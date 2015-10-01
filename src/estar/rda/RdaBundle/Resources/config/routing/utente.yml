@@ -1,0 +1,30 @@
+utente:
+    path:     /
+    defaults: { _controller: "estarRdaBundle:Utente:index" }
+
+utente_show:
+    path:     /{id}/show
+    defaults: { _controller: "estarRdaBundle:Utente:show" }
+
+utente_new:
+    path:     /new
+    defaults: { _controller: "estarRdaBundle:Utente:new" }
+
+utente_create:
+    path:     /create
+    defaults: { _controller: "estarRdaBundle:Utente:create" }
+    methods:  POST
+
+utente_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "estarRdaBundle:Utente:edit" }
+
+utente_update:
+    path:     /{id}/update
+    defaults: { _controller: "estarRdaBundle:Utente:update" }
+    methods:  [POST, PUT]
+
+utente_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "estarRdaBundle:Utente:delete" }
+    methods:  [POST, DELETE]

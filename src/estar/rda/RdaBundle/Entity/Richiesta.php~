@@ -1,0 +1,67 @@
+<?php
+
+namespace estar\rda\RdaBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Richiesta
+ *
+ * @ORM\Table(name="richiesta", indexes={@ORM\Index(name="fkRichiestaCategoriaIdx", columns={"categoriaIdCategoria"}), @ORM\Index(name="fkRichiestaAzienda1Idx", columns={"aziendaIdazienda"})})
+ * @ORM\Entity
+ */
+class Richiesta
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="numeroPratica", type="string", length=45, nullable=true)
+     */
+    private $numeropratica;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string", length=45, nullable=true)
+     */
+    private $status;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="numeroProtocollo", type="string", length=45, nullable=true)
+     */
+    private $numeroprotocollo;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idRichiesta", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idrichiesta;
+
+    /**
+     * @var \estar\rda\RdaBundle\Entity\Azienda
+     *
+     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Azienda")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="aziendaIdazienda", referencedColumnName="idazienda")
+     * })
+     */
+    private $aziendaidazienda;
+
+    /**
+     * @var \estar\rda\RdaBundle\Entity\Categoria
+     *
+     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Categoria")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="categoriaIdCategoria", referencedColumnName="idCategoria")
+     * })
+     */
+    private $categoriaidcategoria;
+
+
+}
+

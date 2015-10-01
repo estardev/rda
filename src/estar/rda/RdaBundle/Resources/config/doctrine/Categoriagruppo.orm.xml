@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="estar\rda\RdaBundle\Entity\Categoriagruppo" table="categoriagruppo">
+    <indexes>
+      <index name="fkCategoriaHasGruppoUtenteGruppoUtente1Idx" columns="gruppoUtenteIdGruppo"/>
+      <index name="fkCategoriaHasGruppoUtenteCategoria1Idx" columns="categoriaIdCategoria"/>
+    </indexes>
+    <id name="idcategoriagruppo" type="integer" column="idCategoriagruppo">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="abilitatoinserimentorichieste" type="boolean" column="abilitatoInserimentoRichieste" nullable="true"/>
+    <field name="validatoretecnico" type="boolean" column="validatoreTecnico" nullable="true"/>
+    <field name="validatoreamministrativo" type="boolean" column="validatoreAmministrativo" nullable="true"/>
+    <field name="referenteabs" type="boolean" column="referenteAbs" nullable="true"/>
+    <many-to-one field="gruppoutenteidgruppo" target-entity="Gruppoutente" fetch="LAZY">
+      <join-columns>
+        <join-column name="gruppoUtenteIdGruppo" referenced-column-name="idGruppo"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="categoriaidcategoria" target-entity="Categoria" fetch="LAZY">
+      <join-columns>
+        <join-column name="categoriaIdCategoria" referenced-column-name="idCategoria"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

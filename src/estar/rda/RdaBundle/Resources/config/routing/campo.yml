@@ -1,0 +1,30 @@
+campo:
+    path:     /
+    defaults: { _controller: "estarRdaBundle:Campo:index" }
+
+campo_show:
+    path:     /{id}/show
+    defaults: { _controller: "estarRdaBundle:Campo:show" }
+
+campo_new:
+    path:     /new
+    defaults: { _controller: "estarRdaBundle:Campo:new" }
+
+campo_create:
+    path:     /create
+    defaults: { _controller: "estarRdaBundle:Campo:create" }
+    methods:  POST
+
+campo_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "estarRdaBundle:Campo:edit" }
+
+campo_update:
+    path:     /{id}/update
+    defaults: { _controller: "estarRdaBundle:Campo:update" }
+    methods:  [POST, PUT]
+
+campo_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "estarRdaBundle:Campo:delete" }
+    methods:  [POST, DELETE]

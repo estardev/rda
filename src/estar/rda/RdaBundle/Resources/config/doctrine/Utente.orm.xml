@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="estar\rda\RdaBundle\Entity\Utente" table="utente">
+    <indexes>
+      <index name="fkUtenteAzienda1Idx" columns="aziendaIdazienda"/>
+    </indexes>
+    <id name="idutente" type="integer" column="idUtente">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="utenteldap" type="string" column="utenteLdap" length="45" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="utentecartaoperatore" type="string" column="utenteCartaOperatore" length="45" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <many-to-one field="aziendaidazienda" target-entity="Azienda" fetch="LAZY">
+      <join-columns>
+        <join-column name="aziendaIdazienda" referenced-column-name="idazienda"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="estar\rda\RdaBundle\Entity\Categoriadocumento" table="categoriadocumento">
+    <indexes>
+      <index name="fkCategoriaHasDocumentoDocumento1Idx" columns="documentoIddocumento"/>
+      <index name="fkCategoriaHasDocumentoCategoria1Idx" columns="categoriaIdCategoria"/>
+    </indexes>
+    <id name="idcategoriadocumento" type="integer" column="idCategoriadocumento">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="necessarioperabs" type="boolean" column="necessarioPerAbs" nullable="true"/>
+    <many-to-one field="documentoiddocumento" target-entity="Documento" fetch="LAZY">
+      <join-columns>
+        <join-column name="documentoIddocumento" referenced-column-name="iddocumento"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="categoriaidcategoria" target-entity="Categoria" fetch="LAZY">
+      <join-columns>
+        <join-column name="categoriaIdCategoria" referenced-column-name="idCategoria"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

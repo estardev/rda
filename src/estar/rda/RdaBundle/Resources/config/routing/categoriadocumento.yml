@@ -1,0 +1,30 @@
+categoriadocumento:
+    path:     /
+    defaults: { _controller: "estarRdaBundle:Categoriadocumento:index" }
+
+categoriadocumento_show:
+    path:     /{id}/show
+    defaults: { _controller: "estarRdaBundle:Categoriadocumento:show" }
+
+categoriadocumento_new:
+    path:     /new
+    defaults: { _controller: "estarRdaBundle:Categoriadocumento:new" }
+
+categoriadocumento_create:
+    path:     /create
+    defaults: { _controller: "estarRdaBundle:Categoriadocumento:create" }
+    methods:  POST
+
+categoriadocumento_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "estarRdaBundle:Categoriadocumento:edit" }
+
+categoriadocumento_update:
+    path:     /{id}/update
+    defaults: { _controller: "estarRdaBundle:Categoriadocumento:update" }
+    methods:  [POST, PUT]
+
+categoriadocumento_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "estarRdaBundle:Categoriadocumento:delete" }
+    methods:  [POST, DELETE]

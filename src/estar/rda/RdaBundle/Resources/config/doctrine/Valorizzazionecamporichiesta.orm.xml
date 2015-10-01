@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="estar\rda\RdaBundle\Entity\Valorizzazionecamporichiesta" table="valorizzazionecamporichiesta">
+    <indexes>
+      <index name="fk_valorizzazioneCamporichiestaRichiesta1Idx" columns="RichiestaIdRichiesta"/>
+      <index name="fk_valorizzazioneCamporichiestaCampo1Idx" columns="campoIdCampo,campoCategoriaIdCategoria"/>
+      <index name="IDX_290A3F414305D38" columns="campoIdCampo"/>
+    </indexes>
+    <id name="idvalorizzazionecamporichiesta" type="integer" column="idvalorizzazioneCamporichiesta">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="campocategoriaidcategoria" type="integer" column="campoCategoriaIdCategoria" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="valore" type="string" column="valore" length="45" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <many-to-one field="campoidcampo" target-entity="Campo" fetch="LAZY">
+      <join-columns>
+        <join-column name="campoIdCampo" referenced-column-name="idCampo"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="richiestaidrichiesta" target-entity="Richiesta" fetch="LAZY">
+      <join-columns>
+        <join-column name="RichiestaIdRichiesta" referenced-column-name="idRichiesta"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

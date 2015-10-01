@@ -1,0 +1,32 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Categoriadocumento</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Necessarioperabs</th>
+                <td>{{ entity.necessarioperabs }}</td>
+            </tr>
+            <tr>
+                <th>Idcategoriadocumento</th>
+                <td>{{ entity.idcategoriadocumento }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('categoriadocumento') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('categoriadocumento_edit', { 'id': entity.idcategoriadocumento }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Valorizzazionecamporichiesta</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Campocategoriaidcategoria</th>
+                <td>{{ entity.campocategoriaidcategoria }}</td>
+            </tr>
+            <tr>
+                <th>Valore</th>
+                <td>{{ entity.valore }}</td>
+            </tr>
+            <tr>
+                <th>Idvalorizzazionecamporichiesta</th>
+                <td>{{ entity.idvalorizzazionecamporichiesta }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('valorizzazionecamporichiesta') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('valorizzazionecamporichiesta_edit', { 'id': entity.idvalorizzazionecamporichiesta }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

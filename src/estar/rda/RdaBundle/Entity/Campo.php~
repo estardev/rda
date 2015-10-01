@@ -1,0 +1,71 @@
+<?php
+
+namespace estar\rda\RdaBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Campo
+ *
+ * @ORM\Table(name="campo", indexes={@ORM\Index(name="fkCampoCategoria1Idx", columns={"categoriaIdCategoria"})})
+ * @ORM\Entity
+ */
+class Campo
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nome", type="string", length=45, nullable=true)
+     */
+    private $nome;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descrizione", type="string", length=100, nullable=true)
+     */
+    private $descrizione;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tipo", type="string", length=45, nullable=true)
+     */
+    private $tipo;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="obbligatorioInserzione", type="boolean", nullable=true)
+     */
+    private $obbligatorioinserzione;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="obbligatorioValidazione", type="boolean", nullable=true)
+     */
+    private $obbligatoriovalidazione;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idCampo", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idcampo;
+
+    /**
+     * @var \estar\rda\RdaBundle\Entity\Categoria
+     *
+     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Categoria")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="categoriaIdCategoria", referencedColumnName="idCategoria")
+     * })
+     */
+    private $categoriaidcategoria;
+
+
+}
+

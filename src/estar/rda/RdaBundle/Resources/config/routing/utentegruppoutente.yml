@@ -1,0 +1,30 @@
+utentegruppoutente:
+    path:     /
+    defaults: { _controller: "estarRdaBundle:Utentegruppoutente:index" }
+
+utentegruppoutente_show:
+    path:     /{id}/show
+    defaults: { _controller: "estarRdaBundle:Utentegruppoutente:show" }
+
+utentegruppoutente_new:
+    path:     /new
+    defaults: { _controller: "estarRdaBundle:Utentegruppoutente:new" }
+
+utentegruppoutente_create:
+    path:     /create
+    defaults: { _controller: "estarRdaBundle:Utentegruppoutente:create" }
+    methods:  POST
+
+utentegruppoutente_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "estarRdaBundle:Utentegruppoutente:edit" }
+
+utentegruppoutente_update:
+    path:     /{id}/update
+    defaults: { _controller: "estarRdaBundle:Utentegruppoutente:update" }
+    methods:  [POST, PUT]
+
+utentegruppoutente_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "estarRdaBundle:Utentegruppoutente:delete" }
+    methods:  [POST, DELETE]

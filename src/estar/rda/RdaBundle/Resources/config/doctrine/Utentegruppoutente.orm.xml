@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="estar\rda\RdaBundle\Entity\Utentegruppoutente" table="utentegruppoutente">
+    <indexes>
+      <index name="fkGruppiUtenteHasUtenteUtente1Idx" columns="UtenteIdUtente"/>
+      <index name="fkGruppiUtenteHasUtenteGruppiUtente1Idx" columns="gruppoUtenteIdGruppo"/>
+    </indexes>
+    <id name="idutentegruppoutente" type="integer" column="idUtentegruppoutente">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="amministratore" type="boolean" column="amministratore" nullable="true"/>
+    <many-to-one field="utenteidutente" target-entity="Utente" fetch="LAZY">
+      <join-columns>
+        <join-column name="UtenteIdUtente" referenced-column-name="idUtente"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="gruppoutenteidgruppo" target-entity="Gruppoutente" fetch="LAZY">
+      <join-columns>
+        <join-column name="gruppoUtenteIdGruppo" referenced-column-name="idGruppo"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

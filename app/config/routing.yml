@@ -1,0 +1,7 @@
+estar_rda:
+    resource: "@estarRdaBundle/Resources/config/routing.yml"
+    prefix:   /
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
