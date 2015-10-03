@@ -45,7 +45,7 @@ assetic:
     filters:
         less:
             node: "C:\\Program Files\\nodejs\\node.exe"
-            node_paths: ["C:\\Users\\Nadia\\AppData\\Roaming\\npm\\node_modules"]
+            node_paths: ["C:\\Users\\David\\AppData\\Roaming\\npm\\node_modules"]
             apply_to: "\.less$"
         cssrewrite: ~
         #closure:
