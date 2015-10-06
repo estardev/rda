@@ -98,3 +98,12 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+    
+    siphoc_pdf:
+    basepath: "%kernel.root_dir%/../web"
+    binary: "/usr/local/bin/wkhtmltopdf"
+    options:
+        'lowquality': false
+        'enable-javascript': true
+        'debug-javascript': true

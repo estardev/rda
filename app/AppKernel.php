@@ -19,6 +19,7 @@ class AppKernel extends Kernel
             new AppBundle\AppBundle(),
             new estar\rda\RdaBundle\estarRdaBundle(),
 			new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
+        	new Siphoc\PdfBundle\SiphocPdfBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
