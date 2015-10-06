@@ -1805,63 +1805,60 @@
         ]
     },
     {
-        "name": "doctrine/doctrine-migrations-bundle",
-        "version": "v1.1.0",
-        "version_normalized": "1.1.0.0",
+        "name": "jquery/jquery",
+        "version": "1.11.1",
+        "version_normalized": "1.11.1.0",
+        "dist": {
+            "type": "file",
+            "url": "http://code.jquery.com/jquery-1.11.1.js",
+            "reference": null,
+            "shasum": null
+        },
+        "type": "library",
+        "installation-source": "dist"
+    },
+    {
+        "name": "twbs/bootstrap",
+        "version": "v3.0.3",
+        "version_normalized": "3.0.3.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/doctrine/DoctrineMigrationsBundle.git",
-            "reference": "93ec729e3f2f1bb882904cce9d2c1dde6f139ec8"
+            "url": "https://github.com/twbs/bootstrap.git",
+            "reference": "6d03173a1aad98e75f7d33e65b411c519176c59a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/93ec729e3f2f1bb882904cce9d2c1dde6f139ec8",
-            "reference": "93ec729e3f2f1bb882904cce9d2c1dde6f139ec8",
+            "url": "https://api.github.com/repos/twbs/bootstrap/zipball/6d03173a1aad98e75f7d33e65b411c519176c59a",
+            "reference": "6d03173a1aad98e75f7d33e65b411c519176c59a",
             "shasum": ""
         },
-        "require": {
-            "doctrine/doctrine-bundle": "~1.0",
-            "doctrine/migrations": "~1.0",
-            "php": ">=5.3.2",
-            "symfony/framework-bundle": "~2.3|~3.0"
-        },
-        "time": "2015-09-29 10:07:00",
-        "type": "symfony-bundle",
+        "time": "2013-12-05 16:09:10",
+        "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.1-dev"
+                "dev-master": "3.0.x-dev"
             }
         },
-        "installation-source": "source",
-        "autoload": {
-            "psr-4": {
-                "Doctrine\\Bundle\\MigrationsBundle\\": ""
-            }
-        },
+        "installation-source": "dist",
         "notification-url": "https://packagist.org/downloads/",
         "license": [
-            "MIT"
+            "Apache-2.0"
         ],
         "authors": [
             {
-                "name": "Symfony Community",
-                "homepage": "http://symfony.com/contributors"
+                "name": "Jacob Thornton",
+                "email": "jacobthornton@gmail.com"
             },
             {
-                "name": "Doctrine Project",
-                "homepage": "http://www.doctrine-project.org"
-            },
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
+                "name": "Mark Otto",
+                "email": "markdotto@gmail.com"
             }
         ],
-        "description": "Symfony DoctrineMigrationsBundle",
-        "homepage": "http://www.doctrine-project.org",
+        "description": "Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.",
+        "homepage": "http://getbootstrap.com",
         "keywords": [
-            "dbal",
-            "migrations",
-            "schema"
+            "bootstrap",
+            "css"
         ]
     },
     {
@@ -1927,60 +1924,63 @@
         ]
     },
     {
-        "name": "jquery/jquery",
-        "version": "1.11.1",
-        "version_normalized": "1.11.1.0",
-        "dist": {
-            "type": "file",
-            "url": "http://code.jquery.com/jquery-1.11.1.js",
-            "reference": null,
-            "shasum": null
-        },
-        "type": "library",
-        "installation-source": "dist"
-    },
-    {
-        "name": "twbs/bootstrap",
-        "version": "v3.0.3",
-        "version_normalized": "3.0.3.0",
+        "name": "doctrine/doctrine-migrations-bundle",
+        "version": "v1.1.0",
+        "version_normalized": "1.1.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/twbs/bootstrap.git",
-            "reference": "6d03173a1aad98e75f7d33e65b411c519176c59a"
+            "url": "https://github.com/doctrine/DoctrineMigrationsBundle.git",
+            "reference": "93ec729e3f2f1bb882904cce9d2c1dde6f139ec8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/twbs/bootstrap/zipball/6d03173a1aad98e75f7d33e65b411c519176c59a",
-            "reference": "6d03173a1aad98e75f7d33e65b411c519176c59a",
+            "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/93ec729e3f2f1bb882904cce9d2c1dde6f139ec8",
+            "reference": "93ec729e3f2f1bb882904cce9d2c1dde6f139ec8",
             "shasum": ""
         },
-        "time": "2013-12-05 16:09:10",
-        "type": "library",
+        "require": {
+            "doctrine/doctrine-bundle": "~1.0",
+            "doctrine/migrations": "~1.0",
+            "php": ">=5.3.2",
+            "symfony/framework-bundle": "~2.3|~3.0"
+        },
+        "time": "2015-09-29 10:07:00",
+        "type": "symfony-bundle",
         "extra": {
             "branch-alias": {
-                "dev-master": "3.0.x-dev"
+                "dev-master": "1.1-dev"
             }
         },
         "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Doctrine\\Bundle\\MigrationsBundle\\": ""
+            }
+        },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
-            "Apache-2.0"
+            "MIT"
         ],
         "authors": [
             {
-                "name": "Jacob Thornton",
-                "email": "jacobthornton@gmail.com"
+                "name": "Symfony Community",
+                "homepage": "http://symfony.com/contributors"
             },
             {
-                "name": "Mark Otto",
-                "email": "markdotto@gmail.com"
+                "name": "Doctrine Project",
+                "homepage": "http://www.doctrine-project.org"
+            },
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
             }
         ],
-        "description": "Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.",
-        "homepage": "http://getbootstrap.com",
+        "description": "Symfony DoctrineMigrationsBundle",
+        "homepage": "http://www.doctrine-project.org",
         "keywords": [
-            "bootstrap",
-            "css"
+            "dbal",
+            "migrations",
+            "schema"
         ]
     }
 ]
