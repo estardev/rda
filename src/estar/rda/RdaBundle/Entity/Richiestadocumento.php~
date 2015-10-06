@@ -1,0 +1,67 @@
+<?php
+
+namespace estar\rda\RdaBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Richiestadocumento
+ *
+ * @ORM\Table(name="richiestadocumento", indexes={@ORM\Index(name="fkRichiestaHasDocumentoDocumento1Idx", columns={"idDocumento"}), @ORM\Index(name="fkRichiestaHasDocumentoRichiesta1Idx", columns={"idRichiesta"})})
+ * @ORM\Entity
+ */
+class Richiestadocumento
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dataInvio", type="datetime", nullable=true)
+     */
+    private $datainvio;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="numeroProtocollo", type="string", length=45, nullable=true)
+     */
+    private $numeroprotocollo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="filePath", type="string", length=100, nullable=true)
+     */
+    private $filepath;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \estar\rda\RdaBundle\Entity\Richiesta
+     *
+     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Richiesta")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idRichiesta", referencedColumnName="id")
+     * })
+     */
+    private $idrichiesta;
+
+    /**
+     * @var \estar\rda\RdaBundle\Entity\Documento
+     *
+     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Documento")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idDocumento", referencedColumnName="id")
+     * })
+     */
+    private $iddocumento;
+
+
+}
+

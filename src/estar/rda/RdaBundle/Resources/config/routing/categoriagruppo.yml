@@ -1,0 +1,30 @@
+categoriagruppo:
+    path:     /
+    defaults: { _controller: "estarRdaBundle:Categoriagruppo:index" }
+
+categoriagruppo_show:
+    path:     /{id}/show
+    defaults: { _controller: "estarRdaBundle:Categoriagruppo:show" }
+
+categoriagruppo_new:
+    path:     /new
+    defaults: { _controller: "estarRdaBundle:Categoriagruppo:new" }
+
+categoriagruppo_create:
+    path:     /create
+    defaults: { _controller: "estarRdaBundle:Categoriagruppo:create" }
+    methods:  POST
+
+categoriagruppo_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "estarRdaBundle:Categoriagruppo:edit" }
+
+categoriagruppo_update:
+    path:     /{id}/update
+    defaults: { _controller: "estarRdaBundle:Categoriagruppo:update" }
+    methods:  [POST, PUT]
+
+categoriagruppo_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "estarRdaBundle:Categoriagruppo:delete" }
+    methods:  [POST, DELETE]
