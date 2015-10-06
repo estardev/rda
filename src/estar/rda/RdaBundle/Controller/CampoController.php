@@ -31,6 +31,7 @@ class CampoController extends Controller
     }
     /**
      * Creates a new Campo entity.
+     * 
      *
      */
     public function createAction(Request $request)
