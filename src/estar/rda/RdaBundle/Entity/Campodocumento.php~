@@ -1,0 +1,50 @@
+<?php
+
+namespace estar\rda\RdaBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Campodocumento
+ *
+ * @ORM\Table(name="campodocumento", indexes={@ORM\Index(name="fkCampodocumentoDocumento1Idx", columns={"documentoIddocumento"})})
+ * @ORM\Entity
+ */
+class Campodocumento
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nome", type="string", length=45, nullable=true)
+     */
+    private $nome;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tipo", type="string", length=45, nullable=true)
+     */
+    private $tipo;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idcampodocumento", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idcampodocumento;
+
+    /**
+     * @var \estar\rda\RdaBundle\Entity\Documento
+     *
+     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Documento")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="documentoIddocumento", referencedColumnName="iddocumento")
+     * })
+     */
+    private $documentoiddocumento;
+
+
+}
+

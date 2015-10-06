@@ -1,0 +1,63 @@
+estar_rda_valorizzazionecamporichiesta:
+    resource: "@estarRdaBundle/Resources/config/routing/valorizzazionecamporichiesta.yml"
+    prefix:   /valorizzazionecamporichiesta
+
+estar_rda_valorizzazionecampodocumento:
+    resource: "@estarRdaBundle/Resources/config/routing/valorizzazionecampodocumento.yml"
+    prefix:   /valorizzazionecampodocumento
+
+estar_rda_utentegruppoutente:
+    resource: "@estarRdaBundle/Resources/config/routing/utentegruppoutente.yml"
+    prefix:   /utentegruppoutente
+
+estar_rda_utente:
+    resource: "@estarRdaBundle/Resources/config/routing/utente.yml"
+    prefix:   /utente
+
+estar_rda_richiestautente:
+    resource: "@estarRdaBundle/Resources/config/routing/richiestautente.yml"
+    prefix:   /richiestautente
+
+estar_rda_richiestadocumento:
+    resource: "@estarRdaBundle/Resources/config/routing/richiestadocumento.yml"
+    prefix:   /richiestadocumento
+
+estar_rda_richiesta:
+    resource: "@estarRdaBundle/Resources/config/routing/richiesta.yml"
+    prefix:   /richiesta
+
+estar_rda_gruppoutente:
+    resource: "@estarRdaBundle/Resources/config/routing/gruppoutente.yml"
+    prefix:   /gruppoutente
+
+estar_rda_documento:
+    resource: "@estarRdaBundle/Resources/config/routing/documento.yml"
+    prefix:   /documento
+
+estar_rda_categoriagruppo:
+    resource: "@estarRdaBundle/Resources/config/routing/categoriagruppo.yml"
+    prefix:   /categoriagruppo
+
+estar_rda_categoriadocumento:
+    resource: "@estarRdaBundle/Resources/config/routing/categoriadocumento.yml"
+    prefix:   /categoriadocumento
+
+estar_rda_categoria:
+    resource: "@estarRdaBundle/Resources/config/routing/categoria.yml"
+    prefix:   /categoria
+
+estar_rda_campodocumento:
+    resource: "@estarRdaBundle/Resources/config/routing/campodocumento.yml"
+    prefix:   /campodocumento
+
+estar_rda_campo:
+    resource: "@estarRdaBundle/Resources/config/routing/campo.yml"
+    prefix:   /campo
+
+estar_rda_azienda:
+    resource: "@estarRdaBundle/Resources/config/routing/azienda.yml"
+    prefix:   /azienda
+
+estar_rda_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: estarRdaBundle:Default:index }

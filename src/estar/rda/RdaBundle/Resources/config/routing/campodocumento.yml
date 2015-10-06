@@ -1,0 +1,30 @@
+campodocumento:
+    path:     /
+    defaults: { _controller: "estarRdaBundle:Campodocumento:index" }
+
+campodocumento_show:
+    path:     /{id}/show
+    defaults: { _controller: "estarRdaBundle:Campodocumento:show" }
+
+campodocumento_new:
+    path:     /new
+    defaults: { _controller: "estarRdaBundle:Campodocumento:new" }
+
+campodocumento_create:
+    path:     /create
+    defaults: { _controller: "estarRdaBundle:Campodocumento:create" }
+    methods:  POST
+
+campodocumento_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "estarRdaBundle:Campodocumento:edit" }
+
+campodocumento_update:
+    path:     /{id}/update
+    defaults: { _controller: "estarRdaBundle:Campodocumento:update" }
+    methods:  [POST, PUT]
+
+campodocumento_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "estarRdaBundle:Campodocumento:delete" }
+    methods:  [POST, DELETE]

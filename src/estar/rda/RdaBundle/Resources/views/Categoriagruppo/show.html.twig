@@ -1,0 +1,44 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Categoriagruppo</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Abilitatoinserimentorichieste</th>
+                <td>{{ entity.abilitatoinserimentorichieste }}</td>
+            </tr>
+            <tr>
+                <th>Validatoretecnico</th>
+                <td>{{ entity.validatoretecnico }}</td>
+            </tr>
+            <tr>
+                <th>Validatoreamministrativo</th>
+                <td>{{ entity.validatoreamministrativo }}</td>
+            </tr>
+            <tr>
+                <th>Referenteabs</th>
+                <td>{{ entity.referenteabs }}</td>
+            </tr>
+            <tr>
+                <th>Idcategoriagruppo</th>
+                <td>{{ entity.idcategoriagruppo }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('categoriagruppo') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('categoriagruppo_edit', { 'id': entity.idcategoriagruppo }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

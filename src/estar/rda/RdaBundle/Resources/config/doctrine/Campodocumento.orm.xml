@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="estar\rda\RdaBundle\Entity\Campodocumento" table="campodocumento">
+    <indexes>
+      <index name="fkCampodocumentoDocumento1Idx" columns="documentoIddocumento"/>
+    </indexes>
+    <id name="idcampodocumento" type="integer" column="idcampodocumento">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="nome" type="string" column="nome" length="45" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipo" type="string" column="tipo" length="45" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <many-to-one field="documentoiddocumento" target-entity="Documento" fetch="LAZY">
+      <join-columns>
+        <join-column name="documentoIddocumento" referenced-column-name="iddocumento"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

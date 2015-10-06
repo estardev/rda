@@ -1,0 +1,53 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Campo list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Descrizione</th>
+                <th>Tipo</th>
+                <th>Obbligatorioinserzione</th>
+                <th>Obbligatoriovalidazione</th>
+                <th>Ordinamento</th>
+                <th>Fieldset</th>
+                <th>Idcampo</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('campo_show', { 'id': entity.idcampo }) }}">{{ entity.nome }}</a></td>
+                <td>{{ entity.descrizione }}</td>
+                <td>{{ entity.tipo }}</td>
+                <td>{{ entity.obbligatorioinserzione }}</td>
+                <td>{{ entity.obbligatoriovalidazione }}</td>
+                <td>{{ entity.ordinamento }}</td>
+                <td>{{ entity.fieldset }}</td>
+                <td>{{ entity.idcampo }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('campo_show', { 'id': entity.idcampo }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('campo_edit', { 'id': entity.idcampo }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('campo_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

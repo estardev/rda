@@ -1,0 +1,36 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Gruppoutente</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Nome</th>
+                <td>{{ entity.nome }}</td>
+            </tr>
+            <tr>
+                <th>Descrizione</th>
+                <td>{{ entity.descrizione }}</td>
+            </tr>
+            <tr>
+                <th>Idgruppo</th>
+                <td>{{ entity.idgruppo }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('gruppoutente') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('gruppoutente_edit', { 'id': entity.idgruppo }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

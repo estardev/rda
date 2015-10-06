@@ -1,0 +1,40 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Richiestadocumento</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Datainvio</th>
+                <td>{{ entity.datainvio|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Numeroprotocollo</th>
+                <td>{{ entity.numeroprotocollo }}</td>
+            </tr>
+            <tr>
+                <th>Filepath</th>
+                <td>{{ entity.filepath }}</td>
+            </tr>
+            <tr>
+                <th>Idrichiestadocumento</th>
+                <td>{{ entity.idrichiestadocumento }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('richiestadocumento') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('richiestadocumento_edit', { 'id': entity.idrichiestadocumento }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

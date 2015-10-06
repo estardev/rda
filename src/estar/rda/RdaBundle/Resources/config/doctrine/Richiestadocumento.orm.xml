@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="estar\rda\RdaBundle\Entity\Richiestadocumento" table="richiestadocumento">
+    <indexes>
+      <index name="fkRichiestaHasDocumentoDocumento1Idx" columns="documentoIddocumento"/>
+      <index name="fkRichiestaHasDocumentoRichiesta1Idx" columns="RichiestaIdRichiesta"/>
+    </indexes>
+    <id name="idrichiestadocumento" type="integer" column="idRichiestadocumento">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="datainvio" type="datetime" column="dataInvio" nullable="true"/>
+    <field name="numeroprotocollo" type="string" column="numeroProtocollo" length="45" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="filepath" type="string" column="filePath" length="100" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <many-to-one field="richiestaidrichiesta" target-entity="Richiesta" fetch="LAZY">
+      <join-columns>
+        <join-column name="RichiestaIdRichiesta" referenced-column-name="idRichiesta"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="documentoiddocumento" target-entity="Documento" fetch="LAZY">
+      <join-columns>
+        <join-column name="documentoIddocumento" referenced-column-name="iddocumento"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

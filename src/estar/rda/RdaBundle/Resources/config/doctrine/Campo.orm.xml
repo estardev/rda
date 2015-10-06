@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="estar\rda\RdaBundle\Entity\Campo" table="campo">
+    <indexes>
+      <index name="fkCampoCategoria1Idx" columns="categoriaIdCategoria"/>
+    </indexes>
+    <id name="idcampo" type="integer" column="idCampo">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="nome" type="string" column="nome" length="45" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descrizione" type="string" column="descrizione" length="100" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipo" type="string" column="tipo" length="45" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="obbligatorioinserzione" type="boolean" column="obbligatorioInserzione" nullable="true"/>
+    <field name="obbligatoriovalidazione" type="boolean" column="obbligatorioValidazione" nullable="true"/>
+    <field name="ordinamento" type="integer" column="ordinamento" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fieldset" type="string" column="fieldset" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <many-to-one field="categoriaidcategoria" target-entity="Categoria" fetch="LAZY">
+      <join-columns>
+        <join-column name="categoriaIdCategoria" referenced-column-name="idCategoria"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>
