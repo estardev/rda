@@ -1,4 +1,0 @@
-services:
-#    estar_rda.example:
-#        class: estar\rda\RdaBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
