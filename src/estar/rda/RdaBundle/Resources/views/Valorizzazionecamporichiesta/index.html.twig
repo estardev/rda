@@ -1,0 +1,43 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Valorizzazionecamporichiesta list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Idcategoria</th>
+                <th>Valore</th>
+                <th>Id</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('valorizzazionecamporichiesta_show', { 'id': entity.id }) }}">{{ entity.idcategoria }}</a></td>
+                <td>{{ entity.valore }}</td>
+                <td>{{ entity.id }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('valorizzazionecamporichiesta_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('valorizzazionecamporichiesta_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('valorizzazionecamporichiesta_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

@@ -1,0 +1,30 @@
+richiestautente:
+    path:     /
+    defaults: { _controller: "estarRdaBundle:Richiestautente:index" }
+
+richiestautente_show:
+    path:     /{id}/show
+    defaults: { _controller: "estarRdaBundle:Richiestautente:show" }
+
+richiestautente_new:
+    path:     /new
+    defaults: { _controller: "estarRdaBundle:Richiestautente:new" }
+
+richiestautente_create:
+    path:     /create
+    defaults: { _controller: "estarRdaBundle:Richiestautente:create" }
+    methods:  POST
+
+richiestautente_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "estarRdaBundle:Richiestautente:edit" }
+
+richiestautente_update:
+    path:     /{id}/update
+    defaults: { _controller: "estarRdaBundle:Richiestautente:update" }
+    methods:  [POST, PUT]
+
+richiestautente_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "estarRdaBundle:Richiestautente:delete" }
+    methods:  [POST, DELETE]

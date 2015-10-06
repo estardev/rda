@@ -1,0 +1,74 @@
+<?php
+
+namespace estar\rda\RdaBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Categoriagruppo
+ *
+ * @ORM\Table(name="categoriagruppo", indexes={@ORM\Index(name="fkCategoriaHasGruppoUtenteGruppoUtente1Idx", columns={"idGruppoutente"}), @ORM\Index(name="fkCategoriaHasGruppoUtenteCategoria1Idx", columns={"idCategoria"})})
+ * @ORM\Entity
+ */
+class Categoriagruppo
+{
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="abilitatoInserimentoRichieste", type="boolean", nullable=true)
+     */
+    private $abilitatoinserimentorichieste;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="validatoreTecnico", type="boolean", nullable=true)
+     */
+    private $validatoretecnico;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="validatoreAmministrativo", type="boolean", nullable=true)
+     */
+    private $validatoreamministrativo;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="referenteAbs", type="boolean", nullable=true)
+     */
+    private $referenteabs;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \estar\rda\RdaBundle\Entity\Gruppoutente
+     *
+     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Gruppoutente")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idGruppoutente", referencedColumnName="id")
+     * })
+     */
+    private $idgruppoutente;
+
+    /**
+     * @var \estar\rda\RdaBundle\Entity\Categoria
+     *
+     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Categoria")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idCategoria", referencedColumnName="id")
+     * })
+     */
+    private $idcategoria;
+
+
+}
+
