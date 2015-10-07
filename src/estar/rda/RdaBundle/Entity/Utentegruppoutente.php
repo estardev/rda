@@ -48,11 +48,8 @@ class Utentegruppoutente
      */
     private $idgruppoutente;
 
-	public function __toString()
-	{
-		return strval($this->getId());
-	}
 
+    public function __toString(){return strval($this->getId());}
     /**
      * Set amministratore
      *

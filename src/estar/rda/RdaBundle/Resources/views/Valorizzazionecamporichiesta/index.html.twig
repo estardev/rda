@@ -6,7 +6,6 @@
     <table class="records_list">
         <thead>
             <tr>
-                <th>Idcategoria</th>
                 <th>Valore</th>
                 <th>Id</th>
                 <th>Actions</th>
@@ -15,8 +14,7 @@
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('valorizzazionecamporichiesta_show', { 'id': entity.id }) }}">{{ entity.idcategoria }}</a></td>
-                <td>{{ entity.valore }}</td>
+                <td><a href="{{ path('valorizzazionecamporichiesta_show', { 'id': entity.id }) }}">{{ entity.valore }}</a></td>
                 <td>{{ entity.id }}</td>
                 <td>
                 <ul>

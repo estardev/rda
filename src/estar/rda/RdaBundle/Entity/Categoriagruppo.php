@@ -69,11 +69,8 @@ class Categoriagruppo
      */
     private $idcategoria;
 
-	public function __toString()
-	{
-		return strval($this->getId());
-	}
 
+    public function __toString(){return strval($this->getId());}
     /**
      * Set abilitatoinserimentorichieste
      *

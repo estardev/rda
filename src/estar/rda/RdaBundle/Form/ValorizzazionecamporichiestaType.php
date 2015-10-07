@@ -15,8 +15,8 @@ class ValorizzazionecamporichiestaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('idcategoria')
             ->add('valore')
+            ->add('idcategoria')
             ->add('idrichiesta')
             ->add('idcampo')
         ;

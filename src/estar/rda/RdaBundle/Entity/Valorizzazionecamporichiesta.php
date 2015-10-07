@@ -7,18 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Valorizzazionecamporichiesta
  *
- * @ORM\Table(name="valorizzazionecamporichiesta", indexes={@ORM\Index(name="fk_valorizzazioneCamporichiestaRichiesta1Idx", columns={"idRichiesta"}), @ORM\Index(name="fk_valorizzazioneCamporichiestaCampo1Idx", columns={"idCampo", "idCategoria"}), @ORM\Index(name="IDX_290A3F413ED374B7", columns={"idCampo"})})
+ * @ORM\Table(name="valorizzazionecamporichiesta", indexes={@ORM\Index(name="fk_valorizzazioneCamporichiestaRichiesta1Idx", columns={"idRichiesta"}), @ORM\Index(name="fk_valorizzazioneCamporichiestaCampo1Idx", columns={"idCampo"}), @ORM\Index(name="fk_valorizzazioneCamporichiestaCategoria1Idx", columns={"idCategoria"})})
  * @ORM\Entity
  */
 class Valorizzazionecamporichiesta
 {
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="idCategoria", type="integer", nullable=false)
-     */
-    private $idcategoria;
-
     /**
      * @var string
      *
@@ -34,6 +27,16 @@ class Valorizzazionecamporichiesta
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * @var \estar\rda\RdaBundle\Entity\Categoria
+     *
+     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Categoria")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idCategoria", referencedColumnName="id")
+     * })
+     */
+    private $idcategoria;
 
     /**
      * @var \estar\rda\RdaBundle\Entity\Richiesta
@@ -55,35 +58,8 @@ class Valorizzazionecamporichiesta
      */
     private $idcampo;
 
-	public function __toString()
-	{
-		return strval($this->getId());
-	}
 
-    /**
-     * Set idcategoria
-     *
-     * @param integer $idcategoria
-     *
-     * @return Valorizzazionecamporichiesta
-     */
-    public function setIdcategoria($idcategoria)
-    {
-        $this->idcategoria = $idcategoria;
-
-        return $this;
-    }
-
-    /**
-     * Get idcategoria
-     *
-     * @return integer
-     */
-    public function getIdcategoria()
-    {
-        return $this->idcategoria;
-    }
-
+    public function __toString(){return strval($this->getId());}
     /**
      * Set valore
      *
@@ -116,6 +92,30 @@ class Valorizzazionecamporichiesta
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set idcategoria
+     *
+     * @param \estar\rda\RdaBundle\Entity\Categoria $idcategoria
+     *
+     * @return Valorizzazionecamporichiesta
+     */
+    public function setIdcategoria(\estar\rda\RdaBundle\Entity\Categoria $idcategoria = null)
+    {
+        $this->idcategoria = $idcategoria;
+
+        return $this;
+    }
+
+    /**
+     * Get idcategoria
+     *
+     * @return \estar\rda\RdaBundle\Entity\Categoria
+     */
+    public function getIdcategoria()
+    {
+        return $this->idcategoria;
     }
 
     /**

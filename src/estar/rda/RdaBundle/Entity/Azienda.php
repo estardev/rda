@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="azienda")
  * @ORM\Entity
- * 
  */
 class Azienda
 {
@@ -29,11 +28,8 @@ class Azienda
      */
     private $id;
 
-	public function __toString()
-	{
-		return strval($this->getId());
-	}
 
+    public function __toString(){return strval($this->getId());}
     /**
      * Set nome
      *

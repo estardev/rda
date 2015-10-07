@@ -62,11 +62,8 @@ class Richiesta
      */
     private $idazienda;
 
-	public function __toString()
-	{
-		return strval($this->getId());
-	}
 
+    public function __toString(){return strval($this->getId());}
     /**
      * Set numeropratica
      *
