@@ -14,12 +14,19 @@ class ValorizzazionecamporichiestaType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /**
+         * David: aggiunto il metodo per recuperare il campo descrizione di cateogoria nel menu a tendina
+         */
         $builder
             ->add('valore')
-            ->add('idcategoria')
+            ->add('idcategoria', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Categoria',
+                'choice_label' => 'descrizione',
+            ))
             ->add('idrichiesta')
             ->add('idcampo')
         ;
+
     }
     
     /**
