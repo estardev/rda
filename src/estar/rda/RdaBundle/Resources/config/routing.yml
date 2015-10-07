@@ -41,6 +41,10 @@ estar_rda_categoriagruppo:
 estar_rda_categoriadocumento:
     resource: "@estarRdaBundle/Resources/config/routing/categoriadocumento.yml"
     prefix:   /categoriadocumento
+    
+estar_rda_campodocumento:
+    resource: "@estarRdaBundle/Resources/config/routing/campodocumento.yml"
+    prefix:   /campodocumento
 
 estar_rda_categoria:
     resource: "@estarRdaBundle/Resources/config/routing/categoria.yml"

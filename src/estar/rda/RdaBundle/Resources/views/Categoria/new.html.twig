@@ -5,11 +5,10 @@
 
     {{ form(form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('categoria') }}">
-            Back to the list
-        </a>
+<button type="button" class="btn btn-default"><a href="{{ path('categoria') }}">
+            <span class="glyphicon glyphicon-chevron-left"></span> Ritorna alla lista categorie
+        </a></button>
+    
     </li>
 </ul>
 {% endblock %}
