@@ -57,7 +57,3 @@ estar_rda_campo:
 estar_rda_azienda:
     resource: "@estarRdaBundle/Resources/config/routing/azienda.yml"
     prefix:   /azienda
-
-estar_rda_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: estarRdaBundle:Default:index }
