@@ -4,13 +4,11 @@
     <h1>Azienda edit</h1>
 
     {{ form(edit_form) }}
+    {{ form(delete_form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('azienda') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <button type="button" class="btn btn-default"><a href="{{ path('azienda') }}">
+            <span class="glyphicon glyphicon-chevron-left"></span> Ritorna alla lista Azienda
+        </a></button>
+
+
 {% endblock %}
