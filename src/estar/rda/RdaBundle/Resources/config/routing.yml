@@ -61,3 +61,7 @@ estar_rda_campo:
 estar_rda_azienda:
     resource: "@estarRdaBundle/Resources/config/routing/azienda.yml"
     prefix:   /azienda
+    
+estar_rda_formtemplate:
+    resource: "@estarRdaBundle/Resources/config/routing/formtemplate.yml"
+    prefix:   /formtemplate

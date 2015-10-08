@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * FormTemplate
- * Entità che astrae una form così come vista dalle richieste: si occupa di mostrare i campi adeguati
+ * Entitï¿½ che astrae una form cosï¿½ come vista dalle richieste: si occupa di mostrare i campi adeguati
  * e gestisce i metodi di persistenza delle classi che astraggono il DB
  *
  * @ORM\Table(name="azienda")
@@ -75,7 +75,7 @@ class FormTemplate
     }
 
     /**
-     * @param la $idcategoria
+     * @param $idcategoria
      */
     public function setIdcategoria($idcategoria)
     {
@@ -85,19 +85,12 @@ class FormTemplate
 
     /**
      * costruttore di default
-     * @param idCategoria l'id numerico della categoria da settare
+     * @param idCategoria id numerico della categoria da settare
      */
-    public function __construct($idCategoria)
+    public function __construct($idCategoria, $campi)
     {
-        //inizializziamo le collezioni
-        $this->campi = new ArrayCollection();
-        $this->documenti = new ArrayCollection();
-        //Retrieve della categoria interessata
-        $em = $this->getDoctrine()->getManager();
+        $this->idcategoria = $idCategoria;
+        $this->campi = $campi;
 
-        //A partire dalla categoria, retrieve dei campi della categoria e valorizzazione della collezione
-
-        //A partire dalla categoria, retrieve dei documenti della categoria e valorizzazione della collezione
-        //TODO si fa poi
     }
 }
