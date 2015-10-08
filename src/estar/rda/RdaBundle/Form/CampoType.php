@@ -15,15 +15,19 @@ class CampoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nome')
-            ->add('descrizione')
-            ->add('tipo')
-            ->add('obbligatorioinserzione')
-            ->add('obbligatoriovalidazione')
-            ->add('ordinamento')
-            ->add('fieldset')
-            ->add('ordinamentofieldset')
-            ->add('idcategoria')
+            ->add('nome',null, array('label' => 'Nome'))
+            ->add('descrizione',null, array('label' => 'Descrizione'))
+            ->add('tipo',null, array('label' => 'Tipo'))
+            ->add('obbligatorioinserzione',null, array('label' => 'Inserzione Obbligatoria'))
+            ->add('obbligatoriovalidazione',null, array('label' => 'Validazione Obbligatoria'))
+            ->add('ordinamento',null, array('label' => 'Ordinamento del Campo'))
+            ->add('fieldset',null, array('label' => 'Raggruppamento di Appartenenza'))
+            ->add('ordinamentofieldset',null, array('label' => 'Ordinamento del Raggruppamento'))
+            ->add('idcategoria', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Categoria',
+                'choice_label' => 'descrizione',
+                'label' => 'Categoria',
+            ))
         ;
     }
     

@@ -15,11 +15,19 @@ class RichiestaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('numeropratica')
-            ->add('status')
-            ->add('numeroprotocollo')
-            ->add('idcategoria')
-            ->add('idazienda')
+            ->add('numeropratica',null, array('label' => 'Numero Pratica'))
+            ->add('status',null, array('label' => 'Stato Pratica'))
+            ->add('numeroprotocollo',null, array('label' => 'Numero Protocollo'))
+            ->add('idcategoria', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Categoria',
+                'choice_label' => 'descrizione',
+                'label' => 'Categoria',
+            ))
+            ->add('idazienda', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Azienda',
+                'choice_label' => 'nome',
+                'label' => 'Azienda',
+            ))
         ;
     }
     

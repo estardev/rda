@@ -15,8 +15,8 @@ class GruppoutenteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nome')
-            ->add('descrizione')
+            ->add('nome',null, array('label' => 'Nome'))
+            ->add('descrizione',null, array('label' => 'Descrizione'))
         ;
     }
     

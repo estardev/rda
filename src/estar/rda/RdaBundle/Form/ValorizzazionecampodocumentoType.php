@@ -15,9 +15,9 @@ class ValorizzazionecampodocumentoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('valore')
-            ->add('idrichiestadocumento')
-            ->add('idcampodocumento')
+            ->add('valore',null, array('label' => 'Valore'))
+            ->add('idrichiestadocumento',null, array('label' => 'Richiesta Documento'))
+            ->add('idcampodocumento',null, array('label' => 'Campo Documento'))
         ;
     }
     
