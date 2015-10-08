@@ -15,9 +15,17 @@ class CategoriadocumentoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('necessarioperabs')
-            ->add('iddocumento')
-            ->add('idcategoria')
+            ->add('necessarioperabs',null, array('label' => 'Necessario per ABS'))
+            ->add('iddocumento', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Documento',
+                'choice_label' => 'nomedescrizione',
+                'label' => 'Documento',
+            ))
+            ->add('idcategoria', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Categoria',
+                'choice_label' => 'descrizione',
+                'label' => 'Categoria',
+            ))
         ;
     }
     

@@ -22,9 +22,18 @@ class ValorizzazionecamporichiestaType extends AbstractType
             ->add('idcategoria', 'entity', array(
                 'class' => 'estar\rda\RdaBundle\Entity\Categoria',
                 'choice_label' => 'descrizione',
+                'label' => 'Categoria',
             ))
-            ->add('idrichiesta')
-            ->add('idcampo')
+            ->add('idrichiesta', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Richiesta',
+                'choice_label' => 'numeropratica',
+                'label' => 'Richiesta (Numero pratica)',
+            ))
+            ->add('idcampo', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Campo',
+                'choice_label' => 'nome',
+                'label' => 'Campo',
+            ))
         ;
 
     }

@@ -15,9 +15,17 @@ class UtentegruppoutenteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('amministratore')
-            ->add('idutente')
-            ->add('idgruppoutente')
+            ->add('amministratore',null, array('label' => 'Amministratore'))
+            ->add('idutente', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Utente',
+                'choice_label' => 'utenteldap',
+                'label' => 'Utente',
+            ))
+            ->add('idgruppoutente', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Gruppoutente',
+                'choice_label' => 'nome',
+                'label' => 'Gruppo Utente',
+            ))
         ;
     }
     

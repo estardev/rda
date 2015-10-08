@@ -15,9 +15,13 @@ class UtenteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('utenteldap')
-            ->add('utentecartaoperatore')
-            ->add('idazienda')
+            ->add('utenteldap',null, array('label' => 'Utente LDAP'))
+            ->add('utentecartaoperatore',null, array('label' => 'Utente Carta Operatore'))
+            ->add('idazienda', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Azienda',
+                'choice_label' => 'nome',
+                'label' => 'Azienda',
+            ))
         ;
     }
     

@@ -15,7 +15,7 @@ class AziendaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nome')
+            ->add('nome',null, array('label' => 'Nome Azienda'))
         ;
     }
     

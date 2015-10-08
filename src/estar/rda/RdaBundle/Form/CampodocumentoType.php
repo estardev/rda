@@ -15,8 +15,16 @@ class CampodocumentoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('iddocumento')
-            ->add('idcampo')
+            ->add('iddocumento', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Documento',
+                'choice_label' => 'nomedescrizione',
+                'label' => 'Documento',
+            ))
+            ->add('idcampo', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Campo',
+                'choice_label' => 'nome',
+                'label' => 'Campo',
+            ))
         ;
     }
     

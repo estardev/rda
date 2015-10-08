@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class DocumentoType extends AbstractType
+class FormTemplateType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -14,19 +14,17 @@ class DocumentoType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('nome',null, array('label' => 'Nome'))
-            ->add('descrizione',null, array('label' => 'Descrizione'))
-        ;
+
+        $builder->add('campi', 'collection', array('type' => new CampoType()));
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'estar\rda\RdaBundle\Entity\Documento'
+            'data_class' => 'estar\rda\RdaBundle\Entity\FormTemplate'
         ));
     }
 
@@ -35,6 +33,6 @@ class DocumentoType extends AbstractType
      */
     public function getName()
     {
-        return 'estar_rda_rdabundle_documento';
+        return 'estar_rda_rdabundle_FormTemplate';
     }
 }
