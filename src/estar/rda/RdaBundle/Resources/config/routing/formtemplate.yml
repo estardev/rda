@@ -1,0 +1,30 @@
+formtemplate:
+    path:     /
+    defaults: { _controller: "estarRdaBundle:FormTemplate:index" }
+
+formtemplate_show:
+    path:     /{idCategoria}/show
+    defaults: { _controller: "estarRdaBundle:FormTemplate:show" }
+
+formtemplate_new:
+    path:     /{idCategoria}/new
+    defaults: { _controller: "estarRdaBundle:FormTemplate:new" }
+
+formtemplate_create:
+    path:     /create
+    defaults: { _controller: "estarRdaBundle:FormTemplate:create" }
+    methods:  POST
+
+formtemplate_edit:
+    path:     /{idCategoria}/edit
+    defaults: { _controller: "estarRdaBundle:FormTemplate:edit" }
+
+formtemplate_update:
+    path:     /{idCategoria}/update
+    defaults: { _controller: "estarRdaBundle:FormTemplate:update" }
+    methods:  [POST, PUT]
+
+formtemplate_delete:
+    path:     /{idCategoria}/delete
+    defaults: { _controller: "estarRdaBundle:FormTemplate:delete" }
+    methods:  [POST, DELETE]
