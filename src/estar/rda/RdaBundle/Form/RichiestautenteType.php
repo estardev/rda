@@ -15,12 +15,20 @@ class RichiestautenteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('creatore')
-            ->add('validatoretecnico')
-            ->add('validatoreamministrativo')
-            ->add('referenteabs')
-            ->add('idutente')
-            ->add('idrichiesta')
+            ->add('creatore',null, array('label' => 'Creatore'))
+            ->add('validatoretecnico',null, array('label' => 'Validatore Tecnico'))
+            ->add('validatoreamministrativo',null, array('label' => 'Validatore Amministrativo'))
+            ->add('referenteabs',null, array('label' => 'Referente ABS'))
+            ->add('idutente', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Utente',
+                'choice_label' => 'utenteldap',
+                'label' => 'Utente',
+            ))
+            ->add('idrichiesta', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Richiesta',
+                'choice_label' => 'numeropratica',
+                'label' => 'Richiesta (Numero pratica)',
+            ))
         ;
     }
     

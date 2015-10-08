@@ -35,6 +35,8 @@ class Documento
      */
     private $id;
 
+    private $nomedescrizione;
+
 
     public function __toString(){return strval($this->getId());}
     /**
@@ -83,6 +85,11 @@ class Documento
     public function getDescrizione()
     {
         return $this->descrizione;
+    }
+
+    public function getNomedescrizione()
+    {
+        return $this->nome . ", " . $this->descrizione;
     }
 
     /**

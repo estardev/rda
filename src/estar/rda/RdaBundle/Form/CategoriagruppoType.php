@@ -15,12 +15,20 @@ class CategoriagruppoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('abilitatoinserimentorichieste')
-            ->add('validatoretecnico')
-            ->add('validatoreamministrativo')
-            ->add('referenteabs')
-            ->add('idgruppoutente')
-            ->add('idcategoria')
+            ->add('abilitatoinserimentorichieste',null, array('label' => 'Abilitato all\'inserimento Richieste'))
+            ->add('validatoretecnico',null, array('label' => 'Validatore Tecnico'))
+            ->add('validatoreamministrativo',null, array('label' => 'Validatore Amministrativo'))
+            ->add('referenteabs',null, array('label' => 'Referente ABS'))
+            ->add('idgruppoutente', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Gruppoutente',
+                'choice_label' => 'nome',
+                'label' => 'Gruppo Utente',
+            ))
+            ->add('idcategoria', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Categoria',
+                'choice_label' => 'descrizione',
+                'label' => 'Categoria',
+            ))
         ;
     }
     
