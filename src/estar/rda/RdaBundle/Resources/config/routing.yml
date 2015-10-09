@@ -65,3 +65,7 @@ estar_rda_azienda:
 estar_rda_formtemplate:
     resource: "@estarRdaBundle/Resources/config/routing/formtemplate.yml"
     prefix:   /formtemplate
+
+soapEsempio:
+    path:     /soapesempio/{city}/{country}
+    defaults: { _controller: estarRdaBundle:SoapEsempio:index }
