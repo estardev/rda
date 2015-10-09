@@ -16,6 +16,7 @@ class FormTemplateType extends AbstractType
     {
 
         $builder->add('campi', 'collection', array('type' => new CampoType()));
+
     }
 
     /**
