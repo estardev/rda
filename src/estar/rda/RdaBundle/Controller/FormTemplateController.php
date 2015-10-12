@@ -6,8 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use estar\rda\RdaBundle\Entity\Campo;
 use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Form\FormTemplateType;
-use Proxies\__CG__\estar\rda\RdaBundle\Entity\Categoria;
-use Proxies\__CG__\estar\rda\RdaBundle\Entity\Valorizzazionecamporichiesta;
+use estar\rda\RdaBundle\Entity\Categoria;
+use estar\rda\RdaBundle\Entity\Valorizzazionecamporichiesta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\FormTemplate;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,21 +22,26 @@ class FormTemplateController extends Controller
      */
     public function newAction($idCategoria)
     {
-        $campi = new ArrayCollection();
+//        $campi = new ArrayCollection();
 
         $em = $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()
             ->getRepository('estarRdaBundle:Campo');
 
 
-        $query = $repository->createQueryBuilder('c')
-            ->where('c.idcategoria = :idcategoria')
-            ->orderBy('c.ordinamentofieldset,c.ordinamento ', 'ASC')
-            ->setParameter('idcategoria', $idCategoria)
-            ->getQuery();
+//        $query = $repository->createQueryBuilder('c')
+//            ->where('c.idcategoria = :idcategoria')
+//            ->orderBy('c.ordinamentofieldset,c.ordinamento ', 'ASC')
+//            ->setParameter('idcategoria', $idCategoria)
+//            ->getQuery();
 
+        //        $campi = $query->getResult();
 
-        $campi = $query->getResult();
+        $campi = $repository->findBy(
+            array('idcategoria' => $idCategoria),
+            array('ordinamentofieldset' => 'ASC', 'ordinamento' => 'ASC')
+        );
+
 
         $entity = new FormTemplate($idCategoria, $campi);
 
@@ -58,16 +63,16 @@ class FormTemplateController extends Controller
                         array_push($options, $item->getDescrizione());
 
                 }
-                $nome = $campo->getNome() . '-' . $campo->getId();
-                $formbuilder->add($nome, 'choice', array(
+
+                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
                     'choices' => $options,
                     'expanded' => true,
                     'multiple' => false,
                     'label' => $fieldsetName
                 ));
             } else {
-                $nome2 = $campo->getNome() . '-' . $campo->getId();
-                $formbuilder->add($nome2, $campo->getTipo(), array(
+
+                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
                     'label' => $campo->getDescrizione()
                 ));
             }
@@ -79,7 +84,7 @@ class FormTemplateController extends Controller
         $form->add('submit', 'submit', array('label' => 'Create'));
         return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
             'entity' => $entity,
-            'form' => $form->createView(),
+            'form' => $form->createView()
 
         ));
     }
@@ -106,11 +111,9 @@ class FormTemplateController extends Controller
 
     public function createAction(Request $request, $idCategoria)
     {
-        dump($request);
+
         $form = $this->createForm(new FormTemplateType());
         $form->handleRequest($request);
-        dump($idCategoria);
-
 
         $em = $this->getDoctrine()->getManager();
 
@@ -120,11 +123,11 @@ class FormTemplateController extends Controller
         $richiesta->setIdcategoria($categoria);
         $em->persist($richiesta);
 
-        $campi = $request->request->getIterator();
-        dump($campi);
+
+        $campi = $request->request->all();
 
 
-        foreach ($campi->current() as $key => $value) {
+        foreach ($campi['form'] as $key => $value) {
             if (!strrpos($key, "-")) {
                 continue;
             }
@@ -144,9 +147,216 @@ class FormTemplateController extends Controller
         $em->flush();
 
 
-        return $this->render('estarRdaBundle:FormTemplate:prova.html.twig', array(
+        return $this->render('estarRdaBundle:FormTemplate:create.html.twig', array(
             'request' => $request
         ));
 
     }
+
+
+    /**
+     * Finds and displays a FormTemplate entity.
+     * @param $idRichiesta
+     * @param $idCategoria
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showAction($idCategoria, $idRichiesta)
+    {
+
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $this->getDoctrine()
+            ->getRepository('estarRdaBundle:Campo');
+
+        $campi = $repository->findBy(
+            array('idcategoria' => $idCategoria),
+            array('ordinamentofieldset' => 'ASC', 'ordinamento' => 'ASC')
+        );
+
+        $entity = new FormTemplate($idCategoria, $campi);
+
+        $repository = $this->getDoctrine()
+            ->getRepository('estarRdaBundle:Valorizzazionecamporichiesta');
+
+        $campiValorizzati = $repository->findBy(
+            array('idrichiesta' => $idRichiesta)
+        );
+
+        $formbuilder = $this->createFormBuilder();
+        $fieldsetVisitati = array();
+
+        foreach ($campiValorizzati as $campovalorizzato) {
+            $campo = $campovalorizzato->getIdcampo();
+            if ($campo->getTipo() == 'radio') {
+                $fieldsetName = $campo->getFieldset();
+                if (in_array($fieldsetName, $fieldsetVisitati)) {
+                    continue;
+                }
+
+                array_push($fieldsetVisitati, $fieldsetName);
+                $options = array();
+                foreach ($campi as $item) {
+                    if ($item->getTipo() == 'radio' and $item->getFieldset() == $fieldsetName)
+                        array_push($options, $item->getDescrizione());
+
+                }
+
+                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
+                    'choices' => $options,
+                    'expanded' => true,
+                    'multiple' => false,
+                    'label' => $fieldsetName,
+                    'data' => $campovalorizzato->getValore()
+                ));
+            } else {
+
+                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
+                    'label' => $campo->getDescrizione(),
+                    'data' => $campovalorizzato->getValore()
+                ));
+            }
+        }
+        $form = $formbuilder->getForm();
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find FormTemplate entity.');
+        }
+
+//        $deleteForm = $this->createDeleteForm($id);
+
+        return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
+            'entity' => $entity,
+            'form' => $form->createView()
+
+        ));
+    }
+
+    /**
+     * Displays a form to edit an existing Richiesta entity.
+     *
+     */
+    public function editAction($idCategoria, $idRichiesta)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $this->getDoctrine()
+            ->getRepository('estarRdaBundle:Campo');
+
+        $campi = $repository->findBy(
+            array('idcategoria' => $idCategoria),
+            array('ordinamentofieldset' => 'ASC', 'ordinamento' => 'ASC')
+        );
+
+        $entity = new FormTemplate($idCategoria, $campi);
+
+        $repository = $this->getDoctrine()
+            ->getRepository('estarRdaBundle:Valorizzazionecamporichiesta');
+
+        $campiValorizzati = $repository->findBy(
+            array('idrichiesta' => $idRichiesta)
+        );
+
+        $formbuilder = $this->createFormBuilder();
+        $fieldsetVisitati = array();
+
+        foreach ($campiValorizzati as $campovalorizzato) {
+            $campo = $campovalorizzato->getIdcampo();
+            if ($campo->getTipo() == 'radio') {
+                $fieldsetName = $campo->getFieldset();
+                if (in_array($fieldsetName, $fieldsetVisitati)) {
+                    continue;
+                }
+
+                array_push($fieldsetVisitati, $fieldsetName);
+                $options = array();
+                foreach ($campi as $item) {
+                    if ($item->getTipo() == 'radio' and $item->getFieldset() == $fieldsetName)
+                        array_push($options, $item->getDescrizione());
+
+                }
+
+                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
+                    'choices' => $options,
+                    'expanded' => true,
+                    'multiple' => false,
+                    'label' => $fieldsetName,
+                    'data' => $campovalorizzato->getValore()
+                ));
+            } else {
+
+                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
+                    'label' => $campo->getDescrizione(),
+                    'data' => $campovalorizzato->getValore()
+                ));
+            }
+        }
+        $form = $formbuilder->getForm();
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find FormTemplate entity.');
+        }
+
+
+        $formbuilder->setAction($this->generateUrl('formtemplate_update', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
+
+        $form = $formbuilder->getForm();
+
+        $form->add('submit', 'submit', array('label' => 'Modifica'));
+
+        return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
+            'entity' => $entity,
+            'form' => $form->createView()
+
+        ));
+    }
+
+    public function updateAction(Request $request, $idCategoria, $idRichiesta)
+    {
+
+        $form = $this->createForm(new FormTemplateType());
+        $form->handleRequest($request);
+
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('estarRdaBundle:Richiesta');
+
+        $richiesta = $repository->find($idRichiesta);
+
+//        $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
+//        $richiesta = new Richiesta();
+//        $richiesta->setIdcategoria($categoria);
+//        $em->persist($richiesta);
+
+
+        $campi = $request->request->all();
+
+
+        foreach ($campi['form'] as $key => $value) {
+            if (!strrpos($key, "-")) {
+                continue;
+            }
+            $a = explode('-', $key);
+            $idCampo = $a[1];
+
+            $campo = $em->getRepository('estarRdaBundle:Campo')->find($idCampo);
+
+            $vcr = $em->getRepository('estarRdaBundle:Valorizzazionecamporichiesta')->findBy(
+                array('idrichiesta' => $idRichiesta, 'idcampo' => $idCampo)
+
+            );
+
+            $vcr[0]->setValore($value);
+
+        }
+
+        $em->flush();
+
+
+        return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
+            'request' => $request,
+
+
+        ));
+
+    }
+
+
 }
