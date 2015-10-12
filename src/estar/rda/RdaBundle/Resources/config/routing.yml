@@ -66,6 +66,9 @@ estar_rda_formtemplate:
     resource: "@estarRdaBundle/Resources/config/routing/formtemplate.yml"
     prefix:   /formtemplate
 
+estar_rda_pdf:
+    resource: "@estarRdaBundle/Resources/config/routing/pdf.yml"
+    prefix:   /pdf
 soapEsempio:
     path:     /soapesempio/{city}/{country}
     defaults: { _controller: estarRdaBundle:SoapEsempio:index }
