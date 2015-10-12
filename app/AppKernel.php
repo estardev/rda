@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new estar\rda\RdaBundle\estarRdaBundle(),
 			new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
 			new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
+            //new Slik\DompdfBundle\SlikDompdfBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
