@@ -2,11 +2,10 @@
 
 namespace estar\rda\RdaBundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
+
 use estar\rda\RdaBundle\Entity\Campo;
 use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Form\FormTemplateType;
-use estar\rda\RdaBundle\Entity\Categoria;
 use estar\rda\RdaBundle\Entity\Valorizzazionecamporichiesta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\FormTemplate;
@@ -22,20 +21,12 @@ class FormTemplateController extends Controller
      */
     public function newAction($idCategoria)
     {
-//        $campi = new ArrayCollection();
+
 
         $em = $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()
             ->getRepository('estarRdaBundle:Campo');
 
-
-//        $query = $repository->createQueryBuilder('c')
-//            ->where('c.idcategoria = :idcategoria')
-//            ->orderBy('c.ordinamentofieldset,c.ordinamento ', 'ASC')
-//            ->setParameter('idcategoria', $idCategoria)
-//            ->getQuery();
-
-        //        $campi = $query->getResult();
 
         $campi = $repository->findBy(
             array('idcategoria' => $idCategoria),
@@ -222,8 +213,6 @@ class FormTemplateController extends Controller
             throw $this->createNotFoundException('Unable to find FormTemplate entity.');
         }
 
-//        $deleteForm = $this->createDeleteForm($id);
-
         return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
             'entity' => $entity,
             'form' => $form->createView()
@@ -290,7 +279,8 @@ class FormTemplateController extends Controller
                 ));
             }
         }
-        $form = $formbuilder->getForm();
+
+
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find FormTemplate entity.');
         }
@@ -298,13 +288,19 @@ class FormTemplateController extends Controller
 
         $formbuilder->setAction($this->generateUrl('formtemplate_update', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
 
-        $form = $formbuilder->getForm();
+        $editForm = $formbuilder->getForm();
+        $editForm->add('submit', 'submit', array('label' => 'Modifica'));
 
-        $form->add('submit', 'submit', array('label' => 'Modifica'));
+        $formbuilder = $this->createFormBuilder();
+        $formbuilder->setAction($this->generateUrl('richiesta_delete', array('id' => $idRichiesta)));
+        $deleteForm = $formbuilder->getForm();
+        $deleteForm->add('submit', 'submit', array('label' => 'Elimina'));
 
-        return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
+
+        return $this->render('estarRdaBundle:FormTemplate:edit.html.twig', array(
             'entity' => $entity,
-            'form' => $form->createView()
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView()
 
         ));
     }
@@ -316,15 +312,9 @@ class FormTemplateController extends Controller
         $form->handleRequest($request);
 
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('estarRdaBundle:Richiesta');
+//        $repository = $em->getRepository('estarRdaBundle:Richiesta');
 
-        $richiesta = $repository->find($idRichiesta);
-
-//        $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
-//        $richiesta = new Richiesta();
-//        $richiesta->setIdcategoria($categoria);
-//        $em->persist($richiesta);
-
+//        $richiesta = $repository->find($idRichiesta);
 
         $campi = $request->request->all();
 
@@ -336,7 +326,7 @@ class FormTemplateController extends Controller
             $a = explode('-', $key);
             $idCampo = $a[1];
 
-            $campo = $em->getRepository('estarRdaBundle:Campo')->find($idCampo);
+//            $campo = $em->getRepository('estarRdaBundle:Campo')->find($idCampo);
 
             $vcr = $em->getRepository('estarRdaBundle:Valorizzazionecamporichiesta')->findBy(
                 array('idrichiesta' => $idRichiesta, 'idcampo' => $idCampo)

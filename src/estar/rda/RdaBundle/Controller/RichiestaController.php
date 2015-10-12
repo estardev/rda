@@ -4,7 +4,6 @@ namespace estar\rda\RdaBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Form\RichiestaType;
 
@@ -30,6 +29,7 @@ class RichiestaController extends Controller
             'entities' => $entities,
         ));
     }
+
     /**
      * Creates a new Richiesta entity.
      *
@@ -50,7 +50,7 @@ class RichiestaController extends Controller
 
         return $this->render('estarRdaBundle:Richiesta:new.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         ));
     }
 
@@ -80,11 +80,11 @@ class RichiestaController extends Controller
     public function newAction()
     {
         $entity = new Richiesta();
-        $form   = $this->createCreateForm($entity);
+        $form = $this->createCreateForm($entity);
 
         return $this->render('estarRdaBundle:Richiesta:new.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         ));
     }
 
@@ -105,7 +105,7 @@ class RichiestaController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('estarRdaBundle:Richiesta:show.html.twig', array(
-            'entity'      => $entity,
+            'entity' => $entity,
             'delete_form' => $deleteForm->createView(),
         ));
     }
@@ -128,19 +128,19 @@ class RichiestaController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('estarRdaBundle:Richiesta:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
 
     /**
-    * Creates a form to edit a Richiesta entity.
-    *
-    * @param Richiesta $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
+     * Creates a form to edit a Richiesta entity.
+     *
+     * @param Richiesta $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
     private function createEditForm(Richiesta $entity)
     {
         $form = $this->createForm(new RichiestaType(), $entity, array(
@@ -152,6 +152,7 @@ class RichiestaController extends Controller
 
         return $form;
     }
+
     /**
      * Edits an existing Richiesta entity.
      *
@@ -177,11 +178,12 @@ class RichiestaController extends Controller
         }
 
         return $this->render('estarRdaBundle:Richiesta:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
+
     /**
      * Deletes a Richiesta entity.
      *
@@ -191,17 +193,26 @@ class RichiestaController extends Controller
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($id);
+//        if ($form->isValid()) {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($id);
 
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Richiesta entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Richiesta entity.');
         }
+
+
+        $vcr = $em->getRepository('estarRdaBundle:Valorizzazionecamporichiesta')->findby(
+            array('idrichiesta' => $id)
+        );
+
+        foreach ($vcr as $item) {
+            $em->remove($item);
+        }
+        $em->remove($entity);
+
+        $em->flush();
+//        }
 
         return $this->redirect($this->generateUrl('richiesta'));
     }
@@ -219,7 +230,6 @@ class RichiestaController extends Controller
             ->setAction($this->generateUrl('richiesta_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+            ->getForm();
     }
 }
