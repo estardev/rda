@@ -1,0 +1,4 @@
+pdf:
+    path:     /
+    defaults: { _controller: "estarRdaBundle:Pdf:index" }
+
