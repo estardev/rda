@@ -664,6 +664,17 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
             }
             not_richiesta_delete:
 
+            // richiesta_valida
+            if (preg_match('#^/richiesta/(?P<id>[^/]++)/valida/(?P<transizione>[^/]++)$#s', $pathinfo, $matches)) {
+                if ($this->context->getMethod() != 'POST') {
+                    $allow[] = 'POST';
+                    goto not_richiesta_valida;
+                }
+
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'richiesta_valida')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\RichiestaController::validaAction',));
+            }
+            not_richiesta_valida:
+
         }
 
         if (0 === strpos($pathinfo, '/gruppoutente')) {
@@ -1150,6 +1161,73 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
             }
             not_azienda_delete:
 
+        }
+
+        if (0 === strpos($pathinfo, '/formtemplate')) {
+            if (0 === strpos($pathinfo, '/formtemplate/show')) {
+                // formtemplate_show
+                if (preg_match('#^/formtemplate/show/(?P<idCategoria>[^/]++)/(?P<idRichiesta>[^/]++)$#s', $pathinfo, $matches)) {
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'formtemplate_show')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\FormTemplateController::showAction',));
+                }
+
+                // formtempate_showpdf
+                if (0 === strpos($pathinfo, '/formtemplate/showpdf') && preg_match('#^/formtemplate/showpdf/(?P<idCategoria>[^/]++)/(?P<idRichiesta>[^/]++)$#s', $pathinfo, $matches)) {
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'formtempate_showpdf')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\FormTemplateController::showpdfAction',));
+                }
+
+            }
+
+            // formtemplate_new
+            if (preg_match('#^/formtemplate/(?P<idCategoria>[^/]++)/new$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'formtemplate_new')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\FormTemplateController::newAction',));
+            }
+
+            // formtemplate_create
+            if (0 === strpos($pathinfo, '/formtemplate/create') && preg_match('#^/formtemplate/create/(?P<idCategoria>[^/]++)$#s', $pathinfo, $matches)) {
+                if ($this->context->getMethod() != 'POST') {
+                    $allow[] = 'POST';
+                    goto not_formtemplate_create;
+                }
+
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'formtemplate_create')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\FormTemplateController::createAction',));
+            }
+            not_formtemplate_create:
+
+            // formtemplate_edit
+            if (0 === strpos($pathinfo, '/formtemplate/edit') && preg_match('#^/formtemplate/edit/(?P<idCategoria>[^/]++)/(?P<idRichiesta>[^/]++)$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'formtemplate_edit')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\FormTemplateController::editAction',));
+            }
+
+            // formtemplate_update
+            if (0 === strpos($pathinfo, '/formtemplate/update') && preg_match('#^/formtemplate/update/(?P<idCategoria>[^/]++)/(?P<idRichiesta>[^/]++)$#s', $pathinfo, $matches)) {
+                if (!in_array($this->context->getMethod(), array('POST', 'PUT'))) {
+                    $allow = array_merge($allow, array('POST', 'PUT'));
+                    goto not_formtemplate_update;
+                }
+
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'formtemplate_update')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\FormTemplateController::updateAction',));
+            }
+            not_formtemplate_update:
+
+            // formtemplate_print
+            if (0 === strpos($pathinfo, '/formtemplate/print') && preg_match('#^/formtemplate/print/(?P<idCategoria>[^/]++)/(?P<idRichiesta>[^/]++)$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'formtemplate_print')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\FormTemplateController::printAction',));
+            }
+
+        }
+
+        // pdf
+        if (rtrim($pathinfo, '/') === '/pdf') {
+            if (substr($pathinfo, -1) !== '/') {
+                return $this->redirect($pathinfo.'/', 'pdf');
+            }
+
+            return array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\PdfController::indexAction',  '_route' => 'pdf',);
+        }
+
+        // soapEsempio
+        if (0 === strpos($pathinfo, '/soapesempio') && preg_match('#^/soapesempio/(?P<city>[^/]++)/(?P<country>[^/]++)$#s', $pathinfo, $matches)) {
+            return $this->mergeDefaults(array_replace($matches, array('_route' => 'soapEsempio')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\SoapEsempioController::indexAction',));
         }
 
         // homepage

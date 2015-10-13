@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
   <parameters>
-    <parameter key="kernel.root_dir">C:\wamp\www\rda\app</parameter>
+    <parameter key="kernel.root_dir">/media/sf_symfony/rda/app</parameter>
     <parameter key="kernel.environment">dev</parameter>
     <parameter key="kernel.debug">true</parameter>
     <parameter key="kernel.name">app</parameter>
-    <parameter key="kernel.cache_dir">C:\wamp\www\rda\app\cache\dev</parameter>
-    <parameter key="kernel.logs_dir">C:\wamp\www\rda\app\logs</parameter>
+    <parameter key="kernel.cache_dir">/media/sf_symfony/rda/app/cache/dev</parameter>
+    <parameter key="kernel.logs_dir">/media/sf_symfony/rda/app/logs</parameter>
     <parameter key="kernel.bundles" type="collection">
       <parameter key="FrameworkBundle">Symfony\Bundle\FrameworkBundle\FrameworkBundle</parameter>
       <parameter key="SecurityBundle">Symfony\Bundle\SecurityBundle\SecurityBundle</parameter>
@@ -20,6 +20,8 @@
       <parameter key="estarRdaBundle">estar\rda\RdaBundle\estarRdaBundle</parameter>
       <parameter key="DoctrineMigrationsBundle">Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle</parameter>
       <parameter key="BraincraftedBootstrapBundle">Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle</parameter>
+      <parameter key="KnpSnappyBundle">Knp\Bundle\SnappyBundle\KnpSnappyBundle</parameter>
+      <parameter key="winzouStateMachineBundle">winzou\Bundle\StateMachineBundle\winzouStateMachineBundle</parameter>
       <parameter key="DebugBundle">Symfony\Bundle\DebugBundle\DebugBundle</parameter>
       <parameter key="WebProfilerBundle">Symfony\Bundle\WebProfilerBundle\WebProfilerBundle</parameter>
       <parameter key="SensioDistributionBundle">Sensio\Bundle\DistributionBundle\SensioDistributionBundle</parameter>
@@ -31,12 +33,12 @@
     <parameter key="database_port">null</parameter>
     <parameter key="database_name">rda</parameter>
     <parameter key="database_user">root</parameter>
-    <parameter key="database_password">null</parameter>
+    <parameter key="database_password">gianluca</parameter>
     <parameter key="mailer_transport">smtp</parameter>
     <parameter key="mailer_host">127.0.0.1</parameter>
     <parameter key="mailer_user">null</parameter>
     <parameter key="mailer_password">null</parameter>
-    <parameter key="secret">02a9e98a8f8f414ecf8dfe1ea9f456e8a1505181</parameter>
+    <parameter key="secret">gianluca</parameter>
     <parameter key="locale">en</parameter>
     <parameter key="controller_resolver.class">Symfony\Bundle\FrameworkBundle\Controller\ControllerResolver</parameter>
     <parameter key="controller_name_converter.class">Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser</parameter>
@@ -86,7 +88,7 @@
     <parameter key="translation.extractor.class">Symfony\Component\Translation\Extractor\ChainExtractor</parameter>
     <parameter key="translation.writer.class">Symfony\Component\Translation\Writer\TranslationWriter</parameter>
     <parameter key="property_accessor.class">Symfony\Component\PropertyAccess\PropertyAccessor</parameter>
-    <parameter key="kernel.secret">02a9e98a8f8f414ecf8dfe1ea9f456e8a1505181</parameter>
+    <parameter key="kernel.secret">gianluca</parameter>
     <parameter key="kernel.http_method_override">true</parameter>
     <parameter key="kernel.trusted_hosts" type="collection"/>
     <parameter key="kernel.trusted_proxies" type="collection"/>
@@ -105,7 +107,7 @@
     <parameter key="session.storage.options" type="collection">
       <parameter key="gc_probability">1</parameter>
     </parameter>
-    <parameter key="session.save_path">C:\wamp\www\rda\app\cache\dev/sessions</parameter>
+    <parameter key="session.save_path">/media/sf_symfony/rda/app/cache/dev/sessions</parameter>
     <parameter key="session.metadata.update_threshold">0</parameter>
     <parameter key="security.secure_random.class">Symfony\Component\Security\Core\Util\SecureRandom</parameter>
     <parameter key="form.resolved_type_factory.class">Symfony\Component\Form\ResolvedFormTypeFactory</parameter>
@@ -162,7 +164,7 @@
     <parameter key="data_collector.form.extractor.class">Symfony\Component\Form\Extension\DataCollector\FormDataExtractor</parameter>
     <parameter key="profiler_listener.only_exceptions">false</parameter>
     <parameter key="profiler_listener.only_master_requests">false</parameter>
-    <parameter key="profiler.storage.dsn">file:C:\wamp\www\rda\app\cache\dev/profiler</parameter>
+    <parameter key="profiler.storage.dsn">file:/media/sf_symfony/rda/app/cache/dev/profiler</parameter>
     <parameter key="profiler.storage.username"></parameter>
     <parameter key="profiler.storage.password"></parameter>
     <parameter key="profiler.storage.lifetime">86400</parameter>
@@ -186,7 +188,7 @@
     <parameter key="router.request_context.host">localhost</parameter>
     <parameter key="router.request_context.scheme">http</parameter>
     <parameter key="router.request_context.base_url"></parameter>
-    <parameter key="router.resource">C:\wamp\www\rda\app\cache\dev/assetic/routing.yml</parameter>
+    <parameter key="router.resource">/media/sf_symfony/rda/app/cache/dev/assetic/routing.yml</parameter>
     <parameter key="router.cache_class_prefix">appDev</parameter>
     <parameter key="request_listener.http_port">80</parameter>
     <parameter key="request_listener.https_port">443</parameter>
@@ -197,7 +199,7 @@
     <parameter key="debug.stopwatch.class">Symfony\Component\Stopwatch\Stopwatch</parameter>
     <parameter key="debug.error_handler.throw_at">-1</parameter>
     <parameter key="debug.event_dispatcher.class">Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher</parameter>
-    <parameter key="debug.container.dump">C:\wamp\www\rda\app\cache\dev/appDevDebugProjectContainer.xml</parameter>
+    <parameter key="debug.container.dump">/media/sf_symfony/rda/app/cache/dev/appDevDebugProjectContainer.xml</parameter>
     <parameter key="debug.controller_resolver.class">Symfony\Component\HttpKernel\Controller\TraceableControllerResolver</parameter>
     <parameter key="security.context.class">Symfony\Component\Security\Core\SecurityContext</parameter>
     <parameter key="security.user_checker.class">Symfony\Component\Security\Core\User\UserChecker</parameter>
@@ -379,7 +381,7 @@
     <parameter key="swiftmailer.mailer.default.transport.smtp.auth_mode">null</parameter>
     <parameter key="swiftmailer.mailer.default.transport.smtp.timeout">30</parameter>
     <parameter key="swiftmailer.mailer.default.transport.smtp.source_ip">null</parameter>
-    <parameter key="swiftmailer.spool.default.memory.path">C:\wamp\www\rda\app\cache\dev/swiftmailer/spool/default</parameter>
+    <parameter key="swiftmailer.spool.default.memory.path">/media/sf_symfony/rda/app/cache/dev/swiftmailer/spool/default</parameter>
     <parameter key="swiftmailer.mailer.default.spool.enabled">true</parameter>
     <parameter key="swiftmailer.mailer.default.plugin.impersonate">null</parameter>
     <parameter key="swiftmailer.mailer.default.single_address">null</parameter>
@@ -404,7 +406,7 @@
     <parameter key="assetic.worker.cache_busting.class">Assetic\Factory\Worker\CacheBustingWorker</parameter>
     <parameter key="assetic.value_supplier.class">Symfony\Bundle\AsseticBundle\DefaultValueSupplier</parameter>
     <parameter key="assetic.node.paths" type="collection"/>
-    <parameter key="assetic.cache_dir">C:\wamp\www\rda\app\cache\dev/assetic</parameter>
+    <parameter key="assetic.cache_dir">/media/sf_symfony/rda/app/cache/dev/assetic</parameter>
     <parameter key="assetic.bundles" type="collection">
       <parameter>FrameworkBundle</parameter>
       <parameter>SecurityBundle</parameter>
@@ -418,6 +420,8 @@
       <parameter>estarRdaBundle</parameter>
       <parameter>DoctrineMigrationsBundle</parameter>
       <parameter>BraincraftedBootstrapBundle</parameter>
+      <parameter>KnpSnappyBundle</parameter>
+      <parameter>winzouStateMachineBundle</parameter>
       <parameter>DebugBundle</parameter>
       <parameter>WebProfilerBundle</parameter>
       <parameter>SensioDistributionBundle</parameter>
@@ -431,11 +435,11 @@
     <parameter key="assetic.debug">true</parameter>
     <parameter key="assetic.use_controller">true</parameter>
     <parameter key="assetic.enable_profiler">false</parameter>
-    <parameter key="assetic.read_from">C:\wamp\www\rda\app/../web</parameter>
-    <parameter key="assetic.write_to">C:\wamp\www\rda\app/../web</parameter>
+    <parameter key="assetic.read_from">/media/sf_symfony/rda/app/../web</parameter>
+    <parameter key="assetic.write_to">/media/sf_symfony/rda/app/../web</parameter>
     <parameter key="assetic.variables" type="collection"/>
     <parameter key="assetic.java.bin">/usr/bin/java</parameter>
-    <parameter key="assetic.node.bin">C:\Program Files\nodejs\\node.EXE</parameter>
+    <parameter key="assetic.node.bin">/usr/bin/node</parameter>
     <parameter key="assetic.ruby.bin">/usr/bin/ruby</parameter>
     <parameter key="assetic.sass.bin">/usr/bin/sass</parameter>
     <parameter key="assetic.reactjsx.bin">/usr/bin/jsx</parameter>
@@ -552,7 +556,7 @@
     <parameter key="doctrine.orm.second_level_cache.cache_configuration.class">Doctrine\ORM\Cache\CacheConfiguration</parameter>
     <parameter key="doctrine.orm.second_level_cache.regions_configuration.class">Doctrine\ORM\Cache\RegionsConfiguration</parameter>
     <parameter key="doctrine.orm.auto_generate_proxy_classes">true</parameter>
-    <parameter key="doctrine.orm.proxy_dir">C:\wamp\www\rda\app\cache\dev/doctrine/orm/Proxies</parameter>
+    <parameter key="doctrine.orm.proxy_dir">/media/sf_symfony/rda/app/cache/dev/doctrine/orm/Proxies</parameter>
     <parameter key="doctrine.orm.proxy_namespace">Proxies</parameter>
     <parameter key="sensio_framework_extra.view.guesser.class">Sensio\Bundle\FrameworkExtraBundle\Templating\TemplateGuesser</parameter>
     <parameter key="sensio_framework_extra.controller.listener.class">Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener</parameter>
@@ -564,7 +568,7 @@
     <parameter key="sensio_framework_extra.converter.doctrine.class">Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\DoctrineParamConverter</parameter>
     <parameter key="sensio_framework_extra.converter.datetime.class">Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\DateTimeParamConverter</parameter>
     <parameter key="sensio_framework_extra.view.listener.class">Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener</parameter>
-    <parameter key="doctrine_migrations.dir_name">C:\wamp\www\rda\app/DoctrineMigrations</parameter>
+    <parameter key="doctrine_migrations.dir_name">/media/sf_symfony/rda/app/DoctrineMigrations</parameter>
     <parameter key="doctrine_migrations.namespace">Application\Migrations</parameter>
     <parameter key="doctrine_migrations.table_name">migration_versions</parameter>
     <parameter key="doctrine_migrations.name">Application Migrations</parameter>
@@ -584,15 +588,119 @@
     <parameter key="braincrafted_bootstrap.flash.class">Braincrafted\Bundle\BootstrapBundle\Session\FlashMessage</parameter>
     <parameter key="braincrafted_bootstrap.customize" type="collection">
       <parameter key="variables_file">null</parameter>
-      <parameter key="bootstrap_output">C:\wamp\www\rda\app/Resources/less/bootstrap.less</parameter>
+      <parameter key="bootstrap_output">/media/sf_symfony/rda/app/Resources/less/bootstrap.less</parameter>
       <parameter key="bootstrap_template">BraincraftedBootstrapBundle:Bootstrap:bootstrap.less.twig</parameter>
     </parameter>
-    <parameter key="braincrafted_bootstrap.assets_dir">C:\wamp\www\rda\app/../vendor/twbs/bootstrap</parameter>
-    <parameter key="braincrafted_bootstrap.fontawesome_dir">C:\wamp\www\rda\app/../vendor/fortawesome/font-awesome</parameter>
-    <parameter key="braincrafted_bootstrap.fonts_dir">C:\wamp\www\rda\app/../web/fonts</parameter>
+    <parameter key="braincrafted_bootstrap.assets_dir">/media/sf_symfony/rda/app/../vendor/twbs/bootstrap</parameter>
+    <parameter key="braincrafted_bootstrap.fontawesome_dir">/media/sf_symfony/rda/app/../vendor/fortawesome/font-awesome</parameter>
+    <parameter key="braincrafted_bootstrap.fonts_dir">/media/sf_symfony/rda/app/../web/fonts</parameter>
     <parameter key="braincrafted_bootstrap.output_dir">null</parameter>
     <parameter key="braincrafted_bootstrap.less_filter">less</parameter>
     <parameter key="braincrafted_bootstrap.icon_tag">span</parameter>
+    <parameter key="knp_snappy.pdf.internal_generator.class">Knp\Snappy\Pdf</parameter>
+    <parameter key="knp_snappy.pdf.class">Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator</parameter>
+    <parameter key="knp_snappy.pdf.binary">/usr/local/bin/wkhtmltopdf</parameter>
+    <parameter key="knp_snappy.pdf.options" type="collection"/>
+    <parameter key="knp_snappy.pdf.env" type="collection"/>
+    <parameter key="knp_snappy.image.internal_generator.class">Knp\Snappy\Image</parameter>
+    <parameter key="knp_snappy.image.class">Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator</parameter>
+    <parameter key="knp_snappy.image.binary">wkhtmltoimage</parameter>
+    <parameter key="knp_snappy.image.options" type="collection"/>
+    <parameter key="knp_snappy.image.env" type="collection"/>
+    <parameter key="sm.configs" type="collection">
+      <parameter key="my_bundle_article" type="collection">
+        <parameter key="class">estar\rda\RdaBundle\Entity\Richiesta</parameter>
+        <parameter key="property_path">status</parameter>
+        <parameter key="graph">rda</parameter>
+        <parameter key="states" type="collection">
+          <parameter>bozza</parameter>
+          <parameter>attesa_val_tec</parameter>
+          <parameter>attesa_val_amm</parameter>
+          <parameter>inserita_ABS</parameter>
+        </parameter>
+        <parameter key="transitions" type="collection">
+          <parameter key="presentata" type="collection">
+            <parameter key="from" type="collection">
+              <parameter>bozza</parameter>
+            </parameter>
+            <parameter key="to">attesa_val_tec</parameter>
+          </parameter>
+          <parameter key="rifiutata_tec" type="collection">
+            <parameter key="from" type="collection">
+              <parameter>attesa_val_tec</parameter>
+            </parameter>
+            <parameter key="to">bozza</parameter>
+          </parameter>
+          <parameter key="validazione_tec" type="collection">
+            <parameter key="from" type="collection">
+              <parameter>attesa_val_tec</parameter>
+            </parameter>
+            <parameter key="to">attesa_val_amm</parameter>
+          </parameter>
+          <parameter key="rifiutata_amm" type="collection">
+            <parameter key="from" type="collection">
+              <parameter>attesa_val_amm</parameter>
+            </parameter>
+            <parameter key="to">attesa_val_tec</parameter>
+          </parameter>
+          <parameter key="validazione_amm" type="collection">
+            <parameter key="from" type="collection">
+              <parameter>attesa_val_amm</parameter>
+            </parameter>
+            <parameter key="to">inserita_ABS</parameter>
+          </parameter>
+          <parameter key="rifiutata_amm_ABS" type="collection">
+            <parameter key="from" type="collection">
+              <parameter>inserita_ABS</parameter>
+            </parameter>
+            <parameter key="to">attesa_val_amm</parameter>
+          </parameter>
+          <parameter key="rifiutata_tec_ABS" type="collection">
+            <parameter key="from" type="collection">
+              <parameter>inserita_ABS</parameter>
+            </parameter>
+            <parameter key="to">attesa_val_tec</parameter>
+          </parameter>
+        </parameter>
+        <parameter key="callbacks" type="collection">
+          <parameter key="before" type="collection">
+            <parameter key="update_reviewer" type="collection">
+              <parameter key="on">create</parameter>
+              <parameter key="do" type="collection">
+                <parameter>@my.awesome.service</parameter>
+                <parameter>update</parameter>
+              </parameter>
+              <parameter key="args" type="collection">
+                <parameter>object</parameter>
+              </parameter>
+              <parameter key="disabled">false</parameter>
+              <parameter key="priority">0</parameter>
+            </parameter>
+          </parameter>
+          <parameter key="after" type="collection">
+            <parameter key="email_on_publish" type="collection">
+              <parameter key="on">publish</parameter>
+              <parameter key="do" type="collection">
+                <parameter>@my.awesome.service</parameter>
+                <parameter>sendEmail</parameter>
+              </parameter>
+              <parameter key="args" type="collection">
+                <parameter>object</parameter>
+                <parameter>"Email title"</parameter>
+              </parameter>
+              <parameter key="disabled">false</parameter>
+              <parameter key="priority">0</parameter>
+            </parameter>
+          </parameter>
+        </parameter>
+        <parameter key="state_machine_class">SM\StateMachine\StateMachine</parameter>
+      </parameter>
+    </parameter>
+    <parameter key="sm.factory.class">SM\Factory\Factory</parameter>
+    <parameter key="sm.callback_factory.class">winzou\Bundle\StateMachineBundle\Callback\ContainerAwareCallbackFactory</parameter>
+    <parameter key="sm.callback.class">winzou\Bundle\StateMachineBundle\Callback\ContainerAwareCallback</parameter>
+    <parameter key="sm.twig_extension.class">SM\Extension\Twig\SMExtension</parameter>
+    <parameter key="sm.callback.cascade_transition.class">SM\Callback\CascadeTransitionCallback</parameter>
     <parameter key="web_profiler.controller.profiler.class">Symfony\Bundle\WebProfilerBundle\Controller\ProfilerController</parameter>
     <parameter key="web_profiler.controller.router.class">Symfony\Bundle\WebProfilerBundle\Controller\RouterController</parameter>
     <parameter key="web_profiler.controller.exception.class">Symfony\Bundle\WebProfilerBundle\Controller\ExceptionController</parameter>
@@ -712,7 +820,7 @@
               <service class="Symfony\Bundle\FrameworkBundle\CacheWarmer\TemplateFinder" public="false">
                 <argument type="service" id="kernel"/>
                 <argument type="service" id="templating.filename_parser"/>
-                <argument>C:\wamp\www\rda\app/Resources</argument>
+                <argument>/media/sf_symfony/rda/app/Resources</argument>
               </service>
             </argument>
             <argument type="service" id="templating.locator"/>
@@ -753,10 +861,10 @@
     <service id="filesystem" class="Symfony\Component\Filesystem\Filesystem"/>
     <service id="file_locator" class="Symfony\Component\HttpKernel\Config\FileLocator">
       <argument type="service" id="kernel"/>
-      <argument>C:\wamp\www\rda\app/Resources</argument>
+      <argument>/media/sf_symfony/rda/app/Resources</argument>
     </service>
     <service id="uri_signer" class="Symfony\Component\HttpKernel\UriSigner">
-      <argument>02a9e98a8f8f414ecf8dfe1ea9f456e8a1505181</argument>
+      <argument>gianluca</argument>
     </service>
     <service id="fragment.handler" class="Symfony\Component\HttpKernel\DependencyInjection\LazyLoadingFragmentHandler">
       <argument type="service" id="service_container"/>
@@ -859,7 +967,7 @@
         </argument>
       </argument>
       <argument type="collection">
-        <argument key="cache_dir">C:\wamp\www\rda\app\cache\dev/translations</argument>
+        <argument key="cache_dir">/media/sf_symfony/rda/app/cache/dev/translations</argument>
         <argument key="debug">true</argument>
       </argument>
       <argument type="collection"/>
@@ -1073,7 +1181,7 @@
     </service>
     <service id="security.secure_random" class="Symfony\Component\Security\Core\Util\SecureRandom">
       <tag name="monolog.logger" channel="security"/>
-      <argument>C:\wamp\www\rda\app\cache\dev/secure_random.seed</argument>
+      <argument>/media/sf_symfony/rda/app/cache/dev/secure_random.seed</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="ignore"/>
     </service>
     <service id="form.resolved_type_factory" class="Symfony\Component\Form\Extension\DataCollector\Proxy\ResolvedTypeFactoryDataCollectorProxy">
@@ -1319,7 +1427,7 @@
     <service id="templating.filename_parser" class="Symfony\Bundle\FrameworkBundle\Templating\TemplateFilenameParser"/>
     <service id="templating.locator" class="Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator" public="false">
       <argument type="service" id="file_locator"/>
-      <argument>C:\wamp\www\rda\app\cache\dev</argument>
+      <argument>/media/sf_symfony/rda/app/cache/dev</argument>
     </service>
     <service id="templating.helper.assets" class="Symfony\Bundle\FrameworkBundle\Templating\Helper\AssetsHelper">
       <tag name="templating.helper" alias="assets"/>
@@ -1355,7 +1463,7 @@
       </call>
       <call method="addXmlMappings">
         <argument type="collection">
-          <argument>C:\wamp\www\rda\vendor\symfony\symfony\src\Symfony\Component\Form/Resources/config/validation.xml</argument>
+          <argument>/media/sf_symfony/rda/vendor/symfony/symfony/src/Symfony/Component/Form/Resources/config/validation.xml</argument>
         </argument>
       </call>
       <call method="enableAnnotationMapping">
@@ -1388,7 +1496,7 @@
       <tag name="monolog.logger" channel="profiler"/>
       <argument type="service">
         <service class="Symfony\Component\HttpKernel\Profiler\FileProfilerStorage" public="false">
-          <argument>file:C:\wamp\www\rda\app\cache\dev/profiler</argument>
+          <argument>file:/media/sf_symfony/rda/app/cache/dev/profiler</argument>
           <argument></argument>
           <argument></argument>
           <argument>86400</argument>
@@ -1780,7 +1888,7 @@
       <argument type="collection">
         <argument type="service">
           <service class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-            <argument>561531a345b855.42312857</argument>
+            <argument>561d0b6374a9f7.39876729</argument>
           </service>
         </argument>
       </argument>
@@ -1903,7 +2011,7 @@
         <argument type="service">
           <service class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
             <argument type="service" id="security.token_storage"/>
-            <argument>561531a345b855.42312857</argument>
+            <argument>561d0b6374a9f7.39876729</argument>
             <argument type="service" id="monolog.logger.security" on-invalid="null"/>
             <argument type="service" id="security.authentication.manager"/>
           </service>
@@ -1950,7 +2058,7 @@
           <argument>BraincraftedBootstrapBundle:Form:bootstrap.html.twig</argument>
         </argument>
         <argument key="autoescape">filename</argument>
-        <argument key="cache">C:\wamp\www\rda\app\cache\dev/twig</argument>
+        <argument key="cache">/media/sf_symfony/rda/app/cache/dev/twig</argument>
         <argument key="charset">UTF-8</argument>
         <argument key="paths" type="collection"/>
         <argument key="date" type="collection">
@@ -2024,7 +2132,7 @@
           <service class="Symfony\Bridge\Twig\Extension\CodeExtension" public="false">
             <tag name="twig.extension"/>
             <argument>null</argument>
-            <argument>C:\wamp\www\rda\app</argument>
+            <argument>/media/sf_symfony/rda/app</argument>
             <argument>UTF-8</argument>
           </service>
         </argument>
@@ -2125,6 +2233,8 @@
               <argument>estarRdaBundle</argument>
               <argument>DoctrineMigrationsBundle</argument>
               <argument>BraincraftedBootstrapBundle</argument>
+              <argument>KnpSnappyBundle</argument>
+              <argument>winzouStateMachineBundle</argument>
               <argument>DebugBundle</argument>
               <argument>WebProfilerBundle</argument>
               <argument>SensioDistributionBundle</argument>
@@ -2156,6 +2266,14 @@
       </call>
       <call method="addExtension">
         <argument type="service" id="braincrafted_bootstrap.twig.form_extension"/>
+      </call>
+      <call method="addExtension">
+        <argument type="service">
+          <service class="SM\Extension\Twig\SMExtension" public="false">
+            <tag name="twig.extension"/>
+            <argument type="service" id="sm.factory"/>
+          </service>
+        </argument>
       </call>
       <call method="addExtension">
         <argument type="service">
@@ -2225,7 +2343,7 @@
       <argument>twig.controller.exception:showAction</argument>
     </service>
     <service id="monolog.handler.main" class="Monolog\Handler\StreamHandler">
-      <argument>C:\wamp\www\rda\app\logs/dev.log</argument>
+      <argument>/media/sf_symfony/rda/app/logs/dev.log</argument>
       <argument>100</argument>
       <argument>true</argument>
       <argument>null</argument>
@@ -2293,7 +2411,7 @@
             </argument>
             <argument type="service">
               <service class="Assetic\Cache\ConfigCache" public="false">
-                <argument>C:\wamp\www\rda\app\cache\dev/assetic/config</argument>
+                <argument>/media/sf_symfony/rda/app/cache/dev/assetic/config</argument>
               </service>
             </argument>
             <argument>true</argument>
@@ -2307,8 +2425,8 @@
             <argument type="collection">
               <argument key="bootstrap_css" type="collection">
                 <argument type="collection">
-                  <argument>C:\wamp\www\rda\app/../vendor/twbs/bootstrap/less/bootstrap.less</argument>
-                  <argument>C:\wamp\www\rda\vendor\braincrafted\bootstrap-bundle\Braincrafted\Bundle\BootstrapBundle\DependencyInjection/../Resources/less/form.less</argument>
+                  <argument>/media/sf_symfony/rda/app/../vendor/twbs/bootstrap/less/bootstrap.less</argument>
+                  <argument>/media/sf_symfony/rda/vendor/braincrafted/bootstrap-bundle/Braincrafted/Bundle/BootstrapBundle/DependencyInjection/../Resources/less/form.less</argument>
                 </argument>
                 <argument type="collection">
                   <argument>less</argument>
@@ -2319,19 +2437,19 @@
               </argument>
               <argument key="bootstrap_js" type="collection">
                 <argument type="collection">
-                  <argument>C:\wamp\www\rda\app/../vendor/twbs/bootstrap/js/transition.js</argument>
-                  <argument>C:\wamp\www\rda\app/../vendor/twbs/bootstrap/js/alert.js</argument>
-                  <argument>C:\wamp\www\rda\app/../vendor/twbs/bootstrap/js/button.js</argument>
-                  <argument>C:\wamp\www\rda\app/../vendor/twbs/bootstrap/js/carousel.js</argument>
-                  <argument>C:\wamp\www\rda\app/../vendor/twbs/bootstrap/js/collapse.js</argument>
-                  <argument>C:\wamp\www\rda\app/../vendor/twbs/bootstrap/js/dropdown.js</argument>
-                  <argument>C:\wamp\www\rda\app/../vendor/twbs/bootstrap/js/modal.js</argument>
-                  <argument>C:\wamp\www\rda\app/../vendor/twbs/bootstrap/js/tooltip.js</argument>
-                  <argument>C:\wamp\www\rda\app/../vendor/twbs/bootstrap/js/popover.js</argument>
-                  <argument>C:\wamp\www\rda\app/../vendor/twbs/bootstrap/js/scrollspy.js</argument>
-                  <argument>C:\wamp\www\rda\app/../vendor/twbs/bootstrap/js/tab.js</argument>
-                  <argument>C:\wamp\www\rda\app/../vendor/twbs/bootstrap/js/affix.js</argument>
-                  <argument>C:\wamp\www\rda\vendor\braincrafted\bootstrap-bundle\Braincrafted\Bundle\BootstrapBundle\DependencyInjection/../Resources/js/bc-bootstrap-collection.js</argument>
+                  <argument>/media/sf_symfony/rda/app/../vendor/twbs/bootstrap/js/transition.js</argument>
+                  <argument>/media/sf_symfony/rda/app/../vendor/twbs/bootstrap/js/alert.js</argument>
+                  <argument>/media/sf_symfony/rda/app/../vendor/twbs/bootstrap/js/button.js</argument>
+                  <argument>/media/sf_symfony/rda/app/../vendor/twbs/bootstrap/js/carousel.js</argument>
+                  <argument>/media/sf_symfony/rda/app/../vendor/twbs/bootstrap/js/collapse.js</argument>
+                  <argument>/media/sf_symfony/rda/app/../vendor/twbs/bootstrap/js/dropdown.js</argument>
+                  <argument>/media/sf_symfony/rda/app/../vendor/twbs/bootstrap/js/modal.js</argument>
+                  <argument>/media/sf_symfony/rda/app/../vendor/twbs/bootstrap/js/tooltip.js</argument>
+                  <argument>/media/sf_symfony/rda/app/../vendor/twbs/bootstrap/js/popover.js</argument>
+                  <argument>/media/sf_symfony/rda/app/../vendor/twbs/bootstrap/js/scrollspy.js</argument>
+                  <argument>/media/sf_symfony/rda/app/../vendor/twbs/bootstrap/js/tab.js</argument>
+                  <argument>/media/sf_symfony/rda/app/../vendor/twbs/bootstrap/js/affix.js</argument>
+                  <argument>/media/sf_symfony/rda/vendor/braincrafted/bootstrap-bundle/Braincrafted/Bundle/BootstrapBundle/DependencyInjection/../Resources/js/bc-bootstrap-collection.js</argument>
                 </argument>
                 <argument type="collection"/>
                 <argument type="collection">
@@ -2340,7 +2458,7 @@
               </argument>
               <argument key="jquery" type="collection">
                 <argument type="collection">
-                  <argument>C:\wamp\www\rda\app/../vendor/jquery/jquery/jquery-1.11.1.js</argument>
+                  <argument>/media/sf_symfony/rda/app/../vendor/jquery/jquery/jquery-1.11.1.js</argument>
                 </argument>
                 <argument type="collection"/>
                 <argument type="collection">
@@ -2362,7 +2480,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>FrameworkBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/FrameworkBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/FrameworkBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2370,7 +2488,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>FrameworkBundle</argument>
-                  <argument>C:\wamp\www\rda\vendor\symfony\symfony\src\Symfony\Bundle\FrameworkBundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2389,7 +2507,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>SecurityBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/SecurityBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/SecurityBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2397,7 +2515,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>SecurityBundle</argument>
-                  <argument>C:\wamp\www\rda\vendor\symfony\symfony\src\Symfony\Bundle\SecurityBundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2416,7 +2534,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>TwigBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/TwigBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/TwigBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2424,7 +2542,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>TwigBundle</argument>
-                  <argument>C:\wamp\www\rda\vendor\symfony\symfony\src\Symfony\Bundle\TwigBundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2443,7 +2561,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>MonologBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/MonologBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/MonologBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2451,7 +2569,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>MonologBundle</argument>
-                  <argument>C:\wamp\www\rda\vendor\symfony\monolog-bundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/vendor/symfony/monolog-bundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2470,7 +2588,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>SwiftmailerBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/SwiftmailerBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/SwiftmailerBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2478,7 +2596,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>SwiftmailerBundle</argument>
-                  <argument>C:\wamp\www\rda\vendor\symfony\swiftmailer-bundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/vendor/symfony/swiftmailer-bundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2497,7 +2615,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>AsseticBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/AsseticBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/AsseticBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2505,7 +2623,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>AsseticBundle</argument>
-                  <argument>C:\wamp\www\rda\vendor\symfony\assetic-bundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/vendor/symfony/assetic-bundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2524,7 +2642,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>DoctrineBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/DoctrineBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/DoctrineBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2532,7 +2650,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>DoctrineBundle</argument>
-                  <argument>C:\wamp\www\rda\vendor\doctrine\doctrine-bundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/vendor/doctrine/doctrine-bundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2551,7 +2669,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>SensioFrameworkExtraBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/SensioFrameworkExtraBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/SensioFrameworkExtraBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2559,7 +2677,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>SensioFrameworkExtraBundle</argument>
-                  <argument>C:\wamp\www\rda\vendor\sensio\framework-extra-bundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/vendor/sensio/framework-extra-bundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2578,7 +2696,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>AppBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/AppBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/AppBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2586,7 +2704,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>AppBundle</argument>
-                  <argument>C:\wamp\www\rda\src\AppBundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/src/AppBundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2605,7 +2723,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>estarRdaBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/estarRdaBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/estarRdaBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2613,7 +2731,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>estarRdaBundle</argument>
-                  <argument>C:\wamp\www\rda\src\estar\rda\RdaBundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/src/estar/rda/RdaBundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2632,7 +2750,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>DoctrineMigrationsBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/DoctrineMigrationsBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/DoctrineMigrationsBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2640,7 +2758,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>DoctrineMigrationsBundle</argument>
-                  <argument>C:\wamp\www\rda\vendor\doctrine\doctrine-migrations-bundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/vendor/doctrine/doctrine-migrations-bundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2659,7 +2777,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>BraincraftedBootstrapBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/BraincraftedBootstrapBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/BraincraftedBootstrapBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2667,7 +2785,61 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>BraincraftedBootstrapBundle</argument>
-                  <argument>C:\wamp\www\rda\vendor\braincrafted\bootstrap-bundle\Braincrafted\Bundle\BootstrapBundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/vendor/braincrafted/bootstrap-bundle/Braincrafted/Bundle/BootstrapBundle/Resources/views</argument>
+                  <argument>/\.[^.]+\.twig$/</argument>
+                </service>
+              </argument>
+            </argument>
+          </service>
+        </argument>
+        <argument>twig</argument>
+      </call>
+      <call method="addResource">
+        <argument type="service">
+          <service class="Symfony\Bundle\AsseticBundle\Factory\Resource\CoalescingDirectoryResource" public="false">
+            <tag name="assetic.templating.twig"/>
+            <tag name="assetic.formula_resource" loader="twig"/>
+            <argument type="collection">
+              <argument type="service">
+                <service class="%assetic.directory_resource.class%" public="false">
+                  <argument type="service" id="templating.loader"/>
+                  <argument>KnpSnappyBundle</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/KnpSnappyBundle/views</argument>
+                  <argument>/\.[^.]+\.twig$/</argument>
+                </service>
+              </argument>
+              <argument type="service">
+                <service class="%assetic.directory_resource.class%" public="false">
+                  <argument type="service" id="templating.loader"/>
+                  <argument>KnpSnappyBundle</argument>
+                  <argument>/media/sf_symfony/rda/vendor/knplabs/knp-snappy-bundle/Resources/views</argument>
+                  <argument>/\.[^.]+\.twig$/</argument>
+                </service>
+              </argument>
+            </argument>
+          </service>
+        </argument>
+        <argument>twig</argument>
+      </call>
+      <call method="addResource">
+        <argument type="service">
+          <service class="Symfony\Bundle\AsseticBundle\Factory\Resource\CoalescingDirectoryResource" public="false">
+            <tag name="assetic.templating.twig"/>
+            <tag name="assetic.formula_resource" loader="twig"/>
+            <argument type="collection">
+              <argument type="service">
+                <service class="%assetic.directory_resource.class%" public="false">
+                  <argument type="service" id="templating.loader"/>
+                  <argument>winzouStateMachineBundle</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/winzouStateMachineBundle/views</argument>
+                  <argument>/\.[^.]+\.twig$/</argument>
+                </service>
+              </argument>
+              <argument type="service">
+                <service class="%assetic.directory_resource.class%" public="false">
+                  <argument type="service" id="templating.loader"/>
+                  <argument>winzouStateMachineBundle</argument>
+                  <argument>/media/sf_symfony/rda/vendor/winzou/state-machine-bundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2686,7 +2858,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>DebugBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/DebugBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/DebugBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2694,7 +2866,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>DebugBundle</argument>
-                  <argument>C:\wamp\www\rda\vendor\symfony\symfony\src\Symfony\Bundle\DebugBundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/vendor/symfony/symfony/src/Symfony/Bundle/DebugBundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2713,7 +2885,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>WebProfilerBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/WebProfilerBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/WebProfilerBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2721,7 +2893,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>WebProfilerBundle</argument>
-                  <argument>C:\wamp\www\rda\vendor\symfony\symfony\src\Symfony\Bundle\WebProfilerBundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/vendor/symfony/symfony/src/Symfony/Bundle/WebProfilerBundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2740,7 +2912,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>SensioDistributionBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/SensioDistributionBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/SensioDistributionBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2748,7 +2920,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>SensioDistributionBundle</argument>
-                  <argument>C:\wamp\www\rda\vendor\sensio\distribution-bundle\Sensio\Bundle\DistributionBundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2767,7 +2939,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>SensioGeneratorBundle</argument>
-                  <argument>C:\wamp\www\rda\app/Resources/SensioGeneratorBundle/views</argument>
+                  <argument>/media/sf_symfony/rda/app/Resources/SensioGeneratorBundle/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2775,7 +2947,7 @@
                 <service class="%assetic.directory_resource.class%" public="false">
                   <argument type="service" id="templating.loader"/>
                   <argument>SensioGeneratorBundle</argument>
-                  <argument>C:\wamp\www\rda\vendor\sensio\generator-bundle\Sensio\Bundle\GeneratorBundle/Resources/views</argument>
+                  <argument>/media/sf_symfony/rda/vendor/sensio/generator-bundle/Sensio/Bundle/GeneratorBundle/Resources/views</argument>
                   <argument>/\.[^.]+\.twig$/</argument>
                 </service>
               </argument>
@@ -2791,7 +2963,7 @@
             <tag name="assetic.formula_resource" loader="twig"/>
             <argument type="service" id="templating.loader"/>
             <argument></argument>
-            <argument>C:\wamp\www\rda\app/Resources/views</argument>
+            <argument>/media/sf_symfony/rda/app/Resources/views</argument>
             <argument>/\.[^.]+\.twig$/</argument>
           </service>
         </argument>
@@ -2806,7 +2978,7 @@
           <factory service="service_container" method="getParameterBag"/>
         </service>
       </argument>
-      <argument>C:\wamp\www\rda\app/../web</argument>
+      <argument>/media/sf_symfony/rda/app/../web</argument>
       <argument>true</argument>
       <call method="addWorker">
         <argument type="service">
@@ -2848,7 +3020,7 @@
       <argument type="service" id="assetic.asset_manager"/>
       <argument type="service">
         <service class="Assetic\Cache\FilesystemCache" public="false">
-          <argument>C:\wamp\www\rda\app\cache\dev/assetic/assets</argument>
+          <argument>/media/sf_symfony/rda/app/cache/dev/assetic/assets</argument>
         </service>
       </argument>
       <argument>false</argument>
@@ -2879,7 +3051,7 @@
         <argument key="port">null</argument>
         <argument key="dbname">rda</argument>
         <argument key="user">root</argument>
-        <argument key="password">null</argument>
+        <argument key="password">gianluca</argument>
         <argument key="charset">UTF8</argument>
         <argument key="driverOptions" type="collection"/>
       </argument>
@@ -2937,17 +3109,17 @@
     </service>
     <service id="doctrine_cache.providers.doctrine.orm.default_metadata_cache" class="Doctrine\Common\Cache\ArrayCache">
       <call method="setNamespace">
-        <argument>sf2orm_default_ea0c269ee888b1f84f14e024d98b7597befa45d756d5badd98bcf4bb54b756f6</argument>
+        <argument>sf2orm_default_0ba487b597c7c69a84e2a7b7795424bb35e1a248aff71784b63a2d27ee9d4006</argument>
       </call>
     </service>
     <service id="doctrine_cache.providers.doctrine.orm.default_result_cache" class="Doctrine\Common\Cache\ArrayCache">
       <call method="setNamespace">
-        <argument>sf2orm_default_ea0c269ee888b1f84f14e024d98b7597befa45d756d5badd98bcf4bb54b756f6</argument>
+        <argument>sf2orm_default_0ba487b597c7c69a84e2a7b7795424bb35e1a248aff71784b63a2d27ee9d4006</argument>
       </call>
     </service>
     <service id="doctrine_cache.providers.doctrine.orm.default_query_cache" class="Doctrine\Common\Cache\ArrayCache">
       <call method="setNamespace">
-        <argument>sf2orm_default_ea0c269ee888b1f84f14e024d98b7597befa45d756d5badd98bcf4bb54b756f6</argument>
+        <argument>sf2orm_default_0ba487b597c7c69a84e2a7b7795424bb35e1a248aff71784b63a2d27ee9d4006</argument>
       </call>
     </service>
     <service id="doctrine.orm.default_entity_listener_resolver" class="Doctrine\ORM\Mapping\DefaultEntityListenerResolver"/>
@@ -2983,7 +3155,7 @@
                   <argument type="service">
                     <service class="Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver" public="false">
                       <argument type="collection">
-                        <argument key="C:\wamp\www\rda\src\estar\rda\RdaBundle\Resources\config\doctrine">estar\rda\RdaBundle\Entity</argument>
+                        <argument key="/media/sf_symfony/rda/src/estar/rda/RdaBundle/Resources/config/doctrine">estar\rda\RdaBundle\Entity</argument>
                       </argument>
                       <call method="setGlobalBasename">
                         <argument>mapping</argument>
@@ -2996,7 +3168,7 @@
             </argument>
           </call>
           <call method="setProxyDir">
-            <argument>C:\wamp\www\rda\app\cache\dev/doctrine/orm/Proxies</argument>
+            <argument>/media/sf_symfony/rda/app/cache/dev/doctrine/orm/Proxies</argument>
           </call>
           <call method="setProxyNamespace">
             <argument>Proxies</argument>
@@ -3118,6 +3290,128 @@
     <service id="braincrafted_bootstrap.flash" class="Braincrafted\Bundle\BootstrapBundle\Session\FlashMessage">
       <argument type="service" id="session"/>
     </service>
+    <service id="knp_snappy.pdf" class="Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator">
+      <tag name="monolog.logger" channel="snappy"/>
+      <argument type="service">
+        <service class="Knp\Snappy\Pdf" public="false">
+          <argument>/usr/local/bin/wkhtmltopdf</argument>
+          <argument type="collection"/>
+          <argument type="collection"/>
+        </service>
+      </argument>
+      <argument type="service" id="monolog.logger.snappy" on-invalid="null"/>
+    </service>
+    <service id="knp_snappy.image" class="Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator">
+      <tag name="monolog.logger" channel="snappy"/>
+      <argument type="service">
+        <service class="Knp\Snappy\Image" public="false">
+          <argument>wkhtmltoimage</argument>
+          <argument type="collection"/>
+          <argument type="collection"/>
+        </service>
+      </argument>
+      <argument type="service" id="monolog.logger.snappy" on-invalid="null"/>
+    </service>
+    <service id="sm.factory" class="SM\Factory\Factory">
+      <argument type="collection">
+        <argument key="my_bundle_article" type="collection">
+          <argument key="class">estar\rda\RdaBundle\Entity\Richiesta</argument>
+          <argument key="property_path">status</argument>
+          <argument key="graph">rda</argument>
+          <argument key="states" type="collection">
+            <argument>bozza</argument>
+            <argument>attesa_val_tec</argument>
+            <argument>attesa_val_amm</argument>
+            <argument>inserita_ABS</argument>
+          </argument>
+          <argument key="transitions" type="collection">
+            <argument key="presentata" type="collection">
+              <argument key="from" type="collection">
+                <argument>bozza</argument>
+              </argument>
+              <argument key="to">attesa_val_tec</argument>
+            </argument>
+            <argument key="rifiutata_tec" type="collection">
+              <argument key="from" type="collection">
+                <argument>attesa_val_tec</argument>
+              </argument>
+              <argument key="to">bozza</argument>
+            </argument>
+            <argument key="validazione_tec" type="collection">
+              <argument key="from" type="collection">
+                <argument>attesa_val_tec</argument>
+              </argument>
+              <argument key="to">attesa_val_amm</argument>
+            </argument>
+            <argument key="rifiutata_amm" type="collection">
+              <argument key="from" type="collection">
+                <argument>attesa_val_amm</argument>
+              </argument>
+              <argument key="to">attesa_val_tec</argument>
+            </argument>
+            <argument key="validazione_amm" type="collection">
+              <argument key="from" type="collection">
+                <argument>attesa_val_amm</argument>
+              </argument>
+              <argument key="to">inserita_ABS</argument>
+            </argument>
+            <argument key="rifiutata_amm_ABS" type="collection">
+              <argument key="from" type="collection">
+                <argument>inserita_ABS</argument>
+              </argument>
+              <argument key="to">attesa_val_amm</argument>
+            </argument>
+            <argument key="rifiutata_tec_ABS" type="collection">
+              <argument key="from" type="collection">
+                <argument>inserita_ABS</argument>
+              </argument>
+              <argument key="to">attesa_val_tec</argument>
+            </argument>
+          </argument>
+          <argument key="callbacks" type="collection">
+            <argument key="before" type="collection">
+              <argument key="update_reviewer" type="collection">
+                <argument key="on">create</argument>
+                <argument key="do" type="collection">
+                  <argument>@my.awesome.service</argument>
+                  <argument>update</argument>
+                </argument>
+                <argument key="args" type="collection">
+                  <argument>object</argument>
+                </argument>
+                <argument key="disabled">false</argument>
+                <argument key="priority">0</argument>
+              </argument>
+            </argument>
+            <argument key="after" type="collection">
+              <argument key="email_on_publish" type="collection">
+                <argument key="on">publish</argument>
+                <argument key="do" type="collection">
+                  <argument>@my.awesome.service</argument>
+                  <argument>sendEmail</argument>
+                </argument>
+                <argument key="args" type="collection">
+                  <argument>object</argument>
+                  <argument>"Email title"</argument>
+                </argument>
+                <argument key="disabled">false</argument>
+                <argument key="priority">0</argument>
+              </argument>
+            </argument>
+          </argument>
+          <argument key="state_machine_class">SM\StateMachine\StateMachine</argument>
+        </argument>
+      </argument>
+      <argument type="service" id="debug.event_dispatcher"/>
+      <argument type="service" id="sm.callback_factory"/>
+    </service>
+    <service id="sm.callback_factory" class="winzou\Bundle\StateMachineBundle\Callback\ContainerAwareCallbackFactory">
+      <argument>winzou\Bundle\StateMachineBundle\Callback\ContainerAwareCallback</argument>
+      <argument type="service" id="service_container"/>
+    </service>
+    <service id="sm.callback.cascade_transition" class="SM\Callback\CascadeTransitionCallback">
+      <argument type="service" id="sm.factory"/>
+    </service>
     <service id="data_collector.dump" class="Symfony\Component\HttpKernel\DataCollector\DumpDataCollector">
       <tag name="data_collector" id="dump" template="@Debug/Profiler/dump.html.twig"/>
       <argument type="service" id="debug.stopwatch" on-invalid="ignore"/>
@@ -3231,7 +3525,7 @@
       <argument>^/(app(_[\w]+)?\.php/)?_wdt</argument>
     </service>
     <service id="sensio_distribution.webconfigurator" class="Sensio\Bundle\DistributionBundle\Configurator\Configurator">
-      <argument>C:\wamp\www\rda\app</argument>
+      <argument>/media/sf_symfony/rda/app</argument>
       <call method="addStep">
         <argument type="service">
           <service class="Sensio\Bundle\DistributionBundle\Configurator\Step\DoctrineStep" public="false">
@@ -3374,12 +3668,24 @@
         <argument type="service" id="monolog.handler.debug"/>
       </call>
     </service>
+    <service id="monolog.logger.snappy" class="Symfony\Bridge\Monolog\Logger">
+      <argument>snappy</argument>
+      <call method="pushHandler">
+        <argument type="service" id="monolog.handler.console"/>
+      </call>
+      <call method="pushHandler">
+        <argument type="service" id="monolog.handler.main"/>
+      </call>
+      <call method="pushHandler">
+        <argument type="service" id="monolog.handler.debug"/>
+      </call>
+    </service>
     <service id="monolog.handler.debug" class="Symfony\Bridge\Monolog\Handler\DebugHandler">
       <argument>100</argument>
       <argument>true</argument>
     </service>
     <service id="session.storage.filesystem" class="Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage">
-      <argument>C:\wamp\www\rda\app\cache\dev/sessions</argument>
+      <argument>/media/sf_symfony/rda/app/cache/dev/sessions</argument>
       <argument>MOCKSESSID</argument>
       <argument type="service" id="session.storage.metadata_bag"/>
     </service>
@@ -3394,9 +3700,9 @@
     <service id="router" class="Symfony\Bundle\FrameworkBundle\Routing\Router">
       <tag name="monolog.logger" channel="router"/>
       <argument type="service" id="service_container"/>
-      <argument>C:\wamp\www\rda\app\cache\dev/assetic/routing.yml</argument>
+      <argument>/media/sf_symfony/rda/app/cache/dev/assetic/routing.yml</argument>
       <argument type="collection">
-        <argument key="cache_dir">C:\wamp\www\rda\app\cache\dev</argument>
+        <argument key="cache_dir">/media/sf_symfony/rda/app/cache/dev</argument>
         <argument key="debug">true</argument>
         <argument key="generator_class">Symfony\Component\Routing\Generator\UrlGenerator</argument>
         <argument key="generator_base_class">Symfony\Component\Routing\Generator\UrlGenerator</argument>
@@ -3416,7 +3722,7 @@
       <argument type="service">
         <service class="Doctrine\Common\Annotations\AnnotationReader" public="false"/>
       </argument>
-      <argument>C:\wamp\www\rda\app\cache\dev/annotations</argument>
+      <argument>/media/sf_symfony/rda/app/cache/dev/annotations</argument>
       <argument>true</argument>
     </service>
     <service id="security.encoder_factory" class="Symfony\Component\Security\Core\Encoder\EncoderFactory">
@@ -3430,50 +3736,50 @@
       <argument type="service" id="templating.locator"/>
       <argument type="service" id="templating.name_parser"/>
       <call method="addPath">
-        <argument>C:\wamp\www\rda\vendor\symfony\symfony\src\Symfony\Bundle\FrameworkBundle/Resources/views</argument>
+        <argument>/media/sf_symfony/rda/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/views</argument>
         <argument>Framework</argument>
       </call>
       <call method="addPath">
-        <argument>C:\wamp\www\rda\vendor\symfony\symfony\src\Symfony\Bundle\SecurityBundle/Resources/views</argument>
+        <argument>/media/sf_symfony/rda/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/views</argument>
         <argument>Security</argument>
       </call>
       <call method="addPath">
-        <argument>C:\wamp\www\rda\vendor\symfony\symfony\src\Symfony\Bundle\TwigBundle/Resources/views</argument>
+        <argument>/media/sf_symfony/rda/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/views</argument>
         <argument>Twig</argument>
       </call>
       <call method="addPath">
-        <argument>C:\wamp\www\rda\vendor\symfony\swiftmailer-bundle/Resources/views</argument>
+        <argument>/media/sf_symfony/rda/vendor/symfony/swiftmailer-bundle/Resources/views</argument>
         <argument>Swiftmailer</argument>
       </call>
       <call method="addPath">
-        <argument>C:\wamp\www\rda\vendor\doctrine\doctrine-bundle/Resources/views</argument>
+        <argument>/media/sf_symfony/rda/vendor/doctrine/doctrine-bundle/Resources/views</argument>
         <argument>Doctrine</argument>
       </call>
       <call method="addPath">
-        <argument>C:\wamp\www\rda\src\estar\rda\RdaBundle/Resources/views</argument>
+        <argument>/media/sf_symfony/rda/src/estar/rda/RdaBundle/Resources/views</argument>
         <argument>estarRda</argument>
       </call>
       <call method="addPath">
-        <argument>C:\wamp\www\rda\vendor\braincrafted\bootstrap-bundle\Braincrafted\Bundle\BootstrapBundle/Resources/views</argument>
+        <argument>/media/sf_symfony/rda/vendor/braincrafted/bootstrap-bundle/Braincrafted/Bundle/BootstrapBundle/Resources/views</argument>
         <argument>BraincraftedBootstrap</argument>
       </call>
       <call method="addPath">
-        <argument>C:\wamp\www\rda\vendor\symfony\symfony\src\Symfony\Bundle\DebugBundle/Resources/views</argument>
+        <argument>/media/sf_symfony/rda/vendor/symfony/symfony/src/Symfony/Bundle/DebugBundle/Resources/views</argument>
         <argument>Debug</argument>
       </call>
       <call method="addPath">
-        <argument>C:\wamp\www\rda\vendor\symfony\symfony\src\Symfony\Bundle\WebProfilerBundle/Resources/views</argument>
+        <argument>/media/sf_symfony/rda/vendor/symfony/symfony/src/Symfony/Bundle/WebProfilerBundle/Resources/views</argument>
         <argument>WebProfiler</argument>
       </call>
       <call method="addPath">
-        <argument>C:\wamp\www\rda\vendor\sensio\distribution-bundle\Sensio\Bundle\DistributionBundle/Resources/views</argument>
+        <argument>/media/sf_symfony/rda/vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/views</argument>
         <argument>SensioDistribution</argument>
       </call>
       <call method="addPath">
-        <argument>C:\wamp\www\rda\app/Resources/views</argument>
+        <argument>/media/sf_symfony/rda/app/Resources/views</argument>
       </call>
       <call method="addPath">
-        <argument>C:\wamp\www\rda\vendor\symfony\symfony\src\Symfony\Bridge\Twig/Resources/views/Form</argument>
+        <argument>/media/sf_symfony/rda/vendor/symfony/symfony/src/Symfony/Bridge/Twig/Resources/views/Form</argument>
       </call>
     </service>
     <service id="logger" class="Symfony\Bridge\Monolog\Logger">
