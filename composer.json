@@ -34,7 +34,8 @@
         "doctrine/doctrine-migrations-bundle": "^1.0",
 		"braincrafted/bootstrap-bundle": "dev-master",
 		"twbs/bootstrap": "3.0.*",
-        "jquery/jquery":  "1.11.*"
+        "jquery/jquery":  "1.11.*",
+        "friendsofsymfony/user-bundle": "~2.0@dev"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
