@@ -10,6 +10,7 @@ use estar\rda\RdaBundle\Entity\Valorizzazionecamporichiesta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\FormTemplate;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class FormTemplateController extends Controller
 {
@@ -181,30 +182,18 @@ class FormTemplateController extends Controller
             $campo = $campovalorizzato->getIdcampo();
             if ($campo->getTipo() == 'radio') {
                 $fieldsetName = $campo->getFieldset();
-                if (in_array($fieldsetName, $fieldsetVisitati)) {
-                    continue;
-                }
 
-                array_push($fieldsetVisitati, $fieldsetName);
-                $options = array();
-                foreach ($campi as $item) {
-                    if ($item->getTipo() == 'radio' and $item->getFieldset() == $fieldsetName)
-                        array_push($options, $item->getDescrizione());
-
-                }
-
-                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
-                    'choices' => $options,
-                    'expanded' => true,
-                    'multiple' => false,
+                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
                     'label' => $fieldsetName,
-                    'data' => $campovalorizzato->getValore()
+                    'data' => $campo->getDescrizione(),
+                    'read_only' => true
                 ));
             } else {
 
                 $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
                     'label' => $campo->getDescrizione(),
-                    'data' => $campovalorizzato->getValore()
+                    'data' => $campovalorizzato->getValore(),
+                    'read_only' => true
                 ));
             }
         }
@@ -220,6 +209,21 @@ class FormTemplateController extends Controller
         ));
     }
 
+    public function showpdfAction($idCategoria, $idRichiesta)
+    {
+        require_once($this->get('kernel')->getRootDir().'/config/dompdf_config.inc.php');
+
+        $dompdf = new \DOMPDF();
+        $htmlfinale =  $this->showAction($idCategoria, $idRichiesta);
+
+        $dompdf->load_html($htmlfinale);
+        $dompdf->render();
+
+
+        return new Response($dompdf->output(), 200, array(
+            'Content-Type' => 'application/pdf'
+        ));
+    }
     /**
      * Displays a form to edit an existing Richiesta entity.
      *
