@@ -10,6 +10,7 @@ use estar\rda\RdaBundle\Entity\Valorizzazionecamporichiesta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\FormTemplate;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class FormTemplateController extends Controller
 {
@@ -112,6 +113,7 @@ class FormTemplateController extends Controller
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
         $richiesta = new Richiesta();
         $richiesta->setIdcategoria($categoria);
+        $richiesta->setStatus('bozza');
         $em->persist($richiesta);
 
 
@@ -181,30 +183,18 @@ class FormTemplateController extends Controller
             $campo = $campovalorizzato->getIdcampo();
             if ($campo->getTipo() == 'radio') {
                 $fieldsetName = $campo->getFieldset();
-                if (in_array($fieldsetName, $fieldsetVisitati)) {
-                    continue;
-                }
 
-                array_push($fieldsetVisitati, $fieldsetName);
-                $options = array();
-                foreach ($campi as $item) {
-                    if ($item->getTipo() == 'radio' and $item->getFieldset() == $fieldsetName)
-                        array_push($options, $item->getDescrizione());
-
-                }
-
-                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
-                    'choices' => $options,
-                    'expanded' => true,
-                    'multiple' => false,
+                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
                     'label' => $fieldsetName,
-                    'data' => $campovalorizzato->getValore()
+                    'data' => $campo->getDescrizione(),
+                    'read_only' => true
                 ));
             } else {
 
                 $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
                     'label' => $campo->getDescrizione(),
-                    'data' => $campovalorizzato->getValore()
+                    'data' => $campovalorizzato->getValore(),
+                    'read_only' => true
                 ));
             }
         }
@@ -220,6 +210,21 @@ class FormTemplateController extends Controller
         ));
     }
 
+    public function showpdfAction($idCategoria, $idRichiesta)
+    {
+        require_once($this->get('kernel')->getRootDir().'/config/dompdf_config.inc.php');
+
+        $dompdf = new \DOMPDF();
+        $htmlfinale =  $this->showAction($idCategoria, $idRichiesta);
+
+        $dompdf->load_html($htmlfinale);
+        $dompdf->render();
+
+
+        return new Response($dompdf->output(), 200, array(
+            'Content-Type' => 'application/pdf'
+        ));
+    }
     /**
      * Displays a form to edit an existing Richiesta entity.
      *
@@ -296,12 +301,46 @@ class FormTemplateController extends Controller
         $deleteForm = $formbuilder->getForm();
         $deleteForm->add('submit', 'submit', array('label' => 'Elimina'));
 
+        $formbuilder = $this->createFormBuilder();
+        $formbuilder->setAction($this->generateUrl('formtemplate_print', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
+        $printForm = $formbuilder->getForm();
+        $printForm->add('submit', 'submit', array('label' => 'Stampa'));
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+
+        // Get the factory
+        $factory = $this->get('sm.factory');
+
+        // Get the state machine for this object, and graph called "simple"
+        $articleSM = $factory->get($entity, 'rda');
+
+//        TODO recupero ruolo utente
+
+
+//        $articleSM->can('a_transition_name');
+
+        $possibili = $articleSM->getPossibleTransitions();
+
+        $formbuilder = $this->createFormBuilder();
+
+        $validaForms=array();
+        foreach ($possibili as $key=>$value) {
+
+            $formbuilder->setAction($this->generateUrl('richiesta_valida', array('id' => $idRichiesta, 'transizione' => $value)));
+            $validaForm = $formbuilder->getForm();
+            $validaForm->add('submit', 'submit', array('label' => $value));
+            array_push($validaForms,$validaForm->createView());
+        }
+
 
         return $this->render('estarRdaBundle:FormTemplate:edit.html.twig', array(
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView()
-
+            'delete_form' => $deleteForm->createView(),
+            'print_form' => $printForm->createView(),
+            'valida_forms' => $validaForms,
         ));
     }
 
@@ -312,9 +351,7 @@ class FormTemplateController extends Controller
         $form->handleRequest($request);
 
         $em = $this->getDoctrine()->getManager();
-//        $repository = $em->getRepository('estarRdaBundle:Richiesta');
 
-//        $richiesta = $repository->find($idRichiesta);
 
         $campi = $request->request->all();
 
@@ -339,14 +376,74 @@ class FormTemplateController extends Controller
 
         $em->flush();
 
+        return $this->redirect($this->generateUrl("richiesta"));
 
-        return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
-            'request' => $request,
-
-
-        ));
 
     }
 
+    public function printAction($idCategoria, $idRichiesta)
+    {
 
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $this->getDoctrine()
+            ->getRepository('estarRdaBundle:Campo');
+
+        $campi = $repository->findBy(
+            array('idcategoria' => $idCategoria),
+            array('ordinamentofieldset' => 'ASC', 'ordinamento' => 'ASC')
+        );
+
+        $entity = new FormTemplate($idCategoria, $campi);
+
+        $repository = $this->getDoctrine()
+            ->getRepository('estarRdaBundle:Valorizzazionecamporichiesta');
+
+        $campiValorizzati = $repository->findBy(
+            array('idrichiesta' => $idRichiesta)
+        );
+
+        $formbuilder = $this->createFormBuilder();
+        $fieldsetVisitati = array();
+
+        foreach ($campiValorizzati as $campovalorizzato) {
+            $campo = $campovalorizzato->getIdcampo();
+            if ($campo->getTipo() == 'radio') {
+                $fieldsetName = $campo->getFieldset();
+
+                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
+                    'label' => $fieldsetName,
+                    'data' => $campo->getDescrizione(),
+                    'read_only' => true
+                ));
+            } else {
+
+                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
+                    'label' => $campo->getDescrizione(),
+                    'data' => $campovalorizzato->getValore(),
+                    'read_only' => true
+                ));
+            }
+        }
+        $form = $formbuilder->getForm();
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find FormTemplate entity.');
+        }
+
+        $html = $this->renderView('estarRdaBundle:FormTemplate:new.html.twig', array(
+            'entity' => $entity,
+            'form' => $form->createView()
+        ));
+
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            200,
+            array(
+                'Content-Type' => 'application/pdf',
+//                'Content-Disposition'   => 'attachment; filename="pippo.pdf"'
+            )
+        );
+    }
 }

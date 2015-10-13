@@ -1,10 +1,10 @@
-formtemplate:
-    path:     /
-    defaults: { _controller: "estarRdaBundle:FormTemplate:index" }
-
 formtemplate_show:
     path:     /show/{idCategoria}/{idRichiesta}
     defaults: { _controller: "estarRdaBundle:FormTemplate:show" }
+
+formtempate_showpdf:
+    path:     /showpdf/{idCategoria}/{idRichiesta}
+    defaults: { _controller: "estarRdaBundle:FormTemplate:showpdf" }
 
 formtemplate_new:
     path:     /{idCategoria}/new
@@ -24,7 +24,6 @@ formtemplate_update:
     defaults: { _controller: "estarRdaBundle:FormTemplate:update" }
     methods:  [POST, PUT]
 
-formtemplate_delete:
-    path:     /{idCategoria}/delete
-    defaults: { _controller: "estarRdaBundle:FormTemplate:delete" }
-    methods:  [POST, DELETE]
+formtemplate_print:
+    path:     /print/{idCategoria}/{idRichiesta}
+    defaults: { _controller: "estarRdaBundle:FormTemplate:print" }
