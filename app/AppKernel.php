@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new estar\rda\RdaBundle\estarRdaBundle(),
 			new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
 			new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
+            new FOS\UserBundle\FOSUserBundle(),
             //new Slik\DompdfBundle\SlikDompdfBundle(),
         );
 
