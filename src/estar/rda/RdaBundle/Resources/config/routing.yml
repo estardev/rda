@@ -72,3 +72,7 @@ estar_rda_pdf:
 soapEsempio:
     path:     /soapesempio/{city}/{country}
     defaults: { _controller: estarRdaBundle:SoapEsempio:index }
+
+HomePage:
+    path:     /homepage
+    defaults: { _controller: estarRdaBundle:HomePage:index }
