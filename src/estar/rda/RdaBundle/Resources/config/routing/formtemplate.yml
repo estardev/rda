@@ -3,7 +3,7 @@ formtemplate:
     defaults: { _controller: "estarRdaBundle:FormTemplate:index" }
 
 formtemplate_show:
-    path:     /{idCategoria}/show
+    path:     /show/{idCategoria}/{idRichiesta}
     defaults: { _controller: "estarRdaBundle:FormTemplate:show" }
 
 formtemplate_new:
@@ -11,16 +11,16 @@ formtemplate_new:
     defaults: { _controller: "estarRdaBundle:FormTemplate:new" }
 
 formtemplate_create:
-    path:     /create
+    path:     /create/{idCategoria}
     defaults: { _controller: "estarRdaBundle:FormTemplate:create" }
     methods:  POST
 
 formtemplate_edit:
-    path:     /{idCategoria}/edit
+    path:     /edit/{idCategoria}/{idRichiesta}
     defaults: { _controller: "estarRdaBundle:FormTemplate:edit" }
 
 formtemplate_update:
-    path:     /{idCategoria}/update
+    path:     /update/{idCategoria}/{idRichiesta}
     defaults: { _controller: "estarRdaBundle:FormTemplate:update" }
     methods:  [POST, PUT]
 

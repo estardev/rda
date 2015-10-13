@@ -36,6 +36,7 @@
 		"twbs/bootstrap": "3.0.*",
         "jquery/jquery":  "1.11.*",
         "friendsofsymfony/user-bundle": "~2.0@dev"
+        "dompdf/dompdf": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

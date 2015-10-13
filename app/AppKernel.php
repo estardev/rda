@@ -21,6 +21,7 @@ class AppKernel extends Kernel
 			new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
 			new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
             new FOS\UserBundle\FOSUserBundle(),
+            //new Slik\DompdfBundle\SlikDompdfBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
