@@ -1,6 +1,10 @@
-estar_rda_valorizzazionecamporichiesta:
-    resource: "@estarRdaBundle/Resources/config/routing/valorizzazionecamporichiesta.yml"
-    prefix:   /valorizzazionecamporichiesta
+estar_rda_campodocumento:
+    resource: "@estarRdaBundle/Resources/config/routing/campodocumento.yml"
+    prefix:   /campodocumento
+
+estar_rda_campodocumento:
+    resource: "@estarRdaBundle/Resources/config/routing/campodocumento.yml"
+    prefix:   /campodocumento
 
 estar_rda_valorizzazionecamporichiesta:
     resource: "@estarRdaBundle/Resources/config/routing/valorizzazionecamporichiesta.yml"
@@ -46,9 +50,6 @@ estar_rda_categoriadocumento:
     resource: "@estarRdaBundle/Resources/config/routing/categoriadocumento.yml"
     prefix:   /categoriadocumento
     
-estar_rda_campodocumento:
-    resource: "@estarRdaBundle/Resources/config/routing/campodocumento.yml"
-    prefix:   /campodocumento
 
 estar_rda_categoria:
     resource: "@estarRdaBundle/Resources/config/routing/categoria.yml"

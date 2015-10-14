@@ -1,5 +1,5 @@
 richiestadocumento:
-    path:     /
+    path:     /{idCategoria}/{idRichiesta}
     defaults: { _controller: "estarRdaBundle:Richiestadocumento:index" }
 
 richiestadocumento_show:
@@ -28,3 +28,8 @@ richiestadocumento_delete:
     path:     /{id}/delete
     defaults: { _controller: "estarRdaBundle:Richiestadocumento:delete" }
     methods:  [POST, DELETE]
+
+richiestadocumento_upload:
+    path:     /upload/{idRichiesta}/{idDocumento}
+    defaults: { _controller: "estarRdaBundle:Richiestadocumento:upload" }
+    methods:  POST

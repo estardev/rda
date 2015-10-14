@@ -3,19 +3,44 @@
   <entity name="estar\rda\RdaBundle\Entity\Campodocumento" table="campodocumento">
     <indexes>
       <index name="fkCampodocumentoDocumento1Idx" columns="idDocumento"/>
-      <index name="idCampo" columns="idCampo"/>
     </indexes>
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
+    <field name="nome" type="string" column="nome" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descrizione" type="string" column="descrizione" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipo" type="string" column="tipo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="obbligatorio" type="boolean" column="obbligatorio" nullable="true"/>
+    <field name="ordinamento" type="integer" column="ordinamento" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fieldset" type="text" column="fieldset" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ordinamentofieldset" type="string" column="ordinamentoFieldset" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
     <many-to-one field="iddocumento" target-entity="Documento" fetch="LAZY">
       <join-columns>
         <join-column name="idDocumento" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
-    <many-to-one field="idcampo" target-entity="Campo" fetch="LAZY">
-      <join-columns>
-        <join-column name="idCampo" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

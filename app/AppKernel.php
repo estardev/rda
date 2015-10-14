@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             new winzou\Bundle\StateMachineBundle\winzouStateMachineBundle(),
 //            new Slik\DompdfBundle\SlikDompdfBundle()
+            new Vich\UploaderBundle\VichUploaderBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

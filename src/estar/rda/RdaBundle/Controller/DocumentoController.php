@@ -29,6 +29,7 @@ class DocumentoController extends Controller
             'entities' => $entities,
         ));
     }
+
     /**
      * Creates a new Documento entity.
      *
@@ -49,7 +50,7 @@ class DocumentoController extends Controller
 
         return $this->render('estarRdaBundle:Documento:new.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         ));
     }
 
@@ -79,11 +80,11 @@ class DocumentoController extends Controller
     public function newAction()
     {
         $entity = new Documento();
-        $form   = $this->createCreateForm($entity);
+        $form = $this->createCreateForm($entity);
 
         return $this->render('estarRdaBundle:Documento:new.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         ));
     }
 
@@ -104,7 +105,7 @@ class DocumentoController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('estarRdaBundle:Documento:show.html.twig', array(
-            'entity'      => $entity,
+            'entity' => $entity,
             'delete_form' => $deleteForm->createView(),
         ));
     }
@@ -127,19 +128,19 @@ class DocumentoController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('estarRdaBundle:Documento:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
 
     /**
-    * Creates a form to edit a Documento entity.
-    *
-    * @param Documento $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
+     * Creates a form to edit a Documento entity.
+     *
+     * @param Documento $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
     private function createEditForm(Documento $entity)
     {
         $form = $this->createForm(new DocumentoType(), $entity, array(
@@ -151,6 +152,7 @@ class DocumentoController extends Controller
 
         return $form;
     }
+
     /**
      * Edits an existing Documento entity.
      *
@@ -176,11 +178,12 @@ class DocumentoController extends Controller
         }
 
         return $this->render('estarRdaBundle:Documento:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
+
     /**
      * Deletes a Documento entity.
      *
@@ -218,7 +221,75 @@ class DocumentoController extends Controller
             ->setAction($this->generateUrl('documento_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+            ->getForm();
     }
+
+    /**
+     * Lists all Documento entities.
+     *
+     */
+    public function indexByCategoriaRichiestaAction($idCategoria, $idRichiesta)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('estarRdaBundle:Categoriadocumento');
+
+        $entities = $repository->findBy(
+            array('idcategoria' => $idCategoria)
+        );
+
+        $documenti = array();
+        foreach ($entities as $entity) {
+            $documento = $entity->getIddocumento();
+
+//            array_push($documenti, $documento);
+            $documenti[$documento->getId()] = array(
+                'documento' => $documento
+            );
+
+            //Per ogni riga di documento passare alla view:
+            // - id di categoria_documento                                                  v
+            // - nome e descrizione del documento                                           v
+
+
+            $repo = $em->getRepository('estarRdaBundle:Campodocumento');
+
+            $qb = $repo->createQueryBuilder('cd');
+            $qb->select('COUNT(cd)');
+            $qb->where('cd.iddocumento = :idDocumento');
+            $qb->setParameter('idDocumento', $entity->getIddocumento()->getId());
+
+            $count = $qb->getQuery()->getSingleScalarResult();
+
+            $upload = ($count != 0) ? false : true;
+            $documenti[$documento->getId()]['upload'] = $upload;
+            // - se il documento HA righe di campidocumento, un pulsante "edit"
+
+            // - se il documento NON HA righe di campidocumento, un pulsante "upload"
+
+            $repo = $em->getRepository('estarRdaBundle:Richiestadocumento');
+
+            $qb = $repo->createQueryBuilder('rd');
+            $qb->select('COUNT(rd)');
+            $qb->where('rd.iddocumento = :idDocumento');
+            $qb->setParameter('idDocumento', $entity->getIddocumento()->getId());
+
+            $count = $qb->getQuery()->getSingleScalarResult();
+            // - se il documento NON ha righe di richiestadocumento un alert che il documento è mancante
+            $alert = ($count != 0) ? false : true;
+            $documenti[$documento->getId()]['alert'] = $alert;
+        }
+        foreach ($documenti as $documento) {
+            //if (primocaso) metti pulsante upload che transiziona verso richiestadocumentocontroller.uploadform
+            //if (secondocaso) metti pulsante edit che transiziona verso richiestadocumentocontroller.editaction
+            //if (terzocaso) c'è da studiare qualcosa
+        }
+
+        return $this->render('estarRdaBundle:Documento:index.html.twig', array(
+            'entities' => $documenti
+        ));
+    }
+
+
 }

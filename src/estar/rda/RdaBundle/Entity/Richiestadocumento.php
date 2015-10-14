@@ -3,12 +3,16 @@
 namespace estar\rda\RdaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\UploadedFile as File;
 
 /**
  * Richiestadocumento
  *
  * @ORM\Table(name="richiestadocumento", indexes={@ORM\Index(name="fkRichiestaHasDocumentoDocumento1Idx", columns={"idDocumento"}), @ORM\Index(name="fkRichiestaHasDocumentoRichiesta1Idx", columns={"idRichiesta"})})
  * @ORM\Entity
+ *
+ * @Vich\Uploadable
  */
 class Richiestadocumento
 {
@@ -193,4 +197,43 @@ class Richiestadocumento
     {
         return $this->iddocumento;
     }
+
+
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     *
+     * @Vich\UploadableField(mapping="product_doc", fileNameProperty="filepath")
+     *
+     * @var File
+     */
+    private $docFile;
+
+    /**
+     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+     * of 'UploadedFile' is injected into this setter to trigger the  update. If this
+     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+     * must be able to accept an instance of 'File' as the bundle will inject one here
+     * during Doctrine hydration.
+     *
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $doc
+     */
+    public function setdocFile(File $doc = null)
+    {
+        $this->docFile = $doc;
+
+        if ($doc) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+//            $this->updatedAt = new \DateTime('now');
+        }
+    }
+
+    /**
+     * @return File
+     */
+    public function getdocFile()
+    {
+        return $this->docFile;
+    }
+
 }
