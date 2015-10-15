@@ -45,7 +45,7 @@ assetic:
     filters:
         less:
             node: "C:\\Program Files\\nodejs\\node.exe"
-            node_paths: ["C:\\Users\\Nadia\\AppData\\Roaming\\npm\\node_modules"]
+            node_paths: ["C:\\Users\\MrZANO\\AppData\\Roaming\\npm\\node_modules"]
             apply_to: "\.less$"
         cssrewrite: ~
         #closure:
@@ -111,4 +111,73 @@ fos_user:
     user_class: estar\rda\RdaBundle\Entity\User
     registration:
             form:
-                type: app_user_registration
+                type: app_user_registration    user_class: estar\rda\RdaBundle\Entity\User
+
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     /usr/local/bin/wkhtmltopdf
+        options:    []
+
+winzou_state_machine:
+    my_bundle_article:
+        class: estar\rda\RdaBundle\Entity\Richiesta # class of your domain object
+        property_path: status                       # property of your object holding the actual state (default is "state")
+        graph: rda                                  # name of the graph (default is "default")
+        # list of all possible states:
+        states:
+            - bozza
+            - attesa_val_tec
+            - attesa_val_amm
+            - inserita_ABS
+            # list of all possible transitions:
+        transitions:
+            presentata:
+                from: [bozza]
+                to: attesa_val_tec
+            rifiutata_tec:
+                from: [attesa_val_tec]
+                to: bozza
+            validazione_tec:
+                from: [attesa_val_tec]
+                to: attesa_val_amm
+            rifiutata_amm:
+                from: [attesa_val_amm]
+                to: attesa_val_tec
+            validazione_amm:
+                from: [attesa_val_amm]
+                to: inserita_ABS
+            rifiutata_amm_ABS:
+                from: [inserita_ABS]
+                to: attesa_val_amm
+            rifiutata_tec_ABS:
+                from: [inserita_ABS]
+                to: attesa_val_tec
+        # list of all callbacks
+        callbacks:
+            # will be called before applying a transition
+            before:
+                update_reviewer:
+                    on:   'create'                         # call the callback on a specific transition
+                    do:   [@my.awesome.service, 'update']  # will call the method of this Symfony service
+                    args: ['object']                       # arguments for the callback
+            # will be called after applying a transition
+            after:
+                email_on_publish:
+                    on:   'publish'
+                    do:   [@my.awesome.service, 'sendEmail']
+                    args: ['object', '"Email title"']
+
+vich_uploader:
+    db_driver: orm # or mongodb or propel or phpcr
+    storage: file_system
+
+
+    mappings:
+        richiesta_documento:
+#            uri_prefix:         /images/products
+            upload_destination: %kernel.root_dir%/../web/images/products
+
+            inject_on_load:     true
+            delete_on_update:   true
+            delete_on_remove:   true
