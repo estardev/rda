@@ -18,6 +18,10 @@ class User extends BaseUser
      */
     protected $id;
 
+    protected $name;
+
+    protected $idgruppoutente;
+
     public function __construct()
     {
         parent::__construct();
@@ -29,6 +33,7 @@ class User extends BaseUser
      *
      * @return array
      */
+
     public function findByRole($role)
     {
         $qb = $this->_em->createQueryBuilder();
@@ -38,5 +43,54 @@ class User extends BaseUser
             ->setParameter('roles', '%"'.$role.'"%');
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function __toString(){return strval($this->getId());}
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return UserExt
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set idgruppoutente
+     *
+     * @param \estar\rda\RdaBundle\Entity\Gruppoutente $idgruppoutente
+     *
+     * @return Utentegruppoutente
+     */
+    public function setIdgruppoutente(\estar\rda\RdaBundle\Entity\Gruppoutente $idgruppoutente = null)
+    {
+        $this->idgruppoutente = $idgruppoutente;
+
+        return $this;
+    }
+
+    /**
+     * Get idgruppoutente
+     *
+     * @return \estar\rda\RdaBundle\Entity\Gruppoutente
+     */
+    public function getIdgruppoutente()
+    {
+        return $this->idgruppoutente;
     }
 }

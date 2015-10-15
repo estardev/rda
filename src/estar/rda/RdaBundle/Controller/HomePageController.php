@@ -8,10 +8,39 @@ class HomePageController extends Controller
 {
     public function indexAction()
     {
-        //$mySESSION= var_dump($_SESSION['_sf2_attributes']['_security_main']);
-        //$myBoolean = $this->authorizationChecker->isGranted('ROLE_NEWSLETTER_ADMIN');
-        //file_put_contents("ciao.txt", print_r($_SESSION['_sf2_attributes']['_security_main'], true));
-        //file_put_contents("ciao.txt", print_r($myBoolean, true));
-        return $this->render('estarRdaBundle:HomePage:index.html.twig'/*,array('sessione'=>$mySESSION)*/);
+       $utenteSessione= $this->get('security.context')->getToken()->getUser();
+       //$idutenteSessione = $utenteSessione->getId();
+       //
+        $em = $this->getDoctrine()->getManager();
+       // $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Utente');
+       // $utente = $repository->findOneBy(array(
+       //     'idfosuser'=>$idutenteSessione)
+       // );
+       // $idutente = $utente->getId();
+       // $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Utentegruppoutente');
+       // $utentegruppo = $repository->findOneBy(array(
+       //         'idutente'=>$idutente)
+       // );
+       // $idutentegruppo = $utentegruppo->getIdgruppoutente()->getId();
+       // $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Categoriagruppo');
+       // $campogruppo = $repository->findOneBy(array(
+       //         'idgruppoutente'=>$idutentegruppo)
+       // );
+       // $abilitatoinserimentorichieste = $campogruppo->getAbilitatoinserimentorichieste();
+       // $validatoretecnico = $campogruppo->getValidatoretecnico();
+       // $validatoreAmministrativo = $campogruppo->getValidatoreamministrativo();
+       // dump($campogruppo);
+       //
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
+        $categoria = $em->getRepository('estarRdaBundle:Categoria')->findAll();
+
+        return $this->render('estarRdaBundle:HomePage:index.html.twig', array(
+            'richiesta' => $richiesta,
+            'categoria'=> $categoria,
+            'utente' => ucfirst($utenteSessione),
+
+        ));
+
     }
+
 }

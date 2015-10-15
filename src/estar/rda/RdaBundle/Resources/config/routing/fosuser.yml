@@ -1,0 +1,30 @@
+fosuser:
+    path:     /
+    defaults: { _controller: "estarRdaBundle:FosUser:index" }
+
+fosuser_show:
+    path:     /{id}/show
+    defaults: { _controller: "estarRdaBundle:FosUser:show" }
+
+fosuser_new:
+    path:     /new
+    defaults: { _controller: "estarRdaBundle:FosUser:new" }
+
+fosuser_create:
+    path:     /create
+    defaults: { _controller: "estarRdaBundle:FosUser:create" }
+    methods:  POST
+
+fosuser_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "estarRdaBundle:FosUser:edit" }
+
+fosuser_update:
+    path:     /{id}/update
+    defaults: { _controller: "estarRdaBundle:FosUser:update" }
+    methods:  [POST, PUT]
+
+fosuser_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "estarRdaBundle:FosUser:delete" }
+    methods:  [POST, DELETE]

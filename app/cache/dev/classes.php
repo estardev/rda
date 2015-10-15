@@ -2999,7 +2999,7 @@ namespace
 {
 class Twig_Environment
 {
-const VERSION ='1.22.2';
+const VERSION ='1.22.3';
 protected $charset;
 protected $loader;
 protected $debug;
@@ -3029,6 +3029,7 @@ protected $staging;
 private $originalCache;
 private $bcWriteCacheFile = false;
 private $bcGetCacheFilename = false;
+private $lastModifiedExtension = 0;
 public function __construct(Twig_LoaderInterface $loader = null, $options = array())
 {
 if (null !== $loader) {
@@ -3117,6 +3118,10 @@ $this->cache = new Twig_Cache_Filesystem($cache);
 } elseif (false === $cache) {
 $this->originalCache = $cache;
 $this->cache = new Twig_Cache_Null();
+} elseif (null === $cache) {
+@trigger_error('Using "null" as the cache strategy is deprecated and will be removed in Twig 2.0.', E_USER_DEPRECATED);
+$this->originalCache = false;
+$this->cache = new Twig_Cache_Null();
 } elseif ($cache instanceof Twig_CacheInterface) {
 $this->originalCache = $this->cache = $cache;
 } else {
@@ -3131,7 +3136,9 @@ return !$key ? false : $key;
 }
 public function getTemplateClass($name, $index = null)
 {
-$key = $this->getLoader()->getCacheKey($name).'__'.implode('__', array_keys($this->extensions));
+$key = $this->getLoader()->getCacheKey($name);
+$key .= json_encode(array_keys($this->extensions));
+$key .= function_exists('twig_template_get_attributes');
 return $this->templateClassPrefix.hash('sha256', $key).(null === $index ?'':'_'.$index);
 }
 public function getTemplateClassPrefix()
@@ -3196,13 +3203,7 @@ return $template;
 }
 public function isTemplateFresh($name, $time)
 {
-foreach ($this->extensions as $extension) {
-$r = new ReflectionObject($extension);
-if (filemtime($r->getFileName()) > $time) {
-return false;
-}
-}
-return $this->getLoader()->isFresh($name, $time);
+return $this->lastModifiedExtension <= $time && $this->getLoader()->isFresh($name, $time);
 }
 public function resolveTemplate($names)
 {
@@ -3340,6 +3341,10 @@ public function addExtension(Twig_ExtensionInterface $extension)
 {
 if ($this->extensionInitialized) {
 throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $extension->getName()));
+}
+$r = new ReflectionObject($extension);
+if (($extensionTime = filemtime($r->getFileName())) > $this->lastModifiedExtension) {
+$this->lastModifiedExtension = $extensionTime;
 }
 $this->extensions[$extension->getName()] = $extension;
 }
@@ -4251,7 +4256,7 @@ return $string;
 if (!is_string($string)) {
 if (is_object($string) && method_exists($string,'__toString')) {
 $string = (string) $string;
-} else {
+} elseif (in_array($strategy, array('html','js','css','html_attr','url'))) {
 return $string;
 }
 }

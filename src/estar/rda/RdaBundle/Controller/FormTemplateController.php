@@ -24,7 +24,7 @@ class FormTemplateController extends Controller
     {
 
 
-        $em = $this->getDoctrine()->getManager();
+//        $em = $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()
             ->getRepository('estarRdaBundle:Campo');
 
@@ -33,6 +33,8 @@ class FormTemplateController extends Controller
             array('idcategoria' => $idCategoria),
             array('ordinamentofieldset' => 'ASC', 'ordinamento' => 'ASC')
         );
+
+
 
 
         $entity = new FormTemplate($idCategoria, $campi);

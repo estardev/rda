@@ -4,16 +4,13 @@ namespace estar\rda\RdaBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
 use estar\rda\RdaBundle\Entity\Campodocumento;
 use estar\rda\RdaBundle\Form\CampodocumentoType;
 
 /**
  * Campodocumento controller.
  *
- * @Route("/campodocumento")
  */
 class CampodocumentoController extends Controller
 {
@@ -21,9 +18,6 @@ class CampodocumentoController extends Controller
     /**
      * Lists all Campodocumento entities.
      *
-     * @Route("/", name="campodocumento")
-     * @Method("GET")
-     * @Template()
      */
     public function indexAction()
     {
@@ -31,16 +25,13 @@ class CampodocumentoController extends Controller
 
         $entities = $em->getRepository('estarRdaBundle:Campodocumento')->findAll();
 
-        return array(
+        return $this->render('estarRdaBundle:Campodocumento:index.html.twig', array(
             'entities' => $entities,
-        );
+        ));
     }
     /**
      * Creates a new Campodocumento entity.
      *
-     * @Route("/", name="campodocumento_create")
-     * @Method("POST")
-     * @Template("estarRdaBundle:Campodocumento:new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -56,10 +47,10 @@ class CampodocumentoController extends Controller
             return $this->redirect($this->generateUrl('campodocumento_show', array('id' => $entity->getId())));
         }
 
-        return array(
+        return $this->render('estarRdaBundle:Campodocumento:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
-        );
+        ));
     }
 
     /**
@@ -84,27 +75,21 @@ class CampodocumentoController extends Controller
     /**
      * Displays a form to create a new Campodocumento entity.
      *
-     * @Route("/new", name="campodocumento_new")
-     * @Method("GET")
-     * @Template()
      */
     public function newAction()
     {
         $entity = new Campodocumento();
         $form   = $this->createCreateForm($entity);
 
-        return array(
+        return $this->render('estarRdaBundle:Campodocumento:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
-        );
+        ));
     }
 
     /**
      * Finds and displays a Campodocumento entity.
      *
-     * @Route("/{id}", name="campodocumento_show")
-     * @Method("GET")
-     * @Template()
      */
     public function showAction($id)
     {
@@ -118,18 +103,15 @@ class CampodocumentoController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
+        return $this->render('estarRdaBundle:Campodocumento:show.html.twig', array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
-        );
+        ));
     }
 
     /**
      * Displays a form to edit an existing Campodocumento entity.
      *
-     * @Route("/{id}/edit", name="campodocumento_edit")
-     * @Method("GET")
-     * @Template()
      */
     public function editAction($id)
     {
@@ -144,11 +126,11 @@ class CampodocumentoController extends Controller
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
+        return $this->render('estarRdaBundle:Campodocumento:edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        );
+        ));
     }
 
     /**
@@ -172,9 +154,6 @@ class CampodocumentoController extends Controller
     /**
      * Edits an existing Campodocumento entity.
      *
-     * @Route("/{id}", name="campodocumento_update")
-     * @Method("PUT")
-     * @Template("estarRdaBundle:Campodocumento:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -196,17 +175,15 @@ class CampodocumentoController extends Controller
             return $this->redirect($this->generateUrl('campodocumento_edit', array('id' => $id)));
         }
 
-        return array(
+        return $this->render('estarRdaBundle:Campodocumento:edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        );
+        ));
     }
     /**
      * Deletes a Campodocumento entity.
      *
-     * @Route("/{id}", name="campodocumento_delete")
-     * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
     {

@@ -12,5 +12,9 @@
             </a>
         </li>
         <li>{{ form(delete_form) }}</li>
+        <li>{{ form(print_form) }}</li>
+        {% for valida_form in valida_forms  %}
+        <li>{{ form(valida_form) }}</li>
+        {% endfor %}
     </ul>
 {% endblock %}
