@@ -45,7 +45,7 @@ assetic:
     filters:
         less:
             node: "C:\\Program Files\\nodejs\\node.exe"
-            node_paths: ["C:\\Users\\MrZANO\\AppData\\Roaming\\npm\\node_modules"]
+            node_paths: ["C:\\Users\\Nadia\\AppData\\Roaming\\npm\\node_modules"]
             apply_to: "\.less$"
         cssrewrite: ~
         #closure:
@@ -109,3 +109,6 @@ fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
     user_class: estar\rda\RdaBundle\Entity\User
+    registration:
+            form:
+                type: app_user_registration
