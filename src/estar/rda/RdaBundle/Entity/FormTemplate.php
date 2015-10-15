@@ -17,7 +17,7 @@ class FormTemplate
 {
     public function __toString()
     {
-        return "pippo";
+        return "Form Template";
     }
 
     /*
@@ -85,7 +85,9 @@ class FormTemplate
 
     /**
      * costruttore di default
-     * @param idCategoria id numerico della categoria da settare
+     * @param $idCategoria
+     * @param $campi
+     * @internal param id $idCategoria numerico della categoria da settare
      */
     public function __construct($idCategoria, $campi)
     {

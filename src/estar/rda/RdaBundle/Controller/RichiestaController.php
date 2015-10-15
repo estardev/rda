@@ -23,7 +23,8 @@ class RichiestaController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
-
+        //TODO: creare pulsanti per l'edit, la gestione dei documenti e la stampa in PDF
+        //Sono tutti pulsanti che puntano a FormTemplateController
         return $this->render('estarRdaBundle:Richiesta:index.html.twig', array(
             'entities' => $entities,
         ));
@@ -230,5 +231,39 @@ class RichiestaController extends Controller
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm();
+    }
+
+
+    /**
+     * Valida una richiesta in base al ruolo dell'utente
+     *
+     * @param mixed $id The entity id
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    public function validaAction($id,$transizione){
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($id);
+
+        // Get the factory
+        $factory = $this->get('sm.factory');
+
+        // Get the state machine for this object, and graph called "simple"
+        $articleSM = $factory->get($entity, 'rda');
+
+//        TODO recupero ruolo utente
+
+
+//        $articleSM->can('a_transition_name');
+
+
+
+        $articleSM->apply($transizione);
+
+        $em->flush();
+
+        return $this->redirect($this->generateUrl("richiesta"));
     }
 }

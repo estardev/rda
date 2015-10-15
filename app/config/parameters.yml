@@ -4,9 +4,9 @@ parameters:
     database_port: null
     database_name: rda
     database_user: root
-    database_password: null
+    database_password: gianluca
     mailer_transport: smtp
     mailer_host: 127.0.0.1
     mailer_user: null
     mailer_password: null
-    secret: 02a9e98a8f8f414ecf8dfe1ea9f456e8a1505181
+    secret: gianluca
