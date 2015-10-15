@@ -111,7 +111,7 @@ fos_user:
     user_class: estar\rda\RdaBundle\Entity\User
     registration:
             form:
-                type: app_user_registration    user_class: estar\rda\RdaBundle\Entity\User
+                type: app_user_registration
 
 knp_snappy:
     pdf:
