@@ -9,28 +9,28 @@ class HomePageController extends Controller
     public function indexAction()
     {
        $utenteSessione= $this->get('security.context')->getToken()->getUser();
-       $idutenteSessione = $utenteSessione->getId();
-
+       //$idutenteSessione = $utenteSessione->getId();
+       //
         $em = $this->getDoctrine()->getManager();
-        $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Utente');
-        $utente = $repository->findOneBy(array(
-            'idfosuser'=>$idutenteSessione)
-        );
-        $idutente = $utente->getId();
-        $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Utentegruppoutente');
-        $utentegruppo = $repository->findOneBy(array(
-                'idutente'=>$idutente)
-        );
-        $idutentegruppo = $utentegruppo->getIdgruppoutente()->getId();
-        $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Categoriagruppo');
-        $campogruppo = $repository->findOneBy(array(
-                'idgruppoutente'=>$idutentegruppo)
-        );
-        $abilitatoinserimentorichieste = $campogruppo->getAbilitatoinserimentorichieste();
-        $validatoretecnico = $campogruppo->getValidatoretecnico();
-        $validatoreAmministrativo = $campogruppo->getValidatoreamministrativo();
-        dump($campogruppo);
-
+       // $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Utente');
+       // $utente = $repository->findOneBy(array(
+       //     'idfosuser'=>$idutenteSessione)
+       // );
+       // $idutente = $utente->getId();
+       // $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Utentegruppoutente');
+       // $utentegruppo = $repository->findOneBy(array(
+       //         'idutente'=>$idutente)
+       // );
+       // $idutentegruppo = $utentegruppo->getIdgruppoutente()->getId();
+       // $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Categoriagruppo');
+       // $campogruppo = $repository->findOneBy(array(
+       //         'idgruppoutente'=>$idutentegruppo)
+       // );
+       // $abilitatoinserimentorichieste = $campogruppo->getAbilitatoinserimentorichieste();
+       // $validatoretecnico = $campogruppo->getValidatoretecnico();
+       // $validatoreAmministrativo = $campogruppo->getValidatoreamministrativo();
+       // dump($campogruppo);
+       //
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->findAll();
 
