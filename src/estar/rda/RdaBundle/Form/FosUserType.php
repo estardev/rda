@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class UtenteType extends AbstractType
+class FosUserType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -15,10 +15,22 @@ class UtenteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('utenteldap')
-            ->add('utentecartaoperatore')
-            ->add('idazienda')
-            ->add('idfosuser')
+            ->add('username')
+            ->add('usernameCanonical')
+            ->add('email')
+            ->add('emailCanonical')
+            ->add('enabled')
+            ->add('salt')
+            ->add('password')
+            ->add('lastLogin')
+            ->add('locked')
+            ->add('expired')
+            ->add('expiresAt')
+            ->add('confirmationToken')
+            ->add('passwordRequestedAt')
+            ->add('roles')
+            ->add('credentialsExpired')
+            ->add('credentialsExpireAt')
         ;
     }
     
@@ -28,7 +40,7 @@ class UtenteType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'estar\rda\RdaBundle\Entity\Utente'
+            'data_class' => 'estar\rda\RdaBundle\Entity\FosUser'
         ));
     }
 
@@ -37,6 +49,6 @@ class UtenteType extends AbstractType
      */
     public function getName()
     {
-        return 'estar_rda_rdabundle_utente';
+        return 'estar_rda_rdabundle_fosuser';
     }
 }

@@ -29,6 +29,7 @@ class User extends BaseUser
      *
      * @return array
      */
+
     public function findByRole($role)
     {
         $qb = $this->_em->createQueryBuilder();
