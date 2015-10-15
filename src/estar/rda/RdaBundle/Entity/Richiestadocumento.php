@@ -202,7 +202,7 @@ class Richiestadocumento
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
-     * @Vich\UploadableField(mapping="product_doc", fileNameProperty="filepath")
+     * @Vich\UploadableField(mapping="richiesta_documento", fileNameProperty="filePath")
      *
      * @var File
      */
@@ -217,14 +217,14 @@ class Richiestadocumento
      *
      * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $doc
      */
-    public function setdocFile(File $doc = null)
+    public function setdocFile($doc = null)
     {
         $this->docFile = $doc;
 
         if ($doc) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
-//            $this->updatedAt = new \DateTime('now');
+            $this->datainvio = new \DateTime('now');
         }
     }
 

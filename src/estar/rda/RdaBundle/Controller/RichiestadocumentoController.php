@@ -4,6 +4,7 @@ namespace estar\rda\RdaBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use estar\rda\RdaBundle\Entity\Richiestadocumento;
 use estar\rda\RdaBundle\Form\RichiestadocumentoType;
@@ -114,33 +115,88 @@ class RichiestadocumentoController extends Controller
      * Displays a form to edit an existing Richiestadocumento entity.
      *
      */
-    public function editAction($id)
+    public function editAction($idCategoria, $idRichiesta, $idDocumento)
     {
         //TODO vanno sistemati i parametri
         //tira su il documento
-        //tira su richiestaDocumento se esiste. Se esiste siamo in edit.
-        //per ogni campodocumento
-        // - crea un input come in formtemplatecontroller
-        // - se siamo in edit, mostra i dati di valorizzazionecampodocumento
-        //   che puntano a richiestadocumento e campodocumento
-        //crea il pulsante per la submit verso updateAction
 
-        //$em = $this->getDoctrine()->getManager();
+        $mode = 'crea';
 
-        //$entity = $em->getRepository('estarRdaBundle:Richiestadocumento')->find($id);
+        $em = $this->getDoctrine()->getManager();
 
-        //if (!$entity) {
-        //    throw $this->createNotFoundException('Unable to find Richiestadocumento entity.');
-        //}
+        $repository = $em->getRepository('estarRdaBundle:Richiestadocumento');
 
-        //$editForm = $this->createEditForm($entity);
-        //$deleteForm = $this->createDeleteForm($id);
+        $entity = $repository->findOneBy(
+            array('iddocumento' => $idDocumento, 'idrichiesta' => $idRichiesta)
 
-        //return $this->render('estarRdaBundle:Richiestadocumento:edit.html.twig', array(
-        //    'entity'      => $entity,
-        //    'edit_form'   => $editForm->createView(),
-        //    'delete_form' => $deleteForm->createView(),
-        //));
+        );
+        $campiValorizzati = '';
+        if ($entity != null) {
+            $mode = 'modifica';
+            $repository = $this->getDoctrine()
+                ->getRepository('estarRdaBundle:Valorizzazionecampodocumento');
+
+            $campiValorizzati = $repository->findBy(
+                array('idrichiesta' => $entity->getId())
+            );
+
+        } else {
+            $repository = $this->getDoctrine()
+                ->getRepository('estarRdaBundle:Campodocumento');
+
+            $campiValorizzati = $repository->findBy(
+                array('iddocumento' => $idDocumento)
+            );
+        }
+
+        $formbuilder = $this->createFormBuilder();
+
+
+        foreach ($campiValorizzati as $campovalorizzato) {
+            if ($mode == 'modifica') {
+                $campo = $campovalorizzato->getIdcampodocumento();
+            } else {
+                $campo = $campovalorizzato;
+            }
+
+            if ($campo->getTipo() == 'radio') {
+                $fieldsetName = $campo->getFieldset();
+                if ($mode == 'modifica') {
+                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
+                        'label' => $fieldsetName,
+                        'data' => $campo->getDescrizione(),
+                    ));
+                } else {
+                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
+                        'label' => $fieldsetName,
+                    ));
+                }
+            } else {
+                if ($mode == 'modifica') {
+                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
+                        'label' => $campo->getDescrizione(),
+                        'data' => $campovalorizzato->getValore(),
+
+                    ));
+                } else {
+                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
+                        'label' => $campo->getDescrizione(),
+
+                    ));
+                }
+            }
+        }
+
+        $formbuilder->setAction($this->generateUrl('richiestadocumento_update', array('mode' => $mode)));
+
+
+        $form = $formbuilder->getForm();
+        $form->add('submit', 'submit', array('label' => 'Salva'));
+
+
+        return $this->render('estarRdaBundle:Richiestadocumento:edit.html.twig', array(
+            'form' => $form->createView()
+        ));
     }
 
     /**
@@ -166,7 +222,7 @@ class RichiestadocumentoController extends Controller
      * Edits an existing Richiestadocumento entity.
      *
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, $mode)
     {
         //TODO sistemare i parametri
         //tirare su il documento e la richiesta
@@ -195,12 +251,37 @@ class RichiestadocumentoController extends Controller
 
         //return $this->redirect($this->generateUrl('richiestadocumento_edit', array('id' => $id)));
         //}
+//        $form = $this->createForm(new FormTemplateType());
+//        $form->handleRequest($request);
 
-        return $this->render('estarRdaBundle:Richiestadocumento:edit.html.twig', array(
-            'entity' => $entity,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        $em = $this->getDoctrine()->getManager();
+
+
+        $campi = $request->request->all();
+
+
+        foreach ($campi['form'] as $key => $value) {
+            if (!strrpos($key, "-")) {
+                continue;
+            }
+            $a = explode('-', $key);
+            $idCampo = $a[1];
+
+//            $campo = $em->getRepository('estarRdaBundle:Campo')->find($idCampo);
+
+            $vcr = $em->getRepository('estarRdaBundle:Valorizzazionecamporichiesta')->findBy(
+                array('idrichiesta' => $idRichiesta, 'idcampo' => $idCampo)
+
+            );
+
+            $vcr[0]->setValore($value);
+
+        }
+
+        $em->flush();
+
+        return $this->redirect($this->generateUrl("richiesta"));
+
     }
 
     /**
@@ -257,20 +338,24 @@ class RichiestadocumentoController extends Controller
         //tira su la richiesta e il documento
 
 //        if ($request->getMethod() == 'POST') {
-            $doc = $request->files->get('docfile');
+        $doc = $request->files->get('docfile');
 //        }
+
         $rd = new Richiestadocumento();
         $repository = $em->getRepository('estarRdaBundle:Richiesta');
-        $richiesta=$repository->find($idRichiesta);
+        $richiesta = $repository->find($idRichiesta);
+        $idCategoria = $richiesta->getIdcategoria()->getId();
         $rd->setIdrichiesta($richiesta);
         $repository = $em->getRepository('estarRdaBundle:Documento');
-        $documento=$repository->find($idDocumento);
+        $documento = $repository->find($idDocumento);
         $rd->setIddocumento($documento);
         $rd->setdocFile($doc);
+//        $rd->setFilepath($doc->getClientOriginalName());
         $em->persist($rd);
         $em->flush();
-        die;
 
+//        $this->container->get('vich_uploader.storage')->upload($entity);
+        return $this->redirect($this->generateUrl('documento_byCategoria', array('idRichiesta' => $idRichiesta, 'idCategoria' => $idCategoria)));
         //crea una riga di richiestaDocumento collegata alla richiesta e al documento
         //mette il pathname nel campo filePath
         //persste

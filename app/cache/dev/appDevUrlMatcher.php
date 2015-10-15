@@ -243,6 +243,66 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
         }
 
+        if (0 === strpos($pathinfo, '/campodocumento')) {
+            // campodocumento
+            if (rtrim($pathinfo, '/') === '/campodocumento') {
+                if (substr($pathinfo, -1) !== '/') {
+                    return $this->redirect($pathinfo.'/', 'campodocumento');
+                }
+
+                return array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\CampodocumentoController::indexAction',  '_route' => 'campodocumento',);
+            }
+
+            // campodocumento_show
+            if (preg_match('#^/campodocumento/(?P<id>[^/]++)/show$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'campodocumento_show')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\CampodocumentoController::showAction',));
+            }
+
+            // campodocumento_new
+            if ($pathinfo === '/campodocumento/new') {
+                return array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\CampodocumentoController::newAction',  '_route' => 'campodocumento_new',);
+            }
+
+            // campodocumento_create
+            if ($pathinfo === '/campodocumento/create') {
+                if ($this->context->getMethod() != 'POST') {
+                    $allow[] = 'POST';
+                    goto not_campodocumento_create;
+                }
+
+                return array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\CampodocumentoController::createAction',  '_route' => 'campodocumento_create',);
+            }
+            not_campodocumento_create:
+
+            // campodocumento_edit
+            if (preg_match('#^/campodocumento/(?P<id>[^/]++)/edit$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'campodocumento_edit')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\CampodocumentoController::editAction',));
+            }
+
+            // campodocumento_update
+            if (preg_match('#^/campodocumento/(?P<id>[^/]++)/update$#s', $pathinfo, $matches)) {
+                if (!in_array($this->context->getMethod(), array('POST', 'PUT'))) {
+                    $allow = array_merge($allow, array('POST', 'PUT'));
+                    goto not_campodocumento_update;
+                }
+
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'campodocumento_update')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\CampodocumentoController::updateAction',));
+            }
+            not_campodocumento_update:
+
+            // campodocumento_delete
+            if (preg_match('#^/campodocumento/(?P<id>[^/]++)/delete$#s', $pathinfo, $matches)) {
+                if (!in_array($this->context->getMethod(), array('POST', 'DELETE'))) {
+                    $allow = array_merge($allow, array('POST', 'DELETE'));
+                    goto not_campodocumento_delete;
+                }
+
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'campodocumento_delete')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\CampodocumentoController::deleteAction',));
+            }
+            not_campodocumento_delete:
+
+        }
+
         if (0 === strpos($pathinfo, '/valorizzazionecampo')) {
             if (0 === strpos($pathinfo, '/valorizzazionecamporichiesta')) {
                 // valorizzazionecamporichiesta
@@ -549,12 +609,8 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
             if (0 === strpos($pathinfo, '/richiestadocumento')) {
                 // richiestadocumento
-                if (rtrim($pathinfo, '/') === '/richiestadocumento') {
-                    if (substr($pathinfo, -1) !== '/') {
-                        return $this->redirect($pathinfo.'/', 'richiestadocumento');
-                    }
-
-                    return array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\RichiestadocumentoController::indexAction',  '_route' => 'richiestadocumento',);
+                if (preg_match('#^/richiestadocumento/(?P<idCategoria>[^/]++)/(?P<idRichiesta>[^/]++)$#s', $pathinfo, $matches)) {
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'richiestadocumento')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\RichiestadocumentoController::indexAction',));
                 }
 
                 // richiestadocumento_show
@@ -579,12 +635,12 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
                 not_richiestadocumento_create:
 
                 // richiestadocumento_edit
-                if (preg_match('#^/richiestadocumento/(?P<id>[^/]++)/edit$#s', $pathinfo, $matches)) {
+                if (0 === strpos($pathinfo, '/richiestadocumento/edit') && preg_match('#^/richiestadocumento/edit/(?P<idCategoria>[^/]++)/(?P<idRichiesta>[^/]++)/(?P<idDocumento>[^/]++)$#s', $pathinfo, $matches)) {
                     return $this->mergeDefaults(array_replace($matches, array('_route' => 'richiestadocumento_edit')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\RichiestadocumentoController::editAction',));
                 }
 
                 // richiestadocumento_update
-                if (preg_match('#^/richiestadocumento/(?P<id>[^/]++)/update$#s', $pathinfo, $matches)) {
+                if (0 === strpos($pathinfo, '/richiestadocumento/update') && preg_match('#^/richiestadocumento/update/(?P<mode>[^/]++)$#s', $pathinfo, $matches)) {
                     if (!in_array($this->context->getMethod(), array('POST', 'PUT'))) {
                         $allow = array_merge($allow, array('POST', 'PUT'));
                         goto not_richiestadocumento_update;
@@ -604,6 +660,17 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
                     return $this->mergeDefaults(array_replace($matches, array('_route' => 'richiestadocumento_delete')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\RichiestadocumentoController::deleteAction',));
                 }
                 not_richiestadocumento_delete:
+
+                // richiestadocumento_upload
+                if (0 === strpos($pathinfo, '/richiestadocumento/upload') && preg_match('#^/richiestadocumento/upload/(?P<idRichiesta>[^/]++)/(?P<idDocumento>[^/]++)$#s', $pathinfo, $matches)) {
+                    if ($this->context->getMethod() != 'POST') {
+                        $allow[] = 'POST';
+                        goto not_richiestadocumento_upload;
+                    }
+
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'richiestadocumento_upload')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\RichiestadocumentoController::uploadAction',));
+                }
+                not_richiestadocumento_upload:
 
             }
 
@@ -795,6 +862,11 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
             }
             not_documento_delete:
 
+            // documento_byCategoria
+            if (0 === strpos($pathinfo, '/documento/byCategoria') && preg_match('#^/documento/byCategoria/(?P<idCategoria>[^/]++)/(?P<idRichiesta>[^/]++)$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'documento_byCategoria')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\DocumentoController::indexByCategoriaRichiestaAction',));
+            }
+
         }
 
         if (0 === strpos($pathinfo, '/ca')) {
@@ -919,69 +991,6 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
                 }
 
-            }
-
-            if (0 === strpos($pathinfo, '/campodocumento')) {
-                // campodocumento
-                if (rtrim($pathinfo, '/') === '/campodocumento') {
-                    if (substr($pathinfo, -1) !== '/') {
-                        return $this->redirect($pathinfo.'/', 'campodocumento');
-                    }
-
-                    return array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\CampodocumentoController::indexAction',  '_route' => 'campodocumento',);
-                }
-
-                // campodocumento_show
-                if (preg_match('#^/campodocumento/(?P<id>[^/]++)/show$#s', $pathinfo, $matches)) {
-                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'campodocumento_show')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\CampodocumentoController::showAction',));
-                }
-
-                // campodocumento_new
-                if ($pathinfo === '/campodocumento/new') {
-                    return array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\CampodocumentoController::newAction',  '_route' => 'campodocumento_new',);
-                }
-
-                // campodocumento_create
-                if ($pathinfo === '/campodocumento/create') {
-                    if ($this->context->getMethod() != 'POST') {
-                        $allow[] = 'POST';
-                        goto not_campodocumento_create;
-                    }
-
-                    return array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\CampodocumentoController::createAction',  '_route' => 'campodocumento_create',);
-                }
-                not_campodocumento_create:
-
-                // campodocumento_edit
-                if (preg_match('#^/campodocumento/(?P<id>[^/]++)/edit$#s', $pathinfo, $matches)) {
-                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'campodocumento_edit')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\CampodocumentoController::editAction',));
-                }
-
-                // campodocumento_update
-                if (preg_match('#^/campodocumento/(?P<id>[^/]++)/update$#s', $pathinfo, $matches)) {
-                    if (!in_array($this->context->getMethod(), array('POST', 'PUT'))) {
-                        $allow = array_merge($allow, array('POST', 'PUT'));
-                        goto not_campodocumento_update;
-                    }
-
-                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'campodocumento_update')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\CampodocumentoController::updateAction',));
-                }
-                not_campodocumento_update:
-
-                // campodocumento_delete
-                if (preg_match('#^/campodocumento/(?P<id>[^/]++)/delete$#s', $pathinfo, $matches)) {
-                    if (!in_array($this->context->getMethod(), array('POST', 'DELETE'))) {
-                        $allow = array_merge($allow, array('POST', 'DELETE'));
-                        goto not_campodocumento_delete;
-                    }
-
-                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'campodocumento_delete')), array (  '_controller' => 'estar\\rda\\RdaBundle\\Controller\\CampodocumentoController::deleteAction',));
-                }
-                not_campodocumento_delete:
-
-            }
-
-            if (0 === strpos($pathinfo, '/categoria')) {
                 // categoria
                 if (rtrim($pathinfo, '/') === '/categoria') {
                     if (substr($pathinfo, -1) !== '/') {

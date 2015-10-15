@@ -164,12 +164,14 @@ winzou_state_machine:
 
 vich_uploader:
     db_driver: orm # or mongodb or propel or phpcr
+    storage: file_system
+
 
     mappings:
-        product_image:
-            uri_prefix:         /images/products
+        richiesta_documento:
+#            uri_prefix:         /images/products
             upload_destination: %kernel.root_dir%/../web/images/products
 
-            inject_on_load:     false
+            inject_on_load:     true
             delete_on_update:   true
             delete_on_remove:   true

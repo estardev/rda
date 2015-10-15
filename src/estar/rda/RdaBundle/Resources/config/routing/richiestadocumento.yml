@@ -16,11 +16,11 @@ richiestadocumento_create:
     methods:  POST
 
 richiestadocumento_edit:
-    path:     /{id}/edit
+    path:     /edit/{idCategoria}/{idRichiesta}/{idDocumento}
     defaults: { _controller: "estarRdaBundle:Richiestadocumento:edit" }
 
 richiestadocumento_update:
-    path:     /{id}/update
+    path:     /update/{mode}
     defaults: { _controller: "estarRdaBundle:Richiestadocumento:update" }
     methods:  [POST, PUT]
 

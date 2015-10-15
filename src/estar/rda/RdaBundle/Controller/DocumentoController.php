@@ -287,7 +287,9 @@ class DocumentoController extends Controller
         }
 
         return $this->render('estarRdaBundle:Documento:index.html.twig', array(
-            'entities' => $documenti
+            'entities' => $documenti,
+            'idRichiesta'=> $idRichiesta,
+            'idCategoria'=> $idCategoria
         ));
     }
 
