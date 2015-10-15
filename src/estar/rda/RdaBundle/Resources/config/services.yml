@@ -1,4 +1,12 @@
-services:
+#services:
 #    estar_rda.example:
 #        class: estar\rda\RdaBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
+parameters:
+    estarRdaBundle.UserCheck.class: estar\rda\RdaBundle\Controller\UserCheckController
+
+services:
+    estarRdaBundle.UserCheck:
+        class: "%estarRdaBundle.UserCheck.class%"
+        arguments:
+          session: @session
