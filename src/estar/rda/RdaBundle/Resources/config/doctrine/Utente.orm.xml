@@ -3,6 +3,7 @@
   <entity name="estar\rda\RdaBundle\Entity\Utente" table="utente">
     <indexes>
       <index name="fkUtenteAzienda1Idx" columns="idAzienda"/>
+      <index name="idFosUser" columns="idFosUser"/>
     </indexes>
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
@@ -20,6 +21,11 @@
     <many-to-one field="idazienda" target-entity="Azienda" fetch="LAZY">
       <join-columns>
         <join-column name="idAzienda" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idfosuser" target-entity="FosUser" fetch="LAZY">
+      <join-columns>
+        <join-column name="idFosUser" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

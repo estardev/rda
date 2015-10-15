@@ -1,3 +1,11 @@
+estar_rda_fosuser:
+    resource: "@estarRdaBundle/Resources/config/routing/fosuser.yml"
+    prefix:   /fosuser
+
+estar_rda_utente:
+    resource: "@estarRdaBundle/Resources/config/routing/utente.yml"
+    prefix:   /utente
+
 estar_rda_valorizzazionecamporichiesta:
     resource: "@estarRdaBundle/Resources/config/routing/valorizzazionecamporichiesta.yml"
     prefix:   /valorizzazionecamporichiesta
@@ -78,4 +86,3 @@ HomePage:
     path:     /homepage
     defaults: { _controller: estarRdaBundle:HomePage:index }
 
-#prova
