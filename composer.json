@@ -38,6 +38,7 @@
     "knplabs/knp-snappy-bundle": "dev-master",
     "winzou/state-machine-bundle": "^0.2.2",
     "dompdf/dompdf": "dev-master",
+	"friendsofsymfony/user-bundle": "~2.0@dev",
     "vich/uploader-bundle": "^0.14.0"
   },
   "require-dev": {
