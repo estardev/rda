@@ -7,16 +7,18 @@
 {% endblock %}
 
 {% block body -%}
+
+
         <div class="form-group">
             <div class="col-lg-6">
                 <div class="input-group">
-                    <select class="form-control">
+                    <select id="homepageSelectCategoria" class="form-control">
                         {% for entity in categoria %}
                         <option value="{{ entity.id }}" type="text">{{ entity.descrizione }}
                             {% endfor %}
                     </select>
           <span class="input-group-btn">
-        <button class="btn btn-default" type="button">Go!</button>
+        <button id="homepageSelectBtnCategoria" class="btn btn-default" type="button">Go!</button>
       </span>
                 </div><!-- /input-group -->
             </div><!-- /.col-lg-6 -->
@@ -98,4 +100,8 @@
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('js/homepage.js') }}"></script>
 {% endblock %}
