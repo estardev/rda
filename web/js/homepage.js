@@ -1,7 +1,7 @@
 $(document).on("click", "#homepageSelectBtnCategoria", function(){
 
     var homepageSelectCategoria = $('#homepageSelectCategoria').val();
-    //alert("Prova");
+    //alert("Provaaa");
     //alert("CategoriaId: " + homepageSelectCategoria);
 
     var url = "formtemplate/"+homepageSelectCategoria+"/new";
