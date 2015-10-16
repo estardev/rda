@@ -44,6 +44,7 @@ class RichiestaController extends Controller
 
         $entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy(array('idcategoria' => $idCategoria));
         //TODO: fare un filtro sui permessi dell'utente appena pronti
+        //TODO: fare un filtro sui permessi dell'utente relativi agli stati
         //Sono tutti pulsanti che puntano a FormTemplateController
         return $this->render('estarRdaBundle:Richiesta:index.html.twig', array(
             'entities' => $entities,
@@ -230,7 +231,7 @@ class RichiestaController extends Controller
             $em->remove($item);
         }
         $em->remove($entity);
-
+        //TODO va ripetuto per i campi documento
         $em->flush();
 //        }
 
