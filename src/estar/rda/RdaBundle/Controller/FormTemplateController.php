@@ -42,8 +42,14 @@ class FormTemplateController extends Controller
         $formbuilder = $this->createFormBuilder();
         $fieldsetVisitati = array();
         //FG 20151016 gestione dei campi della richiesta
-        $formbuilder->add("titolo");
-        $formbuilder->add("descrizione");
+        $formbuilder->add("titolo", "text", array(
+            'label' => "Titolo",
+            'data' => "Specificare un oggetto per la propria richiesta"
+        ));
+        $formbuilder->add("descrizione", "textarea", array(
+            'label' => "Descrizione",
+            'data' => "indicare descrizione, azienda sanitaria e UOC destinataria"
+        ));
 
         foreach ($campi as $campo) {
 
@@ -78,7 +84,7 @@ class FormTemplateController extends Controller
         $formbuilder->setAction($this->generateUrl('formtemplate_create', array('idCategoria' => $idCategoria)));
         $form = $formbuilder->getForm();
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('submit', 'submit', array('label' => 'Crea Nuova Richiesta'));
         return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
             'entity' => $entity,
             'form' => $form->createView()
@@ -115,19 +121,24 @@ class FormTemplateController extends Controller
         $em = $this->getDoctrine()->getManager();
 
 
+        $campi = $request->request->all();
+
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
         $richiesta = new Richiesta();
         $richiesta->setIdcategoria($categoria);
         $richiesta->setStatus('bozza');
+        $richiesta->setTitolo($campi['form']['titolo']);
+        $richiesta->setDescrizione($campi['form']['descrizione']);
         $em->persist($richiesta);
 
 
-        $campi = $request->request->all();
+
 
 
         foreach ($campi['form'] as $key => $value) {
             if (!strrpos($key, "-")) {
                 //FG20151016 salto perchè i campi li ho già sistemati prima
+                continue;
             }
             $a = explode('-', $key);
             $idCampo = $a[1];
@@ -271,11 +282,11 @@ class FormTemplateController extends Controller
         //FG 20151016 gestione dei campi della richiesta
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         $formbuilder->add("titolo", "text", array(
-            'label' => "titolo",
+            'label' => "Titolo",
             'data' => $richiesta->getTitolo()
         ));
         $formbuilder->add("descrizione", "textarea", array(
-            'label' => "descrizione",
+            'label' => "Descrizione",
             'data' => $richiesta->getDescrizione()
         ));
         $fieldsetVisitati = array();
