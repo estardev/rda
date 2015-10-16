@@ -7,20 +7,20 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Numero pratica</th>
+                <th>Id</th>
+                <th>Titolo</th>
                 <th>Status</th>
                 <th>Numero protocollo</th>
-                <th>Id</th>
                 <th>Azioni</th>
             </tr>
         </thead>
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('richiesta_show', { 'id': entity.id }) }}">{{ entity.numeropratica }}</a></td>
+                <td><a target="_blank" href="{{ path('formtemplate_show', { 'idCategoria': entity.idCategoria ,'idRichiesta': entity.id}) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.titolo }}</td>
                 <td>{{ entity.status }}</td>
                 <td>{{ entity.numeroprotocollo }}</td>
-                <td>{{ entity.id }}</td>
                 <td>
 
                     <div class="btn-group" role="group">

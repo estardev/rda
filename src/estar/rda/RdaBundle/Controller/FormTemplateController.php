@@ -41,6 +41,9 @@ class FormTemplateController extends Controller
 
         $formbuilder = $this->createFormBuilder();
         $fieldsetVisitati = array();
+        //FG 20151016 gestione dei campi della richiesta
+        $formbuilder->add("titolo");
+        $formbuilder->add("descrizione");
 
         foreach ($campi as $campo) {
 
@@ -124,7 +127,7 @@ class FormTemplateController extends Controller
 
         foreach ($campi['form'] as $key => $value) {
             if (!strrpos($key, "-")) {
-                continue;
+                //FG20151016 salto perchè i campi li ho già sistemati prima
             }
             $a = explode('-', $key);
             $idCampo = $a[1];
@@ -161,6 +164,7 @@ class FormTemplateController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+
         $repository = $this->getDoctrine()
             ->getRepository('estarRdaBundle:Campo');
 
@@ -180,7 +184,18 @@ class FormTemplateController extends Controller
 
         $formbuilder = $this->createFormBuilder();
         $fieldsetVisitati = array();
-
+        //FG 20151016 gestione dei campi della richiesta
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $formbuilder->add("titolo", "text", array(
+            'label' => "titolo",
+            'data' => $richiesta->getTitolo(),
+            'read_only' => true
+        ));
+        $formbuilder->add("descrizione", "textarea", array(
+            'label' => "descrizione",
+            'data' => $richiesta->getDescrizione(),
+            'read_only' => true
+        ));
         foreach ($campiValorizzati as $campovalorizzato) {
             $campo = $campovalorizzato->getIdcampo();
             if ($campo->getTipo() == 'radio') {
@@ -253,6 +268,16 @@ class FormTemplateController extends Controller
         );
 
         $formbuilder = $this->createFormBuilder();
+        //FG 20151016 gestione dei campi della richiesta
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $formbuilder->add("titolo", "text", array(
+            'label' => "titolo",
+            'data' => $richiesta->getTitolo()
+        ));
+        $formbuilder->add("descrizione", "textarea", array(
+            'label' => "descrizione",
+            'data' => $richiesta->getDescrizione()
+        ));
         $fieldsetVisitati = array();
 
         foreach ($campiValorizzati as $campovalorizzato) {
@@ -357,6 +382,10 @@ class FormTemplateController extends Controller
 
         $campi = $request->request->all();
 
+        //FG 20151016 valorizzazione campi richiesta
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $richiesta->setTitolo($campi['form']['titolo']);
+        $richiesta->setDescrizione($campi['form']['descrizione']);
 
         foreach ($campi['form'] as $key => $value) {
             if (!strrpos($key, "-")) {
@@ -376,6 +405,7 @@ class FormTemplateController extends Controller
 
         }
 
+        //todo sistemare la tabella richiestautente
         $em->flush();
 
         return $this->redirect($this->generateUrl("richiesta"));
