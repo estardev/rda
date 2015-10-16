@@ -2,6 +2,10 @@ richiesta:
     path:     /
     defaults: { _controller: "estarRdaBundle:Richiesta:index" }
 
+richiesta_bycategoria:
+    path:     /byCategoria/{idCategoria}
+    defaults: { _controller: "estarRdaBundle:Richiesta:indexByCategoria" }
+
 richiesta_show:
     path:     /{id}/show
     defaults: { _controller: "estarRdaBundle:Richiesta:show" }
