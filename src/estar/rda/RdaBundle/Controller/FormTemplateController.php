@@ -22,7 +22,7 @@ class FormTemplateController extends Controller
      */
     public function newAction($idCategoria)
     {
-
+        //TODO fg aggiungere il passaggio alla form della obbligatorietà o meno dei campi (manca! è tutto obbligatorio)
 
 //        $em = $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()
@@ -92,24 +92,7 @@ class FormTemplateController extends Controller
         ));
     }
 
-    /**
-     * Creates a form to create a FormTemplate entity.
-     *
-     * @param FormTemplate $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createCreateForm(FormTemplate $entity)
-    {
-        $form = $this->createForm(new FormTemplateType(), $entity, array(
-            'action' => $this->generateUrl('formtemplate_create'),
-            'method' => 'POST',
-        ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
-
-        return $form;
-    }
 
 
     public function createAction(Request $request, $idCategoria)
@@ -172,7 +155,7 @@ class FormTemplateController extends Controller
     public function showAction($idCategoria, $idRichiesta)
     {
 
-
+        //TODO: vanno aggiunti anche i documenti (generati o creati, della stessa sostanza del Padre)
         $em = $this->getDoctrine()->getManager();
 
 
@@ -260,7 +243,8 @@ class FormTemplateController extends Controller
     public function editAction($idCategoria, $idRichiesta)
     {
         $em = $this->getDoctrine()->getManager();
-
+        //TODO fg aggiungere il passaggio alla form della obbligatorietà o meno dei campi (manca! è tutto obbligatorio)
+        //TODO FG verificare: se io aggiungo un campo a una categoria ed esiste già una richiesta di questa categoria, il campo non si vede
         $repository = $this->getDoctrine()
             ->getRepository('estarRdaBundle:Campo');
 
@@ -354,7 +338,7 @@ class FormTemplateController extends Controller
         // Get the state machine for this object, and graph called "simple"
         $articleSM = $factory->get($entity, 'rda');
 
-//        TODO recupero ruolo utente
+//        TODO recupero ruolo utente e controllo se la richiesta può essere avanzata
 
 
 //        $articleSM->can('a_transition_name');

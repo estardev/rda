@@ -14,26 +14,27 @@
         <script src="{{ asset('js/jquery.js') }}"></script>
         <!-- Include all JavaScripts, compiled by Assetic -->
         <script src="{{ asset('js/bootstrap.js') }}"></script>
+
+        {% block header %}
+
+        {% endblock %}
+
+		{% block javascripts %}{% endblock %}
+
 	</head>
 	
     <body>
-    {% block header %}{% endblock %}
-</nav>
-<div class="left_block block_1">
-  {% block sidebar %}{% endblock %}
+
+        <div class="left_block block_1">
+            {% block sidebar %}{% endblock %}
 		</div>
 		<div class="container">
-			
-		
-		{% block body %}{% endblock %}
-		{% block javascripts %}{% endblock %}
-		
-		
-		</div>
-	
-	
-		
-			
-		</div>
+            {% block navbar %}
+                {{ navbar() }}
+            {% endblock %}
+	        {% block body %}{% endblock %}
+	    </div>
+
     </body>
+
 </html>
