@@ -354,7 +354,7 @@ class FormTemplateController extends Controller
         // Get the state machine for this object, and graph called "simple"
         $articleSM = $factory->get($entity, 'rda');
 
-//        TODO recupero ruolo utente
+//        TODO recupero ruolo utente e controllo se la richiesta può essere avanzata
 
 
 //        $articleSM->can('a_transition_name');
