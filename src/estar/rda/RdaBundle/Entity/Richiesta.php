@@ -193,4 +193,62 @@ class Richiesta
     {
         return $this->idazienda;
     }
+    /**
+     * @var string
+     */
+    private $titolo;
+
+    /**
+     * @var string
+     */
+    private $descrizione;
+
+
+    /**
+     * Set titolo
+     *
+     * @param string $titolo
+     *
+     * @return Richiesta
+     */
+    public function setTitolo($titolo)
+    {
+        $this->titolo = $titolo;
+    
+        return $this;
+    }
+
+    /**
+     * Get titolo
+     *
+     * @return string
+     */
+    public function getTitolo()
+    {
+        return $this->titolo;
+    }
+
+    /**
+     * Set descrizione
+     *
+     * @param string $descrizione
+     *
+     * @return Richiesta
+     */
+    public function setDescrizione($descrizione)
+    {
+        $this->descrizione = $descrizione;
+    
+        return $this;
+    }
+
+    /**
+     * Get descrizione
+     *
+     * @return string
+     */
+    public function getDescrizione()
+    {
+        return $this->descrizione;
+    }
 }

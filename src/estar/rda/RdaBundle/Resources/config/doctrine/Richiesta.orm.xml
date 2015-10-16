@@ -8,6 +8,16 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
+    <field name="titolo" type="string" column="titolo" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descrizione" type="text" column="descrizione" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
     <field name="numeropratica" type="string" column="numeroPratica" length="45" nullable="true">
       <options>
         <option name="fixed"/>
