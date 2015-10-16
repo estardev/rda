@@ -22,7 +22,7 @@ class FormTemplateController extends Controller
      */
     public function newAction($idCategoria)
     {
-
+        //TODO fg aggiungere il passaggio alla form della obbligatorietà o meno dei campi (manca! è tutto obbligatorio)
 
 //        $em = $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()
@@ -260,7 +260,7 @@ class FormTemplateController extends Controller
     public function editAction($idCategoria, $idRichiesta)
     {
         $em = $this->getDoctrine()->getManager();
-
+        //TODO fg aggiungere il passaggio alla form della obbligatorietà o meno dei campi (manca! è tutto obbligatorio)
         $repository = $this->getDoctrine()
             ->getRepository('estarRdaBundle:Campo');
 

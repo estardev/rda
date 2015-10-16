@@ -273,24 +273,25 @@ class DocumentoController extends Controller
             $qb = $repo->createQueryBuilder('rd');
             $qb->select('COUNT(rd)');
             $qb->where('rd.iddocumento = :idDocumento');
+            $qb->andWhere('rd.idrichiesta = :idRichiesta');
             $qb->setParameter('idDocumento', $entity->getIddocumento()->getId());
-
+            $qb->setParameter('idRichiesta', $idRichiesta);
             $count = $qb->getQuery()->getSingleScalarResult();
             $rd = $repo->findOneBy(array('iddocumento' => $entity->getIddocumento()->getId()));
             $helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
-            $path = $helper->asset($rd, 'docFile');
+            //$path = $helper->asset($rd, 'docFile');
 
             // - se il documento NON ha righe di richiestadocumento un alert che il documento è mancante
             $alert = ($count != 0) ? false : true;
             $documenti[$documento->getId()]['alert'] = $alert;
-            $documenti[$documento->getId()]['path'] = $path;
+            //$documenti[$documento->getId()]['path'] = $path;
         }
         foreach ($documenti as $documento) {
             //if (primocaso) metti pulsante upload che transiziona verso richiestadocumentocontroller.uploadform
             //if (secondocaso) metti pulsante edit che transiziona verso richiestadocumentocontroller.editaction
             //if (terzocaso) c'è da studiare qualcosa
         }
-        $file = $rd->getdocFile();
+        //$file = $rd->getdocFile();
         return $this->render('estarRdaBundle:Documento:index.html.twig', array(
             'entities' => $documenti,
             'idRichiesta' => $idRichiesta,
