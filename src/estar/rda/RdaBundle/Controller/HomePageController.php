@@ -8,7 +8,7 @@ class HomePageController extends Controller
 {
     public function indexAction()
     {
-       $utenteSessione= $this->get('security.context')->getToken()->getUser();
+       $utenteSessione= $this->getUser();
        //$idutenteSessione = $utenteSessione->getId();
        //
         $em = $this->getDoctrine()->getManager();

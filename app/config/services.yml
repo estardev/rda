@@ -11,3 +11,11 @@ services:
         class: estar\rda\RdaBundle\Form\RegistrationType
         tags:
             - { name: form.type, alias: app_user_registration }
+  app.twig_extension:
+          class: estar\rda\RdaBundle\Twig\NavbarExtension
+          public: false
+          tags:
+              - { name: twig.extension }
+          arguments:
+                      em: "@doctrine.orm.entity_manager"
+                      user: "@security.context"
