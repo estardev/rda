@@ -21,6 +21,7 @@ class AppKernel extends Kernel
 			new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
 			new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
             new FOS\UserBundle\FOSUserBundle(),
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             //new Slik\DompdfBundle\SlikDompdfBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             new winzou\Bundle\StateMachineBundle\winzouStateMachineBundle(),

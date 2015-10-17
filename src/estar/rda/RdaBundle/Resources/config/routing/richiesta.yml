@@ -5,6 +5,8 @@ richiesta:
 richiesta_bycategoria:
     path:     /byCategoria/{idCategoria}
     defaults: { _controller: "estarRdaBundle:Richiesta:indexByCategoria" }
+    options:
+          expose: true
 
 richiesta_show:
     path:     /{id}/show

@@ -90,3 +90,20 @@ HomePage:
     path:     /homepage
     defaults: { _controller: estarRdaBundle:HomePage:index }
 
+navbarSelectedSessionSet:
+    path:     /navbarSelectedSession/set
+    defaults: { _controller: estarRdaBundle:NavbarSelectedSession:setNavbarSession }
+    options:
+      expose: true
+
+navbarSelectedSessionGet:
+    path:     /navbarSelectedSession/get
+    defaults: { _controller: estarRdaBundle:NavbarSelectedSession:getNavbarSession }
+    options:
+      expose: true
+
+navbarSelectedSessionClear:
+    path:     /navbarSelectedSession/clear
+    defaults: { _controller: estarRdaBundle:NavbarSelectedSession:clearNavbarSession }
+    options:
+      expose: true

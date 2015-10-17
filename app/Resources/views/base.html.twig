@@ -14,24 +14,30 @@
         <script src="{{ asset('js/jquery.js') }}"></script>
         <!-- Include all JavaScripts, compiled by Assetic -->
         <script src="{{ asset('js/bootstrap.js') }}"></script>
+        <!-- Include FOSJsRoutingBundle, compiled by Assetic -->
+        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 
         {% block header %}
 
         {% endblock %}
 
-		{% block javascripts %}{% endblock %}
+
+		{% block javascripts %}
+            <script type="text/javascript" src="{{ asset('js/navbar.js') }}"></script>
+        {% endblock %}
 
 	</head>
 	
     <body>
-
+        {% block navbar %}
+            {{ navbar() }}
+        {% endblock %}
         <div class="left_block block_1">
             {% block sidebar %}{% endblock %}
 		</div>
-		<div class="container">
-            {% block navbar %}
-                {{ navbar() }}
-            {% endblock %}
+		<div class="container" style="display: none">
+
 	        {% block body %}{% endblock %}
 	    </div>
 

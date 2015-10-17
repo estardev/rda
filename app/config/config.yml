@@ -166,7 +166,7 @@ winzou_state_machine:
                 email_on_publish:
                     on:   'publish'
                     do:   [@my.awesome.service, 'sendEmail']
-                    args: ['object', '"Email title"']                    args: ['object', '"Email title"']
+                    args: ['object', '"Email title"']
 
 vich_uploader:
     db_driver: orm # or mongodb or propel or phpcr
