@@ -31,6 +31,27 @@ class RichiestaController extends Controller
     }
 
     /**
+     *
+     * Trova tutte le richieste filtrando per categoria (e utente da sessione)
+     *
+     * @author Francesco Galli - francesco01.galli@star.toscana.it
+     * @param $idCategoria
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function indexByCategoriaAction($idCategoria)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy(array('idcategoria' => $idCategoria));
+        //TODO: fare un filtro sui permessi dell'utente appena pronti
+        //TODO: fare un filtro sui permessi dell'utente relativi agli stati
+        //Sono tutti pulsanti che puntano a FormTemplateController
+        return $this->render('estarRdaBundle:Richiesta:index.html.twig', array(
+            'entities' => $entities,
+        ));
+    }
+
+    /**
      * Creates a new Richiesta entity.
      *
      */
@@ -210,7 +231,7 @@ class RichiestaController extends Controller
             $em->remove($item);
         }
         $em->remove($entity);
-
+        //TODO va ripetuto per i campi documento
         $em->flush();
 //        }
 

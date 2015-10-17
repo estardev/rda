@@ -4,8 +4,10 @@ html, body {
 	width: 100%;
 	height: 100%; 
 }
-body { padding-top: 70px; }
 
+body{
+
+}
 
 .left_block {
 	display: block;
@@ -19,4 +21,19 @@ body { padding-top: 70px; }
 
 .h4 {
 	 font-weight: bold;
+}
+
+.navbar-brand {
+	float: none;
+}
+
+.navbar-center
+{
+	position: absolute;
+	width: 100%;
+	left: 0;
+	top: 0;
+	text-align: center;
+	margin: auto;
+	height:100%;
 }

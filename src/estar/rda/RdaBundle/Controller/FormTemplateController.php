@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\FormTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
+//commento per commit
 class FormTemplateController extends Controller
 {
 
@@ -22,7 +22,7 @@ class FormTemplateController extends Controller
      */
     public function newAction($idCategoria)
     {
-
+        //TODO fg aggiungere il passaggio alla form della obbligatorietà o meno dei campi (manca! è tutto obbligatorio)
 
 //        $em = $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()
@@ -41,6 +41,15 @@ class FormTemplateController extends Controller
 
         $formbuilder = $this->createFormBuilder();
         $fieldsetVisitati = array();
+        //FG 20151016 gestione dei campi della richiesta
+        $formbuilder->add("titolo", "text", array(
+            'label' => "Titolo",
+            'data' => "Specificare un oggetto per la propria richiesta"
+        ));
+        $formbuilder->add("descrizione", "textarea", array(
+            'label' => "Descrizione",
+            'data' => "indicare descrizione, azienda sanitaria e UOC destinataria"
+        ));
 
         foreach ($campi as $campo) {
 
@@ -75,7 +84,7 @@ class FormTemplateController extends Controller
         $formbuilder->setAction($this->generateUrl('formtemplate_create', array('idCategoria' => $idCategoria)));
         $form = $formbuilder->getForm();
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('submit', 'submit', array('label' => 'Crea Nuova Richiesta'));
         return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
             'entity' => $entity,
             'form' => $form->createView()
@@ -83,24 +92,7 @@ class FormTemplateController extends Controller
         ));
     }
 
-    /**
-     * Creates a form to create a FormTemplate entity.
-     *
-     * @param FormTemplate $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createCreateForm(FormTemplate $entity)
-    {
-        $form = $this->createForm(new FormTemplateType(), $entity, array(
-            'action' => $this->generateUrl('formtemplate_create'),
-            'method' => 'POST',
-        ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
-
-        return $form;
-    }
 
 
     public function createAction(Request $request, $idCategoria)
@@ -112,18 +104,23 @@ class FormTemplateController extends Controller
         $em = $this->getDoctrine()->getManager();
 
 
+        $campi = $request->request->all();
+
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
         $richiesta = new Richiesta();
         $richiesta->setIdcategoria($categoria);
         $richiesta->setStatus('bozza');
+        $richiesta->setTitolo($campi['form']['titolo']);
+        $richiesta->setDescrizione($campi['form']['descrizione']);
         $em->persist($richiesta);
 
 
-        $campi = $request->request->all();
+
 
 
         foreach ($campi['form'] as $key => $value) {
             if (!strrpos($key, "-")) {
+                //FG20151016 salto perchè i campi li ho già sistemati prima
                 continue;
             }
             $a = explode('-', $key);
@@ -158,8 +155,9 @@ class FormTemplateController extends Controller
     public function showAction($idCategoria, $idRichiesta)
     {
 
-
+        //TODO: vanno aggiunti anche i documenti (generati o creati, della stessa sostanza del Padre)
         $em = $this->getDoctrine()->getManager();
+
 
         $repository = $this->getDoctrine()
             ->getRepository('estarRdaBundle:Campo');
@@ -180,7 +178,18 @@ class FormTemplateController extends Controller
 
         $formbuilder = $this->createFormBuilder();
         $fieldsetVisitati = array();
-
+        //FG 20151016 gestione dei campi della richiesta
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $formbuilder->add("titolo", "text", array(
+            'label' => "titolo",
+            'data' => $richiesta->getTitolo(),
+            'read_only' => true
+        ));
+        $formbuilder->add("descrizione", "textarea", array(
+            'label' => "descrizione",
+            'data' => $richiesta->getDescrizione(),
+            'read_only' => true
+        ));
         foreach ($campiValorizzati as $campovalorizzato) {
             $campo = $campovalorizzato->getIdcampo();
             if ($campo->getTipo() == 'radio') {
@@ -234,7 +243,8 @@ class FormTemplateController extends Controller
     public function editAction($idCategoria, $idRichiesta)
     {
         $em = $this->getDoctrine()->getManager();
-
+        //TODO fg aggiungere il passaggio alla form della obbligatorietà o meno dei campi (manca! è tutto obbligatorio)
+        //TODO FG verificare: se io aggiungo un campo a una categoria ed esiste già una richiesta di questa categoria, il campo non si vede
         $repository = $this->getDoctrine()
             ->getRepository('estarRdaBundle:Campo');
 
@@ -253,6 +263,16 @@ class FormTemplateController extends Controller
         );
 
         $formbuilder = $this->createFormBuilder();
+        //FG 20151016 gestione dei campi della richiesta
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $formbuilder->add("titolo", "text", array(
+            'label' => "Titolo",
+            'data' => $richiesta->getTitolo()
+        ));
+        $formbuilder->add("descrizione", "textarea", array(
+            'label' => "Descrizione",
+            'data' => $richiesta->getDescrizione()
+        ));
         $fieldsetVisitati = array();
 
         foreach ($campiValorizzati as $campovalorizzato) {
@@ -318,7 +338,7 @@ class FormTemplateController extends Controller
         // Get the state machine for this object, and graph called "simple"
         $articleSM = $factory->get($entity, 'rda');
 
-//        TODO recupero ruolo utente
+//        TODO recupero ruolo utente e controllo se la richiesta può essere avanzata
 
 
 //        $articleSM->can('a_transition_name');
@@ -357,6 +377,10 @@ class FormTemplateController extends Controller
 
         $campi = $request->request->all();
 
+        //FG 20151016 valorizzazione campi richiesta
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $richiesta->setTitolo($campi['form']['titolo']);
+        $richiesta->setDescrizione($campi['form']['descrizione']);
 
         foreach ($campi['form'] as $key => $value) {
             if (!strrpos($key, "-")) {
@@ -376,6 +400,7 @@ class FormTemplateController extends Controller
 
         }
 
+        //todo sistemare la tabella richiestautente
         $em->flush();
 
         return $this->redirect($this->generateUrl("richiesta"));

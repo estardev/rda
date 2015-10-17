@@ -1,7 +1,7 @@
 <?php
 
 namespace estar\rda\RdaBundle\Entity;
-
+//commento per modifica
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 

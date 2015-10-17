@@ -8,14 +8,10 @@ class HomePageController extends Controller
 {
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        //$container->get("starRdaBundle.UserCheck")->someMethodCall();
-        //$notify = $this->get("estarrdabundle.usercheck");
-        //$utente = $notify->getSessionName(); //non funziona
-
-       $utenteSessione= $this->get('security.context')->getToken()->getUser();
+       $utenteSessione= $this->getUser();
        //$idutenteSessione = $utenteSessione->getId();
+       //
+        $em = $this->getDoctrine()->getManager();
        // $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Utente');
        // $utente = $repository->findOneBy(array(
        //     'idfosuser'=>$idutenteSessione)
@@ -33,9 +29,8 @@ class HomePageController extends Controller
        // $abilitatoinserimentorichieste = $campogruppo->getAbilitatoinserimentorichieste();
        // $validatoretecnico = $campogruppo->getValidatoretecnico();
        // $validatoreAmministrativo = $campogruppo->getValidatoreamministrativo();
-        //dump($campogruppo);
-        //dump($utente);
-
+       // dump($campogruppo);
+       //
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->findAll();
 
@@ -47,6 +42,5 @@ class HomePageController extends Controller
         ));
 
     }
-
 
 }

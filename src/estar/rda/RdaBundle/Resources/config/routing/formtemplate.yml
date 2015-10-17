@@ -9,6 +9,8 @@ formtempate_showpdf:
 formtemplate_new:
     path:     /{idCategoria}/new
     defaults: { _controller: "estarRdaBundle:FormTemplate:new" }
+    options:
+      expose: true
 
 formtemplate_create:
     path:     /create/{idCategoria}

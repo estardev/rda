@@ -1,5 +1,5 @@
 richiestadocumento:
-    path:     /{idCategoria}/{idRichiesta}
+    path:     /
     defaults: { _controller: "estarRdaBundle:Richiestadocumento:index" }
 
 richiestadocumento_show:
@@ -20,7 +20,7 @@ richiestadocumento_edit:
     defaults: { _controller: "estarRdaBundle:Richiestadocumento:edit" }
 
 richiestadocumento_update:
-    path:     /update/{mode}
+    path:     /update/{modo}/{idCategoria}/{idRichiesta}/{idDocumento}
     defaults: { _controller: "estarRdaBundle:Richiestadocumento:update" }
     methods:  [POST, PUT]
 
