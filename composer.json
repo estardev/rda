@@ -39,7 +39,8 @@
     "winzou/state-machine-bundle": "^0.2.2",
     "dompdf/dompdf": "dev-master",
 	"friendsofsymfony/user-bundle": "~2.0@dev",
-    "vich/uploader-bundle": "^0.14.0"
+    "vich/uploader-bundle": "^0.14.0",
+    "friendsofsymfony/jsrouting-bundle": "^1.5"
   },
   "require-dev": {
     "sensio/generator-bundle": "~2.3"

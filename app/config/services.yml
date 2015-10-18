@@ -19,3 +19,4 @@ services:
           arguments:
                       em: "@doctrine.orm.entity_manager"
                       user: "@security.context"
+                      session: "@session"

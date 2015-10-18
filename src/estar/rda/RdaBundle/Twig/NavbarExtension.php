@@ -15,10 +15,11 @@ class NavbarExtension extends \Twig_Extension
 
     protected $em;
 
-    public function __construct($em, $user)
+    public function __construct($em, $user, $session)
     {
         $this->em = $em;
         $this->user = $user;
+        $this->session = $session;
     }
 
            public function getFunctions()
@@ -33,17 +34,18 @@ class NavbarExtension extends \Twig_Extension
     public function renderNavbar(\Twig_Environment $twig)
     {
 
-        //$utenteSessione= $this->getUser();
         $utenteSessione= $this->user->getToken()->getUser();
 
         $categoria = $this->em->getRepository('estarRdaBundle:Categoria')->findAll();
         $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')->findAll();
 
+        $categoriaSelezionata = $this->session->get('homepageSelectCategoria');
+
         return $twig->render('estarRdaBundle::navbar.html.twig', array(
             'richiesta' => $richiesta,
             'categoria'=> $categoria,
             'utente' => ucfirst($utenteSessione),
-
+            'categoriaSelezionata' => $categoriaSelezionata
         ));
     }
 

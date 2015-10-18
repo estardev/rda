@@ -20,36 +20,47 @@
             <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
         </form>
 
+        {% if is_granted("ROLE_USER") %}
+
         <form class="navbar-form navbar-left">
             <div class="form-group">
                 <select id="homepageSelectCategoria" class="form-control">
+                    {% if categoriaSelezionata != '' %}
+                        <option value="defaultDisabledNavbarOption" disabled>Seleziona una categoria:</option>
+                    {% else %}
+                        <option value="defaultDisabledNavbarOption" disabled selected>Seleziona una categoria:</option>
+                    {% endif %}
                     {% for entity in categoria %}
-                        <option value="{{ entity.id }}" type="text">{{ entity.descrizione }}</option>
+                        {% if entity.id == categoriaSelezionata %}
+                            <option value="{{ entity.id }}" type="text" selected>{{ entity.descrizione }}</option>
+                        {% else %}
+                            <option value="{{ entity.id }}" type="text">{{ entity.descrizione }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
             </div>
-            <button type="button" id="homepageSelectBtnCategoria" class="btn btn-default" >Nuova</button>
+            <button type="button" id="homepageSelectBtnCategoria" class="btn btn-default">Nuova</button>
         </form>
 
         <ul class="nav navbar-nav navbar-right">
 
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    {#<b>Benvenuto {{ utente }}</b>#}
-                    {#{% if is_granted("ROLE") %}#}
-                    Benvenuto, <b>{{ app.user.username|upper }}</b>
-                    {#{% endif %}#}
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="./profile">Visualizza Utente</a></li>
-                    <li class="divider"></li>
-                    <li><a href="./profile/change-password">Cambio Password</a></li>
-                    <li class="divider"></li>
-                    <li><a href="./logout">Logout</a></li>
-                </ul>
-            </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Benvenuto, <b>{{ app.user.username|upper }}</b>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ path('fos_user_profile_show') }}">Visualizza Utente</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ path('fos_user_change_password') }}">Cambio Password</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ path('fos_user_security_logout') }}">Logout</a></li>
+                    </ul>
+                </li>
+
         </ul>
+
+        {% endif %}
 
     </div><!-- /.navbar-collapse -->
 </nav>
