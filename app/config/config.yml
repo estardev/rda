@@ -130,7 +130,7 @@ winzou_state_machine:
             - attesa_val_tec
             - attesa_val_amm
             - inserita_ABS
-            # list of all possible transitions:
+        # list of all possible transitions:
         transitions:
             presentata:
                 from: [bozza]

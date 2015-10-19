@@ -3,7 +3,7 @@
 {% block body -%}
     <h1>Azienda creation</h1>
 
-    {{ form(form) }}
+    {{ form(form, {'attr': {'novalidate': 'novalidate'}}), {'attr': {'novalidate': 'novalidate'}}) }}
 
         <ul class="record_actions">
     <li>
