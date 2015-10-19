@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use estar\rda\RdaBundle\Entity\Richiestadocumento;
 use estar\rda\RdaBundle\Form\RichiestadocumentoType;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Richiestadocumento controller.
@@ -94,23 +95,70 @@ class RichiestadocumentoController extends Controller
      * Finds and displays a Richiestadocumento entity.
      *
      */
-    public function showAction($id)
+    public function showAction($idCategoria, $idRichiesta, $idDocumento)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('estarRdaBundle:Richiestadocumento')->find($id);
+        $repository = $em->getRepository('estarRdaBundle:Richiestadocumento');
 
+        $entity = $repository->findOneBy(
+            array('iddocumento' => $idDocumento, 'idrichiesta' => $idRichiesta)
+
+        );
+
+
+        $repository = $this->getDoctrine()
+            ->getRepository('estarRdaBundle:Valorizzazionecampodocumento');
+
+        $campiValorizzati = $repository->findBy(
+            array('idrichiestadocumento' => $entity->getId())
+        );
+
+
+        $formbuilder = $this->createFormBuilder();
+
+
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $formbuilder->add("titolo", "text", array(
+            'label' => "titolo",
+            'data' => $richiesta->getTitolo(),
+            'read_only' => true
+        ));
+        $formbuilder->add("descrizione", "textarea", array(
+            'label' => "descrizione",
+            'data' => $richiesta->getDescrizione(),
+            'read_only' => true
+        ));
+        foreach ($campiValorizzati as $campovalorizzato) {
+            $campo = $campovalorizzato->getIdcampodocumento();
+            if ($campo->getTipo() == 'radio') {
+                $fieldsetName = $campo->getFieldset();
+
+                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
+                    'label' => $fieldsetName,
+                    'data' => $campo->getDescrizione(),
+                    'read_only' => true
+                ));
+            } else {
+
+                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
+                    'label' => $campo->getDescrizione(),
+                    'data' => $campovalorizzato->getValore(),
+                    'read_only' => true
+                ));
+            }
+        }
+        $form = $formbuilder->getForm();
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Richiestadocumento entity.');
+            throw $this->createNotFoundException('Unable to find FormTemplate entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
+            'form' => $form->createView()
 
-        return $this->render('estarRdaBundle:Richiestadocumento:show.html.twig', array(
-            'entity' => $entity,
-            'delete_form' => $deleteForm->createView(),
         ));
     }
+
 
     /**
      * Displays a form to edit an existing Richiestadocumento entity.
@@ -118,7 +166,7 @@ class RichiestadocumentoController extends Controller
      */
     public function editAction($idCategoria, $idRichiesta, $idDocumento)
     {
-        //TODO vanno sistemati i parametri
+        // vanno sistemati i parametri
         //tira su il documento
 
         $mode = 'crea';
@@ -273,7 +321,7 @@ class RichiestadocumentoController extends Controller
 
         $em->flush();
 
-        return $this->redirect($this->generateUrl("documento_byCategoria", array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'idDocumento' => $idDocumento)));
+        return $this->redirect($this->generateUrl("documento_byCategoria", array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
 
     }
 
@@ -321,30 +369,104 @@ class RichiestadocumentoController extends Controller
     public function uploadAction(Request $request, $idRichiesta, $idDocumento)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        //tira su la richiesta e il documento
-
-//        if ($request->getMethod() == 'POST') {
         $doc = $request->files->get('docfile');
-//        }
+        $repository = $em->getRepository('estarRdaBundle:Richiestadocumento');
+        $rd = $repository->findOneBy(
+            array('idrichiesta' => $idRichiesta, 'iddocumento' => $idDocumento));
 
-        $rd = new Richiestadocumento();
+
         $repository = $em->getRepository('estarRdaBundle:Richiesta');
         $richiesta = $repository->find($idRichiesta);
         $idCategoria = $richiesta->getIdcategoria()->getId();
-        $rd->setIdrichiesta($richiesta);
-        $repository = $em->getRepository('estarRdaBundle:Documento');
-        $documento = $repository->find($idDocumento);
-        $rd->setIddocumento($documento);
+        if (!$rd) {
+            $rd = new Richiestadocumento();
+
+            $rd->setIdrichiesta($richiesta);
+            $repository = $em->getRepository('estarRdaBundle:Documento');
+            $documento = $repository->find($idDocumento);
+            $rd->setIddocumento($documento);
+            $rd->setdocFile($doc);
+            $em->persist($rd);
+        }
+
         $rd->setdocFile($doc);
-//        $rd->setFilepath($doc->getClientOriginalName());
-        $em->persist($rd);
         $em->flush();
 
-//        $this->container->get('vich_uploader.storage')->upload($entity);
+
         return $this->redirect($this->generateUrl('documento_byCategoria', array('idRichiesta' => $idRichiesta, 'idCategoria' => $idCategoria)));
-        //crea una riga di richiestaDocumento collegata alla richiesta e al documento
-        //mette il pathname nel campo filePath
-        //persste
-        //redirect verso documentoController.byCategoriaRichiesta
+
+    }
+
+
+    public function printAction($idCategoria, $idRichiesta, $idDocumento)
+    {
+
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('estarRdaBundle:Richiestadocumento');
+
+        $entity = $repository->findOneBy(
+            array('iddocumento' => $idDocumento, 'idrichiesta' => $idRichiesta)
+
+        );
+
+
+        $repository = $this->getDoctrine()
+            ->getRepository('estarRdaBundle:Valorizzazionecampodocumento');
+
+        $campiValorizzati = $repository->findBy(
+            array('idrichiestadocumento' => $entity->getId())
+        );
+
+
+        $formbuilder = $this->createFormBuilder();
+
+
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $formbuilder->add("titolo", "text", array(
+            'label' => "titolo",
+            'data' => $richiesta->getTitolo(),
+            'read_only' => true
+        ));
+        $formbuilder->add("descrizione", "textarea", array(
+            'label' => "descrizione",
+            'data' => $richiesta->getDescrizione(),
+            'read_only' => true
+        ));
+        foreach ($campiValorizzati as $campovalorizzato) {
+            $campo = $campovalorizzato->getIdcampodocumento();
+            if ($campo->getTipo() == 'radio') {
+                $fieldsetName = $campo->getFieldset();
+
+                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
+                    'label' => $fieldsetName,
+                    'data' => $campo->getDescrizione(),
+                    'read_only' => true
+                ));
+            } else {
+
+                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
+                    'label' => $campo->getDescrizione(),
+                    'data' => $campovalorizzato->getValore(),
+                    'read_only' => true
+                ));
+            }
+        }
+        $form = $formbuilder->getForm();
+
+        $html = $this->renderView('::printbase.html.twig', array(
+            'form' => $form->createView()
+        ));
+
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            200,
+            array(
+                'Content-Type' => 'application/pdf',
+//                'Content-Disposition'   => 'attachment; filename="pippo.pdf"'
+            )
+        );
     }
 }

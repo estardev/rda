@@ -11,6 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\FormTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
+
 //commento per commit
 class FormTemplateController extends Controller
 {
@@ -22,7 +25,7 @@ class FormTemplateController extends Controller
      */
     public function newAction($idCategoria)
     {
-        //TODO fg aggiungere il passaggio alla form della obbligatorietà o meno dei campi (manca! è tutto obbligatorio)
+        //TODO fg aggiungere il passaggio alla form della obbligatorietï¿½ o meno dei campi (manca! ï¿½ tutto obbligatorio)
 
 //        $em = $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()
@@ -35,9 +38,7 @@ class FormTemplateController extends Controller
         );
 
 
-
-
-        $entity = new FormTemplate($idCategoria, $campi);
+//        $entity = new FormTemplate($idCategoria, $campi);
 
         $formbuilder = $this->createFormBuilder();
         $fieldsetVisitati = array();
@@ -52,9 +53,10 @@ class FormTemplateController extends Controller
         ));
 
         foreach ($campi as $campo) {
-
+            $obbligatorio = $campo->getObbligatorioinserzione();
             if ($campo->getTipo() == 'radio') {
                 $fieldsetName = $campo->getFieldset();
+
                 if (in_array($fieldsetName, $fieldsetVisitati)) {
                     continue;
                 }
@@ -66,18 +68,34 @@ class FormTemplateController extends Controller
                         array_push($options, $item->getDescrizione());
 
                 }
+                if ($obbligatorio) {
+                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
+                        'choices' => $options,
+                        'expanded' => true,
+                        'multiple' => false,
+                        'label' => $fieldsetName,
+                        'constraints' => new NotBlank()
+                    ));
+                } else {
+                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
+                        'choices' => $options,
+                        'expanded' => true,
+                        'multiple' => false,
+                        'label' => $fieldsetName
+                    ));
+                }
 
-                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
-                    'choices' => $options,
-                    'expanded' => true,
-                    'multiple' => false,
-                    'label' => $fieldsetName
-                ));
             } else {
-
-                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
-                    'label' => $campo->getDescrizione()
-                ));
+                if ($obbligatorio) {
+                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
+                        'label' => $campo->getDescrizione(),
+                        'constraints' => new NotNull()
+                    ));
+                } else {
+                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
+                        'label' => $campo->getDescrizione(),
+                    ));
+                }
             }
         }
 
@@ -86,13 +104,11 @@ class FormTemplateController extends Controller
 
         $form->add('submit', 'submit', array('label' => 'Crea Nuova Richiesta'));
         return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
-            'entity' => $entity,
+//            'entity' => $entity,
             'form' => $form->createView()
 
         ));
     }
-
-
 
 
     public function createAction(Request $request, $idCategoria)
@@ -115,12 +131,9 @@ class FormTemplateController extends Controller
         $em->persist($richiesta);
 
 
-
-
-
         foreach ($campi['form'] as $key => $value) {
             if (!strrpos($key, "-")) {
-                //FG20151016 salto perchè i campi li ho già sistemati prima
+                //FG20151016 salto perchï¿½ i campi li ho giï¿½ sistemati prima
                 continue;
             }
             $a = explode('-', $key);
@@ -138,10 +151,10 @@ class FormTemplateController extends Controller
 
         $em->flush();
 
-
-        return $this->render('estarRdaBundle:FormTemplate:create.html.twig', array(
-            'request' => $request
-        ));
+        return $this->redirect($this->generateUrl("richiesta_bycategoria", array("idCategoria" => $idCategoria)));
+//        return $this->render('estarRdaBundle:FormTemplate:create.html.twig', array(
+//            'request' => $request
+//        ));
 
     }
 
@@ -178,7 +191,7 @@ class FormTemplateController extends Controller
 
         $formbuilder = $this->createFormBuilder();
         $fieldsetVisitati = array();
-        //FG 20151016 gestione dei campi della richiesta
+        //TODO FG 20151016 gestione dei campi della richiesta
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         $formbuilder->add("titolo", "text", array(
             'label' => "titolo",
@@ -223,10 +236,10 @@ class FormTemplateController extends Controller
 
     public function showpdfAction($idCategoria, $idRichiesta)
     {
-        require_once($this->get('kernel')->getRootDir().'/config/dompdf_config.inc.php');
+        require_once($this->get('kernel')->getRootDir() . '/config/dompdf_config.inc.php');
 
         $dompdf = new \DOMPDF();
-        $htmlfinale =  $this->showAction($idCategoria, $idRichiesta);
+        $htmlfinale = $this->showAction($idCategoria, $idRichiesta);
 
         $dompdf->load_html($htmlfinale);
         $dompdf->render();
@@ -236,6 +249,7 @@ class FormTemplateController extends Controller
             'Content-Type' => 'application/pdf'
         ));
     }
+
     /**
      * Displays a form to edit an existing Richiesta entity.
      *
@@ -243,8 +257,8 @@ class FormTemplateController extends Controller
     public function editAction($idCategoria, $idRichiesta)
     {
         $em = $this->getDoctrine()->getManager();
-        //TODO fg aggiungere il passaggio alla form della obbligatorietà o meno dei campi (manca! è tutto obbligatorio)
-        //TODO FG verificare: se io aggiungo un campo a una categoria ed esiste già una richiesta di questa categoria, il campo non si vede
+        //TODO fg aggiungere il passaggio alla form della obbligatorietï¿½ o meno dei campi (manca! ï¿½ tutto obbligatorio)
+        //TODO FG verificare: se io aggiungo un campo a una categoria ed esiste giï¿½ una richiesta di questa categoria, il campo non si vede
         $repository = $this->getDoctrine()
             ->getRepository('estarRdaBundle:Campo');
 
@@ -338,7 +352,7 @@ class FormTemplateController extends Controller
         // Get the state machine for this object, and graph called "simple"
         $articleSM = $factory->get($entity, 'rda');
 
-//        TODO recupero ruolo utente e controllo se la richiesta può essere avanzata
+//        TODO recupero ruolo utente e controllo se la richiesta puï¿½ essere avanzata
 
 
 //        $articleSM->can('a_transition_name');
@@ -347,13 +361,13 @@ class FormTemplateController extends Controller
 
         $formbuilder = $this->createFormBuilder();
 
-        $validaForms=array();
-        foreach ($possibili as $key=>$value) {
+        $validaForms = array();
+        foreach ($possibili as $key => $value) {
 
             $formbuilder->setAction($this->generateUrl('richiesta_valida', array('id' => $idRichiesta, 'transizione' => $value)));
             $validaForm = $formbuilder->getForm();
             $validaForm->add('submit', 'submit', array('label' => $value));
-            array_push($validaForms,$validaForm->createView());
+            array_push($validaForms, $validaForm->createView());
         }
 
 
@@ -458,7 +472,7 @@ class FormTemplateController extends Controller
             throw $this->createNotFoundException('Unable to find FormTemplate entity.');
         }
 
-        $html = $this->renderView('estarRdaBundle:FormTemplate:new.html.twig', array(
+        $html = $this->renderView('::printbase.html.twig', array(
             'entity' => $entity,
             'form' => $form->createView()
         ));

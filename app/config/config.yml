@@ -116,7 +116,8 @@ fos_user:
 knp_snappy:
     pdf:
         enabled:    true
-        binary:     /usr/local/bin/wkhtmltopdf
+        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+#        binary:     /usr/local/bin/wkhtmltopdf
         options:    []
 
 winzou_state_machine:
@@ -130,7 +131,7 @@ winzou_state_machine:
             - attesa_val_tec
             - attesa_val_amm
             - inserita_ABS
-            # list of all possible transitions:
+        # list of all possible transitions:
         transitions:
             presentata:
                 from: [bozza]
@@ -175,7 +176,7 @@ vich_uploader:
 
     mappings:
         richiesta_documento:
-#            uri_prefix:         /images/products
+            uri_prefix:         /images/products
             upload_destination: %kernel.root_dir%/../web/images/products
 
             inject_on_load:     true

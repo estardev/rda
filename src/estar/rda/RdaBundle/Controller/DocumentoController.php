@@ -277,8 +277,8 @@ class DocumentoController extends Controller
             $qb->setParameter('idDocumento', $entity->getIddocumento()->getId());
             $qb->setParameter('idRichiesta', $idRichiesta);
             $count = $qb->getQuery()->getSingleScalarResult();
-            $rd = $repo->findOneBy(array('iddocumento' => $entity->getIddocumento()->getId()));
-            $helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
+            $rd = $repo->findOneBy(array('iddocumento' => $entity->getIddocumento()->getId(),'idrichiesta'=>$idRichiesta));
+//            $helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
             //$path = $helper->asset($rd, 'docFile');
 
             // - se il documento NON ha righe di richiestadocumento un alert che il documento è mancante
