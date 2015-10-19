@@ -107,3 +107,8 @@ navbarSelectedSessionClear:
     defaults: { _controller: estarRdaBundle:NavbarSelectedSession:clearNavbarSession }
     options:
       expose: true
+
+HelloCiao:
+    path: /testing
+    defaults: { _controller: estarRdaBundle:TestingNotify:index }
+

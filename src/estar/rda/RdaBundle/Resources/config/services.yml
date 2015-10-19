@@ -1,13 +1,18 @@
 parameters:
     estarRdaBundle.UserCheck.class: estar\rda\RdaBundle\Controller\UserCheckController
 services:
-    info_utente:
-        class: estar\rda\RdaBundle\Services\InfoUtente
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
     estarRdaBundle.UserCheck:
         class: "%estarRdaBundle.UserCheck.class%"
         arguments:
-        session: @session
+          session: @session
+
+    usercheck.notify:
+        class: estar\rda\RdaBundle\Controller\UserCheckController
+        arguments:
+           em: "@doctrine.orm.entity_manager"
+           user: "@security.context"
+           session: "@session"
 
 #services:
 #    estar_rda.example:

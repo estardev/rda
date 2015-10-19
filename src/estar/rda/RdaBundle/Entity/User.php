@@ -61,13 +61,13 @@ class User extends BaseUser
     }
 
     /**
-     * Get name
+     * Get username
      *
      * @return string
      */
     public function getName()
     {
-        return $this->name;
+        return $this->username;
     }
 
     /**
