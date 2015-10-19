@@ -3,7 +3,7 @@ richiestadocumento:
     defaults: { _controller: "estarRdaBundle:Richiestadocumento:index" }
 
 richiestadocumento_show:
-    path:     /{id}/show
+    path:     /show/{idCategoria}/{idRichiesta}/{idDocumento}
     defaults: { _controller: "estarRdaBundle:Richiestadocumento:show" }
 
 richiestadocumento_new:
@@ -33,3 +33,8 @@ richiestadocumento_upload:
     path:     /upload/{idRichiesta}/{idDocumento}
     defaults: { _controller: "estarRdaBundle:Richiestadocumento:upload" }
     methods:  POST
+
+richiestadocumento_print:
+    path:     /print/{idCategoria}/{idRichiesta}/{idDocumento}
+    defaults: { _controller: "estarRdaBundle:Richiestadocumento:print" }
+
