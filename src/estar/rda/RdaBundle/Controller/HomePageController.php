@@ -4,11 +4,12 @@ namespace estar\rda\RdaBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+
 class HomePageController extends Controller
 {
     public function indexAction()
     {
-       $utenteSessione= $this->getUser();
+        $utenteSessione= $this->getUser();
        //$idutenteSessione = $utenteSessione->getId();
        //
         $em = $this->getDoctrine()->getManager();

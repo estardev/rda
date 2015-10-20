@@ -57,6 +57,7 @@ class SecurityController extends BaseController
             'error' => $error,
             'csrf_token' => $csrfToken,
         ));
+
     }
 
     /**
