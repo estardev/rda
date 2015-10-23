@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 
 
+
 class SecurityController extends BaseController
 {
     public function loginAction(Request $request)
@@ -25,6 +26,7 @@ class SecurityController extends BaseController
         $session = $request->getSession();
 
         // chiamata del metodo di verifica stringa carta operatore
+
 
         $uid = $this->checkSmartCardString($request);
 
