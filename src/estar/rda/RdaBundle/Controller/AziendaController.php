@@ -21,6 +21,7 @@ class AziendaController extends Controller
      */
     public function indexAction()
     {
+        //FG testo di prova
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('estarRdaBundle:Azienda')->findAll();

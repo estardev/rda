@@ -43,9 +43,9 @@ class Campo
     /**
      * @var boolean
      *
-     * @ORM\Column(name="obbligatorioValidazione", type="boolean", nullable=true)
+     * @ORM\Column(name="obbligatorioValidazioneTecnica", type="boolean", nullable=true)
      */
-    private $obbligatoriovalidazione;
+    private $obbligatoriovalidazionetecnica;
 
     /**
      * @var integer
@@ -57,16 +57,37 @@ class Campo
     /**
      * @var string
      *
-     * @ORM\Column(name="fieldset", type="string", length=255, nullable=true)
+     * @ORM\Column(name="fieldset", type="text", length=65535, nullable=true)
      */
     private $fieldset;
 
     /**
-     * @var integer
+     * @var boolean
      *
-     * @ORM\Column(name="ordinamentoFieldset", type="integer", nullable=true)
+     * @ORM\Column(name="obbligatorioValidazioneAmministrativa", type="boolean", nullable=true)
      */
-    private $ordinamentofieldset;
+    private $obbligatoriovalidazioneamministrativa;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="padre", type="string", length=255, nullable=true)
+     */
+    private $padre;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dataAttivazione", type="datetime", nullable=true)
+     */
+    private $dataattivazione;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dataDismissione", type="datetime", nullable=true)
+     */
+    private $datadismissione;
 
     /**
      * @var integer
@@ -88,7 +109,7 @@ class Campo
     private $idcategoria;
 
 
-    public function __toString(){return strval($this->getId());}
+
     /**
      * Set nome
      *
@@ -186,27 +207,27 @@ class Campo
     }
 
     /**
-     * Set obbligatoriovalidazione
+     * Set obbligatoriovalidazionetecnica
      *
-     * @param boolean $obbligatoriovalidazione
+     * @param boolean $obbligatoriovalidazionetecnica
      *
      * @return Campo
      */
-    public function setObbligatoriovalidazione($obbligatoriovalidazione)
+    public function setObbligatoriovalidazionetecnica($obbligatoriovalidazionetecnica)
     {
-        $this->obbligatoriovalidazione = $obbligatoriovalidazione;
+        $this->obbligatoriovalidazionetecnica = $obbligatoriovalidazionetecnica;
 
         return $this;
     }
 
     /**
-     * Get obbligatoriovalidazione
+     * Get obbligatoriovalidazionetecnica
      *
      * @return boolean
      */
-    public function getObbligatoriovalidazione()
+    public function getObbligatoriovalidazionetecnica()
     {
-        return $this->obbligatoriovalidazione;
+        return $this->obbligatoriovalidazionetecnica;
     }
 
     /**
@@ -258,27 +279,99 @@ class Campo
     }
 
     /**
-     * Set ordinamentofieldset
+     * Set obbligatoriovalidazioneamministrativa
      *
-     * @param integer $ordinamentofieldset
+     * @param boolean $obbligatoriovalidazioneamministrativa
      *
      * @return Campo
      */
-    public function setOrdinamentofieldset($ordinamentofieldset)
+    public function setObbligatoriovalidazioneamministrativa($obbligatoriovalidazioneamministrativa)
     {
-        $this->ordinamentofieldset = $ordinamentofieldset;
+        $this->obbligatoriovalidazioneamministrativa = $obbligatoriovalidazioneamministrativa;
 
         return $this;
     }
 
     /**
-     * Get ordinamentofieldset
+     * Get obbligatoriovalidazioneamministrativa
      *
-     * @return integer
+     * @return boolean
      */
-    public function getOrdinamentofieldset()
+    public function getObbligatoriovalidazioneamministrativa()
     {
-        return $this->ordinamentofieldset;
+        return $this->obbligatoriovalidazioneamministrativa;
+    }
+
+    /**
+     * Set padre
+     *
+     * @param string $padre
+     *
+     * @return Campo
+     */
+    public function setPadre($padre)
+    {
+        $this->padre = $padre;
+
+        return $this;
+    }
+
+    /**
+     * Get padre
+     *
+     * @return string
+     */
+    public function getPadre()
+    {
+        return $this->padre;
+    }
+
+    /**
+     * Set dataattivazione
+     *
+     * @param \DateTime $dataattivazione
+     *
+     * @return Campo
+     */
+    public function setDataattivazione($dataattivazione)
+    {
+        $this->dataattivazione = $dataattivazione;
+
+        return $this;
+    }
+
+    /**
+     * Get dataattivazione
+     *
+     * @return \DateTime
+     */
+    public function getDataattivazione()
+    {
+        return $this->dataattivazione;
+    }
+
+    /**
+     * Set datadismissione
+     *
+     * @param \DateTime $datadismissione
+     *
+     * @return Campo
+     */
+    public function setDatadismissione($datadismissione)
+    {
+        $this->datadismissione = $datadismissione;
+
+        return $this;
+    }
+
+    /**
+     * Get datadismissione
+     *
+     * @return \DateTime
+     */
+    public function getDatadismissione()
+    {
+        return $this->datadismissione;
     }
 
     /**

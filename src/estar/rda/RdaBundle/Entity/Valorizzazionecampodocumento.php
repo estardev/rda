@@ -49,7 +49,7 @@ class Valorizzazionecampodocumento
     private $idcampodocumento;
 
 
-    public function __toString(){return strval($this->getId());}
+
     /**
      * Set valore
      *

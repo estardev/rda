@@ -59,7 +59,7 @@ class Valorizzazionecamporichiesta
     private $idcampo;
 
 
-    public function __toString(){return strval($this->getId());}
+
     /**
      * Set valore
      *

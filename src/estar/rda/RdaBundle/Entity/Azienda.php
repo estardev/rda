@@ -29,7 +29,7 @@ class Azienda
     private $id;
 
 
-    public function __toString(){return strval($this->getId());}
+
     /**
      * Set nome
      *
