@@ -5,26 +5,33 @@ namespace estar\rda\RdaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Categoria
+ * Area
  *
- * @ORM\Table(name="categoria", indexes={@ORM\Index(name="idxidarea", columns={"idarea"})})
+ * @ORM\Table(name="area")
  * @ORM\Entity
  */
-class Categoria
+class Area
 {
     /**
      * @var string
      *
-     * @ORM\Column(name="nome", type="string", length=45, nullable=true)
+     * @ORM\Column(name="nome", type="string", length=255, nullable=true)
      */
     private $nome;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="descrizione", type="string", length=100, nullable=true)
+     * @ORM\Column(name="descrizione", type="string", length=255, nullable=true)
      */
     private $descrizione;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="gruppogestav", type="string", length=255, nullable=true)
+     */
+    private $gruppogestav;
 
     /**
      * @var integer
@@ -35,16 +42,6 @@ class Categoria
      */
     private $id;
 
-    /**
-     * @var \estar\rda\RdaBundle\Entity\Area
-     *
-     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Area")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idarea", referencedColumnName="id")
-     * })
-     */
-    private $idarea;
-
 
 
     /**
@@ -52,7 +49,7 @@ class Categoria
      *
      * @param string $nome
      *
-     * @return Categoria
+     * @return Area
      */
     public function setNome($nome)
     {
@@ -76,7 +73,7 @@ class Categoria
      *
      * @param string $descrizione
      *
-     * @return Categoria
+     * @return Area
      */
     public function setDescrizione($descrizione)
     {
@@ -96,6 +93,30 @@ class Categoria
     }
 
     /**
+     * Set gruppogestav
+     *
+     * @param string $gruppogestav
+     *
+     * @return Area
+     */
+    public function setGruppogestav($gruppogestav)
+    {
+        $this->gruppogestav = $gruppogestav;
+
+        return $this;
+    }
+
+    /**
+     * Get gruppogestav
+     *
+     * @return string
+     */
+    public function getGruppogestav()
+    {
+        return $this->gruppogestav;
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -103,29 +124,5 @@ class Categoria
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set idarea
-     *
-     * @param \estar\rda\RdaBundle\Entity\Area $idarea
-     *
-     * @return Categoria
-     */
-    public function setIdarea(\estar\rda\RdaBundle\Entity\Area $idarea = null)
-    {
-        $this->idarea = $idarea;
-
-        return $this;
-    }
-
-    /**
-     * Get idarea
-     *
-     * @return \estar\rda\RdaBundle\Entity\Area
-     */
-    public function getIdarea()
-    {
-        return $this->idarea;
     }
 }

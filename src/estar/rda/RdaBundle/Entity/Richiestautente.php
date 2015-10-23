@@ -70,7 +70,7 @@ class Richiestautente
     private $idrichiesta;
 
 
-    public function __toString(){return strval($this->getId());}
+
     /**
      * Set creatore
      *

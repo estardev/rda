@@ -23,22 +23,25 @@
       </options>
     </field>
     <field name="obbligatorioinserzione" type="boolean" column="obbligatorioInserzione" nullable="true"/>
-    <field name="obbligatoriovalidazione" type="boolean" column="obbligatorioValidazione" nullable="true"/>
+    <field name="obbligatoriovalidazionetecnica" type="boolean" column="obbligatorioValidazioneTecnica" nullable="true"/>
     <field name="ordinamento" type="integer" column="ordinamento" nullable="true">
       <options>
         <option name="unsigned"/>
       </options>
     </field>
-    <field name="fieldset" type="string" column="fieldset" length="255" nullable="true">
+    <field name="fieldset" type="text" column="fieldset" length="65535" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="ordinamentofieldset" type="integer" column="ordinamentoFieldset" nullable="true">
+    <field name="obbligatoriovalidazioneamministrativa" type="boolean" column="obbligatorioValidazioneAmministrativa" nullable="true"/>
+    <field name="padre" type="string" column="padre" length="255" nullable="true">
       <options>
-        <option name="unsigned"/>
+        <option name="fixed"/>
       </options>
     </field>
+    <field name="dataattivazione" type="datetime" column="dataAttivazione" nullable="true"/>
+    <field name="datadismissione" type="datetime" column="dataDismissione" nullable="true"/>
     <many-to-one field="idcategoria" target-entity="Categoria" fetch="LAZY">
       <join-columns>
         <join-column name="idCategoria" referenced-column-name="id"/>

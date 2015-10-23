@@ -2,97 +2,139 @@
 
 namespace estar\rda\RdaBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * FosUser
+ *
+ * @ORM\Table(name="fos_user", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_957A647992FC23A8", columns={"username_canonical"}), @ORM\UniqueConstraint(name="UNIQ_957A6479A0D96FBF", columns={"email_canonical"})})
+ * @ORM\Entity
  */
 class FosUser
 {
     /**
      * @var string
+     *
+     * @ORM\Column(name="username", type="string", length=255, nullable=false)
      */
     private $username;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="username_canonical", type="string", length=255, nullable=false)
      */
     private $usernameCanonical;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255, nullable=false)
      */
     private $email;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="email_canonical", type="string", length=255, nullable=false)
      */
     private $emailCanonical;
 
     /**
      * @var boolean
+     *
+     * @ORM\Column(name="enabled", type="boolean", nullable=false)
      */
     private $enabled;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="salt", type="string", length=255, nullable=false)
      */
     private $salt;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="password", type="string", length=255, nullable=false)
      */
     private $password;
 
     /**
      * @var \DateTime
+     *
+     * @ORM\Column(name="last_login", type="datetime", nullable=true)
      */
     private $lastLogin;
 
     /**
      * @var boolean
+     *
+     * @ORM\Column(name="locked", type="boolean", nullable=false)
      */
     private $locked;
 
     /**
      * @var boolean
+     *
+     * @ORM\Column(name="expired", type="boolean", nullable=false)
      */
     private $expired;
 
     /**
      * @var \DateTime
+     *
+     * @ORM\Column(name="expires_at", type="datetime", nullable=true)
      */
     private $expiresAt;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="confirmation_token", type="string", length=255, nullable=true)
      */
     private $confirmationToken;
 
     /**
      * @var \DateTime
+     *
+     * @ORM\Column(name="password_requested_at", type="datetime", nullable=true)
      */
     private $passwordRequestedAt;
 
     /**
      * @var array
+     *
+     * @ORM\Column(name="roles", type="array", nullable=false)
      */
     private $roles;
 
     /**
      * @var boolean
+     *
+     * @ORM\Column(name="credentials_expired", type="boolean", nullable=false)
      */
     private $credentialsExpired;
 
     /**
      * @var \DateTime
+     *
+     * @ORM\Column(name="credentials_expire_at", type="datetime", nullable=true)
      */
     private $credentialsExpireAt;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $id;
+    private $id;
 
-    public function __toString(){return strval($this->getId());}
+
+
     /**
      * Set username
      *
@@ -103,7 +145,7 @@ class FosUser
     public function setUsername($username)
     {
         $this->username = $username;
-    
+
         return $this;
     }
 
@@ -127,7 +169,7 @@ class FosUser
     public function setUsernameCanonical($usernameCanonical)
     {
         $this->usernameCanonical = $usernameCanonical;
-    
+
         return $this;
     }
 
@@ -151,7 +193,7 @@ class FosUser
     public function setEmail($email)
     {
         $this->email = $email;
-    
+
         return $this;
     }
 
@@ -175,7 +217,7 @@ class FosUser
     public function setEmailCanonical($emailCanonical)
     {
         $this->emailCanonical = $emailCanonical;
-    
+
         return $this;
     }
 
@@ -199,7 +241,7 @@ class FosUser
     public function setEnabled($enabled)
     {
         $this->enabled = $enabled;
-    
+
         return $this;
     }
 
@@ -223,7 +265,7 @@ class FosUser
     public function setSalt($salt)
     {
         $this->salt = $salt;
-    
+
         return $this;
     }
 
@@ -247,7 +289,7 @@ class FosUser
     public function setPassword($password)
     {
         $this->password = $password;
-    
+
         return $this;
     }
 
@@ -271,7 +313,7 @@ class FosUser
     public function setLastLogin($lastLogin)
     {
         $this->lastLogin = $lastLogin;
-    
+
         return $this;
     }
 
@@ -295,7 +337,7 @@ class FosUser
     public function setLocked($locked)
     {
         $this->locked = $locked;
-    
+
         return $this;
     }
 
@@ -319,7 +361,7 @@ class FosUser
     public function setExpired($expired)
     {
         $this->expired = $expired;
-    
+
         return $this;
     }
 
@@ -343,7 +385,7 @@ class FosUser
     public function setExpiresAt($expiresAt)
     {
         $this->expiresAt = $expiresAt;
-    
+
         return $this;
     }
 
@@ -367,7 +409,7 @@ class FosUser
     public function setConfirmationToken($confirmationToken)
     {
         $this->confirmationToken = $confirmationToken;
-    
+
         return $this;
     }
 
@@ -391,7 +433,7 @@ class FosUser
     public function setPasswordRequestedAt($passwordRequestedAt)
     {
         $this->passwordRequestedAt = $passwordRequestedAt;
-    
+
         return $this;
     }
 
@@ -415,7 +457,7 @@ class FosUser
     public function setRoles($roles)
     {
         $this->roles = $roles;
-    
+
         return $this;
     }
 
@@ -439,7 +481,7 @@ class FosUser
     public function setCredentialsExpired($credentialsExpired)
     {
         $this->credentialsExpired = $credentialsExpired;
-    
+
         return $this;
     }
 
@@ -463,7 +505,7 @@ class FosUser
     public function setCredentialsExpireAt($credentialsExpireAt)
     {
         $this->credentialsExpireAt = $credentialsExpireAt;
-    
+
         return $this;
     }
 
@@ -487,4 +529,3 @@ class FosUser
         return $this->id;
     }
 }
-

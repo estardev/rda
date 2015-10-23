@@ -15,6 +15,20 @@ class Richiesta
     /**
      * @var string
      *
+     * @ORM\Column(name="titolo", type="string", length=255, nullable=false)
+     */
+    private $titolo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descrizione", type="text", length=65535, nullable=false)
+     */
+    private $descrizione;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="numeroPratica", type="string", length=45, nullable=true)
      */
     private $numeropratica;
@@ -32,6 +46,20 @@ class Richiesta
      * @ORM\Column(name="numeroProtocollo", type="string", length=45, nullable=true)
      */
     private $numeroprotocollo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="statusgestav", type="string", length=100, nullable=true)
+     */
+    private $statusgestav;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="urgenza", type="boolean", nullable=false)
+     */
+    private $urgenza;
 
     /**
      * @var integer
@@ -63,7 +91,55 @@ class Richiesta
     private $idazienda;
 
 
-    public function __toString(){return strval($this->getId());}
+
+    /**
+     * Set titolo
+     *
+     * @param string $titolo
+     *
+     * @return Richiesta
+     */
+    public function setTitolo($titolo)
+    {
+        $this->titolo = $titolo;
+
+        return $this;
+    }
+
+    /**
+     * Get titolo
+     *
+     * @return string
+     */
+    public function getTitolo()
+    {
+        return $this->titolo;
+    }
+
+    /**
+     * Set descrizione
+     *
+     * @param string $descrizione
+     *
+     * @return Richiesta
+     */
+    public function setDescrizione($descrizione)
+    {
+        $this->descrizione = $descrizione;
+
+        return $this;
+    }
+
+    /**
+     * Get descrizione
+     *
+     * @return string
+     */
+    public function getDescrizione()
+    {
+        return $this->descrizione;
+    }
+
     /**
      * Set numeropratica
      *
@@ -137,6 +213,54 @@ class Richiesta
     }
 
     /**
+     * Set statusgestav
+     *
+     * @param string $statusgestav
+     *
+     * @return Richiesta
+     */
+    public function setStatusgestav($statusgestav)
+    {
+        $this->statusgestav = $statusgestav;
+
+        return $this;
+    }
+
+    /**
+     * Get statusgestav
+     *
+     * @return string
+     */
+    public function getStatusgestav()
+    {
+        return $this->statusgestav;
+    }
+
+    /**
+     * Set urgenza
+     *
+     * @param boolean $urgenza
+     *
+     * @return Richiesta
+     */
+    public function setUrgenza($urgenza)
+    {
+        $this->urgenza = $urgenza;
+
+        return $this;
+    }
+
+    /**
+     * Get urgenza
+     *
+     * @return boolean
+     */
+    public function getUrgenza()
+    {
+        return $this->urgenza;
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -192,63 +316,5 @@ class Richiesta
     public function getIdazienda()
     {
         return $this->idazienda;
-    }
-    /**
-     * @var string
-     */
-    private $titolo;
-
-    /**
-     * @var string
-     */
-    private $descrizione;
-
-
-    /**
-     * Set titolo
-     *
-     * @param string $titolo
-     *
-     * @return Richiesta
-     */
-    public function setTitolo($titolo)
-    {
-        $this->titolo = $titolo;
-    
-        return $this;
-    }
-
-    /**
-     * Get titolo
-     *
-     * @return string
-     */
-    public function getTitolo()
-    {
-        return $this->titolo;
-    }
-
-    /**
-     * Set descrizione
-     *
-     * @param string $descrizione
-     *
-     * @return Richiesta
-     */
-    public function setDescrizione($descrizione)
-    {
-        $this->descrizione = $descrizione;
-    
-        return $this;
-    }
-
-    /**
-     * Get descrizione
-     *
-     * @return string
-     */
-    public function getDescrizione()
-    {
-        return $this->descrizione;
     }
 }
