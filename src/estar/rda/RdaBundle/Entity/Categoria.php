@@ -128,4 +128,7 @@ class Categoria
     {
         return $this->idarea;
     }
+
+    public function __toString(){return strval($this->getId());}
+
 }

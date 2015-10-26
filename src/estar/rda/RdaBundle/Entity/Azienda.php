@@ -63,4 +63,6 @@ class Azienda
     {
         return $this->id;
     }
+
+    public function __toString(){return strval($this->getId());}
 }

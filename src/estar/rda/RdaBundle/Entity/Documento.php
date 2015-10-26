@@ -94,4 +94,6 @@ class Documento
     {
         return $this->id;
     }
+
+    public function __toString(){return strval($this->getId());}
 }

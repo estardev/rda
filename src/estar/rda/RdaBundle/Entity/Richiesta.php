@@ -317,4 +317,6 @@ class Richiesta
     {
         return $this->idazienda;
     }
+
+    public function __toString(){return strval($this->getId());}
 }
