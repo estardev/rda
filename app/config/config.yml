@@ -182,3 +182,20 @@ vich_uploader:
             inject_on_load:     true
             delete_on_update:   true
             delete_on_remove:   true
+
+be_simple_soap:
+    cache:
+        type:     disk
+        lifetime: 86400
+        limit:    5
+    services:
+            DemoApi:
+                namespace:     http://localhost/RDA/web/app_dev.php/ws/DemoApi/1.0/
+                binding:       rpc-literal
+                resource:      "@estarRdaBundle/Controller/DemoController.php"
+                resource_type: annotation
+    clients:
+            DemoApi:
+                wsdl:           http://localhost/RDA/web/app_dev.php/ws/DemoApi?wsdl
+            Tempo:
+                wsdl: http://www.webservicex.com/globalweather.asmx?wsdl

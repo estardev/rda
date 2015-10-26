@@ -27,6 +27,7 @@ class AppKernel extends Kernel
             new winzou\Bundle\StateMachineBundle\winzouStateMachineBundle(),
 //            new Slik\DompdfBundle\SlikDompdfBundle()
             new Vich\UploaderBundle\VichUploaderBundle(),
+            new BeSimple\SoapBundle\BeSimpleSoapBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
