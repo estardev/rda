@@ -165,4 +165,6 @@ class Valorizzazionecamporichiesta
     {
         return $this->idcampo;
     }
+
+    public function __toString(){return strval($this->getId());}
 }

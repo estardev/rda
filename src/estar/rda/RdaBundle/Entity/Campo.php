@@ -407,4 +407,6 @@ class Campo
     {
         return $this->idcategoria;
     }
+
+    public function __toString(){return strval($this->getId());}
 }

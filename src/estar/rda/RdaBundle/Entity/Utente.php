@@ -191,4 +191,6 @@ class Utente
     {
         return $this->nomecognome;
     }
+
+    public function __toString(){return strval($this->getId());}
 }

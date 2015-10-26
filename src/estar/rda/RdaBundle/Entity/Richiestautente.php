@@ -224,4 +224,6 @@ class Richiestautente
     {
         return $this->idrichiesta;
     }
+
+    public function __toString(){return strval($this->getId());}
 }

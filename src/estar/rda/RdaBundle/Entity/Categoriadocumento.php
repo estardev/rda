@@ -131,4 +131,6 @@ class Categoriadocumento
     {
         return $this->idcategoria;
     }
+
+    public function __toString(){return strval($this->getId());}
 }
