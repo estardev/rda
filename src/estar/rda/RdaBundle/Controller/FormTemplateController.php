@@ -34,14 +34,14 @@ class FormTemplateController extends Controller
 
         $campi = $repository->findBy(
             array('idcategoria' => $idCategoria),
-            array('ordinamentofieldset' => 'ASC', 'ordinamento' => 'ASC')
+            array('ordinamento' => 'ASC')
         );
 
 
 //        $entity = new FormTemplate($idCategoria, $campi);
 
         $formbuilder = $this->createFormBuilder();
-        $fieldsetVisitati = array();
+//        $fieldsetVisitati = array();
         //FG 20151016 gestione dei campi della richiesta
         $formbuilder->add("titolo", "text", array(
             'label' => "Titolo",
@@ -51,29 +51,47 @@ class FormTemplateController extends Controller
             'label' => "Descrizione",
             'data' => "indicare descrizione, azienda sanitaria e UOC destinataria"
         ));
+        function getChoicesOptions($string)
+        {
+            $options = explode('||', $string);
+            $returnOptions = array();
+            foreach ($options as $option) {
+                $subOption = explode('|',$option);
+                if(count($subOption)>1){
+                $returnOptions[$subOption[0]]= $subOption[1];}
+                else{
+                    $returnOptions[$subOption[0]]= $subOption[0];
+                }
+            }
 
+
+            return $returnOptions;
+        }
         foreach ($campi as $campo) {
             $obbligatorio = $campo->getObbligatorioinserzione();
-            if ($campo->getTipo() == 'radio') {
-                $fieldsetName = $campo->getFieldset();
+            if ($campo->getTipo() == 'choice') {
+//                $fieldsetName = $campo->getFieldset();
 
-                if (in_array($fieldsetName, $fieldsetVisitati)) {
-                    continue;
-                }
+//                if (in_array($fieldsetName, $fieldsetVisitati)) {
+//                    continue;
+//                }
 
-                array_push($fieldsetVisitati, $fieldsetName);
-                $options = array();
-                foreach ($campi as $item) {
-                    if ($item->getTipo() == 'radio' and $item->getFieldset() == $fieldsetName)
-                        array_push($options, $item->getDescrizione());
+//                array_push($fieldsetVisitati, $fieldsetName);
+//            $options = array();
 
-                }
+
+                $options = getChoicesOptions($campo->getFieldset());
+//                foreach ($campi as $item) {
+//                    if ($item->getTipo() == 'radio' and $item->getFieldset() == $fieldsetName)
+//                        array_push($options, $item->getDescrizione());
+//
+//                }
                 if ($obbligatorio) {
                     $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
                         'choices' => $options,
                         'expanded' => true,
                         'multiple' => false,
-                        'label' => $fieldsetName,
+                        'label' => $campo->getDescrizione(),
                         'constraints' => new NotBlank()
                     ));
                 } else {
@@ -81,7 +99,7 @@ class FormTemplateController extends Controller
                         'choices' => $options,
                         'expanded' => true,
                         'multiple' => false,
-                        'label' => $fieldsetName
+                        'label' => $campo->getDescrizione()
                     ));
                 }
 
@@ -111,7 +129,8 @@ class FormTemplateController extends Controller
     }
 
 
-    public function createAction(Request $request, $idCategoria)
+    public
+    function createAction(Request $request, $idCategoria)
     {
 
         $form = $this->createForm(new FormTemplateType());
@@ -165,7 +184,8 @@ class FormTemplateController extends Controller
      * @param $idCategoria
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction($idCategoria, $idRichiesta)
+    public
+    function showAction($idCategoria, $idRichiesta)
     {
 
         //TODO: vanno aggiunti anche i documenti (generati o creati, della stessa sostanza del Padre)
@@ -234,7 +254,8 @@ class FormTemplateController extends Controller
         ));
     }
 
-    public function showpdfAction($idCategoria, $idRichiesta)
+    public
+    function showpdfAction($idCategoria, $idRichiesta)
     {
         require_once($this->get('kernel')->getRootDir() . '/config/dompdf_config.inc.php');
 
@@ -254,7 +275,8 @@ class FormTemplateController extends Controller
      * Displays a form to edit an existing Richiesta entity.
      *
      */
-    public function editAction($idCategoria, $idRichiesta)
+    public
+    function editAction($idCategoria, $idRichiesta)
     {
         $em = $this->getDoctrine()->getManager();
         //TODO fg aggiungere il passaggio alla form della obbligatoriet� o meno dei campi (manca! � tutto obbligatorio)
@@ -312,6 +334,9 @@ class FormTemplateController extends Controller
                     'label' => $fieldsetName,
                     'data' => $campovalorizzato->getValore()
                 ));
+                $serializer = $this->get('serializer');
+                $json = $serializer->serialize($options, 'json');
+                dump($json);
             } else {
 
                 $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
@@ -380,7 +405,8 @@ class FormTemplateController extends Controller
         ));
     }
 
-    public function updateAction(Request $request, $idCategoria, $idRichiesta)
+    public
+    function updateAction(Request $request, $idCategoria, $idRichiesta)
     {
 
         $form = $this->createForm(new FormTemplateType());
@@ -422,7 +448,8 @@ class FormTemplateController extends Controller
 
     }
 
-    public function printAction($idCategoria, $idRichiesta)
+    public
+    function printAction($idCategoria, $idRichiesta)
     {
 
 
