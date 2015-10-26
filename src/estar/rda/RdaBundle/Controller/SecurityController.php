@@ -3,15 +3,18 @@
 namespace estar\rda\RdaBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use FOS\UserBundle\Controller\SecurityController as BaseController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Acl\Exception\Exception;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use FOS\UserBundle\Doctrine\UserManager;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+
 
 
 
@@ -34,28 +37,35 @@ class SecurityController extends BaseController
 
         if ($uid!=false){
 
-
             // si recupera l'id utente a seguito della query per CF
 
-            $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Utente');
-            $utente = $repository->findOneBy(array(
-                    'utentecartaoperatore'=>$uid)
-            );
-            $username = $utente->getIdfosuser()->getUsername();
-
-            $userManager = $this->get('fos_user.user_manager');
-            $user = $userManager->findUserByUsername($username);
-
-            // metodo per bypassare l'autenticazione nativa di symfony
-
-            $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-            $this->get('security.token_storage')->setToken($token);
-
-            return $this->render('estarRdaBundle:HomePage:index.html.twig', array('utente' => $user));
+                $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Utente');
+               $utente = $repository->findOneBy(array(
+                        'utentecartaoperatore'=>$uid)
+                );
 
 
+                if ($utente){
+                    $username = $utente->getIdfosuser()->getUsername();
 
-       }
+                    $userManager = $this->get('fos_user.user_manager');
+                    $user = $userManager->findUserByUsername($username);
+
+                    // metodo per bypassare l'autenticazione nativa di symfony
+
+                    $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                    $this->get('security.token_storage')->setToken($token);
+
+                    return $this->render('estarRdaBundle:HomePage:index.html.twig', array('utente' => $user));
+                }else{
+                    //throw new BadCredentialsException();
+
+                }
+
+
+
+      }
+
         if (class_exists('\Symfony\Component\Security\Core\Security')) {
             $authErrorKey = Security::AUTHENTICATION_ERROR;
             $lastUsernameKey = Security::LAST_USERNAME;
@@ -95,11 +105,10 @@ class SecurityController extends BaseController
         // parametri per il redirect di ritorno da parte del server di autenticazione, nel caso ok o ko dalla verifica
         // della carta operatore
 
-        $urlok = "http://127.0.0.1/rda/web/app_dev.php/login";
-        $urlko = "http://127.0.0.1/rda/web/app_dev.php/register";
+        $urlok = $request->getUri();
+        $urlko = $request->getUri();
         $urlok = base64_encode($urlok);
         $urlko = base64_encode($urlko);
-
 
         return $this->renderLogin(array(
             'last_username' => $lastUsername,
@@ -151,14 +160,10 @@ class SecurityController extends BaseController
     public function checkSmartCardString(Request $request){
 
         $uid = (!empty($request->get('uid')))?$request->get('uid'):"";
-
-
-
         $time = (!empty($request->get('time')))?$request->get('time'):"";
         $hash = (!empty($request->get('hash')))?$request->get('hash'):"";
 
      if ($uid == ""||$time==""||$hash=="") return false;
-
 
         //$time = 1344334037;
          $timeattuale = time();
