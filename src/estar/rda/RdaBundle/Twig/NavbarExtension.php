@@ -38,7 +38,7 @@ class NavbarExtension extends \Twig_Extension
 
         //FG 20151026 gestione aree su categoria
         //$categoria = $this->em->getRepository('estarRdaBundle:Categoria')->findAll();
-        $query = $this->em->createQuery('select c.id, c.descrizione, a.nome as area from estarRdaBundle:categoria c join c.idarea a where c.idarea = a.id');
+        $query = $this->em->createQuery('select c.id, c.descrizione, a.nome as area from estarRdaBundle:Categoria c join c.idarea a where c.idarea = a.id');
         $categoria = $query->getResult();
 
 
