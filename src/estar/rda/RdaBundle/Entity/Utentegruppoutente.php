@@ -131,4 +131,6 @@ class Utentegruppoutente
     {
         return $this->idgruppoutente;
     }
+
+    public function __toString(){return strval($this->getId());}
 }

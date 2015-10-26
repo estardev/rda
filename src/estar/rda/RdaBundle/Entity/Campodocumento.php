@@ -283,4 +283,6 @@ class Campodocumento
     {
         return $this->iddocumento;
     }
+
+    public function __toString(){return strval($this->getId());}
 }

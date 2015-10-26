@@ -131,4 +131,6 @@ class Valorizzazionecampodocumento
     {
         return $this->idcampodocumento;
     }
+
+    public function __toString(){return strval($this->getId());}
 }
