@@ -36,8 +36,14 @@ class NavbarExtension extends \Twig_Extension
 
         $utenteSessione= $this->user->getToken()->getUser();
 
-        $categoria = $this->em->getRepository('estarRdaBundle:Categoria')->findAll();
+        //FG 20151026 gestione aree su categoria
+        //$categoria = $this->em->getRepository('estarRdaBundle:Categoria')->findAll();
+        $query = $this->em->createQuery('select c.id, c.descrizione, a.nome as area from estarRdaBundle:categoria c join c.idarea a where c.idarea = a.id');
+        $categoria = $query->getResult();
+
+
         $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')->findAll();
+
 
         $categoriaSelezionata = $this->session->get('homepageSelectCategoria');
 
