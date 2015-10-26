@@ -162,4 +162,33 @@ class Utente
     {
         return $this->idazienda;
     }
+    /**
+     * @var string
+     */
+    private $nomecognome;
+
+
+    /**
+     * Set nomecognome
+     *
+     * @param string $nomecognome
+     *
+     * @return Utente
+     */
+    public function setNomecognome($nomecognome)
+    {
+        $this->nomecognome = $nomecognome;
+
+        return $this;
+    }
+
+    /**
+     * Get nomecognome
+     *
+     * @return string
+     */
+    public function getNomecognome()
+    {
+        return $this->nomecognome;
+    }
 }
