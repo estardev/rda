@@ -199,3 +199,5 @@ be_simple_soap:
                 wsdl:           http://localhost/RDA/web/app_dev.php/ws/DemoApi?wsdl
             Tempo:
                 wsdl: http://www.webservicex.com/globalweather.asmx?wsdl
+            Sistematica:
+                wsdl: https://democorepaumbria.grupposistematica.it/isharedoc/webservices/webserviceInstance.wsdl
