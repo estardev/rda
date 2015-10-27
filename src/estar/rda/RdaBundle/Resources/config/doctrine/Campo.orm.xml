@@ -12,7 +12,7 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="descrizione" type="string" column="descrizione" length="100" nullable="true">
+    <field name="descrizione" type="string" column="descrizione" length="255" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
