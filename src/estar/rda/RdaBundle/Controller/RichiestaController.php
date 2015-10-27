@@ -2,6 +2,7 @@
 
 namespace estar\rda\RdaBundle\Controller;
 
+use estar\rda\RdaBundle\Entity\Iter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\Richiesta;
@@ -262,26 +263,41 @@ class RichiestaController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    public function validaAction($id,$transizione){
+    public function validaAction($id, $transizione)
+    {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($id);
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($id);
 
         // Get the factory
         $factory = $this->get('sm.factory');
 
         // Get the state machine for this object, and graph called "simple"
-        $articleSM = $factory->get($entity, 'rda');
+        $articleSM = $factory->get($richiesta, 'rda');
+        $utente = $this->get('usercheck.notify')->getUtente();
+        $iter= new Iter();
 
 //        TODO recupero ruolo utente
 
 
-//        $articleSM->can('a_transition_name');
+        if ($articleSM->can($transizione)) {
+            $iter->setDastato($articleSM->getState());
+            $articleSM->apply($transizione);
+            $iter->setAstato($articleSM->getState());
+            $iter->setIdrichiesta($richiesta);
+            $iter->setIdutente($utente);
+            //TODO aggiungere motivazione
+            $iter->setMotivazione('MOTIVAZIONE GENERICA');
+            $iter->setDataora(new \DateTime('now'));
+            $em->persist($iter);
+        }
 
 
 
-        $articleSM->apply($transizione);
+
+
+
 
         $em->flush();
 

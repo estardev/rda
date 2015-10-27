@@ -1,0 +1,30 @@
+iter:
+    path:     /
+    defaults: { _controller: "estarRdaBundle:Iter:index" }
+
+iter_show:
+    path:     /{id}/show
+    defaults: { _controller: "estarRdaBundle:Iter:show" }
+
+iter_new:
+    path:     /new
+    defaults: { _controller: "estarRdaBundle:Iter:new" }
+
+iter_create:
+    path:     /create
+    defaults: { _controller: "estarRdaBundle:Iter:create" }
+    methods:  POST
+
+iter_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "estarRdaBundle:Iter:edit" }
+
+iter_update:
+    path:     /{id}/update
+    defaults: { _controller: "estarRdaBundle:Iter:update" }
+    methods:  [POST, PUT]
+
+iter_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "estarRdaBundle:Iter:delete" }
+    methods:  [POST, DELETE]

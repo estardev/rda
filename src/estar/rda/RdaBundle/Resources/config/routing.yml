@@ -1,3 +1,7 @@
+estar_rda_iter:
+    resource: "@estarRdaBundle/Resources/config/routing/iter.yml"
+    prefix:   /iter
+
 estar_rda_fosuser:
     resource: "@estarRdaBundle/Resources/config/routing/fosuser.yml"
     prefix:   /fosuser

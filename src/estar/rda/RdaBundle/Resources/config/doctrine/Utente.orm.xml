@@ -8,6 +8,11 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
+    <field name="nomecognome" type="string" column="nomecognome" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
     <field name="utenteldap" type="string" column="utenteLdap" length="45" nullable="true">
       <options>
         <option name="fixed"/>
