@@ -153,9 +153,7 @@ class FormTemplateController extends Controller
         $em->flush();
 
         return $this->redirect($this->generateUrl("richiesta_bycategoria", array("idCategoria" => $idCategoria)));
-//        return $this->render('estarRdaBundle:FormTemplate:create.html.twig', array(
-//            'request' => $request
-//        ));
+
 
     }
 
@@ -173,22 +171,41 @@ class FormTemplateController extends Controller
         //TODO: vanno aggiunti anche i documenti (generati o creati, della stessa sostanza del Padre)
         $em = $this->getDoctrine()->getManager();
 
+//        $queryBuilder
+//            ->select('u.id', 'u.name', 'p.number')
+//            ->from('users', 'u')
+//            ->innerJoin('u', 'phonenumbers', 'p', 'u.id = p.user_id')
+//        $qb->join('u.Group', 'g', 'WITH', 'u.status = ?1')
 
-        $repository = $this->getDoctrine()
-            ->getRepository('estarRdaBundle:Campo');
+//        $repository = $this->getDoctrine()
+//            ->getRepository('estarRdaBundle:Campo');
+        $query = $em->createQuery('SELECT c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
+                                    FROM estarRdaBundle:Campo c JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
+                                    WITH c.id = vc.idcampo
+                                    AND vc.idrichiesta = :idRichiesta')
+            ->setparameter('idRichiesta', $idRichiesta);
+//        $categoria = $query->getResult();
+//        $query = $em->createQueryBuilder()
+//            ->select('c,cv')
+//            ->from('estar\rda\RdaBundle\Entity\Valorizzazionecampo','vc')
+//            ->join('vc.idcampo', 'c', 'WITH', 'vc.idrichiesta=:idRichiesta')
+//            ->setParameter('idRichiesta', $idRichiesta)
+//            ->getQuery();
 
-        $campi = $repository->findBy(
-            array('idcategoria' => $idCategoria),
-            array('ordinamento' => 'ASC')
-        );
-
-
-        $repository = $this->getDoctrine()
-            ->getRepository('estarRdaBundle:Valorizzazionecamporichiesta');
-
-        $campiValorizzati = $repository->findBy(
-            array('idrichiesta' => $idRichiesta)
-        );
+        $campiValorizzati = $query->getResult();
+//
+//        $campi = $repository->findBy(
+//            array('idcategoria' => $idCategoria),
+//            array('ordinamento' => 'ASC')
+//        );
+//
+//
+//        $repository = $this->getDoctrine()
+//            ->getRepository('estarRdaBundle:Valorizzazionecamporichiesta');
+//
+//        $campiValorizzati = $repository->findBy(
+//            array('idrichiesta' => $idRichiesta)
+//        );
 
         $formbuilder = $this->createFormBuilder();
 //        $fieldsetVisitati = array();
@@ -205,20 +222,22 @@ class FormTemplateController extends Controller
             'read_only' => true
         ));
         foreach ($campiValorizzati as $campovalorizzato) {
-            $campo = $campovalorizzato->getIdcampo();
-            if ($campo->getTipo() == 'choice') {
+//            $campo = $campovalorizzato->getIdcampo();
+            $campo = $campovalorizzato;
+//            if ($campo->getTipo() == 'choice') {
+            if ($campo['tipo'] == 'choice') {
 //                $fieldsetName = $campo->getFieldset();
 
-                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
-                    'label' => $campo->getDescrizione(),
-                    'data' => $campovalorizzato->getValore(),
+                $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                    'label' => $campo['descrizione'],
+                    'data' => $campo['valore'],
                     'read_only' => true
                 ));
             } else {
 
-                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
-                    'label' => $campo->getDescrizione(),
-                    'data' => $campovalorizzato->getValore(),
+                $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
+                    'label' => $campo['descrizione'],
+                    'data' => $campo['valore'],
                     'read_only' => true
                 ));
             }
@@ -262,22 +281,30 @@ class FormTemplateController extends Controller
         $em = $this->getDoctrine()->getManager();
         //TODO fg aggiungere il passaggio alla form della obbligatoriet� o meno dei campi (manca! � tutto obbligatorio)
         //TODO FG verificare: se io aggiungo un campo a una categoria ed esiste gi� una richiesta di questa categoria, il campo non si vede
-        $repository = $this->getDoctrine()
-            ->getRepository('estarRdaBundle:Campo');
-
-        $campi = $repository->findBy(
-            array('idcategoria' => $idCategoria),
-            array('ordinamento' => 'ASC')
-        );
+//        $repository = $this->getDoctrine()
+//            ->getRepository('estarRdaBundle:Campo');
+//
+//        $campi = $repository->findBy(
+//            array('idcategoria' => $idCategoria),
+//            array('ordinamento' => 'ASC')
+//        );
 
 //        $entity = new FormTemplate($idCategoria, $campi);
 
-        $repository = $this->getDoctrine()
-            ->getRepository('estarRdaBundle:Valorizzazionecamporichiesta');
+//        $repository = $this->getDoctrine()
+//            ->getRepository('estarRdaBundle:Valorizzazionecamporichiesta');
+//
+//        $campiValorizzati = $repository->findBy(
+//            array('idrichiesta' => $idRichiesta)
+//        );
+        $query = $em->createQuery('SELECT c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
+                                    FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
+                                    WITH c.id = vc.idcampo
+                                    AND vc.idrichiesta = :idRichiesta
+                                    ORDER BY c.ordinamento')
+            ->setparameter('idRichiesta', $idRichiesta);
 
-        $campiValorizzati = $repository->findBy(
-            array('idrichiesta' => $idRichiesta)
-        );
+        $campiValorizzati = $query->getResult();
 
         $formbuilder = $this->createFormBuilder();
         //FG 20151016 gestione dei campi della richiesta
@@ -293,8 +320,10 @@ class FormTemplateController extends Controller
 //        $fieldsetVisitati = array();
 
         foreach ($campiValorizzati as $campovalorizzato) {
-            $campo = $campovalorizzato->getIdcampo();
-            if ($campo->getTipo() == 'choice') {
+//            $campo = $campovalorizzato->getIdcampo();
+            $campo = $campovalorizzato;
+//            if ($campo->getTipo() == 'choice') {
+            if ($campo['tipo'] == 'choice') {
 //                $fieldsetName = $campo->getFieldset();
 //                if (in_array($fieldsetName, $fieldsetVisitati)) {
 //                    continue;
@@ -307,22 +336,22 @@ class FormTemplateController extends Controller
 //                        array_push($options, $item->getDescrizione());
 //
 //                }
-                $options = $this->getChoicesOptions($campo->getFieldset());
-                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
+                $options = $this->getChoicesOptions($campo['fieldset']);
+                $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'choice', array(
                     'choices' => $options,
                     'expanded' => true,
                     'multiple' => false,
-                    'label' => $campo->getDescrizione(),
-                    'data' => $campovalorizzato->getValore()
+                    'label' => $campo['descrizione'],
+                    'data' => $campo['valore']
                 ));
                 $serializer = $this->get('serializer');
                 $json = $serializer->serialize($options, 'json');
                 dump($json);
             } else {
 
-                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
-                    'label' => $campo->getDescrizione(),
-                    'data' => $campovalorizzato->getValore()
+                $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
+                    'label' => $campo['descrizione'],
+                    'data' => $campo['valore']
                 ));
             }
         }
@@ -412,12 +441,13 @@ class FormTemplateController extends Controller
 
 //            $campo = $em->getRepository('estarRdaBundle:Campo')->find($idCampo);
 
-            $vcr = $em->getRepository('estarRdaBundle:Valorizzazionecamporichiesta')->findBy(
+            $vcr = $em->getRepository('estarRdaBundle:Valorizzazionecamporichiesta')->findOneBy(
                 array('idrichiesta' => $idRichiesta, 'idcampo' => $idCampo)
 
             );
-
-            $vcr[0]->setValore($value);
+            if ($vcr != null) {
+                $vcr->setValore($value);
+            }
 
         }
 
@@ -443,7 +473,6 @@ class FormTemplateController extends Controller
             array('idcategoria' => $idCategoria),
             array('ordinamento' => 'ASC')
         );
-
 
 
         $repository = $this->getDoctrine()
