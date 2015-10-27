@@ -38,7 +38,7 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="urgenza" type="boolean" column="urgenza" nullable="false"/>
+    <field name="urgenza" type="boolean" column="urgenza" nullable="true"/>
     <many-to-one field="idcategoria" target-entity="Categoria" fetch="LAZY">
       <join-columns>
         <join-column name="idCategoria" referenced-column-name="id"/>

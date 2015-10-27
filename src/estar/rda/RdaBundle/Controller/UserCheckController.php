@@ -19,93 +19,115 @@ class UserCheckController extends Controller
         $this->session = $session;
     }
 
-    public function getName(){
-        $idutenteSessione= $this->user->getToken()->getUser();
+    public function getName()
+    {
+        $idutenteSessione = $this->user->getToken()->getUser();
         $nomeUtente = $idutenteSessione->getName();
         return $nomeUtente;
 
     }
 
-    public function getIdUtente(){
-        $idutenteSessione= $this->user->getToken()->getUser();
+    public function getIdUtente()
+    {
+        $idutenteSessione = $this->user->getToken()->getUser();
         $repository = $this->em->getRepository('estarRdaBundle:Utente');
         $idUtente = $repository->findOneBy(array(
-                'idfosuser'=>$idutenteSessione)
+                'idfosuser' => $idutenteSessione)
         );
-        $idUtente= $idUtente->getId();
+        $idUtente = $idUtente->getId();
         return $idUtente;
 
     }
 
-    public function getIdUtenteGruppoUtente(){
+    public function getUtente()
+    {
+        $idutenteSessione = $this->user->getToken()->getUser();
+        $repository = $this->em->getRepository('estarRdaBundle:Utente');
+        $utente = $repository->findOneBy(array(
+                'idfosuser' => $idutenteSessione)
+        );
+
+        return $utente;
+
+    }
+
+    public function getIdUtenteGruppoUtente()
+    {
         $idutente = $this->getIdUtente();
         $repository = $this->em->getRepository('estarRdaBundle:Utentegruppoutente');
-         $idutentegruppo = $repository->findOneBy(array(
-                 'idutente'=>$idutente)
-         );
-        $idutentegruppo= $idutentegruppo->getId();
+        $idutentegruppo = $repository->findOneBy(array(
+                'idutente' => $idutente)
+        );
+        $idutentegruppo = $idutentegruppo->getId();
         return $idutentegruppo;
 
     }
 
-    public function getUtenteGruppoUtente(){
+    public function getUtenteGruppoUtente()
+    {
         $idgruppoutente = $this->getIdUtenteGruppoUtente();
         $repository = $this->em->getRepository('estarRdaBundle:Gruppoutente');
         $utentegruppo = $repository->findOneBy(array(
-                'id'=>$idgruppoutente)
+                'id' => $idgruppoutente)
         );
-        $gruppoutente= $utentegruppo->getNome();
+        $gruppoutente = $utentegruppo->getNome();
         return $gruppoutente;
 
     }
 
-    public function isAbilitatoInserimentoRichieste($categoria){
+    public function isAbilitatoInserimentoRichieste($categoria)
+    {
         $idgruppoutente = $this->getIdUtenteGruppoUtente();
         $repository = $this->em->getRepository('estarRdaBundle:Categoriagruppo');
         $utentegruppo = $repository->findOneBy(array(
-                'idgruppoutente'=>$idgruppoutente,
-                'idcategoria'=>$categoria)
+                'idgruppoutente' => $idgruppoutente,
+                'idcategoria' => $categoria)
         );
-        $isAR= $utentegruppo->getAbilitatoinserimentorichieste();
+        $isAR = $utentegruppo->getAbilitatoinserimentorichieste();
         return $isAR;
 
     }
-    public function isValidatoreTecnico($categoria){
+
+    public function isValidatoreTecnico($categoria)
+    {
         $idgruppoutente = $this->getIdUtenteGruppoUtente();
         $repository = $this->em->getRepository('estarRdaBundle:Categoriagruppo');
         $utentegruppo = $repository->findOneBy(array(
-                'idgruppoutente'=>$idgruppoutente,
-                'idcategoria'=>$categoria)
+                'idgruppoutente' => $idgruppoutente,
+                'idcategoria' => $categoria)
         );
-        $isVT= $utentegruppo->getValidatoretecnico();
+        $isVT = $utentegruppo->getValidatoretecnico();
         return $isVT;
 
     }
-    public function isValidatoreAmministrativo($categoria){
+
+    public function isValidatoreAmministrativo($categoria)
+    {
         $idgruppoutente = $this->getIdUtenteGruppoUtente();
         $repository = $this->em->getRepository('estarRdaBundle:Categoriagruppo');
         $utentegruppo = $repository->findOneBy(array(
-                'idgruppoutente'=>$idgruppoutente,
-                'idcategoria'=>$categoria)
+                'idgruppoutente' => $idgruppoutente,
+                'idcategoria' => $categoria)
         );
-        $isVA= $utentegruppo->getValidatoreamministrativo();
+        $isVA = $utentegruppo->getValidatoreamministrativo();
         return $isVA;
 
     }
-    public function allRole($categoria){
+
+    public function allRole($categoria)
+    {
         $idgruppoutente = $this->getIdUtenteGruppoUtente();
         $repository = $this->em->getRepository('estarRdaBundle:Categoriagruppo');
         $utentegruppo = $repository->findOneBy(array(
-                'idgruppoutente'=>$idgruppoutente,
-                'idcategoria'=>$categoria)
+                'idgruppoutente' => $idgruppoutente,
+                'idcategoria' => $categoria)
         );
-        $isVA= $utentegruppo->getValidatoreamministrativo();
-        $isVT= $utentegruppo->getValidatoretecnico();
-        $isAR= $utentegruppo->getAbilitatoinserimentorichieste();
-        return array($isAR,$isVT,$isVA);
+        $isVA = $utentegruppo->getValidatoreamministrativo();
+        $isVT = $utentegruppo->getValidatoretecnico();
+        $isAR = $utentegruppo->getAbilitatoinserimentorichieste();
+        return array($isAR, $isVT, $isVA);
 
     }
-
 
 
 }
