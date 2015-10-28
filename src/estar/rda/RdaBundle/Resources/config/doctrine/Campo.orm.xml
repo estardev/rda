@@ -22,8 +22,8 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="obbligatorioinserzione" type="boolean" column="obbligatorioInserzione" nullable="true"/>
-    <field name="obbligatoriovalidazionetecnica" type="boolean" column="obbligatorioValidazioneTecnica" nullable="true"/>
+    <field name="obbligatorioinserzione" type="integer" column="obbligatorioInserzione" nullable="true"/>
+    <field name="obbligatoriovalidazionetecnica" type="integer" column="obbligatorioValidazioneTecnica" nullable="true"/>
     <field name="ordinamento" type="integer" column="ordinamento" nullable="true">
       <options>
         <option name="unsigned"/>
@@ -34,7 +34,7 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="obbligatoriovalidazioneamministrativa" type="boolean" column="obbligatorioValidazioneAmministrativa" nullable="true"/>
+    <field name="obbligatoriovalidazioneamministrativa" type="integer" column="obbligatorioValidazioneAmministrativa" nullable="true"/>
     <field name="padre" type="string" column="padre" length="255" nullable="true">
       <options>
         <option name="fixed"/>

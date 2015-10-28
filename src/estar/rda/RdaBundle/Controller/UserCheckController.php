@@ -2,6 +2,8 @@
 
 namespace estar\rda\RdaBundle\Controller;
 
+use estar\rda\RdaBundle\Entity\Utentegruppoutente;
+use estar\rda\RdaBundle\Model\DirittiRichiesta;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -55,6 +57,7 @@ class UserCheckController extends Controller
     {
         $idutente = $this->getIdUtente();
         $repository = $this->em->getRepository('estarRdaBundle:Utentegruppoutente');
+        $idutentegruppo = new Utentegruppoutente();
         $idutentegruppo = $repository->findOneBy(array(
                 'idutente' => $idutente)
         );
@@ -114,18 +117,56 @@ class UserCheckController extends Controller
 
     }
 
+    /** ritorna tutti i ruoli per una categoria dato l'utente loggato
+     *
+     * @author Francesco Galli
+     * @return DirittiRichiesta
+     */
     public function allRole($categoria)
     {
-        $idgruppoutente = $this->getIdUtenteGruppoUtente();
-        $repository = $this->em->getRepository('estarRdaBundle:Categoriagruppo');
-        $utentegruppo = $repository->findOneBy(array(
-                'idgruppoutente' => $idgruppoutente,
-                'idcategoria' => $categoria)
-        );
-        $isVA = $utentegruppo->getValidatoreamministrativo();
-        $isVT = $utentegruppo->getValidatoretecnico();
-        $isAR = $utentegruppo->getAbilitatoinserimentorichieste();
-        return array($isAR, $isVT, $isVA);
+        $utente = $this->getUtente();
+        $idUtente =  $utente->getId();
+
+        //recupero il massimo livello di accesso per la categoria a cui è collegato l'utente tramite i gruppi
+        //di appartenenza
+//        $query = $this->em->createQuery('SELECT max(cg.abilitatoinserimentorichieste) as inserimento,
+//                                    max(cg.validatoretecnico) as valtec, max(cg.validatoreamministrativo) as valamm
+//                                    FROM estarRdaBundle:Categoriagruppo cg
+//                                    JOIN estarRdaBundle:Gruppoutente gu
+//                                    JOIN estarRdaBundle:Utentegruppoutente ugu
+//                                    WITH ugu.idgruppoutente = gu.id
+//                                    AND cg.idgruppoutente = gu.id
+//                                    WHERE ugu.idutente = :idUtente')
+        $query = $this->em->createQuery('SELECT max(cg.abilitatoinserimentorichieste) as inserimento,
+                                    max(cg.validatoretecnico) as valtec, max(cg.validatoreamministrativo) as valamm
+                                    FROM estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Gruppoutente gu, estarRdaBundle:Utentegruppoutente ugu
+                                    WHERE ugu.idgruppoutente = gu.id
+                                    AND cg.idgruppoutente = gu.id
+                                    AND ugu.idutente = :idUtente
+                                    AND cg.idcategoria = :idCategoria')
+
+            ->setparameter('idUtente', $idUtente)->setparameter('idCategoria', $categoria);
+
+        $diritti = $query->getResult();
+        $dirittiRichiesta = new DirittiRichiesta();
+        foreach($diritti as $diritto) {
+            if ($diritto['inserimento'] >0 ) $dirittiRichiesta->setIsAI(true);
+            if ($diritto['valamm'] >0 ) $dirittiRichiesta->setIsVA(true);
+            if ($diritto['valtec'] >0 ) $dirittiRichiesta->setIsVT(true);
+        }
+
+        return $dirittiRichiesta;
+        //vecchio codice di Demetrio
+        //$idgruppoutente = $this->getIdUtenteGruppoUtente();
+        //$repository = $this->em->getRepository('estarRdaBundle:Categoriagruppo');
+        //$utentegruppo = $repository->findOneBy(array(
+        //        'idgruppoutente' => $idgruppoutente,
+        //        'idcategoria' => $categoria)
+        //);
+        //$isVA = $utentegruppo->getValidatoreamministrativo();
+        //$isVT = $utentegruppo->getValidatoretecnico();
+        //$isAR = $utentegruppo->getAbilitatoinserimentorichieste();
+        //return array($isAR, $isVT, $isVA);
 
     }
 

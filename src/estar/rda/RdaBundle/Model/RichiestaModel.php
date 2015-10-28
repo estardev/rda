@@ -124,6 +124,18 @@ class RichiestaModel extends Controller
      *
      * @return true or false
      */
+    public function puoAvanzare($idRichiesta, $nuovostatus) {
+        //tiro su la richiesta
+        $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')
+            ->find($idRichiesta);
+        //prendo lo status della richiesta
+        $vecchiostatus = $richiesta->getStatus();
+
+        //punto primo: una richiesta può sempre andare indietro.
+        if ($nuovostatus == RichiestaModel::STATUS_BOZZA) return true;
+        if ($nuovostatus == RichiestaModel::STATUS_ATTESA_VAL_TEC && $vecchiostatus==RichiestaModel::STATUS_ATTESA_VAL_AMM) return true;;
+    }
+
 
     /** Avanza una richiesta allo stato indicato
      *

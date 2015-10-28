@@ -36,6 +36,7 @@ class FormTemplateController extends Controller
         return $returnOptions;
     }
 
+
     /**
      * Displays a form to create a new FormTemplate entity.
      *
@@ -46,6 +47,10 @@ class FormTemplateController extends Controller
 
 
         $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
+
+        //FG20151027 modifica per i diritti: prendiamo i diritti
+        $usercheck = $this->get("usercheck.notify");
+        $diritti = $usercheck->allRole($idCategoria);
 
         $campi = $repository->findBy(
             array('idcategoria' => $idCategoria),
@@ -64,6 +69,9 @@ class FormTemplateController extends Controller
 
 
         foreach ($campi as $campo) {
+            //FG 20151027 modifica per campi visualizzabili a seconda dei diritti
+            if (!($diritti->campoVisualizzabile($diritti, $campo))) continue;
+
             $obbligatorio = $campo->getObbligatorioinserzione();
             if ($campo->getTipo() == 'choice') {
 
@@ -171,6 +179,10 @@ class FormTemplateController extends Controller
         //TODO: vanno aggiunti anche i documenti (generati o creati, della stessa sostanza del Padre)
         $em = $this->getDoctrine()->getManager();
 
+        //FG20151028 modifica per i diritti: prendiamo i diritti
+        $usercheck = $this->get("usercheck.notify");
+        $diritti = $usercheck->allRole($idCategoria);
+
 //        $queryBuilder
 //            ->select('u.id', 'u.name', 'p.number')
 //            ->from('users', 'u')
@@ -179,7 +191,8 @@ class FormTemplateController extends Controller
 
 //        $repository = $this->getDoctrine()
 //            ->getRepository('estarRdaBundle:Campo');
-        $query = $em->createQuery('SELECT c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
+        //FG modificata 20151028 aggiunto campo.id as idcampo
+        $query = $em->createQuery('SELECT c.id as idcampo, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
                                     FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
                                     WITH c.id = vc.idcampo
                                     AND vc.idrichiesta = :idRichiesta')
@@ -209,7 +222,7 @@ class FormTemplateController extends Controller
 
         $formbuilder = $this->createFormBuilder();
 //        $fieldsetVisitati = array();
-        //TODO FG 20151016 gestione dei campi della richiesta
+
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         $formbuilder->add("titolo", "text", array(
             'label' => "titolo",
@@ -224,6 +237,12 @@ class FormTemplateController extends Controller
         foreach ($campiValorizzati as $campovalorizzato) {
 //            $campo = $campovalorizzato->getIdcampo();
             $campo = $campovalorizzato;
+
+            //FG20151028 se il campo non è visualizzabile, skip.
+            $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
+            $campoCheck = $repository->find($campo['idcampo']);
+            if (!($this->campoVisualizzabile($diritti, $campoCheck))) continue;
+
 //            if ($campo->getTipo() == 'choice') {
             if ($campo['tipo'] == 'choice') {
 //                $fieldsetName = $campo->getFieldset();
@@ -279,8 +298,9 @@ class FormTemplateController extends Controller
     function editAction($idCategoria, $idRichiesta)
     {
         $em = $this->getDoctrine()->getManager();
-        //TODO fg aggiungere il passaggio alla form della obbligatoriet� o meno dei campi (manca! � tutto obbligatorio)
-        //TODO FG verificare: se io aggiungo un campo a una categoria ed esiste gi� una richiesta di questa categoria, il campo non si vede
+        //FG20151028 modifica per i diritti: prendiamo i diritti
+        $usercheck = $this->get("usercheck.notify");
+        $diritti = $usercheck->allRole($idCategoria);
 //        $repository = $this->getDoctrine()
 //            ->getRepository('estarRdaBundle:Campo');
 //
@@ -297,7 +317,8 @@ class FormTemplateController extends Controller
 //        $campiValorizzati = $repository->findBy(
 //            array('idrichiesta' => $idRichiesta)
 //        );
-        $query = $em->createQuery('SELECT c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
+        //FG 20151028 modificata: aggiunto c.id as idcampo
+        $query = $em->createQuery('SELECT c.id as idcampo, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
                                     FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
                                     WITH c.id = vc.idcampo
                                     AND vc.idrichiesta = :idRichiesta
@@ -322,6 +343,11 @@ class FormTemplateController extends Controller
         foreach ($campiValorizzati as $campovalorizzato) {
 //            $campo = $campovalorizzato->getIdcampo();
             $campo = $campovalorizzato;
+            //FG20151028 se il campo non è visualizzabile, skip.
+            $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
+            $campoCheck = $repository->find($campo['idcampo']);
+            if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
+
 //            if ($campo->getTipo() == 'choice') {
             if ($campo['tipo'] == 'choice') {
 //                $fieldsetName = $campo->getFieldset();
@@ -465,6 +491,7 @@ class FormTemplateController extends Controller
 
 
         $em = $this->getDoctrine()->getManager();
+        //FG il controllo dei campi è intenzionalmente tenuto fuori da ACL
         $query = $em->createQuery('SELECT c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
                                     FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
                                     WITH c.id = vc.idcampo
