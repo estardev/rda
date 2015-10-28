@@ -45,6 +45,13 @@ class FormTemplateController extends Controller
     {
         //TODO fg aggiungere il passaggio alla form della obbligatoriet� o meno dei campi (manca! � tutto obbligatorio)
 
+        $data='12/12/2009';
+        $datetime = DateTime::createFromFormat('d/m/Y', $data);
+        $timestamp = $datetime->getTimestamp();
+
+
+
+        dump($timestamp);
 
         $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
 

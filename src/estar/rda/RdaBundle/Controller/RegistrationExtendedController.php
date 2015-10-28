@@ -14,7 +14,6 @@ use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 
 
-
 class RegistrationExtendedController extends RegistrationParentController
 {
 
@@ -38,7 +37,8 @@ class RegistrationExtendedController extends RegistrationParentController
         if (null !== $event->getResponse()) {
             return $event->getResponse();
         }
-
+        $campi = $request->request->all();
+//        $email = $campi['fos_user_registration_form']['email'];
         // 1) build the form
         $form = $formFactory->createForm();
         $form->setData($user);
@@ -54,21 +54,21 @@ class RegistrationExtendedController extends RegistrationParentController
             $userManager->updateUser($user);
 
             //** Parte aggiunta INIT */
+            //TODO recupero id fosuser appena inserito
+            $em = $this->getDoctrine()->getManager();
 
-                $em = $this->getDoctrine()->getManager();
+            $campiForm = $request->request->all();
 
-                $campiForm = $request->request->all();
+            $azienda = $em->getRepository('estarRdaBundle:Azienda')->find('21');
+            $fosuser = $em->getRepository('estarRdaBundle:FosUser')->find('9');
 
-                $azienda = $em->getRepository('estarRdaBundle:Azienda')->find('21');
-                $fosuser = $em->getRepository('estarRdaBundle:FosUser')->find('9');
+            $utente = new Utente();
+            $utente->setIdazienda($azienda);
+            $utente->setIdfosuser($fosuser);
+            //$utente->setNomecognome($campiForm[$form->createView()]['nomecognome']);
+            //$utente->setUtentecartaoperatore($campiForm[$form->createView()]['codicefiscale']);
 
-                $utente = new Utente();
-                $utente->setIdazienda($azienda);
-                $utente->setIdfosuser($fosuser);
-                //$utente->setNomecognome($campiForm[$form->createView()]['nomecognome']);
-                //$utente->setUtentecartaoperatore($campiForm[$form->createView()]['codicefiscale']);
-
-                $em->persist($utente);
+            $em->persist($utente);
 
             //** Parte aggiunta END */
 
