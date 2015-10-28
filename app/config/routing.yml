@@ -2,10 +2,6 @@ prog_test_homepage:
     path:     /hello/{name}
     defaults: { _controller: estarRdaBundle:DemoClient:hello }
 
-SistematicaClient:
-    path: /sistematicaclient/{idPratica}
-    defaults: { _controller: estarRdaBundle:SistematicaClient:index}
-
 estar_rda:
     resource: "@estarRdaBundle/Resources/config/routing.yml"
     prefix:   /

@@ -263,8 +263,11 @@ class RichiestaController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    public function validaAction($id, $transizione)
+    public function validaAction($id, $transizione, Request $request)
     {
+
+        $campi = $request->request->all();
+        $messaggio= $campi['form']['messaggio'];
 
         $em = $this->getDoctrine()->getManager();
 
@@ -288,7 +291,7 @@ class RichiestaController extends Controller
             $iter->setIdrichiesta($richiesta);
             $iter->setIdutente($utente);
             //TODO aggiungere motivazione
-            $iter->setMotivazione('MOTIVAZIONE GENERICA');
+            $iter->setMotivazione($messaggio);
             $iter->setDataora(new \DateTime('now'));
             $em->persist($iter);
         }

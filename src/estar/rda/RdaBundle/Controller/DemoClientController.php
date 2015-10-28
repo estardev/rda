@@ -22,6 +22,7 @@ class DemoClientController extends Controller
         $soapClient= $clientbuilder->build();
 
 
+
         $wsdl= $clientbuilder->getWsdl();
         //var_dump($wsdl);
         $soapClient->SoapClient($wsdl, array('trace' => 1,

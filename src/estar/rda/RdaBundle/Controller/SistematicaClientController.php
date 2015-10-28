@@ -20,6 +20,7 @@ class SistematicaClientController extends Controller
      */
     public function indexAction($idPratica)
     {
+        $nome = "richiesta_".time().".zip";
         $clientbuilder = $this->get('besimple.soap.client.builder.sistematica');
 
         $soapClient= $clientbuilder->build();
@@ -46,7 +47,7 @@ class SistematicaClientController extends Controller
         $ss= new SoapCommon\Mime\Part();
         $ss->setHeader("Content-Type","applicatio/xop+xml");
         $ss->setHeader("type","text/xml");
-        $ss->setHeader("Content-Transfer-Encoding","8bit");
+        $ss->setHeader("Content-Transfer-Encoding","base64");
 
         //$ss->setContent(base64_encode('mio.txt'));
 
@@ -178,7 +179,7 @@ class SistematicaClientController extends Controller
 				 <variable>
 						<key>transition</key>
 						<type>string</type>
-						<valueString>protocolla</valueString>
+						<valueString>Protocolla</valueString>
 				 </variable>
 			</variables>
 			  <!--Optional:-->
@@ -186,7 +187,7 @@ class SistematicaClientController extends Controller
             <!--Zero or more repetitions:-->
             <attachment>
                <fileset>isharedocMailAttach</fileset>
-               <filename>mio.txt</filename>
+               <filename>'.$nome.'</filename>
                <!--Optional:-->
                <contentType>mimeType</contentType>
                <data>cid:1157971487190</data>
@@ -219,8 +220,9 @@ class SistematicaClientController extends Controller
         file_put_contents('ProvaRisposta.xml', print_r($myrespons, true));
         //var_dump($myrespons);
 
-        return $this->render('@estarRda/Testing/index.html.twig', array(
-            'hello' => $myrespons,
-        ));
+        return $this->redirect($this->generateUrl("richiesta"));
+        //return $this->render('@estarRda/Testing/index.html.twig', array(
+        //    'hello' => $myrespons,
+        //));
     }
 }
