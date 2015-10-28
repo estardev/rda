@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
+use estar\rda\RdaBundle\Controller\SistematicaClientController;
 
 
 class FormTemplateController extends Controller
@@ -45,6 +46,13 @@ class FormTemplateController extends Controller
     {
         //TODO fg aggiungere il passaggio alla form della obbligatoriet� o meno dei campi (manca! � tutto obbligatorio)
 
+        $data='12/12/2009';
+        $datetime = DateTime::createFromFormat('d/m/Y', $data);
+        $timestamp = $datetime->getTimestamp();
+
+
+
+        dump($timestamp);
 
         $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
 
@@ -66,6 +74,7 @@ class FormTemplateController extends Controller
             'label' => "Descrizione",
             'data' => "indicare descrizione, azienda sanitaria e UOC destinataria"
         ));
+
 
 
         foreach ($campi as $campo) {
@@ -338,7 +347,8 @@ class FormTemplateController extends Controller
             'label' => "Descrizione",
             'data' => $richiesta->getDescrizione()
         ));
-//        $fieldsetVisitati = array();
+
+       //        $fieldsetVisitati = array();
 
         foreach ($campiValorizzati as $campovalorizzato) {
 //            $campo = $campovalorizzato->getIdcampo();
@@ -394,6 +404,11 @@ class FormTemplateController extends Controller
         $editForm->add('submit', 'submit', array('label' => 'Modifica'));
 
         $formbuilder = $this->createFormBuilder();
+        $formbuilder->setAction($this->generateUrl('sistematicaclient_show' , array('idPratica' => '1')));
+        $ClientSoapForm = $formbuilder->getForm();
+        $ClientSoapForm->add('submit', 'submit', array('label' => 'Invia iShareDoc'));
+
+        $formbuilder = $this->createFormBuilder();
         $formbuilder->setAction($this->generateUrl('richiesta_delete', array('id' => $idRichiesta)));
         $deleteForm = $formbuilder->getForm();
         $deleteForm->add('submit', 'submit', array('label' => 'Elimina'));
@@ -427,7 +442,13 @@ class FormTemplateController extends Controller
 
             $formbuilder->setAction($this->generateUrl('richiesta_valida', array('id' => $idRichiesta, 'transizione' => $value)));
             $validaForm = $formbuilder->getForm();
+            //$formbuilder = $this->createFormBuilder();
+            $validaForm->add("messaggio", "textarea", array(
+                'label' => "Messaggio",
+                'data'=> "indicare motivazione di rigetto o validazione"
+            ));
             $validaForm->add('submit', 'submit', array('label' => $value));
+            //$MessaggioForm = $formbuilder->getForm();
             array_push($validaForms, $validaForm->createView());
         }
 
@@ -438,6 +459,8 @@ class FormTemplateController extends Controller
             'delete_form' => $deleteForm->createView(),
             'print_form' => $printForm->createView(),
             'valida_forms' => $validaForms,
+            'soap_form' =>  $ClientSoapForm->createView()
+        //    'messaggio_form' => $MessaggioForm->createView(),
         ));
     }
 

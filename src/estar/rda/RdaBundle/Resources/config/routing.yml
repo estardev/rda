@@ -18,10 +18,6 @@ estar_rda_campodocumento:
     resource: "@estarRdaBundle/Resources/config/routing/campodocumento.yml"
     prefix:   /campodocumento
 
-estar_rda_valorizzazionecamporichiesta:
-    resource: "@estarRdaBundle/Resources/config/routing/valorizzazionecamporichiesta.yml"
-    prefix:   /valorizzazionecamporichiesta
-
 estar_rda_valorizzazionecampodocumento:
     resource: "@estarRdaBundle/Resources/config/routing/valorizzazionecampodocumento.yml"
     prefix:   /valorizzazionecampodocumento
@@ -29,10 +25,6 @@ estar_rda_valorizzazionecampodocumento:
 estar_rda_utentegruppoutente:
     resource: "@estarRdaBundle/Resources/config/routing/utentegruppoutente.yml"
     prefix:   /utentegruppoutente
-
-estar_rda_utente:
-    resource: "@estarRdaBundle/Resources/config/routing/utente.yml"
-    prefix:   /utente
 
 estar_rda_richiestautente:
     resource: "@estarRdaBundle/Resources/config/routing/richiestautente.yml"
@@ -62,10 +54,6 @@ estar_rda_categoriadocumento:
     resource: "@estarRdaBundle/Resources/config/routing/categoriadocumento.yml"
     prefix:   /categoriadocumento
     
-estar_rda_campodocumento:
-    resource: "@estarRdaBundle/Resources/config/routing/campodocumento.yml"
-    prefix:   /campodocumento
-
 estar_rda_categoria:
     resource: "@estarRdaBundle/Resources/config/routing/categoria.yml"
     prefix:   /categoria
@@ -81,6 +69,10 @@ estar_rda_azienda:
 estar_rda_formtemplate:
     resource: "@estarRdaBundle/Resources/config/routing/formtemplate.yml"
     prefix:   /formtemplate
+
+sistematica:
+    resource: "@estarRdaBundle/Resources/config/routing/sistematicaclient.yml"
+    prefix:   /sistematicaclient
 
 estar_rda_pdf:
     resource: "@estarRdaBundle/Resources/config/routing/pdf.yml"
