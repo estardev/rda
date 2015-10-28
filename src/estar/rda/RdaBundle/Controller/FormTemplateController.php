@@ -46,14 +46,6 @@ class FormTemplateController extends Controller
     {
         //TODO fg aggiungere il passaggio alla form della obbligatoriet� o meno dei campi (manca! � tutto obbligatorio)
 
-        $data='12/12/2009';
-        $datetime = DateTime::createFromFormat('d/m/Y', $data);
-        $timestamp = $datetime->getTimestamp();
-
-
-
-        dump($timestamp);
-
         $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
 
         //FG20151027 modifica per i diritti: prendiamo i diritti
@@ -460,7 +452,6 @@ class FormTemplateController extends Controller
             'print_form' => $printForm->createView(),
             'valida_forms' => $validaForms,
             'soap_form' =>  $ClientSoapForm->createView()
-        //    'messaggio_form' => $MessaggioForm->createView(),
         ));
     }
 
