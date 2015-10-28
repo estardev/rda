@@ -18,8 +18,10 @@ class User extends BaseUser
      */
     protected $id;
 
-    protected $name;
-
+    protected $name; //TODO: credo non serva più, sostituito con nomecognome
+    protected $nomecognome;
+    protected  $codicefiscale;
+    protected  $idazienda;
     protected $idgruppoutente;
 
     public function __construct()
@@ -56,7 +58,6 @@ class User extends BaseUser
     public function setName($name)
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -70,17 +71,62 @@ class User extends BaseUser
         return $this->name;
     }
 
+    /** Get e Set nomecognome */
+    public function setNomecognome($nomecognome)
+    {
+        $this->nomecognome = $nomecognome;
+        return $this;
+    }
+
+    public function getNomecognome()
+    {
+        return $this->nomecognome;
+    }
+
+    /** Get e Set codicefiscale */
+    public function setCodicefiscale($codicefiscale)
+    {
+        $this->codicefiscale = $codicefiscale;
+        return $this;
+    }
+
+    public function getCodicefiscale()
+    {
+        return $this->codicefiscale;
+    }
+    /**
+     * Set idazienda
+     *
+     * @param \estar\rda\RdaBundle\Entity\Azienda $idazienda
+     *
+     * @return User
+     */
+    public function setIdazienda(\estar\rda\RdaBundle\Entity\Azienda $idazienda = null)
+    {
+        $this->idazienda = $idazienda;
+        return $this;
+    }
+
+    /**
+     * Get idazienda
+     *
+     * @return \estar\rda\RdaBundle\Entity\Azienda
+     */
+    public function getIdazienda()
+    {
+        return $this->idazienda;
+    }
+
     /**
      * Set idgruppoutente
      *
      * @param \estar\rda\RdaBundle\Entity\Gruppoutente $idgruppoutente
      *
-     * @return Utentegruppoutente
+     * @return User
      */
     public function setIdgruppoutente(\estar\rda\RdaBundle\Entity\Gruppoutente $idgruppoutente = null)
     {
         $this->idgruppoutente = $idgruppoutente;
-
         return $this;
     }
 
