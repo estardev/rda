@@ -2,6 +2,7 @@
 
 namespace estar\rda\RdaBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,18 +17,26 @@ class User extends BaseUser
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    //protected $id;
 
-    protected $name; //TODO: credo non serva più, sostituito con nomecognome
+    //protected $name; //TODO: credo non serva più, sostituito con nomecognome
+    /**
+     * @var string
+     */
     protected $nomecognome;
+    /**
+     * @var string
+     */
     protected  $codicefiscale;
     protected  $idazienda;
     protected $idgruppoutente;
 
+    protected $gruppiutente;
+
     public function __construct()
     {
         parent::__construct();
-        // your own logic
+        $this->gruppiutente = new ArrayCollection();
     }
 
     /**
@@ -47,7 +56,7 @@ class User extends BaseUser
         return $qb->getQuery()->getResult();
     }
 
-    public function __toString(){return strval($this->getId());}
+    //public function __toString(){return strval($this->getId());}
     /**
      * Set name
      *
@@ -55,21 +64,21 @@ class User extends BaseUser
      *
      * @return UserExt
      */
-    public function setName($name)
+    /*public function setName($name)
     {
         $this->name = $name;
         return $this;
-    }
+    }*/
 
     /**
      * Get name
      *
      * @return string
      */
-    public function getName()
+    /*public function getName()
     {
         return $this->name;
-    }
+    }*/
 
     /** Get e Set nomecognome */
     public function setNomecognome($nomecognome)
@@ -118,25 +127,64 @@ class User extends BaseUser
     }
 
     /**
+     * Set user groups
+     *
+     * @return User
+     */
+    public function setGruppiutente(ArrayCollection $gruppiutente = null)
+    {
+        $this->gruppiutente = $gruppiutente;
+        /*$this->getGruppiutente()->clear();
+
+        foreach($gruppiutente as $gruppoutente) {
+            $this->addGruppoutente($gruppoutente);
+        }
+
+        return $this;*/
+        return $this;
+    }
+
+    /**
+     * Get groups granted to the user.
+     *
+     * @return Collection
+     */
+    public function getGruppiutente()
+    {
+        return $this->gruppiutente;// ?: $this->gruppiutente = new ArrayCollection();
+    }
+
+    /*public function addGruppoutente(Gruppoutente $gruppoutente){
+        $this->gruppiutente[] = $gruppoutente;
+        $gruppoutente->addArchive($this);
+    }
+
+    public function removeGruppoutente(Gruppoutente $gruppoutente){
+        $this->gruppiutente->removeElement($gruppoutente);
+        $gruppoutente->setArchive(null);
+    }*/
+
+
+    /**
      * Set idgruppoutente
      *
      * @param \estar\rda\RdaBundle\Entity\Gruppoutente $idgruppoutente
      *
      * @return User
      */
-    public function setIdgruppoutente(\estar\rda\RdaBundle\Entity\Gruppoutente $idgruppoutente = null)
+    /*public function setIdgruppoutente(\estar\rda\RdaBundle\Entity\Gruppoutente $idgruppoutente = null)
     {
         $this->idgruppoutente = $idgruppoutente;
         return $this;
-    }
+    }*/
 
     /**
      * Get idgruppoutente
      *
      * @return \estar\rda\RdaBundle\Entity\Gruppoutente
      */
-    public function getIdgruppoutente()
+    /*public function getIdgruppoutente()
     {
         return $this->idgruppoutente;
-    }
+    }*/
 }
