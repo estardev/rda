@@ -4,9 +4,25 @@ html, body {
 	width: 100%;
 	height: 100%; 
 }
-
+.header-logo{
+	margin-left:15px;
+	margin-bottom:20px;
+}
 body{
 
+}
+.container{
+	padding-bottom:20px;
+}
+
+#form_submit_delete{
+	background-color: #a94442;
+	border-color: #a94442;
+
+}
+
+.btn-primary{
+	margin-right:10px;
 }
 
 .left_block {
@@ -36,4 +52,13 @@ body{
 	text-align: center;
 	margin: auto;
 	height:100%;
+}
+
+.bottoni{
+
+	float:left;
+}
+
+.bottoniera{
+	float:right;
 }

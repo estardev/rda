@@ -29,3 +29,7 @@ formtemplate_update:
 formtemplate_print:
     path:     /print/{idCategoria}/{idRichiesta}
     defaults: { _controller: "estarRdaBundle:FormTemplate:print" }
+
+formtemplate_back:
+    path:     ../richiesta/byCategoria/{idCategoria}
+    defaults: { _controller: "estarRdaBundle:Richiesta:show" }
