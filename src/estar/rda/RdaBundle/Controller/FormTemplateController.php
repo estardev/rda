@@ -37,6 +37,30 @@ class FormTemplateController extends Controller
         return $returnOptions;
     }
 
+    function selectedOption($options, $key)
+    {
+        return $options[$key];
+    }
+
+    function getFirstLevel($string)
+    {
+        $options = explode('||', $string);
+        $returnOptions = array();
+        foreach ($options as $option) {
+            $subOption = explode('|', $option);
+            array_push($returnOptions, $subOption[1]);
+        }
+
+        return $returnOptions;
+    }
+
+    function getFather($string)
+    {
+        $options = explode('||', $string);
+        $subOption = explode('|', $options[0]);
+
+        return $subOption[0];
+    }
 
     /**
      * Displays a form to create a new FormTemplate entity.
@@ -67,56 +91,70 @@ class FormTemplateController extends Controller
             'data' => "indicare descrizione, azienda sanitaria e UOC destinataria"
         ));
 
-
-
+        $firstLevels = array();
         foreach ($campi as $campo) {
             //FG 20151027 modifica per campi visualizzabili a seconda dei diritti
             if (!($diritti->campoVisualizzabile($diritti, $campo))) continue;
 
             $obbligatorio = $campo->getObbligatorioinserzione();
             if ($campo->getTipo() == 'choice') {
+                $class = array('class' => 'firstLevel');
 
 
-//                $options = getChoicesOptions($campo->getFieldset());
                 $options = $this->getChoicesOptions($campo->getFieldset());
+
                 if ($obbligatorio) {
                     $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
                         'choices' => $options,
                         'expanded' => true,
                         'multiple' => false,
                         'label' => $campo->getDescrizione(),
-                        'constraints' => new NotBlank()
+                        'constraints' => new NotBlank(),
+                        'attr' => $class
                     ));
                 } else {
                     $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
                         'choices' => $options,
                         'expanded' => true,
                         'multiple' => false,
-                        'label' => $campo->getDescrizione()
+                        'label' => $campo->getDescrizione(),
+                        'attr' => $class
                     ));
                 }
 
             } else {
+                $class = array();
+                $label = $campo->getDescrizione();
+
+                if ($campo->getPadre() != null) {
+                    $class = array('class' => 'secondLevel');
+                    $padri = $this->getFirstLevel($campo->getPadre());
+                    $firstLevels[$this->getFather($campo->getPadre())] = $padri;
+
+                }
+
                 if ($obbligatorio) {
                     $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
-                        'label' => $campo->getDescrizione(),
-                        'constraints' => new NotNull()
+                        'label' => $label,
+                        'constraints' => new NotNull(),
+                        'attr' => $class
                     ));
                 } else {
                     $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
-                        'label' => $campo->getDescrizione(),
+                        'label' => $label,
+                        'attr' => $class
                     ));
                 }
             }
         }
-
+        dump($firstLevels);
         $formbuilder->setAction($this->generateUrl('formtemplate_create', array('idCategoria' => $idCategoria)));
         $form = $formbuilder->getForm();
 
         $form->add('submit', 'submit', array('label' => 'Crea Nuova Richiesta'));
         return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
-            'form' => $form->createView()
-
+            'form' => $form->createView(),
+            'firstLevels' => $firstLevels
         ));
     }
 
@@ -242,15 +280,16 @@ class FormTemplateController extends Controller
             //FG20151028 se il campo non è visualizzabile, skip.
             $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
             $campoCheck = $repository->find($campo['idcampo']);
-            if (!($this->campoVisualizzabile($diritti, $campoCheck))) continue;
+            if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
 
 //            if ($campo->getTipo() == 'choice') {
             if ($campo['tipo'] == 'choice') {
 //                $fieldsetName = $campo->getFieldset();
 
+                $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
                 $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
                     'label' => $campo['descrizione'],
-                    'data' => $campo['valore'],
+                    'data' => $descrizioneValore,
                     'read_only' => true
                 ));
             } else {
@@ -340,7 +379,7 @@ class FormTemplateController extends Controller
             'data' => $richiesta->getDescrizione()
         ));
 
-       //        $fieldsetVisitati = array();
+        //        $fieldsetVisitati = array();
 
         foreach ($campiValorizzati as $campovalorizzato) {
 //            $campo = $campovalorizzato->getIdcampo();
@@ -396,7 +435,7 @@ class FormTemplateController extends Controller
         $editForm->add('submit', 'submit', array('label' => 'Modifica'));
 
         $formbuilder = $this->createFormBuilder();
-        $formbuilder->setAction($this->generateUrl('sistematicaclient_show' , array('idPratica' => '1')));
+        $formbuilder->setAction($this->generateUrl('sistematicaclient_show', array('idPratica' => '1')));
         $ClientSoapForm = $formbuilder->getForm();
         $ClientSoapForm->add('submit', 'submit', array('label' => 'Invia iShareDoc'));
 
@@ -437,7 +476,7 @@ class FormTemplateController extends Controller
             //$formbuilder = $this->createFormBuilder();
             $validaForm->add("messaggio", "textarea", array(
                 'label' => "Messaggio",
-                'data'=> "indicare motivazione di rigetto o validazione"
+                'data' => "indicare motivazione di rigetto o validazione"
             ));
             $validaForm->add('submit', 'submit', array('label' => $value));
             //$MessaggioForm = $formbuilder->getForm();
@@ -451,7 +490,8 @@ class FormTemplateController extends Controller
             'delete_form' => $deleteForm->createView(),
             'print_form' => $printForm->createView(),
             'valida_forms' => $validaForms,
-            'soap_form' =>  $ClientSoapForm->createView()
+            'soap_form' => $ClientSoapForm->createView()
+            //    'messaggio_form' => $MessaggioForm->createView(),
         ));
     }
 
@@ -505,8 +545,10 @@ class FormTemplateController extends Controller
 
 
         $em = $this->getDoctrine()->getManager();
+        $usercheck = $this->get("usercheck.notify");
+        $diritti = $usercheck->allRole($idCategoria);
         //FG il controllo dei campi è intenzionalmente tenuto fuori da ACL
-        $query = $em->createQuery('SELECT c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
+        $query = $em->createQuery('SELECT c.id as idcampo,c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
                                     FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
                                     WITH c.id = vc.idcampo
                                     AND vc.idrichiesta = :idRichiesta')
@@ -544,13 +586,18 @@ class FormTemplateController extends Controller
         foreach ($campiValorizzati as $campovalorizzato) {
 //            $campo = $campovalorizzato->getIdcampo();
             $campo = $campovalorizzato;
+
+            $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
+            $campoCheck = $repository->find($campo['idcampo']);
+            if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
+
 //            if ($campo->getTipo() == 'choice') {
             if ($campo['tipo'] == 'choice') {
 //                $fieldsetName = $campo->getFieldset();
-
+                $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
                 $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
                     'label' => $campo['descrizione'],
-                    'data' => $campo['valore'],
+                    'data' => $descrizioneValore,
                     'read_only' => true
                 ));
             } else {
