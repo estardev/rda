@@ -26,6 +26,18 @@
 
 		{% block javascripts %}
             <script type="text/javascript" src="{{ asset('js/navbar.js', absolute=true) }}"></script>
+            <script type="text/javascript" src="{{ asset('js/levelsFieldFunctions.js', absolute=true) }}"></script>
+            {% if firstLevels is defined %}
+            <script>
+                $(document).ready(function(){
+                            var options = {{ firstLevels|json_encode|raw }};
+                            firstLevel(options);
+                            secondLevel();
+                        }
+
+                )
+            </script>
+        {% endif %}
         {% endblock %}
 
 	</head>

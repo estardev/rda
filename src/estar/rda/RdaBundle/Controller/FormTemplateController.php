@@ -100,7 +100,6 @@ class FormTemplateController extends Controller
             if ($campo->getTipo() == 'choice') {
                 $class = array('class' => 'firstLevel');
 
-
                 $options = $this->getChoicesOptions($campo->getFieldset());
 
                 if ($obbligatorio) {
@@ -152,8 +151,7 @@ class FormTemplateController extends Controller
         $form = $formbuilder->getForm();
 
 
-
-        $form->add('submit', 'submit', array('label' => 'Salva e chiudi','attr' => array('class' => 'bottoniera')));
+        $form->add('submit', 'submit', array('label' => 'Salva e chiudi', 'attr' => array('class' => 'bottoniera')));
         $form->add('back', 'submit', array('label' => 'Indietro'));
         $formbuilder = $this->createFormBuilder();
         $formbuilder->setAction($this->generateUrl('formtemplate_back', array('idCategoria' => $idCategoria)));
@@ -369,7 +367,7 @@ class FormTemplateController extends Controller
 //            array('idrichiesta' => $idRichiesta)
 //        );
         //FG 20151028 modificata: aggiunto c.id as idcampo
-        $query = $em->createQuery('SELECT c.id as idcampo, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
+        $query = $em->createQuery('SELECT c.id as idcampo, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,c.padre,vc.id,vc.valore
                                     FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
                                     WITH c.id = vc.idcampo
                                     AND vc.idrichiesta = :idRichiesta
@@ -379,7 +377,6 @@ class FormTemplateController extends Controller
         $campiValorizzati = $query->getResult();
 
         $formbuilder = $this->createFormBuilder();
-
 
 
         //FG 20151016 gestione dei campi della richiesta
@@ -393,8 +390,8 @@ class FormTemplateController extends Controller
             'data' => $richiesta->getDescrizione()
         ));
 
-       //        $fieldsetVisitati = array();
-
+        //        $fieldsetVisitati = array();
+        $firstLevels = array();
         foreach ($campiValorizzati as $campovalorizzato) {
 //            $campo = $campovalorizzato->getIdcampo();
             $campo = $campovalorizzato;
@@ -405,34 +402,31 @@ class FormTemplateController extends Controller
 
 //            if ($campo->getTipo() == 'choice') {
             if ($campo['tipo'] == 'choice') {
-//                $fieldsetName = $campo->getFieldset();
-//                if (in_array($fieldsetName, $fieldsetVisitati)) {
-//                    continue;
-//                }
+                $class = array('class' => 'firstLevel');
 
-//                array_push($fieldsetVisitati, $fieldsetName);
-//                $options = array();
-//                foreach ($campi as $item) {
-//                    if ($item->getTipo() == 'radio' and $item->getFieldset() == $fieldsetName)
-//                        array_push($options, $item->getDescrizione());
-//
-//                }
                 $options = $this->getChoicesOptions($campo['fieldset']);
                 $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'choice', array(
                     'choices' => $options,
                     'expanded' => true,
                     'multiple' => false,
                     'label' => $campo['descrizione'],
-                    'data' => $campo['valore']
+                    'data' => $campo['valore'],
+                    'attr' => $class
                 ));
-                $serializer = $this->get('serializer');
-                $json = $serializer->serialize($options, 'json');
-                dump($json);
-            } else {
 
+            } else {
+                $class = array();
+                    $label = $campo['descrizione'];
+                if ($campo['padre'] != null) {
+                    $class = array('class' => 'secondLevel');
+                    $padri = $this->getFirstLevel($campo['padre']);
+                    $firstLevels[$this->getFather($campo['padre'])] = $padri;
+
+                }
                 $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
                     'label' => $campo['descrizione'],
-                    'data' => $campo['valore']
+                    'data' => $campo['valore'],
+                    'attr' => $class
                 ));
             }
         }
@@ -446,13 +440,13 @@ class FormTemplateController extends Controller
 
 
         $editForm = $formbuilder->getForm();
-       // $editForm->add('submit', 'submit', array('label' => 'Modifica'));
+        // $editForm->add('submit', 'submit', array('label' => 'Modifica'));
         $editForm->add('submit', 'submit', array('label' => 'Salva e chiudi', 'attr' => array('class' => 'bottoniera')));
 
 
         $formbuilder = $this->createFormBuilder();
-        
-        $formbuilder->setAction($this->generateUrl('sistematicaclient_show' , array('idRichiesta' => $idRichiesta)));
+
+        $formbuilder->setAction($this->generateUrl('sistematicaclient_show', array('idRichiesta' => $idRichiesta)));
         $ClientSoapForm = $formbuilder->getForm();
         $ClientSoapForm->add('submit', 'submit', array('label' => 'Invia ad ABS'));
 
@@ -471,7 +465,6 @@ class FormTemplateController extends Controller
         $formbuilder->setAction($this->generateUrl('formtemplate_back', array('idCategoria' => $idCategoria)));
         $backForm = $formbuilder->getForm();
         $backForm->add('back', 'submit', array('label' => 'Indietro'));
-
 
 
         $em = $this->getDoctrine()->getManager();
@@ -510,16 +503,17 @@ class FormTemplateController extends Controller
         $usercheckControl = $this->get('usercheck.notify');
         $dirittiucc = $usercheckControl->allRole($idCategoria);
 
-            return $this->render('estarRdaBundle:FormTemplate:edit.html.twig', array(
-                'entity' => $entity,
-                'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-                'print_form' => $printForm->createView(),
-                'valida_forms' => $validaForms,
-                'soap_form' =>  $ClientSoapForm->createView(),
-                'back_form' =>  $backForm->createView(),
-                'diritti' =>$dirittiucc
-            ));
+        return $this->render('estarRdaBundle:FormTemplate:edit.html.twig', array(
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            'print_form' => $printForm->createView(),
+            'valida_forms' => $validaForms,
+            'soap_form' => $ClientSoapForm->createView(),
+            'back_form' => $backForm->createView(),
+            'diritti' => $dirittiucc,
+            'firstLevels' => $firstLevels
+        ));
 
     }
 
