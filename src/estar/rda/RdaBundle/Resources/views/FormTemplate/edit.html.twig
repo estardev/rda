@@ -3,15 +3,27 @@
 {% block body -%}
     <h1>Modifica di una richiesta</h1>
 
+    <div class="bottoniera">
+
+       <div class="bottoni">{{ form(back_form) }}</div>
+        <div class="bottoni"> {{ form(print_form) }}</div>
+        <div class="bottoni"> {{ form(delete_form) }}</div>
+
+        {% if (diritti.isVA) %} <div class="bottoni"> {{ form(soap_form) }}</div>{% endif %}
+
+        <div class="bottoni"> <button class="btn btn-primary" data-toggle="modal" data-target="#confirmModal">Cambia Stato</button></div>
+
+        <!-- David_20151029: test per dirottare su rotte e parametri direttamente dal twig -->
+        <!-- <button class="btn btn-default"><a href="{{ absolute_url(path('richiesta_bycategoria', {'idCategoria': app.session.get('homepageSelectCategoria')})) }}">indietro</a></button>-->
+        <!-- fine:20151029 -->
+    </div>
+
     {{ form(edit_form) }}
 
-    {{ form(delete_form) }}
-    {{ form(print_form) }}
-    {{ form(soap_form) }}
 
-    <button class="btn btn-primary"
-            data-toggle="modal"
-            data-target="#confirmModal">Invia a</button>
+
+
+
 
     <div class="modal fade" id="confirmModal"
          aria-hidden="true" role="dialog">

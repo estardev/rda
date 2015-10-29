@@ -147,14 +147,25 @@ class FormTemplateController extends Controller
                 }
             }
         }
-        dump($firstLevels);
+
         $formbuilder->setAction($this->generateUrl('formtemplate_create', array('idCategoria' => $idCategoria)));
         $form = $formbuilder->getForm();
 
-        $form->add('submit', 'submit', array('label' => 'Crea Nuova Richiesta'));
+
+
+        $form->add('submit', 'submit', array('label' => 'Salva e chiudi','attr' => array('class' => 'bottoniera')));
+        $form->add('back', 'submit', array('label' => 'Indietro'));
+        $formbuilder = $this->createFormBuilder();
+        $formbuilder->setAction($this->generateUrl('formtemplate_back', array('idCategoria' => $idCategoria)));
+        $backForm = $formbuilder->getForm();
+        $backForm->add('back', 'submit', array('label' => 'Indietro'));
+
+
         return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
             'form' => $form->createView(),
-            'firstLevels' => $firstLevels
+            'firstLevels' => $firstLevels,
+            'back_form' => $backForm->createView()
+
         ));
     }
 
@@ -368,6 +379,9 @@ class FormTemplateController extends Controller
         $campiValorizzati = $query->getResult();
 
         $formbuilder = $this->createFormBuilder();
+
+
+
         //FG 20151016 gestione dei campi della richiesta
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         $formbuilder->add("titolo", "text", array(
@@ -379,7 +393,7 @@ class FormTemplateController extends Controller
             'data' => $richiesta->getDescrizione()
         ));
 
-        //        $fieldsetVisitati = array();
+       //        $fieldsetVisitati = array();
 
         foreach ($campiValorizzati as $campovalorizzato) {
 //            $campo = $campovalorizzato->getIdcampo();
@@ -428,26 +442,37 @@ class FormTemplateController extends Controller
 //            throw $this->createNotFoundException('Unable to find FormTemplate entity.');
 //        }
 
-
         $formbuilder->setAction($this->generateUrl('formtemplate_update', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
 
+
         $editForm = $formbuilder->getForm();
-        $editForm->add('submit', 'submit', array('label' => 'Modifica'));
+       // $editForm->add('submit', 'submit', array('label' => 'Modifica'));
+        $editForm->add('submit', 'submit', array('label' => 'Salva e chiudi', 'attr' => array('class' => 'bottoniera')));
+
 
         $formbuilder = $this->createFormBuilder();
-        $formbuilder->setAction($this->generateUrl('sistematicaclient_show', array('idPratica' => '1')));
+        
+        $formbuilder->setAction($this->generateUrl('sistematicaclient_show' , array('idRichiesta' => $idRichiesta)));
         $ClientSoapForm = $formbuilder->getForm();
-        $ClientSoapForm->add('submit', 'submit', array('label' => 'Invia iShareDoc'));
+        $ClientSoapForm->add('submit', 'submit', array('label' => 'Invia ad ABS'));
 
         $formbuilder = $this->createFormBuilder();
         $formbuilder->setAction($this->generateUrl('richiesta_delete', array('id' => $idRichiesta)));
         $deleteForm = $formbuilder->getForm();
-        $deleteForm->add('submit', 'submit', array('label' => 'Elimina'));
+        $deleteForm->add('submit_delete', 'submit', array('label' => 'Elimina'));
 
         $formbuilder = $this->createFormBuilder();
         $formbuilder->setAction($this->generateUrl('formtemplate_print', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
         $printForm = $formbuilder->getForm();
         $printForm->add('submit', 'submit', array('label' => 'Stampa'));
+
+
+        $formbuilder = $this->createFormBuilder();
+        $formbuilder->setAction($this->generateUrl('formtemplate_back', array('idCategoria' => $idCategoria)));
+        $backForm = $formbuilder->getForm();
+        $backForm->add('back', 'submit', array('label' => 'Indietro'));
+
+
 
         $em = $this->getDoctrine()->getManager();
 
@@ -482,17 +507,20 @@ class FormTemplateController extends Controller
             //$MessaggioForm = $formbuilder->getForm();
             array_push($validaForms, $validaForm->createView());
         }
+        $usercheckControl = $this->get('usercheck.notify');
+        $dirittiucc = $usercheckControl->allRole($idCategoria);
 
+            return $this->render('estarRdaBundle:FormTemplate:edit.html.twig', array(
+                'entity' => $entity,
+                'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+                'print_form' => $printForm->createView(),
+                'valida_forms' => $validaForms,
+                'soap_form' =>  $ClientSoapForm->createView(),
+                'back_form' =>  $backForm->createView(),
+                'diritti' =>$dirittiucc
+            ));
 
-        return $this->render('estarRdaBundle:FormTemplate:edit.html.twig', array(
-            'entity' => $entity,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-            'print_form' => $printForm->createView(),
-            'valida_forms' => $validaForms,
-            'soap_form' => $ClientSoapForm->createView()
-            //    'messaggio_form' => $MessaggioForm->createView(),
-        ));
     }
 
     public
