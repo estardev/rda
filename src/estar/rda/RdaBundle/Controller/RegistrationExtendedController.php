@@ -2,6 +2,7 @@
 
 namespace estar\rda\RdaBundle\Controller;
 
+use estar\rda\RdaBundle\Entity\Utentegruppoutente;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\Utente;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,20 +30,16 @@ class RegistrationExtendedController extends RegistrationParentController
         $user = $userManager->createUser();
         $user->setEnabled(true);
 
-        //$nomecognome =
-
         $event = new GetResponseUserEvent($user, $request);
         $dispatcher->dispatch(FOSUserEvents::REGISTRATION_INITIALIZE, $event);
 
         if (null !== $event->getResponse()) {
             return $event->getResponse();
         }
-        $campi = $request->request->all();
-//        $email = $campi['fos_user_registration_form']['email'];
+
         // 1) build the form
         $form = $formFactory->createForm();
         $form->setData($user);
-        //$form->setData()
 
         // 2) handle the submit (will only happen on POST)
         $form->handleRequest($request);
@@ -54,25 +51,37 @@ class RegistrationExtendedController extends RegistrationParentController
             $userManager->updateUser($user);
 
             //** Parte aggiunta INIT */
-            //TODO recupero id fosuser appena inserito
+
             $em = $this->getDoctrine()->getManager();
 
-            $campiForm = $request->request->all();
-
-            $azienda = $em->getRepository('estarRdaBundle:Azienda')->find('21');
-            $fosuser = $em->getRepository('estarRdaBundle:FosUser')->find('9');
+            $fosuserid = $user->getId();
+            $fosuser = $em->getRepository('estarRdaBundle:FosUser')->find($fosuserid);
 
             $utente = new Utente();
-            $utente->setIdazienda($azienda);
+            $utente->setIdazienda($user->getIdazienda());
             $utente->setIdfosuser($fosuser);
-            //$utente->setNomecognome($campiForm[$form->createView()]['nomecognome']);
-            //$utente->setUtentecartaoperatore($campiForm[$form->createView()]['codicefiscale']);
-
+            $utente->setNomecognome($user->getNomecognome());
+            $utente->setUtentecartaoperatore($user->getCodicefiscale());
             $em->persist($utente);
+
+            $campiRequest = $request->request->all();
+            $gruppiutenteRequest = $campiRequest['fos_user_registration_form']['gruppiutente'];
+
+            foreach ($gruppiutenteRequest as $gruppoutenteRequest){
+                $utentegruppoutente = new Utentegruppoutente();
+                $utentegruppoutente->setIdutente($utente);
+                $utentegruppoutenteEntity = $em->getRepository('estarRdaBundle:Gruppoutente')->find($gruppoutenteRequest);
+                $utentegruppoutente->setIdgruppoutente($utentegruppoutenteEntity);
+                $em->persist($utentegruppoutente);
+            }
+
 
             //** Parte aggiunta END */
 
             if (null === $response = $event->getResponse()) {
+                //** Parte aggiunta INIT */
+                $em->flush();
+                //** Parte aggiunta END */
                 $url = $this->generateUrl('fos_user_registration_confirmed');
                 $response = new RedirectResponse($url);
             }
