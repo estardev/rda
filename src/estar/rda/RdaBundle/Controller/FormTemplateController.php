@@ -242,7 +242,7 @@ class FormTemplateController extends Controller
             //FG20151028 se il campo non è visualizzabile, skip.
             $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
             $campoCheck = $repository->find($campo['idcampo']);
-            if (!($this->campoVisualizzabile($diritti, $campoCheck))) continue;
+            if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
 
 //            if ($campo->getTipo() == 'choice') {
             if ($campo['tipo'] == 'choice') {
