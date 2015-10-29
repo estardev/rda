@@ -10,15 +10,16 @@ use BeSimple\SoapClient;
 use BeSimple\SoapCommon;
 use BeSimple\SoapBundle;
 use BeSimple\SoapWsdl;
+use estar\rda\RdaBundle\Entity\Richiesta;
 
 
 class SistematicaClientController extends Controller
 {
     /**
-     * @param $idPratica
+     * @param $idRichiesta
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($idPratica)
+    public function indexAction($idRichiesta)
     {
         $nome = "richiesta_".time().".zip";
         $clientbuilder = $this->get('besimple.soap.client.builder.sistematica');
@@ -173,14 +174,24 @@ class SistematicaClientController extends Controller
 			<!--Optional:-->
 			<subject>richiesta</subject>
 			<!--Optional:-->
-			<tags>'.$idPratica.'</tags>
+			<tags>'.$idRichiesta.'</tags>
 			<!--Optional:-->
 			<variables>
-				 <variable>
-						<key>transition</key>
-						<type>string</type>
-						<valueString>Protocolla</valueString>
-				 </variable>
+				<variable>
+					<key>transition</key>
+					<type>string</type>
+					<valueString>Protocolla</valueString>
+				</variable>
+				<variable>
+					<key>tipoDocumentazione</key>
+					<type>string</type>
+					<valueString>RDA da portale</valueString>
+				</variable>
+				<variable>
+					<key>idPratica</key>
+					<type>string</type>
+					<valueString>'.$idRichiesta.'</valueString>
+				</variable>
 			</variables>
 			  <!--Optional:-->
          <attachments>
@@ -189,7 +200,7 @@ class SistematicaClientController extends Controller
                <fileset>isharedocMailAttach</fileset>
                <filename>'.$nome.'</filename>
                <!--Optional:-->
-               <contentType>mimeType</contentType>
+               <contentType>application/octect-stream</contentType>
                <data>cid:1157971487190</data>
             </attachment>
          </attachments>
@@ -209,8 +220,6 @@ class SistematicaClientController extends Controller
             echo $exception->getMessage() . "<br>";
         }
 
-
-
         $myreq= $soapClient->__getLastRequest();
         file_put_contents('ProvaRichiesta.xml', print_r($myreq, true));
         //var_dump($myreq);
@@ -219,6 +228,33 @@ class SistematicaClientController extends Controller
         $myrespons= $soapClient->__getLastResponse();
         file_put_contents('ProvaRisposta.xml', print_r($myrespons, true));
         //var_dump($myrespons);
+
+        // parsing response
+        $response_pulita = strstr($myrespons, '<ns3:InstanceMessageCreateResponse');
+        $da_eliminare = strstr($response_pulita, '</SOAP-ENV:Body></SOAP-ENV:Envelope>');
+        $content = str_replace($da_eliminare,'',$response_pulita);
+
+        /*$file = file("ProvaRisposta.xml");
+        $rispo = $file[3];
+        file_put_contents('ProvaRispostaNoParts.xml', $rispo);
+        $xmlfile='ProvaRispostaNoParts.xml';
+        $file = fopen($xmlfile, 'r');
+        $content = fread($file, filesize($xmlfile));
+        fclose($file);
+        $content = str_replace('<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><SOAP-ENV:Body>','',$content);
+        $content = str_replace('</SOAP-ENV:Body></SOAP-ENV:Envelope>','',$content);*/
+        $ProtocolResp = simplexml_load_string($content);
+        $numProt = $ProtocolResp->identifier;
+        file_put_contents('ila.txt',$idRichiesta);
+
+
+        // TO DO : gestire per le richieste ICT l'aggregazione di n richieste sotto un unico numeroPratica
+        // scrivo il numero di protocollo sulla richiesta
+        $em = $this->getDoctrine()->getManager();
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $richiesta->setNumeroprotocollo($numProt);
+        $em->persist($richiesta);
+        $em->flush();
 
         return $this->redirect($this->generateUrl("richiesta"));
         //return $this->render('@estarRda/Testing/index.html.twig', array(

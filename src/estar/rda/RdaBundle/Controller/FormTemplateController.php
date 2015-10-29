@@ -396,7 +396,7 @@ class FormTemplateController extends Controller
         $editForm->add('submit', 'submit', array('label' => 'Modifica'));
 
         $formbuilder = $this->createFormBuilder();
-        $formbuilder->setAction($this->generateUrl('sistematicaclient_show' , array('idPratica' => '1')));
+        $formbuilder->setAction($this->generateUrl('sistematicaclient_show' , array('idRichiesta' => $idRichiesta)));
         $ClientSoapForm = $formbuilder->getForm();
         $ClientSoapForm->add('submit', 'submit', array('label' => 'Invia iShareDoc'));
 
