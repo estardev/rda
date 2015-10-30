@@ -23,6 +23,7 @@ class RegistrationType extends AbstractType
                 'property' => 'nome',
                 'multiple' => true,
                 'expanded' => true,
+                'attr' => array('class'=>'gruppiutenteCheckbox'),
                 'label' => 'Gruppi Utente',
             ))
         ;

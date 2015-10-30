@@ -66,12 +66,20 @@ class RegistrationExtendedController extends RegistrationParentController
 
             $campiRequest = $request->request->all();
             $gruppiutenteRequest = $campiRequest['fos_user_registration_form']['gruppiutente'];
+            $amministratoriRequest = $campiRequest['amministratoriCheckboxInput'];
 
             foreach ($gruppiutenteRequest as $gruppoutenteRequest){
                 $utentegruppoutente = new Utentegruppoutente();
                 $utentegruppoutente->setIdutente($utente);
                 $utentegruppoutenteEntity = $em->getRepository('estarRdaBundle:Gruppoutente')->find($gruppoutenteRequest);
                 $utentegruppoutente->setIdgruppoutente($utentegruppoutenteEntity);
+                if ($amministratoriRequest){
+                    foreach ($amministratoriRequest as $amministratoreRequest){
+                        if ($amministratoreRequest == $gruppoutenteRequest){
+                            $utentegruppoutente->setAmministratore(true);
+                        }
+                    }
+                }
                 $em->persist($utentegruppoutente);
             }
 
