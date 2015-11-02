@@ -10,9 +10,37 @@
         <script type="text/javascript" src="{{ asset('js/registration.js', absolute=true) }}"></script>
     {% endblock %}
 
-{% block fos_user_content %}
+{% block body -%}
+    {% if (is_granted("ROLE_ADMIN")) and (is_granted("IS_AUTHENTICATED_REMEMBERED")) %}
 
+        {% if app.request.hasPreviousSession %}
+            {% for type, messages in app.session.flashbag.all() %}
+                {% for message in messages %}
+                    <div class="flash-{{ type }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
 
+        <div>
+            {% block fos_user_content %}
+                {% include "FOSUserBundle:Registration:register_content.html.twig" %}
+            {% endblock fos_user_content %}
+        </div>
+    {% else %}
 
-{% include "FOSUserBundle:Registration:register_content.html.twig" %}
-{% endblock fos_user_content %}
+        <div>
+            <p>
+                Siamo spiacenti! <br>
+                Per accedere a questa pagina devi essere autenticato come Amministratore.
+            </p>
+            {% if (is_granted("IS_AUTHENTICATED_REMEMBERED")) %}
+                <a class="btn btn-default" href="{{ path('fos_user_security_logout') }}">Login come Amministratore</a>
+            {% else %}
+                <a class="btn btn-default" href="{{ path('fos_user_security_login') }}">Login come Amministratore</a>
+            {% endif %}
+        </div>
+
+    {% endif %}
+{% endblock %}
