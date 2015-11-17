@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="estar\rda\RdaBundle\Entity\Vcategoriadirittiutente" table="vcategoriadirittiutente">
+    <field name="nomearea" type="string" column="nomearea" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descrizionearea" type="string" column="descrizionearea" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="nomecategoria" type="string" column="nomecategoria" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descrizionecategoria" type="string" column="descrizionecategoria" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="isabilitatoinserimento" type="integer" column="isabilitatoinserimento" nullable="true"/>
+    <field name="isvalidatoretecnico" type="integer" column="isvalidatoretecnico" nullable="true"/>
+    <field name="isvalidatoreamministrativo" type="integer" column="isvalidatoreamministrativo" nullable="true"/>
+    <id name="idcategoria" type="integer" column="idcategoria" />
+    <id name="idutente" type="integer" column="idutente" />
+  </entity>
+</doctrine-mapping>

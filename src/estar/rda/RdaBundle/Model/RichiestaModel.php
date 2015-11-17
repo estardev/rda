@@ -134,6 +134,7 @@ class RichiestaModel extends Controller
         //punto primo: una richiesta può sempre andare indietro.
         if ($nuovostatus == RichiestaModel::STATUS_BOZZA) return true;
         if ($nuovostatus == RichiestaModel::STATUS_ATTESA_VAL_TEC && $vecchiostatus==RichiestaModel::STATUS_ATTESA_VAL_AMM) return true;;
+        //TODO da finire!
     }
 
 
@@ -141,4 +142,39 @@ class RichiestaModel extends Controller
      *
      */
 
+
+    /**
+     * ritorna un elenco di categorie che l'utente può accedere
+     */
+    public function getCategorieByUser() {
+        $usercheck = $this->get("usercheck.notify");
+
+        $utente = $usercheck->getUtente();
+        $toReturn = array();
+
+        //Se l'utente non è loggato (caso che non dovrebbe mai succedere) ritorno l'array vuoto
+        //metto la return qui per evitare successive bizze di NPE.
+        if ($utente == null) return $toReturn;
+
+        // check: se l'utente è amministratore di sistema, vede tutto.
+        $utenteFos = $utente->getIdFosUser();
+
+        if ($utenteFos->is_granted('ROLE_ADMIN')|| $utenteFos->is_granted('ROLE_SUPERADMIN')) {
+            $query = $this->em->createQuery('select c.id, c.descrizione, a.nome as area from estarRdaBundle:Categoria c join c.idarea a where c.idarea = a.id');
+            $categoria = $query->getResult();
+
+        } else {
+            //Altrimenti dobbiamo mostrare solo le categorie a cui ha accesso
+            $query = $this->em->
+                createQuery('select c.id, c.descrizione, a.nome as area from estarRdaBundle:Categoria c join c.idarea a
+                  join estarRdaBundle:Categoriagruppo cg join estarRdaBundle:Utentegruppoutente ugu
+                  where c.idarea = a.id
+                  and c.id = cg.idcategoria
+                  and cg.idgruppoutente = ugu.idgruppoutente
+                  and ugu.idutente = :idutente');
+            $query->setParameter('idutente', $utente->getId());
+            $categoria = $query->getResult();
+
+        }
+    }
 }
