@@ -38,10 +38,39 @@ class NavbarExtension extends \Twig_Extension
 
         //FG 20151026 gestione aree su categoria
         //$categoria = $this->em->getRepository('estarRdaBundle:Categoria')->findAll();
-        $query = $this->em->createQuery('select c.id, c.descrizione, a.nome as area from estarRdaBundle:Categoria c join c.idarea a where c.idarea = a.id');
-        $categoria = $query->getResult();
+        //FG 20151112 ulteriore modifica: ACL non fa vedere le categorie a chi non se le merita.
+        //$query = $this->em->createQuery('select c.id, c.descrizione, a.nome as area from estarRdaBundle:Categoria c join c.idarea a where c.idarea = a.id');
+        //$categoria = $query->getResult();
+        // check: se l'utente è amministratore di sistema, vede tutto.
+        //$utenteFos = $utenteSessione->getIdFosUser();
+        if (!is_null($utenteSessione) && is_object($utenteSessione)) {
+            //Se entro in questo branch ho l'utente loggato
+            if ($utenteSessione->hasRole('ROLE_ADMIN') || $utenteSessione->hasRole('ROLE_SUPER_ADMIN')) {
+                $query = $this->em->createQuery('select c.id as id, c.descrizione as descrizione, a.nome as area from estarRdaBundle:Categoria c join c.idarea a where c.idarea = a.id');
+                $categoria = $query->getResult();
+
+            } else {
+                //Altrimenti dobbiamo mostrare solo le categorie a cui ha accesso
+                //FIXME FG: questa query non viene eseguita da Doctrine per motivi mistico-cabalistici da investigare.
+                //$query = $this->em->
+                //createQuery('select c.id, c.descrizione, a.nome as area
+                //      from estarRdaBundle:Categoria c, estarRdaBundle:Area a
+                //      where c.idarea = a.id
+                //      and c.id in (select idCategoria from estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Utentegruppoutente ugu
+                //        where cg.idgruppoutente = ugu.idgruppoutente
+                //        and ugu.idutente = :idutente)');
+                $query = $this->em->
+                        createQuery('select v.idcategoria as id, v.descrizionecategoria as descrizione, v.nomearea as area from
+                          estarRdaBundle:Vcategoriadirittiutente v where v.idutente= :utente')
+                    ->setParameter('utente', $utenteSessione);
+                 $categoria=$query->getResult();
 
 
+            }
+        } else {
+            //l'utente non è loggato
+            $categoria = array();
+        }
         $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')->findAll();
 
 
