@@ -19,7 +19,7 @@ class User extends BaseUser
      */
     protected $id;
 
-    //protected $name; //TODO: credo non serva più, sostituito con nomecognome
+    //protected $name; //TODO: credo non serva piï¿½, sostituito con nomecognome
     /**
      * @var string
      */
