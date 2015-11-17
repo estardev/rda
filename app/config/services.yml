@@ -12,7 +12,7 @@ services:
         tags:
             - { name: form.type, alias: app_user_registration }
 
-  app.twig_extension:
+  navbar.twig_extension:
           class: estar\rda\RdaBundle\Twig\NavbarExtension
           public: false
           tags:
@@ -21,3 +21,11 @@ services:
                       em: "@doctrine.orm.entity_manager"
                       user: "@security.context"
                       session: "@session"
+
+  sidebar.twig_extension:
+            class: estar\rda\RdaBundle\Twig\SidebarExtension
+            public: false
+            tags:
+                - { name: twig.extension }
+            arguments:
+                        user: "@security.context"

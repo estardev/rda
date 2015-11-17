@@ -3,18 +3,20 @@ $(document).ready(function()
     var homepageSelectCategoria = $('#homepageSelectCategoria').val();
     //alert("selezionato: " + homepageSelectCategoria);
 
-        var onResize = function() {
-            // apply dynamic padding at the top of the body according to the fixed navbar height
-            $("body").css("padding-top", $(".navbar-fixed-top").height()+40);
-        };
+    var onResize = function() {
+        // apply dynamic padding at the top of the body according to the fixed navbar height
+        $("body").css("padding-top", $(".navbar-fixed-top").height());
+        $(".container").css("padding-top", 20);
 
-        // attach the function to the window resize event
-        $(window).resize(onResize);
+    };
 
-        // call it also when the page is ready after load or reload
-        $(function() {
-            onResize();
-        });
+    // attach the function to the window resize event
+    $(window).resize(onResize);
+
+    // call it also when the page is ready after load or reload
+    $(function() {
+        onResize();
+    });
 
     $(".container").fadeIn(500);
 

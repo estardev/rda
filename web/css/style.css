@@ -2,15 +2,13 @@ html, body {
 	margin: 0;
 	padding: 0;
 	width: 100%;
-	height: 100%; 
+	height: 100%;
 }
 .header-logo{
 	margin-left:15px;
 	margin-bottom:20px;
 }
-body{
 
-}
 .container{
 	padding-bottom:20px;
 }
@@ -27,16 +25,20 @@ body{
 
 .left_block {
 	display: block;
-	float: left; 
+	float: left;
 }
 
 .right_block {
 	display: block;
-	float: right; 
+	float: right;
 }
 
 .h4 {
-	 font-weight: bold;
+	font-weight: bold;
+}
+
+.panel {
+	border-radius: 0px !important;
 }
 
 .navbar-brand {
@@ -61,4 +63,13 @@ body{
 
 .bottoniera{
 	float:right;
+}
+
+.panel-heading h4 {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: normal;
+	width: 75%;
+	padding-top: 8px;
 }

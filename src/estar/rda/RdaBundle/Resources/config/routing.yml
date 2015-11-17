@@ -94,6 +94,12 @@ HomePage:
     path:     /homepage
     defaults: { _controller: estarRdaBundle:HomePage:index }
 
+underCostruction:
+    path:     /underCostruction
+    defaults: { _controller: estarRdaBundle:UnderCostruction:index}
+    options:
+      expose: true
+
 navbarSelectedSessionSet:
     path:     /navbarSelectedSession/set
     defaults: { _controller: estarRdaBundle:NavbarSelectedSession:setNavbarSession }
@@ -109,6 +115,12 @@ navbarSelectedSessionGet:
 navbarSelectedSessionClear:
     path:     /navbarSelectedSession/clear
     defaults: { _controller: estarRdaBundle:NavbarSelectedSession:clearNavbarSession }
+    options:
+      expose: true
+
+setListaRichiesteFromSidebar:
+    path:     /listaRichiesteFromSidebar/set
+    defaults: { _controller: estarRdaBundle:ListaRichiesteFromSidebar:setListaRichieste }
     options:
       expose: true
 

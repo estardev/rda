@@ -1,0 +1,31 @@
+{% if (is_granted("IS_AUTHENTICATED_REMEMBERED")) %}
+    <ul class="nav">
+
+        {#<li>
+            <a href="#" data-toggle="collapse" class="mydropdown" data-target="#subRichieste"><b>RICHIESTE</b></a>
+            <ul class="nav collapse in" id="subRichieste">
+                <li class="active scelteSidebar scelteSidebarLavorazione" id="lavorate_0"><a><span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;In Lavorazione</a></li>
+                <li class="scelteSidebar scelteSidebarLavorazione" id="lavorate_1"><a><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;Lavorate</a></li>
+            </ul>
+
+        </li>#}
+
+        {% if (is_granted("ROLE_ADMIN"))%}
+            <li>
+                <a href="#" data-toggle="collapse" class="mydropdown" data-target="#subUtenti"><b>UTENTI</b></a>
+                <ul class="nav collapse in" id="subUtenti">
+                    <li class="scelteSidebar"><a href="#"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Utenti</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="#" data-toggle="collapse" class="mydropdown" data-target="#subConf"><b>CONFIGURAZIONE</b></a>
+                <ul class="nav collapse in" id="subConf">
+                    <li class="scelteSidebar"><a href="{{ path('categoria') }}"><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;Categorie</a></li>
+                    <li class="scelteSidebar"><a href="{{ path('underCostruction') }}"><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Documenti</a></li>
+                </ul>
+            </li>
+        {% endif %}
+
+    </ul>
+{% endif %}

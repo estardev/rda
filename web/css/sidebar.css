@@ -1,0 +1,42 @@
+
+#sidebar {
+    height: 100%;
+    padding-right: 0;
+    padding-top: 20px;
+}
+#sidebar .nav {
+    width: 90%;
+}
+
+.mydropdown{
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+#sidebar li {
+    border:0 #f2f2f2 solid;
+    border-bottom-width:1px;
+}
+
+/*#sidebar li .active  {
+    background: rgba(220, 224, 216, 0.34);
+}*/
+
+/* collapsed sidebar styles */
+@media screen and (max-width: 767px) {
+
+    #sidebar {
+        padding-top:0;
+    }
+    #sidebar .nav>li:first-child {
+        border-top:0;
+    }
+    #sidebar .nav>li>a {
+        /*color: #ddd;*/
+    }
+    #sidebar .nav>li>a>img {
+        max-width: 14px;
+    }
+
+}
+

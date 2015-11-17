@@ -8,10 +8,10 @@
             async: false,
             url: Routing.generate('navbarSelectedSessionClear'),
             /*success: function(data)
-            {
-                var myjson = $.parseJSON(data);
-                alert(" ecco: "+myjson.homepageSelectCategoria);
-            }*/
+             {
+             var myjson = $.parseJSON(data);
+             alert(" ecco: "+myjson.homepageSelectCategoria);
+             }*/
         });
     </script>
 
@@ -19,13 +19,6 @@
 
     <script type="text/javascript" src="{{ asset('js/homepage.js') }}"></script>
 
-{% endblock %}
-
-{% block sidebar -%}
-    {#<ul class="nav nav-pills nav-stacked">
-        <li role="presentation" class="active"><a href="#">In Lavorazione</a></li>
-        <li role="presentation"><a href="#">Lavorate</a></li>
-    </ul>#}
 {% endblock %}
 
 {% block body -%}
