@@ -5,7 +5,7 @@ namespace estar\rda\RdaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Area
+ * Vista sulla categoria a cui ha accesso un utente
  *
  * @ORM\Table(name="vcategoriadirittiutente")
  * @ORM\Entity
@@ -63,14 +63,14 @@ class Vcategoriadirittiutente
 
     /**
      * @var integer
-     *
+     * @ORM\Id
      * @ORM\Column(name="idutente", type="integer", nullable=true)
      */
     private $idutente;
 
     /**
      * @var integer
-     *
+     * @ORM\Id
      * @ORM\Column(name="idcategoria", type="integer", nullable=true)
      */
     private $idcategoria;

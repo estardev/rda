@@ -37,16 +37,16 @@ class Campo
     private $tipo;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="obbligatorioInserzione", type="boolean", nullable=true)
+     * @ORM\Column(name="obbligatorioInserzione", type="integer", nullable=true)
      */
     private $obbligatorioinserzione;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="obbligatorioValidazioneTecnica", type="boolean", nullable=true)
+     * @ORM\Column(name="obbligatorioValidazioneTecnica", type="integer", nullable=true)
      */
     private $obbligatoriovalidazionetecnica;
 
@@ -65,9 +65,9 @@ class Campo
     private $fieldset;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="obbligatorioValidazioneAmministrativa", type="boolean", nullable=true)
+     * @ORM\Column(name="obbligatorioValidazioneAmministrativa", type="integer", nullable=true)
      */
     private $obbligatoriovalidazioneamministrativa;
 
@@ -102,6 +102,13 @@ class Campo
      */
     public function setFiglio(\estar\rda\RdaBundle\Entity\Campo $figlio)
     {
+        //FG + GL fix su figli che non salvavano alcuni dati
+        $figlio->setIdcategoria($this->getIdcategoria());
+        $figlio->setObbligatorioinserzione($this->getObbligatorioinserzione());
+        $figlio->setObbligatoriovalidazioneamministrativa($this->getObbligatoriovalidazioneamministrativa());
+        $figlio->setObbligatoriovalidazionetecnica($this->getObbligatoriovalidazionetecnica());
+        //FIXME l'ordinamento potrebbe essere da vedere
+        $figlio->setOrdinamento($this->getOrdinamento()+1);
         $this->figlio = $figlio;
 
         return $this;
