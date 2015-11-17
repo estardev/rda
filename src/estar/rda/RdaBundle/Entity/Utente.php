@@ -55,6 +55,12 @@ class Utente
      */
     private $idazienda;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nomecognome", type="string", length=255, nullable=true)
+     */
+    private $nomecognome;
 
 
     /**
@@ -162,10 +168,6 @@ class Utente
     {
         return $this->idazienda;
     }
-    /**
-     * @var string
-     */
-    private $nomecognome;
 
 
     /**
