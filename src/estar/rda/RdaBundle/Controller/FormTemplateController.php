@@ -416,7 +416,7 @@ class FormTemplateController extends Controller
 
             } else {
                 $class = array();
-                    $label = $campo['descrizione'];
+                $label = $campo['descrizione'];
                 if ($campo['padre'] != null) {
                     $class = array('class' => 'secondLevel');
                     $padri = $this->getFirstLevel($campo['padre']);

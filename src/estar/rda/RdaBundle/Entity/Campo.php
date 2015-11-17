@@ -9,9 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="campo", indexes={@ORM\Index(name="fkCampoCategoria1Idx", columns={"idCategoria"})})
  * @ORM\Entity
+// * @ORM\HasLifecycleCallbacks()
  */
 class Campo
 {
+
+
     /**
      * @var string
      *
@@ -76,6 +79,35 @@ class Campo
     private $padre;
 
     /**
+     * @var \estar\rda\RdaBundle\Entity\Campo
+     *
+     * @ORM\OneToOne(targetEntity="Campo",cascade={"persist"})
+     * @ORM\JoinColumn(name="figlio", referencedColumnName="id")
+     */
+
+    private $figlio;
+
+    /**
+     * @return Campo
+     */
+    public function getFiglio()
+    {
+        return $this->figlio;
+    }
+
+    /**
+     * @param \estar\rda\RdaBundle\Entity\Campo $figlio
+     *
+     * @return Campo
+     */
+    public function setFiglio(\estar\rda\RdaBundle\Entity\Campo $figlio)
+    {
+        $this->figlio = $figlio;
+
+        return $this;
+    }
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="dataAttivazione", type="datetime", nullable=true)
@@ -101,13 +133,12 @@ class Campo
     /**
      * @var \estar\rda\RdaBundle\Entity\Categoria
      *
-     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Categoria")
+     * @ORM\ManyToOne(targetEntity="Categoria",inversedBy="campi")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="idCategoria", referencedColumnName="id")
      * })
      */
     private $idcategoria;
-
 
 
     /**
@@ -339,7 +370,16 @@ class Campo
 
         return $this;
     }
-
+//    /**
+//     * Set createdAt
+//     *
+//     * @ORM\PrePersist
+//     */
+//    public function setCreatedAt()
+//    {
+//        $this->dataattivazione = new \DateTime();
+//
+//    }
     /**
      * Get dataattivazione
      *
@@ -391,7 +431,7 @@ class Campo
      *
      * @return Campo
      */
-    public function setIdcategoria(\estar\rda\RdaBundle\Entity\Categoria $idcategoria = null)
+    public function setIdcategoria(\estar\rda\RdaBundle\Entity\Categoria $idcategoria)
     {
         $this->idcategoria = $idcategoria;
 
@@ -408,5 +448,25 @@ class Campo
         return $this->idcategoria;
     }
 
-    public function __toString(){return strval($this->getId());}
+    public static function getPossibleEnumValues()
+    {
+        $choices = array(
+            'choice' => 'Scelta',
+            'integer' => 'Numerico',
+            'text' => 'Testo');
+        return $choices;
+    }
+
+    public static function getPossibleEnumValuesFiglio()
+    {
+        $choices = array(
+            'integer' => 'Numerico',
+            'text' => 'Testo');
+        return $choices;
+    }
+
+    public function __toString()
+    {
+        return strval($this->getId());
+    }
 }

@@ -28,3 +28,6 @@ categoria_delete:
     path:     /{id}/delete
     defaults: { _controller: "estarRdaBundle:Categoria:delete" }
     methods:  [POST, DELETE]
+
+
+

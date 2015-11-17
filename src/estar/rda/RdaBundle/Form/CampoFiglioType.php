@@ -7,7 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class CampoType extends AbstractType
+class CampoFiglioType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -19,20 +19,18 @@ class CampoType extends AbstractType
         $builder
             ->add('nome')
             ->add('descrizione')
-            ->add('tipo', 'choice', array('choices' => Campo::getPossibleEnumValues()))
-            ->add('fieldset', 'hidden')
-//            ->add('padre')
-            ->add('figlio', new CampoFiglioType())
-            ->add('obbligatoriovalidazioneamministrativa')
-            ->add('obbligatorioinserzione')
-            ->add('obbligatoriovalidazionetecnica')
-            ->add('ordinamento')
-            ->add('dataattivazione')
-            ->add('datadismissione')
-            //            ->add('idcategoria')
+            ->add('tipo','choice',array('choices'=>Campo::getPossibleEnumValuesFiglio()))
+            ->add('padre')
+//           ->add('obbligatoriovalidazioneamministrativa')
+//            ->add('obbligatorioinserzione')
+//            ->add('obbligatoriovalidazionetecnica')
+//            ->add('ordinamento')
+//            ->add('dataattivazione')
+//            ->add('datadismissione')
+//            ->add('idcategoria')
         ;
     }
-
+    
     /**
      * @param OptionsResolverInterface $resolver
      */

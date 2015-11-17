@@ -2,7 +2,7 @@
 
 namespace estar\rda\RdaBundle\Entity;
 //commento per modifica
-use Doctrine\ORM\Mapping as ORM;
+//use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
@@ -10,8 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  * Entit� che astrae una form cos� come vista dalle richieste: si occupa di mostrare i campi adeguati
  * e gestisce i metodi di persistenza delle classi che astraggono il DB
  *
- * @ORM\Table(name="azienda")
- * @ORM\Entity
+ *
+ *
  */
 class FormTemplate
 {

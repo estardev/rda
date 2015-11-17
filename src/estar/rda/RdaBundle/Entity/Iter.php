@@ -197,4 +197,3 @@ class Iter
         return $this->idrichiesta;
     }
 }
-

@@ -2,6 +2,8 @@
 
 namespace estar\rda\RdaBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,6 +14,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Categoria
 {
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Campo", mappedBy="idcategoria" ,cascade={"persist"})
+     */
+
+    private $campi;
+
     /**
      * @var string
      *
@@ -44,7 +54,6 @@ class Categoria
      * })
      */
     private $idarea;
-
 
 
     /**
@@ -129,6 +138,51 @@ class Categoria
         return $this->idarea;
     }
 
-    public function __toString(){return strval($this->getId());}
+    public function __toString()
+    {
+        return strval($this->getId());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCampi()
+    {
+        return $this->campi;
+    }
+
+
+    public function __construct()
+    {
+        $this->campi = new ArrayCollection();
+    }
+
+
+
+    public function addCampus($campo)
+    {
+        if ( ! $this->campi->contains($campo) ) {
+            $campo->setIdcategoria($this);
+            $this->campi->add($campo);
+        }
+        return $this->campi;
+    }
+    public function removeCampus( $campo)
+    {
+        if ($this->campi->contains($campo)) {
+            $this->campi->removeElement($campo);
+        }
+        return $this->campi;
+    }
+    /**
+     * @param Collection $campi
+     * @return $this
+     */
+    public function setCampi(Collection $campi)
+    {
+        $this->campi = $campi;
+        return $this->campi;
+    }
+
 
 }

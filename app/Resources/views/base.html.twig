@@ -1,59 +1,58 @@
 <!DOCTYPE html>
 <html>
-    <head>
+<head>
 
-		<title>RDA</title>
-		<meta charset="UTF-8"  name="viewport" content="width=device-width, initial-scale=1.0">
-		<!-- Bootstrap -->
-		<link href="{{ asset('css/bootstrap.css', absolute=true) }}" rel="stylesheet" media="screen">
-		{#<link href="http://symfony/rda/web/css/bootstrap.css" rel="stylesheet" media="screen">#}
-		<link href="{{ asset('css/style.css', absolute=true) }}" rel="stylesheet" media="screen">
-		<!-- HTML5 Shim and Respond.js add IE8 support of HTML5 elements and media queries -->
-		{% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
-        <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
-        <script src="{{ asset('js/jquery.js', absolute=true) }}"></script>
-        <!-- Include all JavaScripts, compiled by Assetic -->
-        <script src="{{ asset('js/bootstrap.js', absolute=true) }}"></script>
-        <!-- Include FOSJsRoutingBundle, compiled by Assetic -->
-        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-        {#<script src="{{ asset('js/router.js', absolute=true) }}"></script>#}
-        <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    <title>RDA</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="{{ asset('css/bootstrap.css', absolute=true) }}" rel="stylesheet" media="screen">
+    {#<link href="http://symfony/rda/web/css/bootstrap.css" rel="stylesheet" media="screen">#}
+    <link href="{{ asset('css/style.css', absolute=true) }}" rel="stylesheet" media="screen">
+    <!-- HTML5 Shim and Respond.js add IE8 support of HTML5 elements and media queries -->
+    {% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
+    <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
+    <script src="{{ asset('js/jquery.js', absolute=true) }}"></script>
+    <!-- Include all JavaScripts, compiled by Assetic -->
+    <script src="{{ asset('js/bootstrap.js', absolute=true) }}"></script>
+    <!-- Include FOSJsRoutingBundle, compiled by Assetic -->
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    {#<script src="{{ asset('js/router.js', absolute=true) }}"></script>#}
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 
-        {% block header %}
+    {% block header %}
 
-        {% endblock %}
+    {% endblock %}
 
 
-		{% block javascripts %}
-            <script type="text/javascript" src="{{ asset('js/navbar.js', absolute=true) }}"></script>
-            <script type="text/javascript" src="{{ asset('js/levelsFieldFunctions.js', absolute=true) }}"></script>
-            {% if firstLevels is defined %}
-            <script>
-                $(document).ready(function(){
-                            var options = {{ firstLevels|json_encode|raw }};
-                            firstLevel(options);
-                            secondLevel();
-                        }
-
-                )
-            </script>
+    {% block javascripts %}
+        <script type="text/javascript" src="{{ asset('js/navbar.js', absolute=true) }}"></script>
+        <script type="text/javascript" src="{{ asset('js/levelsFieldFunctions.js', absolute=true) }}"></script>
+        {% if firstLevels is defined %}
+        <script>
+            $(document).ready(function () {
+                        var options = {{ firstLevels|json_encode|raw }};
+                        firstLevel(options);
+                        secondLevel();
+                    }
+            )
+        </script>
         {% endif %}
-        {% endblock %}
+    {% endblock %}
 
-	</head>
-	
-    <body>
-        {% block navbar %}
-            {{ navbar() }}
-        {% endblock %}
-        <div class="left_block block_1">
-            {% block sidebar %}{% endblock %}
-		</div>
-		<div class="container" style="display: none">
+</head>
 
-	        {% block body %}{% endblock %}
-	    </div>
+<body>
+{% block navbar %}
+    {{ navbar() }}
+{% endblock %}
+<div class="left_block block_1">
+    {% block sidebar %}{% endblock %}
+</div>
+<div class="container" style="display: none">
 
-    </body>
+    {% block body %}{% endblock %}
+</div>
+
+</body>
 
 </html>

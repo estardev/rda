@@ -172,14 +172,10 @@ class CampoController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('campo_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('categoria_edit', array('id' => $entity->getIdcategoria()->getId())));
         }
 
-        return $this->render('estarRdaBundle:Campo:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return $this->redirect($this->generateUrl('categoria_edit', array('id' => $entity->getIdcategoria()->getId())));
     }
     /**
      * Deletes a Campo entity.
