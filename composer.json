@@ -42,7 +42,10 @@
     "vich/uploader-bundle": "^0.14.0",
     "friendsofsymfony/jsrouting-bundle": "^1.5",
     "besimple/soap": "0.2.*@dev",
-    "ass/xmlsecurity": "dev-master"
+    "ass/xmlsecurity": "dev-master",
+    "liip/search-bundle": "^1.0",
+    "padam87/search-bundle": "2.0.*",
+    "comodojo/zip": "2.0.*"
   },
   "require-dev": {
     "sensio/generator-bundle": "~2.3"

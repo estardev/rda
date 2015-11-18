@@ -1,4 +1,4 @@
 sistematicaclient_show:
-    path: /show/{idRichiesta}
+    path: /show/{idCategoria}/{idRichiesta}
     defaults: { _controller: estarRdaBundle:SistematicaClient:index}
-    methods:  [POST, PUT]
+    #methods:  [POST, PUT]
