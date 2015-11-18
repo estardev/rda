@@ -67,9 +67,9 @@
                             var $checkbox = $(this);
                             var options = getFieldsetOptions($('#estar_rda_rdabundle_campo_fieldset').val());
                             if ($checkbox.is(":checked")) {
-                                addOption2Padre(keyfromvalue(options,$(this).closest('label').text()));
+                                addOption2Padre(keyfromvalue(options, $(this).closest('label').text()));
                             } else {
-                                removeOption2Padre(keyfromvalue(options,$(this).closest('label').text()));
+                                removeOption2Padre(keyfromvalue(options, $(this).closest('label').text()));
                             }
                             $checkbox.val($checkbox.is(':checked'));
                             console.log($checkbox.val());
@@ -158,19 +158,23 @@
         $(document).ready(function () {
 
 
-
             $('#fields').insertAfter($('#estar_rda_rdabundle_campo_tipo').parent());
             if ($('#estar_rda_rdabundle_campo_tipo').val() == 'choice') {
                 $('#fields').show();
+                $('#estar_rda_rdabundle_campo_figlio').parent().show();
             } else {
                 $('#fields').hide();
+                $('#estar_rda_rdabundle_campo_figlio').parent().hide();
             }
 
             $('#estar_rda_rdabundle_campo_tipo').on('change', function () {
                 if ($(this).val() == 'choice') {
+
                     $('#fields').show();
+                    $('#estar_rda_rdabundle_campo_figlio').parent().show();
                 } else {
                     $('#fields').hide();
+                    $('#estar_rda_rdabundle_campo_figlio').parent().hide();
                 }
             });
 
@@ -196,9 +200,9 @@
                 var $checkbox = $(this);
                 var options = getFieldsetOptions($('#estar_rda_rdabundle_campo_fieldset').val());
                 if ($checkbox.is(":checked")) {
-                    addOption2Padre(keyfromvalue(options,$(this).closest('label').text()));
+                    addOption2Padre(keyfromvalue(options, $(this).closest('label').text()));
                 } else {
-                    removeOption2Padre(keyfromvalue(options,$(this).closest('label').text()));
+                    removeOption2Padre(keyfromvalue(options, $(this).closest('label').text()));
                 }
                 $checkbox.val($checkbox.is(':checked'));
                 console.log($checkbox.val());
