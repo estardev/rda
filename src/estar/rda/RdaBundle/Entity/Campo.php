@@ -464,6 +464,19 @@ class Campo
         return $choices;
     }
 
+    /**
+     * Metodo che ritorna l'enumerato per i campi obbligatorioInserzione, obbligatorioValidazioneTecnica, obbligatorioValidazioneAmministrativa
+     * @return array
+     */
+    public static function getPossibleEnumObblighi()
+    {
+        $choices = array(
+            '-1' => 'Non visibile',
+            '0' => 'Visibile e facoltativo',
+            '1' => 'Visibile e obbligatorio');
+        return $choices;
+    }
+
     public static function getPossibleEnumValuesFiglio()
     {
         $choices = array(
