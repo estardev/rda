@@ -446,7 +446,7 @@ class FormTemplateController extends Controller
 
         $formbuilder = $this->createFormBuilder();
 
-        $formbuilder->setAction($this->generateUrl('sistematicaclient_show', array('idRichiesta' => $idRichiesta)));
+        $formbuilder->setAction($this->generateUrl('sistematicaclient_show', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
         $ClientSoapForm = $formbuilder->getForm();
         $ClientSoapForm->add('submit', 'submit', array('label' => 'Invia ad ABS'));
 

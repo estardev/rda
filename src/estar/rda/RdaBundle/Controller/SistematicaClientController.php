@@ -11,254 +11,345 @@ use BeSimple\SoapCommon;
 use BeSimple\SoapBundle;
 use BeSimple\SoapWsdl;
 use estar\rda\RdaBundle\Entity\Richiesta;
+use estar\rda\RdaBundle\Entity\Campo;
+use estar\rda\RdaBundle\Form\FormTemplateType;
+use estar\rda\RdaBundle\Entity\Valorizzazionecamporichiesta;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
+
+use BeSimple\SoapClient\Tests\AxisInterop\Fixtures\AttachmentRequest;
+use BeSimple\SoapClient\Tests\AxisInterop\Fixtures\AttachmentType;
+use BeSimple\SoapClient\Tests\AxisInterop\Fixtures\base64Binary;
 
 
 class SistematicaClientController extends Controller
 {
+    // cancellazione di cartella non vuota
+    public static function delTree($dir) {
+        $files = array_diff(scandir($dir), array('.','..'));
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? delTree("$dir/$file") : unlink("$dir/$file");
+        }
+        return rmdir($dir);
+    }
+
+    public function getChoicesOptions($string)
+    {
+        $options = explode('||', $string);
+        $returnOptions = array();
+        foreach ($options as $option) {
+            $subOption = explode('|', $option);
+            if (count($subOption) > 1) {
+                $returnOptions[$subOption[0]] = $subOption[1];
+            } else {
+                $returnOptions[$subOption[0]] = $subOption[0];
+            }
+        }
+
+
+        return $returnOptions;
+    }
+
+    function selectedOption($options, $key)
+    {
+        return $options[$key];
+    }
+
     /**
      * @param $idRichiesta
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($idRichiesta)
+    public function indexAction($idCategoria,$idRichiesta)
     {
-        $nome = "richiesta_".time().".zip";
-        $clientbuilder = $this->get('besimple.soap.client.builder.sistematica');
+        $em = $this->getDoctrine()->getManager();
+        $usercheck = $this->get("usercheck.notify");
+        $diritti = $usercheck->allRole($idCategoria);
+        $query = $em->createQuery('SELECT c.id as idcampo,c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
+                                    FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
+                                    WITH c.id = vc.idcampo
+                                    AND vc.idrichiesta = :idRichiesta')
+            ->setparameter('idRichiesta', $idRichiesta);
+        $campiValorizzati = $query->getResult();
 
-        $soapClient= $clientbuilder->build();
+        $formbuilder = $this->createFormBuilder();
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $formbuilder->add("titolo", "text", array(
+            'label' => "titolo",
+            'data' => $richiesta->getTitolo(),
+            'read_only' => true
+        ));
+        $formbuilder->add("descrizione", "textarea", array(
+            'label' => "descrizione",
+            'data' => $richiesta->getDescrizione(),
+            'read_only' => true
+        ));
+        foreach ($campiValorizzati as $campovalorizzato) {
+            $campo = $campovalorizzato;
 
-        $wsdl= $clientbuilder->getWsdl();
-        //var_dump($wsdl);
+            $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
+            $campoCheck = $repository->find($campo['idcampo']);
+            if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
 
-        $sc = new BeSimpleSoapClient($wsdl, array(
-            'attachment_type' => BeSimpleSoapHelper::ATTACHMENTS_TYPE_MTOM,
-            'cache_wsdl'      => WSDL_CACHE_NONE,
-            'trace' => 1,
-            'exception' => true,
-            'location' => 'https://democorepaumbria.grupposistematica.it/isharedoc/webservices/webserviceInstance.wsdl'));
+            if ($campo['tipo'] == 'choice') {
+                $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                    'label' => $campo['descrizione'],
+                    'data' => $descrizioneValore,
+                    'read_only' => true
+                ));
+            } else {
 
-        //$b64= new Mime();
-        ////$b64->encodeBase64('text/plain');
-        //////$b64 = new base64Binary();
-        //////$b64->_ = 'This is a test. :)';
-        //////$b64->contentType = 'text/plain';
-        ////$attachment = new AttachmentRequest();
-        ////$attachment->fileName = 'mio.rar';
-        ////$attachment->binaryData = $b64;sa
-//
-        $ss= new SoapCommon\Mime\Part();
-        $ss->setHeader("Content-Type","applicatio/xop+xml");
-        $ss->setHeader("type","text/xml");
-        $ss->setHeader("Content-Transfer-Encoding","base64");
+                $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
+                    'label' => $campo['descrizione'],
+                    'data' => $campo['valore'],
+                    'read_only' => true
+                ));
+            }
+        }
+        $form = $formbuilder->getForm();
 
-        //$ss->setContent(base64_encode('mio.txt'));
+        $html = $this->renderView('::printbase.html.twig', array(
+//            'entity' => $entity,
+            'form' => $form->createView()
+        ));
 
-        $b53 = new SoapCommon\Mime\MultiPart();
-        $aa= $ss->getMessagePart();
-        $b53->getMimeMessage($aa);
+        // generazione file pdf e zip
+        $directory_sender="sender";
+        $num=1;
+        $max=0;
+        $results = scandir($directory_sender);
+        foreach ($results as $result) {
+            if ($result === '.' or $result === '..') continue;
 
+            if (is_dir($directory_sender . '/' . $result)) {
+                $primo=explode("_", $result);
+                $primo=$primo[0];
+                if ($max<=$primo)
+                    $max=$primo;
+            }
+        }
+        $num=$max+1;
 
-       // boundary
+        $path= $num."_Richiesta_".$idRichiesta."_categoria_".$idCategoria;
+        if(!is_dir($directory_sender."/".$path))mkdir($directory_sender."/".$path, 0777);
 
+        /*if(file_exists($path."/Richiesta".$idRichiesta.".pdf")){
+            unlink($path."/Richiesta".$idRichiesta.".pdf");
+        }
+        if(file_exists($path.'/'.$path.'.zip')){
+            unlink($path.'/'.$path.'.zip');
+        }*/
 
+       //$response = new Response(
+            $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender."/".$path."/".$num."_Richiesta".$idRichiesta.".pdf");
+        //);
 
-        $soapClient->getSoapKernel()->addAttachment($ss);
+        $zip = \Comodojo\Zip\Zip::create($directory_sender.'/'.$path.'/'.$path.'.zip');
+        $zip->add($directory_sender."/".$path, true);
+        $zip->close();
 
-        var_dump($aa);
-        //$cc= new SoapBundle\Soap\SoapHeader('ns1','ins','');
-        //$soapClient->__setSoapHeaders($cc);
+        // estrazione parametri per la richiesta
+        $em = $this->getDoctrine()->getManager();
+        $parametri = $em->getRepository('estarRdaBundle:Sistematica')->find(1);
+        $user = $parametri->getUser();
+        $psw = $parametri->getPsw();
+        $wsdl = $parametri->getWsdl();
+        $storyboardcode = $parametri->getStoryboardcode();
+        $setmetaviewname = $parametri->getSetmetaviewname();
+        $setdirection = $parametri->getSetdirection();
+        $contactSettype1 = $parametri->getContactSettype1();
+        $contactReferencetype1 = $parametri->getContactReferencetype1();
+        $contactReferencecode1 = $parametri->getContactReferencecode1();
+        $contactSettype2 = $parametri->getContactSettype2();
+        $contactReferencetype2 = $parametri->getContactReferencetype2();
+        $contactReferencecode2 = $parametri->getContactReferencecode2();
+        $contactSettype3 = $parametri->getContactSettype3();
+        $contactReferencetype3 = $parametri->getContactReferencetype3();
+        $contactReferencecode3 = $parametri->getContactReferencecode3();
+        $variableSetkey1 = $parametri->getVariableSetkey1();
+        $variableSettype1 = $parametri->getVariableSettype1();
+        $variableSetvaluestring1 = $parametri->getVariableSetvaluestring1();
+        $attachmentSetfileset1 = $parametri->getAttachmentSetfileset1();
+        $attachmentSetcontenttype1 = $parametri->getAttachmentSetcontenttype1();
+        $requestSetinstanceoperation = $parametri->getRequestSetinstanceoperation();
 
+        // generazione file .java
+        $stringa = "
+import java.io.*;
+import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-        $b53->addPart($ss);
-        //var_dump($ss);
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.handler.Handler;
+import javax.xml.ws.handler.HandlerResolver;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.handler.PortInfo;
+import javax.xml.ws.soap.MTOMFeature;
 
-        $sc->getSoapKernel()->addAttachment($ss);
+import it.isharedoc.schemas.instance.InstanceMessageCreateRequest;
+import it.isharedoc.schemas.instance.InstanceMessageCreateRequest.*;
+import it.isharedoc.schemas.instance.InstanceMessageCreateRequest.Attachments.Attachment;
+import it.isharedoc.schemas.instance.InstanceMessageCreateRequest.Contacts.Contact;
+import it.isharedoc.schemas.instance.InstanceMessageCreateRequest.Variables.Variable;
+import it.isharedoc.schemas.instance.InstanceMessageCreateResponse;
+import it.isharedoc.schemas.instance.InstancePort;
+import it.isharedoc.schemas.instance.InstancePortService;
+import it.isharedoc.schemas.instance.ObjectFactory;
 
+public class TestClient {
 
-        ////$ss= new SoapCommon\Mime\MultiPart();
-        ////$ss->setHeader("Content-Type","Multipart/Related");
-//
-        ////$b53->setHeader("Content-ID","the-attachment");
-        //$b53->setHeader("Content-Type","Multipart/Related");
-        //$b53->setHeader("start-info","text/xml");
-        //$b53->setHeader("type","application/xop+xml");
-//      //  $b53->setContent('mio.txt');
-//
-        ////        $cid= new Mime();
-        ////$cid->encodeBase64('mio.txt');
-        ////$sc->getSoapKernel()->addAttachment($b53);
-//
-        ////var_dump($b53);
-        //print_r($b53);
+	public static void main(String[] args) throws SOAPException {
+		InstancePortService service = new InstancePortService();
 
-        // PARAMETRI HEADER
-        $headerUsername = "demo";
-        $headerPassword = "demo100";
+		service.setHandlerResolver( new HandlerResolver() {
 
-        $guid = trim(com_create_guid(),'{}');
-        $guidBase64 = base64_encode($guid);
+			@Override
+			public List<Handler> getHandlerChain(PortInfo portInfo) {
+				List<Handler> handlerList = new ArrayList<Handler>();
+                handlerList.add(new WSSUsernameTokenSecurityHandler(\"".$user."\", \"".$psw."\"));
+                return handlerList;
+			}
+		});
 
-        date_default_timezone_set('Europe/Rome');
-        $dt = Date("Y-m-d H:i:s");
-        $dtCreated = date("Y-m-d\TH:i:s.000\Z", strtotime($dt));
+		InstancePort port = service.getInstancePortSoap11( new MTOMFeature(10240));
+		Map<String, Object> ctxt = ((BindingProvider)port).getRequestContext();
+		ctxt.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, \"".$wsdl."\");
 
-        // PARAMETRI BODY
-        $partitionId = 5;
-        $storyboardCode = "protocollo";
-        $messageBoxId = 4;
-        $metaViewName = "protocollo";
-        $startWorkflow = true;
-        $instanceOperation = "protocolla";
+		String fileName = \"".$path.".zip\";
+		String filePath = \"../../".$directory_sender."/".$path."/\" + fileName;
 
-        // direzione messaggio
-        $direction = "IN"; // messaggio in ingresso
-        // ufficio autore
-        $contactTypeAut = "O";
-        $referenceTypeAut = "OU";
-        $referenceCodeAut = "ASL4CDC0009";
-        // ufficio destinatario
-        $contactTypeDest = "T";
-        $referenceTypeDest = "OU";
-        $referenceCodeDest = "ASL3B400";
-        // mittente
-        $contactTypeMitt = "F";
-        $referenceTypeMitt = "AB";
-        $referenceCodeMitt = "ESTAR";
+		InstanceMessageCreateRequest request = prepareRequestObject(filePath);
 
-
-
-        // CREAZIONE HEADER
-        $CredentialObjectXML  = '
-		<wsse:Security SOAP-ENV:mustUnderstand="1" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
-			<wsse:UsernameToken wsu:Id="UsernameToken-9E95C729FF5F13BA5714443833654194">
-				<wsse:Username>'.$headerUsername.'</wsse:Username>
-				<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">'.$headerPassword.'</wsse:Password>
-				<wsse:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">'.$guidBase64.'</wsse:Nonce>
-				<wsu:Created>'.$dtCreated.'</wsu:Created>
-			 </wsse:UsernameToken>
-		</wsse:Security>';
-        $CredentialObject  = new \SoapVar($CredentialObjectXML,XSD_ANYXML);
-        $header = new \SoapHeader('http://schemas.xmlsoap.org/soap/envelope/','null',$CredentialObject);
-        $soapClient->__setSoapHeaders($header);
-
-        // CREAZIONE BODY
-        $inputparam = new \SoapVar('
-		<ns1:InstanceMessageCreateRequest>
-			<partitionId>'.$partitionId.'</partitionId>
-			<storyboardCode>'.$storyboardCode.'</storyboardCode>
-			<messageBoxId>'.$messageBoxId.'</messageBoxId>
-			<!--Optional:-->
-			<metaViewName>'.$metaViewName.'</metaViewName>
-			<direction>'.$direction.'</direction>
-			<!--Optional:-->
-			<contacts>
-			<!--Zero or more repetitions:-->
-			<contact>
-			   <type>'.$contactTypeAut.'</type>
-			   <referenceType>'.$referenceTypeAut.'</referenceType>
-			   <!--You have a CHOICE of the next 2 items at this level-->
-			   <referenceCode>'.$referenceCodeAut.'</referenceCode>
-			</contact>
-			<contact>
-			   <type>'.$contactTypeDest.'</type>
-			   <referenceType>'.$referenceTypeDest.'</referenceType>
-			   <!--You have a CHOICE of the next 2 items at this level-->
-			   <referenceCode>'.$referenceCodeDest.'</referenceCode>
-			</contact>
-			<contact>
-			   <type>'.$contactTypeMitt.'</type>
-			   <referenceType>'.$referenceTypeMitt.'</referenceType>
-			   <!--You have a CHOICE of the next 2 items at this level-->
-			   <referenceCode>'.$referenceCodeMitt.'</referenceCode>
-			</contact>
-			</contacts>
-			<!--Optional:-->
-			<subject>richiesta</subject>
-			<!--Optional:-->
-			<tags>'.$idRichiesta.'</tags>
-			<!--Optional:-->
-			<variables>
-				<variable>
-					<key>transition</key>
-					<type>string</type>
-					<valueString>Protocolla</valueString>
-				</variable>
-				<variable>
-					<key>tipoDocumentazione</key>
-					<type>string</type>
-					<valueString>RDA da portale</valueString>
-				</variable>
-				<variable>
-					<key>idPratica</key>
-					<type>string</type>
-					<valueString>'.$idRichiesta.'</valueString>
-				</variable>
-			</variables>
-			  <!--Optional:-->
-         <attachments>
-            <!--Zero or more repetitions:-->
-            <attachment>
-               <fileset>isharedocMailAttach</fileset>
-               <filename>'.$nome.'</filename>
-               <!--Optional:-->
-               <contentType>application/octect-stream</contentType>
-               <data>cid:1157971487190</data>
-            </attachment>
-         </attachments>
-         <!--Optional:-->
-        <!--Optional:-->
-			<startWorkflow>'.$startWorkflow.'</startWorkflow>
-			<!--Optional:-->
-			<instanceOperation>'.$instanceOperation.'</instanceOperation>
-		</ns1:InstanceMessageCreateRequest>', XSD_ANYXML);
-
-        // CHIAMATA RICHIESTA
+		InstanceMessageCreateResponse response = port.instanceMessageCreate(request);
+		System.out.println( response );
+		BufferedWriter output = null;
+		try {
+            File file = new File(\"".$path."_protocollo.txt\");
+			output = new BufferedWriter(new FileWriter(file));
+			output.write(response.getIdentifier().getValue());
+		} catch ( IOException e ) {
+        e.printStackTrace();
+    } finally {
         try {
-            $return = $soapClient->InstanceMessageCreate($inputparam);
-            $sc->getSoapKernel()->filterRequest($return);
-        }
-        catch (\SoapFault $exception) {
-            echo $exception->getMessage() . "<br>";
+            if ( output !=  null ) output.close();
+        } catch ( Exception ex ) {
+
         }
 
-        $myreq= $soapClient->__getLastRequest();
-        file_put_contents('ProvaRichiesta.xml', print_r($myreq, true));
-        //var_dump($myreq);
-        $headermio= $soapClient->__getLastRequestHeaders();
-        file_put_contents('Provaheader.xml', print_r($headermio, true));
-        $myrespons= $soapClient->__getLastResponse();
-        file_put_contents('ProvaRisposta.xml', print_r($myrespons, true));
-        //var_dump($myrespons);
+		}
+	}
 
-        // parsing response
-        $response_pulita = strstr($myrespons, '<ns3:InstanceMessageCreateResponse');
-        $da_eliminare = strstr($response_pulita, '</SOAP-ENV:Body></SOAP-ENV:Envelope>');
-        $content = str_replace($da_eliminare,'',$response_pulita);
+private static InstanceMessageCreateRequest prepareRequestObject(String filePath) {
+SimpleDateFormat sdf = new SimpleDateFormat( \"dd/MM/yyyy HH:mm:ss.SSS\");
+ObjectFactory factory = new ObjectFactory();
 
-        /*$file = file("ProvaRisposta.xml");
-        $rispo = $file[3];
-        file_put_contents('ProvaRispostaNoParts.xml', $rispo);
-        $xmlfile='ProvaRispostaNoParts.xml';
-        $file = fopen($xmlfile, 'r');
-        $content = fread($file, filesize($xmlfile));
-        fclose($file);
-        $content = str_replace('<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><SOAP-ENV:Body>','',$content);
-        $content = str_replace('</SOAP-ENV:Body></SOAP-ENV:Envelope>','',$content);*/
-        $ProtocolResp = simplexml_load_string($content);
-        $numProt = $ProtocolResp->identifier;
-        file_put_contents('ila.txt',$idRichiesta);
+InstanceMessageCreateRequest request = new InstanceMessageCreateRequest();
+request.setPartitionId( BigInteger.valueOf(5));
+request.setStoryboardCode( \"".$storyboardcode."\" );
+request.setMessageBoxId( BigInteger.valueOf(4));
+request.setMetaViewName( factory.createInstanceMessageCreateRequestMetaViewName(\"".$setmetaviewname."\"));
+request.setDirection(\"".$setdirection."\");
 
+Contacts contacts = factory.createInstanceMessageCreateRequestContacts();
+Contact contact = factory.createInstanceMessageCreateRequestContactsContact();
+contact.setType(\"".$contactSettype1."\");
+contact.setReferenceType(\"".$contactReferencetype1."\");
+contact.setReferenceCode(\"".$contactReferencecode1."\");
+contacts.getContact().add(contact);
 
-        // TO DO : gestire per le richieste ICT l'aggregazione di n richieste sotto un unico numeroPratica
-        // scrivo il numero di protocollo sulla richiesta
+contact = factory.createInstanceMessageCreateRequestContactsContact();
+contact.setType(\"".$contactSettype2."\");
+contact.setReferenceType(\"".$contactReferencetype2."\");
+contact.setReferenceCode(\"".$contactReferencecode2."\");
+contacts.getContact().add(contact);
+
+contact = factory.createInstanceMessageCreateRequestContactsContact();
+contact.setType(\"".$contactSettype3."\");
+contact.setReferenceType(\"".$contactReferencetype3."\");
+contact.setReferenceCode(\"".$contactReferencecode3."\");
+contacts.getContact().add(contact);
+
+request.setContacts( factory.createInstanceMessageCreateRequestContacts(contacts));
+
+request.setSubject( factory.createInstanceMessageCreateRequestSubject(\"Richiesta del \" + sdf.format(new Date())));
+
+request.setTags( factory.createInstanceMessageCreateRequestTags( \"".$idRichiesta."\" ));
+
+Variables variables = factory.createInstanceMessageCreateRequestVariables();
+Variable variable = factory.createInstanceMessageCreateRequestVariablesVariable();
+variable.setKey( \"".$variableSetkey1."\" );
+variable.setType( \"".$variableSettype1."\" );
+variable.setValueString( factory.createInstanceMessageCreateRequestVariablesVariableValueString( \"".$variableSetvaluestring1."\" ));
+variables.getVariable().add(variable);
+
+request.setVariables( factory.createInstanceMessageCreateRequestVariables(variables) );
+
+File f = new File( filePath );
+
+Attachments attachments = factory.createInstanceMessageCreateRequestAttachments();
+Attachment attachment = factory.createInstanceMessageCreateRequestAttachmentsAttachment();
+attachment.setFileset( \"".$attachmentSetfileset1."\" );
+attachment.setFilename( f.getName() );
+attachment.setContentType( factory.createInstanceMessageCreateRequestAttachmentsAttachmentContentType( \"".$attachmentSetcontenttype1."\" ));
+
+FileDataSource fds = new FileDataSource( f );
+DataHandler handler = new DataHandler( fds );
+
+attachment.setData( handler );
+
+attachments.getAttachment().add(attachment);
+
+request.setAttachments( factory.createInstanceMessageCreateRequestAttachments(attachments));
+
+request.setStartWorkflow( factory.createInstanceMessageCreateRequestStartWorkflow(true) );
+request.setInstanceOperation( factory.createInstanceMessageCreateRequestInstanceOperation( \"".$requestSetinstanceoperation."\" ));
+
+return request;
+}
+
+}
+
+";
+        file_put_contents("client/src/TestClient.java",$stringa, FILE_USE_INCLUDE_PATH);
+
+        // generazione file batch
+        $righe_batch="@echo off \ncd client\\src\\ \n";
+        $righe_batch.="javac TestClient.java \n";
+        $righe_batch.="java TestClient \n";
+        $righe_batch.="cd ..\\..\\ \n";
+        $righe_batch.="pause";
+        $batfile = $path."_esec.bat";
+
+        file_put_contents($batfile,$righe_batch);
+
+        // esecuzione file batch
+        // abilitare su php.ini di apache (wamp) safe_mode_exec_dir=off
+        exec($path."_esec.bat",$output,$return);
+
+        // estrazione del numero di protocollo dalla risposta
+        $numProt=file_get_contents("/client/src/".$path."_protocollo.txt",FILE_USE_INCLUDE_PATH);
+
+        // scrittura del numero di protocollo sulla richiesta
         $em = $this->getDoctrine()->getManager();
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         $richiesta->setNumeroprotocollo($numProt);
         $em->persist($richiesta);
         $em->flush();
 
+        // cancellazione file
+        // da decommentare nel caso non volessimo più fare storage delle richieste zippate e inviate
+        //$this->delTree($path);
+        unlink($batfile);
+        unlink("client/src/".$path."_protocollo.txt");
+
         return $this->redirect($this->generateUrl("richiesta"));
-        //return $this->render('@estarRda/Testing/index.html.twig', array(
-        //    'hello' => $myrespons,
-        //));
     }
 }

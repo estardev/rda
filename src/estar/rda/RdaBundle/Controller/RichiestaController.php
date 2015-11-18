@@ -48,7 +48,7 @@ class RichiestaController extends Controller
         //TODO: fare un filtro sui permessi dell'utente relativi agli stati
         //Sono tutti pulsanti che puntano a FormTemplateController
         return $this->render('estarRdaBundle:Richiesta:index.html.twig', array(
-            'entities' => $entities,
+            'entities' => $entities
         ));
     }
 
@@ -306,4 +306,6 @@ class RichiestaController extends Controller
 
         return $this->redirect($this->generateUrl("richiesta"));
     }
+
+
 }
