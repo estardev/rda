@@ -10,7 +10,7 @@
 
         </li>#}
 
-        {% if (is_granted("ROLE_ADMIN"))%}
+        {% if (is_granted("ROLE_ADMIN") or is_granted("ROLE_SUPER_ADMIN"))%}
             <li>
                 <a href="#" data-toggle="collapse" class="mydropdown" data-target="#subUtenti"><b>UTENTI</b></a>
                 <ul class="nav collapse in" id="subUtenti">
