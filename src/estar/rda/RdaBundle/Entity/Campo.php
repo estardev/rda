@@ -100,15 +100,17 @@ class Campo
      *
      * @return Campo
      */
-    public function setFiglio(\estar\rda\RdaBundle\Entity\Campo $figlio)
+    public function setFiglio(\estar\rda\RdaBundle\Entity\Campo $figlio = null)
     {
         //FG + GL fix su figli che non salvavano alcuni dati
-        $figlio->setIdcategoria($this->getIdcategoria());
-        $figlio->setObbligatorioinserzione($this->getObbligatorioinserzione());
-        $figlio->setObbligatoriovalidazioneamministrativa($this->getObbligatoriovalidazioneamministrativa());
-        $figlio->setObbligatoriovalidazionetecnica($this->getObbligatoriovalidazionetecnica());
-        //FIXME l'ordinamento potrebbe essere da vedere
-        $figlio->setOrdinamento($this->getOrdinamento()+1);
+        if ($figlio != null) {
+            $figlio->setIdcategoria($this->getIdcategoria());
+            $figlio->setObbligatorioinserzione($this->getObbligatorioinserzione());
+            $figlio->setObbligatoriovalidazioneamministrativa($this->getObbligatoriovalidazioneamministrativa());
+            $figlio->setObbligatoriovalidazionetecnica($this->getObbligatoriovalidazionetecnica());
+            //FIXME l'ordinamento potrebbe essere da vedere
+            $figlio->setOrdinamento($this->getOrdinamento() + 1);
+        }
         $this->figlio = $figlio;
 
         return $this;
@@ -438,7 +440,7 @@ class Campo
      *
      * @return Campo
      */
-    public function setIdcategoria(\estar\rda\RdaBundle\Entity\Categoria $idcategoria)
+    public function setIdcategoria(\estar\rda\RdaBundle\Entity\Categoria $idcategoria = null)
     {
         $this->idcategoria = $idcategoria;
 
@@ -461,6 +463,19 @@ class Campo
             'choice' => 'Scelta',
             'integer' => 'Numerico',
             'text' => 'Testo');
+        return $choices;
+    }
+
+    /**
+     * Metodo che ritorna l'enumerato per i campi obbligatorioInserzione, obbligatorioValidazioneTecnica, obbligatorioValidazioneAmministrativa
+     * @return array
+     */
+    public static function getPossibleEnumObblighi()
+    {
+        $choices = array(
+            '-1' => 'Non visibile',
+            '0' => 'Visibile, facoltativo',
+            '1' => 'Visibile, obbligatorio');
         return $choices;
     }
 

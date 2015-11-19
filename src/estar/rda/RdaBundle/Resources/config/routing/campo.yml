@@ -7,11 +7,11 @@ campo_show:
     defaults: { _controller: "estarRdaBundle:Campo:show" }
 
 campo_new:
-    path:     /new
+    path:     /{idCategoria}/{ordinamento}/new
     defaults: { _controller: "estarRdaBundle:Campo:new" }
 
 campo_create:
-    path:     /create
+    path:     /{idCategoria}/{ordinamento}/create
     defaults: { _controller: "estarRdaBundle:Campo:create" }
     methods:  POST
 

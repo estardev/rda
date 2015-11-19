@@ -21,15 +21,13 @@ class CampoType extends AbstractType
             ->add('descrizione')
             ->add('tipo', 'choice', array('choices' => Campo::getPossibleEnumValues()))
             ->add('fieldset', 'hidden')
-//            ->add('padre')
             ->add('figlio', new CampoFiglioType())
             ->add('obbligatoriovalidazioneamministrativa', 'choice', array('choices' => Campo::getPossibleEnumObblighi()))
             ->add('obbligatorioinserzione', 'choice', array('choices' => Campo::getPossibleEnumObblighi()))
             ->add('obbligatoriovalidazionetecnica', 'choice', array('choices' => Campo::getPossibleEnumObblighi()))
-            ->add('ordinamento')
-            ->add('dataattivazione')
-            ->add('datadismissione')
-            //            ->add('idcategoria')
+//            ->add('ordinamento')
+//            ->add('dataattivazione')
+//            ->add('datadismissione')
         ;
     }
 

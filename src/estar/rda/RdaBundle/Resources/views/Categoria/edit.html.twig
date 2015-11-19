@@ -2,6 +2,7 @@
 
 {% block body -%}
 
+
     <script>
 
 
@@ -90,7 +91,14 @@
 
         </div>
     </div>
+    {#{{ dump(form.children)}}#}
+    {% if form.children|length<2 %}
+        <button id="campoNew" type="button" class="btn btn-info btn-lg" data-toggle="modal"
+                data-target="#myModal">Aggiungi Campo
+        </button>
+    {% endif %}
     {{ form(form) }}
+
     {#<h1>Categoria editing</h1>#}
     {#{{ form_start(edit_form) }}#}
     {#{{ form_row(edit_form.nome) }}#}
@@ -104,9 +112,7 @@
     {#<li>#}
 
     {#{{ campo.vars.value.descrizione }}#}
-    <button href="{{ path('campo_edit',{ 'id':'1'}) }}" type="button" class="btn btn-info btn-lg" data-toggle="modal"
-            data-target="#myModal">modifica
-    </button>
+
 
 
     <!-- Modal -->
@@ -143,21 +149,22 @@
                 var patt = new RegExp(/form_(.*)+-([0-9]+)/);
                 var id = patt.exec($(this).parent().find('input').attr('id'))[2];
                 var patt2 = new RegExp(/(\d)-(.*)+/);
-                var ordinamento = patt2.exec($(this).text())[1];
-                {#var route = "{{ path('campo_moveUp', { 'ordinamento': 'PLACEHOLDER' }) }}";#}
-//                var urlMoveUp = route.replace('PLACEHOLDER', ordinamento);
-                {#route = "{{ path('campo_moveDown', { 'ordinamento': 'PLACEHOLDER' }) }}";#}
-//                var urlMoveDown = route.replace('PLACEHOLDER', ordinamento);
+                var ordinamento = parseInt(patt2.exec($(this).text())[1]);
+                var route = "{{ path('campo_create', { 'idCategoria':idCategoria,'ordinamento': 'PLACEHOLDER' }) }}";
+                var urlCreateUp = route.replace('PLACEHOLDER', ordinamento - 1);
+                var urlCreateDown = route.replace('PLACEHOLDER', ordinamento + 1);
                 $(this).replaceWith(
                         '<div class="dropdown">' +
-                        '<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">' + $(this).text() + '<span class="caret"></span></button>' +
+                        '<button class="btn btn-default" type="button">' + $(this).text() + '</button>' +
+                        '<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><span class="caret"></span></button>' +
+                        '<span class="sr-only">Toggle Dropdown</span>' +
                         '<ul class="dropdown-menu">' +
                         '<li><a class="edit" id="' + id + '">Modifica</a></li>' +
                         '<li class="' + disableFirst + '"><a >Sposta su</a></li>' +
                         '<li class="' + disableLast + '"><a >Sposta giù</a></li>' +
                         '<li class="divider"></li>' +
-                        '<li><a >Aggiungi sopra</a></li>' +
-                        '<li><a >Aggiungi sotto</a></li>' +
+                        '<li><a class="createUp">Aggiungi sopra</a></li>' +
+                        '<li><a class="createDown">Aggiungi sotto</a></li>' +
                         '</ul>' +
                         '</div>');
             });
@@ -191,8 +198,96 @@
 
                     }
                 })
+            });
+            $('#campoNew').on('click', function () {
+
+
+                id = $(this).attr('id');
+                var url = "{{ path('campo_new',{'idCategoria':idCategoria,'ordinamento':'1'}) }}";
+                var $myModal = $('#myModal');
+                console.log(url);
+                var $myProgress = $('#myProgress');
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    async: true,
+                    beforeSend: function () {
+
+                        $myProgress.find('.modal-body').html("<h4><p>Attendere prego...</p></h4>");
+                        $myProgress.modal('show');
+
+                    },
+                    success: function (data) {
+                        $('#myProgress').modal('hide');
+                        $myModal.find('.modal-body').html(data);
+                        $myModal.modal('show');
+                        $('.dropdown-toggle').dropdown()
+
+                    }
+                })
+            });
+            $('.createUp').on('click', function () {
+
+                var patt2 = new RegExp(/(\d*)-(.*)+/);
+                var ordinamento = parseInt(patt2.exec($(this).parents('.dropdown.open').find('.btn:not(.dropdown-toggle)').text())[1]);
+//                var isFirstLevel = $(this).parents('.form-group').has('.firstLevel').length > 0;
+//                var offset = (isFirstLevel) ? 2 : 1;
+                var offset = 1;
+                var route = "{{ path('campo_new', { 'idCategoria':idCategoria,'ordinamento': 'PLACEHOLDER' }) }}";
+                var urlCreateUp = route.replace('PLACEHOLDER', ordinamento - offset);
+                var $myModal = $('#myModal');
+                var $myProgress = $('#myProgress');
+                $.ajax({
+                    type: 'GET',
+                    url: urlCreateUp,
+                    async: true,
+                    beforeSend: function () {
+
+                        $myProgress.find('.modal-body').html("<h4><p>Attendere prego...</p></h4>");
+                        $myProgress.modal('show');
+
+                    },
+                    success: function (data) {
+                        $('#myProgress').modal('hide');
+                        $myModal.find('.modal-body').html(data);
+                        $myModal.modal('show');
+                        $('.dropdown-toggle').dropdown()
+
+                    }
+                })
+            });
+            $('.createDown').on('click', function () {
+
+
+                var patt2 = new RegExp(/(\d*)-(.*)+/);
+                var ordinamento = parseInt(patt2.exec($(this).parents('.dropdown.open').find('.btn:not(.dropdown-toggle)').text())[1]);
+                var isFirstLevel = $(this).parents('.form-group').has('.firstLevel').length > 0;
+                var offset = (isFirstLevel) ? 2 : 1;
+                var route = "{{ path('campo_new', { 'idCategoria':idCategoria,'ordinamento': 'PLACEHOLDER' }) }}";
+                var urlCreateDown = route.replace('PLACEHOLDER', ordinamento + offset);
+                var $myModal = $('#myModal');
+                var $myProgress = $('#myProgress');
+                $.ajax({
+                    type: 'GET',
+                    url: urlCreateDown,
+                    async: true,
+                    beforeSend: function () {
+
+                        $myProgress.find('.modal-body').html("<h4><p>Attendere prego...</p></h4>");
+                        $myProgress.modal('show');
+
+                    },
+                    success: function (data) {
+                        $('#myProgress').modal('hide');
+                        $myModal.find('.modal-body').html(data);
+                        $myModal.modal('show');
+                        $('.dropdown-toggle').dropdown()
+
+                    }
+                })
             })
         });
+
     </script>
 
 {% endblock %}

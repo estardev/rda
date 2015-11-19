@@ -196,7 +196,7 @@ class CategoriaController extends Controller
         $firstLevels = array();
         foreach ($campi as $campo) {
             //FG 20151027 modifica per campi visualizzabili a seconda dei diritti
-            if (!($diritti->campoVisualizzabile($diritti, $campo))) continue;
+//            if (!($diritti->campoVisualizzabile($diritti, $campo))) continue;
 
             $obbligatorio = $campo->getObbligatorioinserzione();
             if ($campo->getTipo() == 'choice') {
@@ -261,6 +261,7 @@ class CategoriaController extends Controller
 //        ));
 
         return $this->render('estarRdaBundle:Categoria:edit.html.twig', array(
+            'idCategoria' => $idCategoria,
             'form' => $form->createView(),
             'firstLevels' => $firstLevels,
 //            'back_form' => $backForm->createView()
