@@ -33,7 +33,10 @@ public class WSSUsernameTokenSecurityHandler implements SOAPHandler<SOAPMessageC
             	String nonce = generateNonce();
 
             	SOAPEnvelope envelope = context.getMessage().getSOAPPart().getEnvelope();
-            	SOAPHeader header = envelope.addHeader();
+            	if (envelope.getHeader() != null) {
+				envelope.getHeader().detachNode();
+				}
+				SOAPHeader header = envelope.addHeader();
 
             	SOAPElement security =
             	header.addChildElement("Security", "wsse", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");

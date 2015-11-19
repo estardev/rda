@@ -1,15 +1,219 @@
-{% extends '::base.html.twig' %}
-
+{#{% extends '::base.html.twig' %}#}
+<link href="{{ asset('css/bootstrap.css', absolute=true) }}" rel="stylesheet" media="screen">
+{#<link href="http://symfony/rda/web/css/bootstrap.css" rel="stylesheet" media="screen">#}
+<link href="{{ asset('css/style.css', absolute=true) }}" rel="stylesheet" media="screen">
+<!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
+<script src="{{ asset('js/jquery.js', absolute=true) }}"></script>
+<!-- Include all JavaScripts, compiled by Assetic -->
+<script src="{{ asset('js/bootstrap.js', absolute=true) }}"></script>
 {% block body -%}
-    <h1>Campo creation</h1>
+    {#<h1>Campo edit</h1>#}
 
     {{ form(form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('campo') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+    <div class="container">
+        <div class="row">
+            <div class="control-group" id="fields">
+
+                <small>Premi <span class="glyphicon glyphicon-plus gs"></span> per aggiungere un'opzione</small>
+                <div class="controls">
+                    <form role="form" autocomplete="off">
+                        <div class="entry input-group col-xs-5">
+                            <input class="form-control" id="fieldsValore" type="text" placeholder="Valore"/>
+                            <input class="form-control" id="fieldsDescrizione" type="text" placeholder="Descrizione"/>
+                            <br>
+                    	<span class="input-group-btn">
+                            <button class="btn btn-success btn-add" type="button">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </span>
+                        </div>
+                    </form>
+
+                    <br>
+
+                    <div class="control-group" id="secondLevel">
+
+                        <small>Aggiungi campo di secondo livello</small>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script>
+        $(function () {
+
+            $(document).on('click', '.btn-add', function (e) {
+                e.preventDefault();
+
+                var controlForm = $('.controls form:first'),
+                        currentEntry = $(this).parents('.entry:first'),
+                        newEntry = $(currentEntry.clone()).appendTo(controlForm);
+
+                newEntry.find('input').val('');
+                controlForm.find('.entry:not(:last) .btn-add')
+                        .removeClass('btn-add').addClass('btn-remove')
+                        .removeClass('btn-success').addClass('btn-danger')
+                        .html('<span class="glyphicon glyphicon-minus"></span>');
+                var descrizione = currentEntry.find('#fieldsDescrizione').val();
+                var valore = currentEntry.find('#fieldsValore').val();
+                addOption2Fieldset(descrizione, valore);
+                $('#secondLevel').append('<label class="checkbox-inline"><input type="checkbox" value="">' + descrizione + '</label>')
+                        .find('input')
+                        .on('click', function (e) {
+                            var $checkbox = $(this);
+                            var options = getFieldsetOptions($('#estar_rda_rdabundle_campo_fieldset').val());
+                            if ($checkbox.is(":checked")) {
+                                addOption2Padre(keyfromvalue(options, $(this).closest('label').text()));
+                            } else {
+                                removeOption2Padre(keyfromvalue(options, $(this).closest('label').text()));
+                            }
+                            $checkbox.val($checkbox.is(':checked'));
+                            console.log($checkbox.val());
+                        });
+            }).on('click', '.btn-remove', function () {
+                $(this).parents('.entry:first').remove();
+                var descrizione = $(this).parents('.entry:first').find('#fieldsDescrizione').val();
+                var valore = $(this).parents('.entry:first').find('#fieldsValore').val();
+                removeOption2Fieldset(descrizione, valore);
+                removeOption2Padre(valore);
+                $('label.checkbox-inline:contains("' + descrizione + '")').remove();
+                return false;
+            });
+        });
+    </script>
+    <script>
+        function keyfromvalue(object, value) {
+            for (var field in object) {
+                if (object.hasOwnProperty(field)) {
+                    if (object[field] === value) {
+                        return field;
+                    }
+                }
+            }
+        }
+        //TODO carico i dati dal campo fieldset
+        function getFieldsetOptions(string) {
+            var options = string.split('||');
+            var ret = {};
+            for (var i = 0; i < options.length; i++) {
+                var subOption = options[i].split('|');
+
+                ret[subOption[0]] = subOption[1];
+            }
+            return ret;
+
+        }
+
+        function getPadreOptions(string) {
+            var options = string.split('||');
+            var ret = [];
+            for (var i = 0; i < options.length; i++) {
+                var subOption = options[i].split('|');
+
+                ret.push(subOption[1]);
+            }
+            return ret;
+        }
+
+        function addOption2Fieldset(descrizione, valore) {
+            var oldValue = $('#estar_rda_rdabundle_campo_fieldset').val();
+//            var newValue = oldValue + "||" + valore + '|' + descrizione;
+            var newValue = (oldValue != "") ? oldValue + "||" + valore + '|' + descrizione : valore + '|' + descrizione;
+            $('#estar_rda_rdabundle_campo_fieldset').val(newValue);
+
+        }
+        function removeOption2Fieldset(descrizione, valore) {
+            var oldValue = $('#estar_rda_rdabundle_campo_fieldset').val();
+            var re = new RegExp('([|]{2})*' + valore + '[|]{1}' + descrizione);
+            var newValue = oldValue.replace(re, '');
+            var re2 = new RegExp(/(^[|]{2})(.*)/);
+            newValue = (re2.test(newValue)) ? re2.exec(newValue)[1] : newValue;
+            $('#estar_rda_rdabundle_campo_fieldset').val(newValue);
+
+        }
+
+        function addOption2Padre(valore) {
+            var oldValue = $('#estar_rda_rdabundle_campo_figlio_padre').val();
+            var nomePadre = $('#estar_rda_rdabundle_campo_nome').val();
+            var newValue = (oldValue != "") ? oldValue + "||" + nomePadre + '|' + valore : nomePadre + '|' + valore;
+            $('#estar_rda_rdabundle_campo_figlio_padre').val(newValue);
+
+        }
+
+        function removeOption2Padre(descrizione) {
+            var oldValue = $('#estar_rda_rdabundle_campo_figlio_padre').val();
+            var nomePadre = $('#estar_rda_rdabundle_campo_nome').val();
+            var re = new RegExp('([|]{2})*' + nomePadre + '[|]{1}' + descrizione);
+            var newValue = oldValue.replace(re, '');
+            var re2 = new RegExp(/^[|]{2}(.*)/);
+            newValue = (re2.test(newValue)) ? re2.exec(newValue)[1] : newValue;
+            $('#estar_rda_rdabundle_campo_figlio_padre').val(newValue);
+
+        }
+
+        $(document).ready(function () {
+
+
+            $('#fields').insertAfter($('#estar_rda_rdabundle_campo_tipo').parent());
+            if ($('#estar_rda_rdabundle_campo_tipo').val() == 'choice') {
+                $('#fields').show();
+                $('#estar_rda_rdabundle_campo_figlio').parent().show();
+            } else {
+                $('#fields').hide();
+                $('#estar_rda_rdabundle_campo_figlio').parent().hide();
+            }
+
+            $('#estar_rda_rdabundle_campo_tipo').on('change', function () {
+                if ($(this).val() == 'choice') {
+
+                    $('#fields').show();
+                    $('#estar_rda_rdabundle_campo_figlio').parent().show();
+                } else {
+                    $('#fields').hide();
+                    $('#estar_rda_rdabundle_campo_figlio').parent().hide();
+                }
+            });
+
+            var choices = getFieldsetOptions($('#estar_rda_rdabundle_campo_fieldset').val());
+            var nomePadre = $('#estar_rda_rdabundle_campo_nome').val();
+            var optionsPadre = getPadreOptions($('#estar_rda_rdabundle_campo_figlio_padre').val());
+            var controlForm = $('.controls form:first');
+            for (var field in choices) {
+                if (choices.hasOwnProperty(field) && field != '') {
+
+                    var currentEntry = $('.btn-add').parents('.entry:first'),
+                            newEntry = $(currentEntry.clone()).appendTo(controlForm);
+                    controlForm.find('.entry:not(:last) .btn-add')
+                            .removeClass('btn-add').addClass('btn-remove')
+                            .removeClass('btn-success').addClass('btn-danger')
+                            .html('<span class="glyphicon glyphicon-minus"></span>');
+                    currentEntry.find('#fieldsValore').val(field);
+                    currentEntry.find('#fieldsDescrizione').val(choices[field]);
+                    $('#secondLevel').append('<label class="checkbox-inline"><input type="checkbox" value="">' + choices[field] + '</label>')
+                }
+            }
+            $('.checkbox-inline').find('input').on('click', function (e) {
+                var $checkbox = $(this);
+                var options = getFieldsetOptions($('#estar_rda_rdabundle_campo_fieldset').val());
+                if ($checkbox.is(":checked")) {
+                    addOption2Padre(keyfromvalue(options, $(this).closest('label').text()));
+                } else {
+                    removeOption2Padre(keyfromvalue(options, $(this).closest('label').text()));
+                }
+                $checkbox.val($checkbox.is(':checked'));
+                console.log($checkbox.val());
+            });
+            var options = getFieldsetOptions($('#estar_rda_rdabundle_campo_fieldset').val());
+            for (var i = 0; i < optionsPadre.length; i++) {
+                var $checkbox = $('label.checkbox-inline:contains("' + options[optionsPadre[i]] + '")').find('input');
+                $checkbox.prop("checked", true);
+            }
+
+        });
+    </script>
+
 {% endblock %}
