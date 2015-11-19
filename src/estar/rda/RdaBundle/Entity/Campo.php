@@ -474,8 +474,8 @@ class Campo
     {
         $choices = array(
             '-1' => 'Non visibile',
-            '0' => 'Visibile e facoltativo',
-            '1' => 'Visibile e obbligatorio');
+            '0' => 'Visibile, facoltativo',
+            '1' => 'Visibile, obbligatorio');
         return $choices;
     }
 
