@@ -225,10 +225,10 @@
 
                     }
                 })
-            })
+            });
             $('.createUp').on('click', function () {
 
-                var patt2 = new RegExp(/(\d)-(.*)+/);
+                var patt2 = new RegExp(/(\d*)-(.*)+/);
                 var ordinamento = parseInt(patt2.exec($(this).parents('.dropdown.open').find('.btn:not(.dropdown-toggle)').text())[1]);
 //                var isFirstLevel = $(this).parents('.form-group').has('.firstLevel').length > 0;
 //                var offset = (isFirstLevel) ? 2 : 1;
@@ -236,7 +236,6 @@
                 var route = "{{ path('campo_new', { 'idCategoria':idCategoria,'ordinamento': 'PLACEHOLDER' }) }}";
                 var urlCreateUp = route.replace('PLACEHOLDER', ordinamento - offset);
                 var $myModal = $('#myModal');
-                console.log(url);
                 var $myProgress = $('#myProgress');
                 $.ajax({
                     type: 'GET',
@@ -256,11 +255,11 @@
 
                     }
                 })
-            })
+            });
             $('.createDown').on('click', function () {
 
 
-                var patt2 = new RegExp(/(\d)-(.*)+/);
+                var patt2 = new RegExp(/(\d*)-(.*)+/);
                 var ordinamento = parseInt(patt2.exec($(this).parents('.dropdown.open').find('.btn:not(.dropdown-toggle)').text())[1]);
                 var isFirstLevel = $(this).parents('.form-group').has('.firstLevel').length > 0;
                 var offset = (isFirstLevel) ? 2 : 1;

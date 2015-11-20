@@ -18,6 +18,29 @@ use Symfony\Component\HttpFoundation\Response;
 class RichiestadocumentoController extends Controller
 {
 
+
+    function selectedOption($options, $key)
+    {
+        return $options[$key];
+    }
+
+    public function getChoicesOptions($string)
+    {
+        $options = explode('||', $string);
+        $returnOptions = array();
+        foreach ($options as $option) {
+            $subOption = explode('|', $option);
+            if (count($subOption) > 1) {
+                $returnOptions[$subOption[0]] = $subOption[1];
+            } else {
+                $returnOptions[$subOption[0]] = $subOption[0];
+            }
+        }
+
+
+        return $returnOptions;
+    }
+
     /**
      * Lists all Richiestadocumento entities.
      *
@@ -398,6 +421,7 @@ class RichiestadocumentoController extends Controller
     }
 
 
+    /*
     public function printAction($idCategoria, $idRichiesta, $idDocumento)
     {
 
@@ -466,6 +490,78 @@ class RichiestadocumentoController extends Controller
             array(
                 'Content-Type' => 'application/pdf',
 //                'Content-Disposition'   => 'attachment; filename="pippo.pdf"'
+            )
+        );
+    }
+    */
+    public
+    function printAction($idCategoria, $idRichiesta, $idDocumento)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery('SELECT c.id as idcampo,c.nome,c.descrizione,c.fieldset,c.tipo,vc.id,vc.valore
+                                    FROM estarRdaBundle:Campodocumento c
+                                    LEFT JOIN estarRdaBundle:Valorizzazionecampodocumento vc
+                                    WITH c.id = vc.idcampodocumento
+                                    LEFT JOIN estarRdaBundle:Richiestadocumento r
+                                    WITH r.id = vc.idrichiestadocumento
+                                    WHERE r.idrichiesta = :idRichiesta
+                                    AND r.iddocumento = :idDocumento
+                                    ')->setparameters(array('idRichiesta' => $idRichiesta, 'idDocumento' => $idDocumento));
+        $campiValorizzati = $query->getResult();
+
+        //var_dump($query);
+    //var_dump($campiValorizzati);
+    //    exit;
+
+        $formbuilder = $this->createFormBuilder();
+        $documento = $em->getRepository('estarRdaBundle:Documento')->find($idDocumento);
+        $formbuilder->add("nome", "text", array(
+            'label' => "nome",
+            'data' => $documento->getNome(),
+            'read_only' => true
+        ));
+        $formbuilder->add("descrizione", "textarea", array(
+            'label' => "descrizione",
+            'data' => $documento->getDescrizione(),
+            'read_only' => true
+        ));
+        foreach ($campiValorizzati as $campovalorizzato) {
+            $campo = $campovalorizzato;
+
+            $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campodocumento');
+            $campoCheck = $repository->find($campo['idcampo']);
+
+            if ($campo['tipo'] == 'choice') {
+                $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                    'label' => $campo['descrizione'],
+                    'data' => $descrizioneValore,
+                    'read_only' => true
+                ));
+            } else {
+
+                $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
+                    'label' => $campo['descrizione'],
+                    'data' => $campo['valore'],
+                    'read_only' => true
+                ));
+            }
+        }
+        $form = $formbuilder->getForm();
+
+
+        $html = $this->renderView('::printbase.html.twig', array(
+            'form' => $form->createView()
+        ));
+
+        //dump($html);
+
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            200,
+            array(
+                'Content-Type' => 'application/pdf',
             )
         );
     }

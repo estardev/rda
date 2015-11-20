@@ -92,8 +92,9 @@
                                             href="{{ path('richiestadocumento_edit', { 'idCategoria': idCategoria, 'idRichiesta': idRichiesta ,'idDocumento': entity.id}) }}">
                                         Modifica/Crea</a>
                                 </button>
-                                <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span><a target="_blank" href="{{ path('richiestadocumento_print', { 'idCategoria': idCategoria, 'idRichiesta': idRichiesta ,'idDocumento': entity.id  }) }}">Genera PDF</a></button>
-
+                                {% if alert==false %}
+                                    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-file" aria-hidden="true"></span><a target="_blank" href="{{ path('richiestadocumento_print', { 'idCategoria': idCategoria, 'idRichiesta': idRichiesta ,'idDocumento': entity.id  }) }}"> Genera PDF</a></button>
+                                {% endif %}
 
                             {% endif %}
                         </div>
