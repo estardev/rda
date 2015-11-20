@@ -20,6 +20,12 @@ services:
           em: "@doctrine.orm.entity_manager"
           user: "@security.context"
 
+    model.campo:
+        class: estar\rda\RdaBundle\Model\CampoModel
+        arguments:
+          em: "@doctrine.orm.entity_manager"
+          user: "@security.context"
+
 #services:
 #    estar_rda.example:
 #        class: estar\rda\RdaBundle\Example
