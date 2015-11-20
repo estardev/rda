@@ -498,15 +498,20 @@ class RichiestadocumentoController extends Controller
     function printAction($idCategoria, $idRichiesta, $idDocumento)
     {
         $em = $this->getDoctrine()->getManager();
-        //FG il controllo dei campi è intenzionalmente tenuto fuori da ACL
         $query = $em->createQuery('SELECT c.id as idcampo,c.nome,c.descrizione,c.fieldset,c.tipo,vc.id,vc.valore
                                     FROM estarRdaBundle:Campodocumento c
                                     LEFT JOIN estarRdaBundle:Valorizzazionecampodocumento vc
-                                    WITH c.id = vc.idcampodocumento');
+                                    WITH c.id = vc.idcampodocumento
+                                    LEFT JOIN estarRdaBundle:Richiestadocumento r
+                                    WITH r.id = vc.idrichiestadocumento
+                                    WHERE r.idrichiesta = :idRichiesta
+                                    AND r.iddocumento = :idDocumento
+                                    ')->setparameters(array('idRichiesta' => $idRichiesta, 'idDocumento' => $idDocumento));
         $campiValorizzati = $query->getResult();
 
-        //dump($campiValorizzati);
-        //var_dump($campiValorizzati);
+        //var_dump($query);
+    //var_dump($campiValorizzati);
+    //    exit;
 
         $formbuilder = $this->createFormBuilder();
         $documento = $em->getRepository('estarRdaBundle:Documento')->find($idDocumento);

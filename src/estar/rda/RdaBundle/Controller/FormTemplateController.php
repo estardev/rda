@@ -441,30 +441,30 @@ class FormTemplateController extends Controller
 
         $editForm = $formbuilder->getForm();
         // $editForm->add('submit', 'submit', array('label' => 'Modifica'));
-        $editForm->add('submit', 'submit', array('label' => 'Salva e chiudi', 'attr' => array('class' => 'bottoniera')));
+        $editForm->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'icon' => 'glyphicon glyphicon-ok')));
 
 
         $formbuilder = $this->createFormBuilder();
 
         $formbuilder->setAction($this->generateUrl('sistematicaclient_show', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
         $ClientSoapForm = $formbuilder->getForm();
-        $ClientSoapForm->add('submit', 'submit', array('label' => 'Invia ad ABS'));
+        $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane')));
 
         $formbuilder = $this->createFormBuilder();
         $formbuilder->setAction($this->generateUrl('richiesta_delete', array('id' => $idRichiesta)));
         $deleteForm = $formbuilder->getForm();
-        $deleteForm->add('submit_delete', 'submit', array('label' => 'Elimina'));
+        $deleteForm->add('submit_delete', 'submit', array('label' => ' Elimina', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));
 
         $formbuilder = $this->createFormBuilder();
         $formbuilder->setAction($this->generateUrl('formtemplate_print', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
         $printForm = $formbuilder->getForm();
-        $printForm->add('submit', 'submit', array('label' => 'Stampa'));
+        $printForm->add('submit', 'submit', array('label' => ' Stampa', 'attr' => array('icon' => 'glyphicon glyphicon-print')));
 
 
         $formbuilder = $this->createFormBuilder();
         $formbuilder->setAction($this->generateUrl('formtemplate_back', array('idCategoria' => $idCategoria)));
         $backForm = $formbuilder->getForm();
-        $backForm->add('back', 'submit', array('label' => 'Indietro'));
+        $backForm->add('back', 'submit', array('label' => ' Indietro', 'attr' => array('icon' => 'glyphicon glyphicon-arrow-left')));
 
 
         $em = $this->getDoctrine()->getManager();
