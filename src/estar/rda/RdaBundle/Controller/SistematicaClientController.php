@@ -406,6 +406,13 @@ return request;
         $richiesta->setNumeroprotocollo($numProt);
         $em->persist($richiesta);
         $em->flush();
+        $richiestadocumento = $em->getRepository('estarRdaBundle:Richiestadocumento')->findOneBy(
+        array('idrichiesta' => $idRichiesta)
+
+    );
+        $richiestadocumento->setNumeroprotocollo($numProt);
+        $em->persist($richiestadocumento);
+        $em->flush();
 
         // cancellazione file
         // da decommentare nel caso non volessimo più fare storage delle richieste zippate e inviate
