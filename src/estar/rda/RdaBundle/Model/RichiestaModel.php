@@ -165,6 +165,7 @@ class RichiestaModel extends Controller
 
         } else {
             //Altrimenti dobbiamo mostrare solo le categorie a cui ha accesso
+            //fixme utilizzare la vista!
             $query = $this->em->
                 createQuery('select c.id, c.descrizione, a.nome as area from estarRdaBundle:Categoria c join c.idarea a
                   join estarRdaBundle:Categoriagruppo cg join estarRdaBundle:Utentegruppoutente ugu
