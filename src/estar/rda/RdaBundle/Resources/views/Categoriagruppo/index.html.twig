@@ -2,27 +2,28 @@
 
 {% block body -%}
 <div class="panel panel-default">
-    <div class="panel-heading"><h4>Lista Associazioni Categoria-Gruppo</h4></div>
+    <div class="panel-heading"><h4>Permessi dei Gruppi sulle Categorie</h4></div>
 
     <table class="table">
         <thead>
             <tr>
+                <th>Id</th>
                 <th>Abilitato inserimento richieste</th>
                 <th>Validatore tecnico</th>
                 <th>Validatore amministrativo</th>
                 <th>Referente abs</th>
-                <th>Id</th>
                 <th>Azioni</th>
             </tr>
         </thead>
         <tbody>
         {% for entity in entities %}
             <tr>
+                <td>{{ entity.id }}</td>
                 <td><a href="{{ path('categoriagruppo_show', { 'id': entity.id }) }}">{{ entity.abilitatoinserimentorichieste }}</a></td>
                 <td>{{ entity.validatoretecnico }}</td>
                 <td>{{ entity.validatoreamministrativo }}</td>
                 <td>{{ entity.referenteabs }}</td>
-                <td>{{ entity.id }}</td>
+
                 <td>
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span><a href="{{ path('categoriagruppo_show', { 'id': entity.id }) }}"> Visualizza</a></button>

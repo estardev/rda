@@ -1,7 +1,3 @@
-estar_rda_campo:
-    resource: "@estarRdaBundle/Resources/config/routing/campo.yml"
-    prefix:   /campo
-
 estar_rda_area:
     resource: "@estarRdaBundle/Resources/config/routing/area.yml"
     prefix:   /area
