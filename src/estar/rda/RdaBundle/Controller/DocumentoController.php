@@ -25,7 +25,8 @@ class DocumentoController extends Controller
 
         $entities = $em->getRepository('estarRdaBundle:Documento')->findAll();
 
-        return $this->render('estarRdaBundle:Documento:index.html.twig', array(
+        //FG modificata per andare su tutt'altro twig
+        return $this->render('estarRdaBundle:Documento:indexall.html.twig', array(
             'entities' => $entities,
         ));
     }
