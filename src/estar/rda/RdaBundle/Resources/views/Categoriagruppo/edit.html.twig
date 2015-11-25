@@ -1,14 +1,14 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <h1>Categoriagruppo edit</h1>
+    <h1>Modifica dei Permessi</h1>
 
     {{ form(edit_form) }}
 
         <ul class="record_actions">
     <li>
         <a href="{{ path('categoriagruppo') }}">
-            Back to the list
+            Indietro alla Lista
         </a>
     </li>
     <li>{{ form(delete_form) }}</li>

@@ -22,15 +22,19 @@
                 <ul class="nav collapse in" id="subUtentiGruppi">
                     <li class="scelteSidebar"><a href="{{ path('gruppoutente') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Gestione Gruppi</a></li>
                 </ul>
+                <ul class="nav collapse in" id="subUtentiGruppiNew">
+                    <li class="scelteSidebar"><a href="{{ path('gruppoutente_new') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Nuovo Gruppo</a></li>
+                </ul>
 
             </li>
 
             <li>
                 <a href="#" data-toggle="collapse" class="mydropdown" data-target="#subConf"><b>CONFIGURAZIONE</b></a>
                 <ul class="nav collapse in" id="subConf">
-                    <li class="scelteSidebar"><a href="{{ path('categoria') }}"><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;Categorie</a></li>
-                    <li class="scelteSidebar"><a href="{{ path('underCostruction') }}"><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Documenti</a></li>
-                    <li class="scelteSidebar"><a href="{{ path('categoriagruppo') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Permessi</a></li>
+                    <li class="scelteSidebar"><a href="{{ path('categoria') }}"><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;Gestione Categorie</a></li>
+                    <li class="scelteSidebar"><a href="{{ path('documento') }}"><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Gestione Documenti</a></li>
+                    <li class="scelteSidebar"><a href="{{ path('categoriagruppo') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Gestione Permessi</a></li>
+                    <li class="scelteSidebar"><a href="{{ path('categoriagruppo_new') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Nuovo Permesso</a></li>
                     <li class="scelteSidebar"><a href="{{ path('area') }}"><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Aree</a></li>
                 </ul>
             </li>
