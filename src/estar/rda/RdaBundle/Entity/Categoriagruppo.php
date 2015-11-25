@@ -226,4 +226,15 @@ class Categoriagruppo
     }
 
     public function __toString(){return strval($this->getId());}
+
+    /**
+     * Metodo che ritorna i possibili enumerati per i permessi
+     */
+    public static function getPossibleEnumAbilitazioni() {
+        $choices = array(
+            '0' => 'No',
+            '1' => 'Si');
+        return $choices;
+
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace estar\rda\RdaBundle\Form;
 
+use estar\rda\RdaBundle\Entity\Categoriagruppo;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -15,10 +16,14 @@ class CategoriagruppoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('abilitatoinserimentorichieste',null, array('label' => 'Abilitato all\'inserimento Richieste'))
-            ->add('validatoretecnico',null, array('label' => 'Validatore Tecnico'))
-            ->add('validatoreamministrativo',null, array('label' => 'Validatore Amministrativo'))
-            ->add('referenteabs',null, array('label' => 'Referente ABS'))
+            ->add('abilitatoinserimentorichieste','choice', array('label' => 'Abilitato all\'inserimento Richieste',
+                'choices' => Categoriagruppo::getPossibleEnumAbilitazioni()))
+            ->add('validatoretecnico','choice', array('label' => 'Validatore Tecnico',
+                'choices' => Categoriagruppo::getPossibleEnumAbilitazioni()))
+            ->add('validatoreamministrativo','choice', array('label' => 'Validatore Amministrativo',
+                'choices' => Categoriagruppo::getPossibleEnumAbilitazioni()))
+            ->add('referenteabs','choice', array('label' => 'Referente ABS',
+                'choices' => Categoriagruppo::getPossibleEnumAbilitazioni()))
             ->add('idgruppoutente', 'entity', array(
                 'class' => 'estar\rda\RdaBundle\Entity\Gruppoutente',
                 'choice_label' => 'nome',

@@ -67,7 +67,7 @@ class CategoriagruppoController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('submit', 'submit', array('label' => 'Crea'));
 
         return $form;
     }
@@ -147,7 +147,7 @@ class CategoriagruppoController extends Controller
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', 'submit', array('label' => 'Aggiorna'));
 
         return $form;
     }
@@ -217,7 +217,7 @@ class CategoriagruppoController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('categoriagruppo_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->add('submit', 'submit', array('label' => 'Cancella'))
             ->getForm()
         ;
     }
