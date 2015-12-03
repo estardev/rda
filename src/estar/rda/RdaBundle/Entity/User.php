@@ -19,7 +19,6 @@ class User extends BaseUser
      */
     protected $id;
 
-    //protected $name; //TODO: credo non serva pi�, sostituito con nomecognome
     /**
      * @var string
      */
@@ -28,7 +27,13 @@ class User extends BaseUser
      * @var string
      */
     protected  $codicefiscale;
+
+    /**
+     * @var string
+     */
     protected  $idazienda;
+
+
     protected $idgruppoutente;
 
     protected $gruppiutente;
