@@ -1,44 +1,62 @@
 <?php
 
 namespace estar\rda\RdaBundle\Entity;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Iter
+ * @ORM\Table(name="iter", indexes={@ORM\Index(name="idxidutente", columns={"idutente"}), @ORM\Index(name="idxidrichiesta", columns={"idrichiesta"})})
+ * @ORM\Entity
  */
 class Iter
 {
     /**
      * @var \DateTime
+     * @ORM\Column(name="dataora", type="datetime", nullable=true)
      */
     private $dataora;
 
     /**
      * @var string
+     * @ORM\Column(name="dastato", type="string",length=100, nullable=true)
      */
     private $dastato;
 
     /**
      * @var string
+     * @ORM\Column(name="astato", type="string",length=100, nullable=true)
      */
     private $astato;
 
     /**
      * @var string
+     * @ORM\Column(name="motivazione", type="text",length=65535, nullable=true)
      */
     private $motivazione;
 
     /**
      * @var integer
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var \estar\rda\RdaBundle\Entity\Utente
+     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Utente")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idUtente", referencedColumnName="id")
+     * })
      */
     private $idutente;
 
     /**
      * @var \estar\rda\RdaBundle\Entity\Richiesta
+     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Richiesta")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idRichiesta", referencedColumnName="id")
+     * })
      */
     private $idrichiesta;
 
