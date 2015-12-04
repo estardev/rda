@@ -215,26 +215,15 @@ class ProfileExtendedController extends ProfileController
         $utente->setUtentecartaoperatore($campiRequest['form']['utentecartaoperatore']);
         $utente->setIdazienda($em->getRepository('estarRdaBundle:Azienda')->find($campiRequest['form']['idazienda']));
 
-        //$gruppiutenteRequest = $campiRequest['form']['gruppiutente'];
-        //$amministratoriRequest = $campiRequest['amministratoriCheckboxInput'];
-        $gruppiutenteRequest = null;
-        $amministratoriRequest = null;
-        if (false) {
-            foreach ($gruppiutenteRequest as $gruppoutenteRequest) {
-                $utentegruppoutente = new Utentegruppoutente();
-                $utentegruppoutente->setIdutente($utente);
-                $utentegruppoutenteEntity = $em->getRepository('estarRdaBundle:Gruppoutente')->find($gruppoutenteRequest);
-                $utentegruppoutente->setIdgruppoutente($utentegruppoutenteEntity);
-                if ($amministratoriRequest) {
-                    foreach ($amministratoriRequest as $amministratoreRequest) {
-                        if ($amministratoreRequest == $gruppoutenteRequest) {
-                            $utentegruppoutente->setAmministratore(true);
-                        }
-                    }
-                }
-                $em->persist($utentegruppoutente);
-            }
+        $gruppiutenteRequest = $campiRequest['form']['gruppiutente'];
+        foreach ($gruppiutenteRequest as $gruppoutenteRequest) {
+            $utentegruppoutente = new Utentegruppoutente();
+            $utentegruppoutente->setIdutente($utente);
+            $utentegruppoutenteEntity = $em->getRepository('estarRdaBundle:Gruppoutente')->find($gruppoutenteRequest);
+            $utentegruppoutente->setIdgruppoutente($utentegruppoutenteEntity);
+            $em->persist($utentegruppoutente);
         }
+
 
             //** Parte aggiunta END */
             $em->flush();
@@ -242,6 +231,21 @@ class ProfileExtendedController extends ProfileController
             return $this->redirect($url);
 
 
+
+    }
+
+    public function changePasswordFixedAction (Request $request, $idUtente) {
+        //Ci peschiamo l'utente
+        $em = $this->getDoctrine()->getManager();
+        $utente = $em->getRepository('estar\rda\RdaBundle\Entity\Utente')->find($idUtente);
+
+        $fosUser = $utente ->getIdfosuser();
+
+        $fosUser->setPassword("12345678");
+        $em->flush();
+
+        $url = $this->generateUrl('utente');
+        return $this->redirect($url);
 
     }
 }

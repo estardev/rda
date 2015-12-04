@@ -14,5 +14,8 @@
     <route id="updateUser" path="/{idUtente}/update" methods="GET POST">
         <default key="_controller">estarRdaBundle:ProfileExtended:updateUser</default>
     </route>
+    <route id="changePasswordFixed" path="/{idUtente}/changePasswordFixed" methods="GET POST">
+        <default key="_controller">estarRdaBundle:ProfileExtended:changePasswordFixed</default>
+    </route>
 
 </routes>
