@@ -12,6 +12,6 @@ class DirectoryNamer implements DirectoryNamerInterface
     public function directoryName($obj, PropertyMapping  $field) {
         $idRich = $obj->getIdrichiesta();
         $idDoc = $obj->getIddocumento();
-        return $upload = 'Richiesta_'.$idRich.'_Documento_'.$idDoc;
+        return $upload = 'Richiesta_'.$idRich;
     }
 }
