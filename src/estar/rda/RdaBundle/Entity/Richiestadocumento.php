@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile as File;
  * @ORM\Entity
  *
  * @Vich\Uploadable
+ * @ORM\HasLifecycleCallbacks
  */
 class Richiestadocumento
 {
@@ -204,9 +205,9 @@ class Richiestadocumento
      *
      * @Vich\UploadableField(mapping="richiesta_documento", fileNameProperty="filePath")
      *
-     * @var File
+     * @var File $docFile
      */
-    private $docFile;
+    public $docFile;
 
     /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance

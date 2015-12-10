@@ -88,6 +88,7 @@ class SistematicaClientController extends Controller
                                    WHERE c.idrichiesta = :idRichiesta')->setparameter('idRichiesta', $idRichiesta);
         $arrayiddocumento = $query->getResult();
 
+        //TODO non più necessario perchè con l'alberatura è necessario prendere la giusta cartella
         foreach ($arrayiddocumento as $idDoc) {
             $idD = $idDoc;
             $idDoc= $idD['iddocu'];
@@ -210,7 +211,10 @@ class SistematicaClientController extends Controller
         //);
 
         $zip = \Comodojo\Zip\Zip::create($directory_sender . '/' . $path . '/' . $path . '.zip');
-        $zip->add($directory_sender . "/" . $path, true);
+
+        $pathdocumenti='Richiesta_'.$idRich;
+        //TODO prendere tutti i file e documenti
+        $zip->add($directory_sender . "/" . $path, true)->add($pathdocumenti, true);
         $zip->close();
 
         // estrazione parametri per la richiesta
