@@ -14,18 +14,8 @@ use estar\rda\RdaBundle\Entity\Iter;
 use estar\rda\RdaBundle\Entity\Utente;
 
 
-class DemoController extends Controller
+class ServerESTARController extends Controller
 {
-    /**
-     * @Soap\Method("hello")
-     * @Soap\Param("name", phpType = "string")
-     * @Soap\Result(phpType = "string")
-     */
-    public function helloAction($name)
-    {
-        return sprintf('CIAO %s!', $name);
-    }
-
     /**
      * @Soap\Method("notify")
      * @Soap\Param("messaggio", phpType = "string")
@@ -111,13 +101,4 @@ class DemoController extends Controller
         );
     }
 
-    /**
-     * @Soap\Method("goodbye")
-     * @Soap\Param("name", phpType = "string")
-     * @Soap\Result(phpType = "string")
-     */
-    public function goodbyeAction($name)
-    {
-        return $this->container->get('besimple.soap.response')->setReturnValue(sprintf('Goodbye %s!', $name));
-    }
 }

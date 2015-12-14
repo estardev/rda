@@ -195,14 +195,14 @@ be_simple_soap:
         lifetime: 86400
         limit:    5
     services:
-            DemoApi:
-                namespace:     http://localhost/RDA/web/app_dev.php/ws/DemoApi/1.0/
+            ServerESTAR:
+                namespace:     http://localhost/RDA/web/app_dev.php/ws/ServerESTAR/1.0/
                 binding:       rpc-literal
-                resource:      "@estarRdaBundle/Controller/DemoController.php"
+                resource:      "@estarRdaBundle/Controller/ServerESTARController.php"
                 resource_type: annotation
     clients:
-            DemoApi:
-                wsdl:           http://localhost/RDA/web/app_dev.php/ws/DemoApi?wsdl
+            ServerESTAR:
+                wsdl:           http://localhost/RDA/web/app_dev.php/ws/ServerESTAR?wsdl
             Tempo:
                 wsdl: http://www.webservicex.com/globalweather.asmx?wsdl
             Sistematica:
