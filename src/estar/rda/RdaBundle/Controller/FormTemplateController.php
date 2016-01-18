@@ -20,12 +20,16 @@ class FormTemplateController extends Controller
 {
 
 
+    /** FG messa costante per poterla più facilmente editare in futuro */
+    const SEPARATORE_VALORI = '|';
+    /** FG messa costante per poterla più facilmente editare in futuro */
+    const SEPARATORE_CAMPI = '||';
     public function getChoicesOptions($string)
     {
-        $options = explode('||', $string);
+        $options = explode(FormTemplateController::SEPARATORE_CAMPI, $string);
         $returnOptions = array();
         foreach ($options as $option) {
-            $subOption = explode('|', $option);
+            $subOption = explode(FormTemplateController::SEPARATORE_VALORI, $option);
             if (count($subOption) > 1) {
                 $returnOptions[$subOption[0]] = $subOption[1];
             } else {
@@ -44,10 +48,10 @@ class FormTemplateController extends Controller
 
     function getFirstLevel($string)
     {
-        $options = explode('||', $string);
+        $options = explode(FormTemplateController::SEPARATORE_CAMPI, $string);
         $returnOptions = array();
         foreach ($options as $option) {
-            $subOption = explode('|', $option);
+            $subOption = explode(FormTemplateController::SEPARATORE_VALORI, $option);
             array_push($returnOptions, $subOption[1]);
         }
 
@@ -56,8 +60,8 @@ class FormTemplateController extends Controller
 
     function getFather($string)
     {
-        $options = explode('||', $string);
-        $subOption = explode('|', $options[0]);
+        $options = explode(FormTemplateController::SEPARATORE_CAMPI, $string);
+        $subOption = explode(FormTemplateController::SEPARATORE_VALORI, $options[0]);
 
         return $subOption[0];
     }
@@ -68,8 +72,6 @@ class FormTemplateController extends Controller
      */
     public function newAction($idCategoria)
     {
-        //TODO fg aggiungere il passaggio alla form della obbligatoriet� o meno dei campi (manca! � tutto obbligatorio)
-
         $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
 
         //FG20151027 modifica per i diritti: prendiamo i diritti
