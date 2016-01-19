@@ -145,6 +145,8 @@ class RichiestaModel extends Controller
 
     /**
      * ritorna un elenco di categorie che l'utente può accedere
+     *
+     * @return array(Categoria) un array di categorie
      */
     public function getCategorieByUser() {
         $usercheck = $this->get("usercheck.notify");
@@ -165,17 +167,25 @@ class RichiestaModel extends Controller
 
         } else {
             //Altrimenti dobbiamo mostrare solo le categorie a cui ha accesso
-            //fixme utilizzare la vista!
+
+            //FG20151211 messa la vista.
             $query = $this->em->
-                createQuery('select c.id, c.descrizione, a.nome as area from estarRdaBundle:Categoria c join c.idarea a
-                  join estarRdaBundle:Categoriagruppo cg join estarRdaBundle:Utentegruppoutente ugu
-                  where c.idarea = a.id
-                  and c.id = cg.idcategoria
-                  and cg.idgruppoutente = ugu.idgruppoutente
-                  and ugu.idutente = :idutente');
-            $query->setParameter('idutente', $utente->getId());
-            $categoria = $query->getResult();
+            createQuery('select v.idcategoria as id, v.descrizionecategoria as descrizione, v.nomearea as area from
+                          estarRdaBundle:Vcategoriadirittiutente v where v.idutente= :utente')
+                ->setParameter('utente', $utente->getId());
+            $categoria=$query->getResult();
+
+//            $query = $this->em->
+//                createQuery('select c.id, c.descrizione, a.nome as area from estarRdaBundle:Categoria c join c.idarea a
+//                  join estarRdaBundle:Categoriagruppo cg join estarRdaBundle:Utentegruppoutente ugu
+//                  where c.idarea = a.id
+//                  and c.id = cg.idcategoria
+//                  and cg.idgruppoutente = ugu.idgruppoutente
+//                  and ugu.idutente = :idutente');
+//            $query->setParameter('idutente', $utente->getId());
+//            $categoria = $query->getResult();
 
         }
+        return $categoria;
     }
 }

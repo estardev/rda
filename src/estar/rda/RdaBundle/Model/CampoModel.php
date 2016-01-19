@@ -176,7 +176,7 @@ class CampoModel extends Controller
     /** Libera lo spazio per inserire un campo sopra
      *
      * @param $idcampo l'id del campo sopra il quale inserire
-     * @return l'ordinamento del prossimo campo, ossia l'ordinamento orfano.
+     * @return l'ordinamento del prossimo campo, ossia l'ordinamento orfano
      */
     public function inserisciSopra($idCampo) {
         $campo = CampoModel::cast($this->em->getRepository('estarRdaBundle:Campo')
@@ -220,7 +220,7 @@ class CampoModel extends Controller
 
     /** Ritorna TRUE se il campo è figlio di qualcuno
      *
-     * @return boolean
+     * @return bool se è figlio o no
      */
     public function isFiglio(Campo $campo) {
         //Un campo è figlio di qualcuno se  esiste un padre che ha lui come id figlio
@@ -231,7 +231,7 @@ class CampoModel extends Controller
 
     /** Ritorna TRUE se il campo è padre di qualcuno
      *
-     * @return boolean
+     * @return bool se è padre o no
      */
     public function isPadre(Campo $campo) {
         if (!is_null($campo->getFiglio())) return true;
@@ -242,7 +242,7 @@ class CampoModel extends Controller
      * Metodo di comodo che mi ritorna un campo data la categoria e l'ordinamento
      * @param $idCategoria
      * @param $idOrdinamento
-     * @return Campo
+     * @return Campo|false il campo che ha l'ordinamento o inesistente
      */
     public function getCampoByOrdinamento($idCategoria, $idOrdinamento) {
         $campo = $this->em->getRepository('estarRdaBundle:Campo')->findOneBy(
@@ -256,7 +256,8 @@ class CampoModel extends Controller
 
     /**
      * Ritorna il massimo tra gli ordinamenti di una data categoria
-     * @param $idCategoria
+     * @param $idCategoria la categoria
+     * @return int il massimo ordinamento per quella categoria
      */
     public function getMaxOrdinamento($idCategoria) {
         $max = $this->em->createQueryBuilder()

@@ -120,7 +120,7 @@ class UserCheckController extends Controller
     /** ritorna tutti i ruoli per una categoria dato l'utente loggato
      *
      * @author Francesco Galli
-     * @return DirittiRichiesta
+     * @return DirittiRichiesta i diritti della richiesta
      */
     public function allRole($categoria)
     {

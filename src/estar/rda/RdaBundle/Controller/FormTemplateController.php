@@ -154,7 +154,6 @@ class FormTemplateController extends Controller
 
 
         $form->add('submit', 'submit', array('label' => 'Salva e chiudi', 'attr' => array('class' => 'bottoniera')));
-        $form->add('back', 'submit', array('label' => 'Indietro'));
         $formbuilder = $this->createFormBuilder();
         $formbuilder->setAction($this->generateUrl('formtemplate_back', array('idCategoria' => $idCategoria)));
         $backForm = $formbuilder->getForm();

@@ -46,6 +46,8 @@ class CampoController extends Controller
             if($entity->getFiglio()!=null){
                 $entity->setFiglio();
             }
+            //20160119 modifica per campi "orfani" generati in caso di figlio non presente
+            if ($entity->nonHaFiglio()) $entity->setFiglio(null);
             $em->persist($entity);
 
             $em->flush();
@@ -177,6 +179,8 @@ class CampoController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            //20160117 controllo se non ha figli
+            if ($entity->nonHaFiglio()) $entity->setFiglio(null);
             $em->flush();
 
             return $this->redirect($this->generateUrl('categoria_edit', array('id' => $entity->getIdcategoria()->getId())));

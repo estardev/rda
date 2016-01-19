@@ -491,4 +491,14 @@ class Campo
     {
         return strval($this->getId());
     }
+
+    /**
+     * Ritorna true se il campo non ha figli
+     * @return bool
+     */
+    public function nonHaFiglio() {
+        $figlio = $this->getFiglio();
+        if ($figlio->getNome()==null || $figlio->getDescrizione()==null) return true;
+        return false;
+    }
 }
