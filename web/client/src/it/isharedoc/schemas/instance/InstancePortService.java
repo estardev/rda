@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "InstancePortService", targetNamespace = "http://www.isharedoc.it/schemas/instance", wsdlLocation = "https://democorepa.grupposistematica.it/isharedoc/webservices/webserviceInstance.wsdl")
+@WebServiceClient(name = "InstancePortService", targetNamespace = "http://www.isharedoc.it/schemas/instance", wsdlLocation = "https://democorepaumbria.grupposistematica.it/isharedoc/webservices/webserviceInstance.wsdl")
 public class InstancePortService
     extends Service
 {
@@ -30,7 +30,7 @@ public class InstancePortService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("https://democorepa.grupposistematica.it/isharedoc/webservices/webserviceInstance.wsdl");
+            url = new URL("https://democorepaumbria.grupposistematica.it/isharedoc/webservices/webserviceInstance.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
