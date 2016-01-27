@@ -34,3 +34,5 @@ services:
                 - { name: twig.extension }
             arguments:
                         user: "@security.context"
+  fos_user.doctrine_registry:
+            alias: doctrine
