@@ -9,9 +9,9 @@
         <div class="bottoni"> {{ form(print_form) }}</div>
         <div class="bottoni"> {{ form(delete_form) }}</div>
 
-        {% if (diritti.isVA) %} <div class="bottoni"> {{ form(soap_form) }}</div>{% endif %}
+        {% if (diritti.isVA) and (stato=='inserita_ABS') %} <div class="bottoni"> {{ form(soap_form) }}</div>{% endif %}
 
-        <div class="bottoni"> <button class="btn btn-primary" data-toggle="modal" data-target="#confirmModal"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Cambia Stato</button></div>
+        {% if (stato!='inserita_ABS') %} <div class="bottoni"> <button class="btn btn-primary" data-toggle="modal" data-target="#confirmModal"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Cambia Stato</button></div>{% endif %}
 
         <!-- David_20151029: test per dirottare su rotte e parametri direttamente dal twig -->
         <!-- <button class="btn btn-default"><a href="{{ absolute_url(path('richiesta_bycategoria', {'idCategoria': app.session.get('homepageSelectCategoria')})) }}">indietro</a></button>-->

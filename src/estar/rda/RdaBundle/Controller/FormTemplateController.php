@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use estar\rda\RdaBundle\Controller\SistematicaClientController;
+use estar\rda\RdaBundle\Controller\IterController;
 
 
 class FormTemplateController extends Controller
@@ -432,6 +433,11 @@ class FormTemplateController extends Controller
             }
         }
 
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $factory = $this->get('sm.factory');
+        $articleSM = $factory->get($entity, 'rda');
+        $stato = $articleSM->getState();
 
 //        if (!$entity) {
 //            throw $this->createNotFoundException('Unable to find FormTemplate entity.');
@@ -480,7 +486,6 @@ class FormTemplateController extends Controller
 
 //        TODO recupero ruolo utente e controllo se la richiesta pu� essere avanzata
 
-
 //        $articleSM->can('a_transition_name');
 
         $possibili = $articleSM->getPossibleTransitions();
@@ -513,6 +518,7 @@ class FormTemplateController extends Controller
             'soap_form' => $ClientSoapForm->createView(),
             'back_form' => $backForm->createView(),
             'diritti' => $dirittiucc,
+            'stato' => $stato,
             'firstLevels' => $firstLevels
         ));
 
