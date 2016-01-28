@@ -2,15 +2,17 @@
 
 namespace estar\rda\RdaBundle\Entity;
 
+use FOS\UserBundle\Model\User as BaseUser;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Utente
  *
- * @ORM\Table(name="utente", indexes={@ORM\Index(name="fkUtenteAzienda1Idx", columns={"idAzienda"}), @ORM\Index(name="idFosUser", columns={"idFosUser"})})
+ * @ORM\Table(name="utente")
  * @ORM\Entity
  */
-class Utente
+class Utente extends BaseUser
 {
     /**
      * @var string
@@ -33,17 +35,8 @@ class Utente
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    protected $id;
 
-    /**
-     * @var \estar\rda\RdaBundle\Entity\FosUser
-     *
-     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\FosUser")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idFosUser", referencedColumnName="id")
-     * })
-     */
-    private $idfosuser;
 
     /**
      * @var \estar\rda\RdaBundle\Entity\Azienda
@@ -61,6 +54,17 @@ class Utente
      * @ORM\Column(name="nomecognome", type="string", length=255, nullable=true)
      */
     private $nomecognome;
+
+
+    /**
+     * @var string
+     */
+    protected $codicefiscale;
+
+
+    protected $idgruppoutente;
+
+    protected $gruppiutente;
 
 
     /**
@@ -122,28 +126,53 @@ class Utente
     }
 
     /**
-     * Set idfosuser
-     *
-     * @param \estar\rda\RdaBundle\Entity\FosUser $idfosuser
-     *
-     * @return Utente
+     * @return mixed
      */
-    public function setIdfosuser(\estar\rda\RdaBundle\Entity\FosUser $idfosuser = null)
+    public function getIdgruppoutente()
     {
-        $this->idfosuser = $idfosuser;
-
-        return $this;
+        return $this->idgruppoutente;
     }
 
     /**
-     * Get idfosuser
-     *
-     * @return \estar\rda\RdaBundle\Entity\FosUser
+     * @param mixed $idgruppoutente
      */
-    public function getIdfosuser()
+    public function setIdgruppoutente($idgruppoutente)
     {
-        return $this->idfosuser;
+        $this->idgruppoutente = $idgruppoutente;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getGruppiutente()
+    {
+        return $this->gruppiutente;
+    }
+
+    /**
+     * @param mixed $gruppiutente
+     */
+    public function setGruppiutente($gruppiutente)
+    {
+        $this->gruppiutente = $gruppiutente;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCodicefiscale()
+    {
+        return $this->codicefiscale;
+    }
+
+    /**
+     * @param string $codicefiscale
+     */
+    public function setCodicefiscale($codicefiscale)
+    {
+        $this->codicefiscale = $codicefiscale;
+    }
+
 
     /**
      * Set idazienda
@@ -194,5 +223,8 @@ class Utente
         return $this->nomecognome;
     }
 
-    public function __toString(){return strval($this->getId());}
+    public function __toString()
+    {
+        return strval($this->getId());
+    }
 }
