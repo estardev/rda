@@ -83,7 +83,7 @@ class ProfileExtendedController extends ProfileController
             $utente->setUtentecartaoperatore($user->getCodicefiscale());
             $em->persist($utente);
 
-            //FG 20151202 dichiarazione di campirequest spostata più in su
+            //FG 20151202 dichiarazione di campirequest spostata piï¿½ in su
 
             $gruppiutenteRequest = $campiRequest['fos_user_profile_edit']['gruppiutente'];
             $amministratoriRequest = $campiRequest['amministratoriCheckboxInput'];
@@ -154,7 +154,7 @@ class ProfileExtendedController extends ProfileController
 
         // 1) build the form
         //$form = $formFactory->createForm();
-        //FG non c'è verso di farlo funzionare con la form estesa per un motivo: non abbiamo esteso la classe
+        //FG non c'ï¿½ verso di farlo funzionare con la form estesa per un motivo: non abbiamo esteso la classe
         //di fos user con la nostra ma siamo andati in affiancamento. Questo mi rende impossibile usare il meccanismo
         //di base per cui riscrivo tutto.
         $formBuilder = $this->createFormBuilder();
@@ -174,7 +174,7 @@ class ProfileExtendedController extends ProfileController
             'data' => $utente->getIdazienda()
         ));
 
-        // Creiamo l'array di gruppi a cui è collegato l'utente
+        // Creiamo l'array di gruppi a cui ï¿½ collegato l'utente
         $gruppi = $em->getRepository('estar\rda\RdaBundle\Entity\Utentegruppoutente')->findBy(array('idutente' => $utente->getId()));
         $dati = array();
         foreach ($gruppi as $gruppo) array_push($dati, $gruppo->getIdgruppoutente());
@@ -209,7 +209,7 @@ class ProfileExtendedController extends ProfileController
         $em = $this->getDoctrine()->getManager();
         $utente = $em->getRepository('estar\rda\RdaBundle\Entity\Utente')->find($idUtente);
 
-        //Vediamo che c'è arrivato
+        //Vediamo che c'ï¿½ arrivato
         $campiRequest = $request->request->all();
         $utente->setNomecognome($campiRequest['form']['nomecognome']);
         $utente->setUtentecartaoperatore($campiRequest['form']['utentecartaoperatore']);
@@ -236,13 +236,20 @@ class ProfileExtendedController extends ProfileController
 
     public function changePasswordFixedAction (Request $request, $idUtente) {
         //Ci peschiamo l'utente
-        $em = $this->getDoctrine()->getManager();
-        $utente = $em->getRepository('estar\rda\RdaBundle\Entity\Utente')->find($idUtente);
+//        $em = $this->getDoctrine()->getManager();
+//        $utente = $em->getRepository('estar\rda\RdaBundle\Entity\Utente')->find($idUtente);
 
-        $fosUser = $utente ->getIdfosuser();
 
-        $fosUser->setPassword("12345678");
-        $em->flush();
+        //TODO vedere documentazione ufficiale http://symfony.com/doc/current/bundles/FOSUserBundle/user_manager.html
+        $userManager = $this->container->get('fos_user.user_manager');
+
+        $user= $userManager->findUserBy(array('id'=>$idUtente));
+
+        $user->setPlainPassword('12354678');
+
+        $userManager->updateUser($user, true);
+
+
 
         $url = $this->generateUrl('utente');
         return $this->redirect($url);
