@@ -54,32 +54,32 @@ class NavbarExtension extends \Twig_Extension
             } else {
                 //Altrimenti dobbiamo mostrare solo le categorie a cui ha accesso
                 //FIXME FG: questa query non viene eseguita da Doctrine per motivi mistico-cabalistici da investigare.
-                $subquery=$this->em->createQueryBuilder()
-                    ->select('IDENTITY(cg.idcategoria)')
-                    ->from('estarRdaBundle:Categoriagruppo','cg')
-                    ->leftjoin( 'cg.idgruppoutente','gu')
-                    ->where('gu.id = :idutente')
-                    ->getDQL();
+//                $subquery=$this->em->createQueryBuilder()
+//                    ->select('IDENTITY(cg.idcategoria)')
+//                    ->from('estarRdaBundle:Categoriagruppo','cg',)
+//                    ->leftjoin( 'cg.idgruppoutente','gu')
+//                    ->where('gu.id = :idutente')
+//                    ->getDQL();
+//
+//
+//                $query=$this->em->createQueryBuilder()
+//                    ->select('c.id, c.descrizione, a.nome as area')
+//                    ->from('estarRdaBundle:Categoria','c')
+//                    ->leftjoin( 'c.idarea','a')
+//                    ->where($this->em->createQueryBuilder()->expr()->in('c.id', $subquery))
+//                    ->setParameter('idutente', $utenteSessione)
+//                    ->getQuery();
 
 
-                $query=$this->em->createQueryBuilder()
-                    ->select('c.id, c.descrizione, a.nome as area')
-                    ->from('estarRdaBundle:Categoria','c')
-                    ->leftjoin( 'c.idarea','a')
-                    ->where($this->em->createQueryBuilder()->expr()->in('c.id', $subquery))
-                    ->setParameter('idutente', $utenteSessione)
-                    ->getQuery();
 
-
-
-//                $query = $this->em->
-//                createQuery('select  c.descrizione, a.nome as area
-//                      from estarRdaBundle:Categoria c, estarRdaBundle:Area a
-//                      where c.idarea = a.id
-//                      and c.id in (select cg.idcategoria from estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Utentegruppoutente ugu
-//                        where cg.idgruppoutente = ugu.idgruppoutente
-//                        and ugu.idutente = :idutente)')
-//                    ->setParameter('idutente', $utenteSessione);
+                $query = $this->em->
+                createQuery('select  c.id ,c.descrizione, a.nome as area
+                      from estarRdaBundle:Categoria c, estarRdaBundle:Area a
+                      where c.idarea = a.id
+                      and c.id in (select IDENTITY(cg.idcategoria) from estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Utentegruppoutente ugu
+                        where cg.idgruppoutente = ugu.idgruppoutente
+                        and ugu.idutente = :idutente)')
+                    ->setParameter('idutente', $utenteSessione);
 //                $query = $this->em->
 //                        createQuery('select v.idcategoria as id, v.descrizionecategoria as descrizione, v.nomearea as area from
 //                          estarRdaBundle:Vcategoriadirittiutente v where v.idutente= :utente')

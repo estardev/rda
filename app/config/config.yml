@@ -110,7 +110,7 @@ swiftmailer:
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
-    user_class: estar\rda\RdaBundle\Entity\User
+    user_class: estar\rda\RdaBundle\Entity\Utente
     registration:
             form:
                 type: app_user_registration
