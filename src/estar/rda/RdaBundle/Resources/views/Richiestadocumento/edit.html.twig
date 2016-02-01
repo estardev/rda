@@ -1,16 +1,9 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <h1>Categoria edit</h1>
+    <h1>Modifica di un documento associato alla richiesta</h1>
 
-    {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form(save_form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-    <ul class="record_actions">
-        <li>
-            <a href="{{ path('categoria') }}">
-                Back to the list
-            </a>
-        </li>
-
-    </ul>
+    {{ form(back_form, {'attr': {'novalidate': 'novalidate'}}) }}
 {% endblock %}

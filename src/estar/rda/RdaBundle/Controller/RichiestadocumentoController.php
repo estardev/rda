@@ -264,10 +264,13 @@ class RichiestadocumentoController extends Controller
 
         $form = $formbuilder->getForm();
         $form->add('submit', 'submit', array('label' => 'Salva'));
-
-
+        $formbuilder= $this->createFormBuilder();
+        $formbuilder->setAction($this->generateUrl('documento_byCategoria', array('modo' => $mode, 'idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'idDocumento' => $idDocumento)));
+        $backForm = $formbuilder->getForm();
+        $backForm->add('submit', 'submit', array('label'=> 'Indietro'));
         return $this->render('estarRdaBundle:Richiestadocumento:edit.html.twig', array(
-            'form' => $form->createView()
+            'save_form' => $form->createView(),
+            'back_form' =>$backForm->createView()
         ));
     }
 
