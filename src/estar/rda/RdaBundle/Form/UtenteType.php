@@ -18,7 +18,6 @@ class UtenteType extends AbstractType
             ->add('utenteldap')
             ->add('utentecartaoperatore')
             ->add('idazienda')
-            ->add('idfosuser')
         ;
     }
     

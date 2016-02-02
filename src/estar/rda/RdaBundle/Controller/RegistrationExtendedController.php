@@ -54,6 +54,8 @@ class RegistrationExtendedController extends RegistrationParentController
 
             $em = $this->getDoctrine()->getManager();
 
+            // FG 20160202 commentata grazie al refactoring
+            /*
             $fosuserid = $user->getId();
             $fosuser = $em->getRepository('estarRdaBundle:FosUser')->find($fosuserid);
 
@@ -63,24 +65,27 @@ class RegistrationExtendedController extends RegistrationParentController
             $utente->setNomecognome($user->getNomecognome());
             $utente->setUtentecartaoperatore($user->getCodicefiscale());
             $em->persist($utente);
-
+*/
             $campiRequest = $request->request->all();
-            $gruppiutenteRequest = $campiRequest['fos_user_registration_form']['gruppiutente'];
-            $amministratoriRequest = $campiRequest['amministratoriCheckboxInput'];
+            if (array_key_exists('gruppiutente', $campiRequest['fos_user_registration_form'])) {
+                $gruppiutenteRequest = $campiRequest['fos_user_registration_form']['gruppiutente'];
+                $amministratoriRequest = $campiRequest['amministratoriCheckboxInput'];
 
-            foreach ($gruppiutenteRequest as $gruppoutenteRequest){
-                $utentegruppoutente = new Utentegruppoutente();
-                $utentegruppoutente->setIdutente($utente);
-                $utentegruppoutenteEntity = $em->getRepository('estarRdaBundle:Gruppoutente')->find($gruppoutenteRequest);
-                $utentegruppoutente->setIdgruppoutente($utentegruppoutenteEntity);
-                if ($amministratoriRequest){
-                    foreach ($amministratoriRequest as $amministratoreRequest){
-                        if ($amministratoreRequest == $gruppoutenteRequest){
-                            $utentegruppoutente->setAmministratore(true);
+                foreach ($gruppiutenteRequest as $gruppoutenteRequest) {
+                    $utentegruppoutente = new Utentegruppoutente();
+                    $utentegruppoutente->setIdutente($user); //FG 20160202 modificato causa refactoring
+                    $utentegruppoutenteEntity = $em->getRepository('estarRdaBundle:Gruppoutente')->find($gruppoutenteRequest);
+                    $utentegruppoutente->setIdgruppoutente($utentegruppoutenteEntity);
+                    if ($amministratoriRequest) {
+                        foreach ($amministratoriRequest as $amministratoreRequest) {
+                            if ($amministratoreRequest == $gruppoutenteRequest) {
+                                $utentegruppoutente->setAmministratore(true);
+                            }
                         }
                     }
+                    $em->persist($utentegruppoutente);
                 }
-                $em->persist($utentegruppoutente);
+
             }
 
 
@@ -90,11 +95,11 @@ class RegistrationExtendedController extends RegistrationParentController
                 //** Parte aggiunta INIT */
                 $em->flush();
                 //** Parte aggiunta END */
-                $url = $this->generateUrl('fos_user_registration_confirmed');
+                $url = $this->generateUrl('utente');
                 $response = new RedirectResponse($url);
             }
 
-            $dispatcher->dispatch(FOSUserEvents::REGISTRATION_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
+            //$dispatcher->dispatch(FOSUserEvents::REGISTRATION_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
 
             return $response;
         }

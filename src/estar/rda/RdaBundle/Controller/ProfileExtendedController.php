@@ -10,6 +10,7 @@ namespace estar\rda\RdaBundle\Controller;
 
 
 use estar\rda\RdaBundle\Entity\Utentegruppoutente;
+use estar\rda\RdaBundle\Form\UtenteType;
 use FOS\UserBundle\Tests\Form\Type\ProfileFormTypeTest;
 use Proxies\__CG__\estar\rda\RdaBundle\Entity\Gruppoutente;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -157,6 +158,7 @@ class ProfileExtendedController extends ProfileController
         //FG non c'� verso di farlo funzionare con la form estesa per un motivo: non abbiamo esteso la classe
         //di fos user con la nostra ma siamo andati in affiancamento. Questo mi rende impossibile usare il meccanismo
         //di base per cui riscrivo tutto.
+
         $formBuilder = $this->createFormBuilder();
         $formBuilder->add("nomecognome", "text", array(
             'label' => "Nome e Cognome",
@@ -164,6 +166,7 @@ class ProfileExtendedController extends ProfileController
         ));
         $formBuilder->add("utentecartaoperatore", "text", array(
             'label' => "Codice fiscale carta operatore",
+            'required' => false,
             'data' => $utente->getUtentecartaoperatore()
         ));
 
@@ -214,14 +217,15 @@ class ProfileExtendedController extends ProfileController
         $utente->setNomecognome($campiRequest['form']['nomecognome']);
         $utente->setUtentecartaoperatore($campiRequest['form']['utentecartaoperatore']);
         $utente->setIdazienda($em->getRepository('estarRdaBundle:Azienda')->find($campiRequest['form']['idazienda']));
-
-        $gruppiutenteRequest = $campiRequest['form']['gruppiutente'];
-        foreach ($gruppiutenteRequest as $gruppoutenteRequest) {
-            $utentegruppoutente = new Utentegruppoutente();
-            $utentegruppoutente->setIdutente($utente);
-            $utentegruppoutenteEntity = $em->getRepository('estarRdaBundle:Gruppoutente')->find($gruppoutenteRequest);
-            $utentegruppoutente->setIdgruppoutente($utentegruppoutenteEntity);
-            $em->persist($utentegruppoutente);
+        if (array_key_exists('gruppiutente', $campiRequest['form'])) {
+            $gruppiutenteRequest = $campiRequest['form']['gruppiutente'];
+            foreach ($gruppiutenteRequest as $gruppoutenteRequest) {
+                $utentegruppoutente = new Utentegruppoutente();
+                $utentegruppoutente->setIdutente($utente);
+                $utentegruppoutenteEntity = $em->getRepository('estarRdaBundle:Gruppoutente')->find($gruppoutenteRequest);
+                $utentegruppoutente->setIdgruppoutente($utentegruppoutenteEntity);
+                $em->persist($utentegruppoutente);
+            }
         }
 
 
@@ -255,4 +259,24 @@ class ProfileExtendedController extends ProfileController
         return $this->redirect($url);
 
     }
+
+    /**
+     * Creates a form to edit a Area entity.
+     *
+     * @param Area $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createEditForm(Utente $entity)
+    {
+        $form = $this->createForm(new UtenteType(), $entity, array(
+            'action' => $this->generateUrl('updateUser', array('idUtente' => $entity->getId())),
+            'method' => 'PUT',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Aggiorna'));
+
+        return $form;
+    }
+
 }
