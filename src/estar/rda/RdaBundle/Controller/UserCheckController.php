@@ -13,51 +13,61 @@ class UserCheckController extends Controller
 {
 
     protected $em;
+    protected $user;
+    protected $session;
 
     public function __construct($em, $user, $session)
     {
         $this->em = $em;
-        $this->user = $user;
+        $this->user = $user->getToken()->getUser();
         $this->session = $session;
     }
 
     public function getName()
     {
-        $idutenteSessione = $this->user->getToken()->getUser();
-        $nomeUtente = $idutenteSessione->getName();
-        return $nomeUtente;
+//        $idutenteSessione = $this->user->getToken()->getUser();
+//        $nomeUtente = $idutenteSessione->getName();
+//        return $nomeUtente;
+
+        return $this->user->getName();
 
     }
 
     public function getIdUtente()
     {
-        $idutenteSessione = $this->user->getToken()->getUser();
-        $repository = $this->em->getRepository('estarRdaBundle:Utente');
-        $idUtente = $repository->findOneBy(array(
-                'idfosuser' => $idutenteSessione)
-        );
-        $idUtente = $idUtente->getId();
-        return $idUtente;
+//        $idutenteSessione = $this->user->getToken()->getUser();
+//        $repository = $this->em->getRepository('estarRdaBundle:Utente');
+//
+//
+//
+//
+//        $idUtente = $repository->findOneBy(array(
+//                'idfosuser' => $idutenteSessione)
+//        );
+//        $idUtente = $idUtente->getId();
+//        return $idUtente;
+        return $this->user->getId();
 
     }
 
     public function getUtente()
     {
-        $idutenteSessione = $this->user->getToken()->getUser();
-        $repository = $this->em->getRepository('estarRdaBundle:Utente');
-        $utente = $repository->findOneBy(array(
-                'idfosuser' => $idutenteSessione)
-        );
+//        $idutenteSessione = $this->user->getToken()->getUser();
+//        $repository = $this->em->getRepository('estarRdaBundle:Utente');
+//        $utente = $repository->findOneBy(array(
+//                'idfosuser' => $idutenteSessione)
+//        );
 
-        return $utente;
+//        return $utente;
 
+        return $this->user;
     }
 
     public function getIdUtenteGruppoUtente()
     {
         $idutente = $this->getIdUtente();
         $repository = $this->em->getRepository('estarRdaBundle:Utentegruppoutente');
-        $idutentegruppo = new Utentegruppoutente();
+//        $idutentegruppo = new Utentegruppoutente();
         $idutentegruppo = $repository->findOneBy(array(
                 'idutente' => $idutente)
         );
@@ -127,7 +137,7 @@ class UserCheckController extends Controller
         $utente = $this->getUtente();
         $idUtente =  $utente->getId();
 
-        //recupero il massimo livello di accesso per la categoria a cui è collegato l'utente tramite i gruppi
+        //recupero il massimo livello di accesso per la categoria a cui ï¿½ collegato l'utente tramite i gruppi
         //di appartenenza
 //        $query = $this->em->createQuery('SELECT max(cg.abilitatoinserimentorichieste) as inserimento,
 //                                    max(cg.validatoretecnico) as valtec, max(cg.validatoreamministrativo) as valamm

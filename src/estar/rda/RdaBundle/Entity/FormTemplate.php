@@ -87,7 +87,7 @@ class FormTemplate
      * costruttore di default
      * @param $idCategoria
      * @param $campi
-     * @internal param id $idCategoria numerico della categoria da settare
+     * 
      */
     public function __construct($idCategoria, $campi)
     {
