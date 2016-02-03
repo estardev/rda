@@ -36,3 +36,10 @@ services:
                         user: "@security.context"
   fos_user.doctrine_registry:
             alias: doctrine
+
+  form_template_factory:
+        class: estar\rda\RdaBundle\Form\FormTemplateService
+        arguments:
+            user: "@usercheck.notify"
+            router: "@router"
+

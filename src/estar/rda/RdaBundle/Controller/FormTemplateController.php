@@ -20,11 +20,11 @@ use estar\rda\RdaBundle\Controller\IterController;
 class FormTemplateController extends Controller
 {
 
-
     /** FG messa costante per poterla più facilmente editare in futuro */
     const SEPARATORE_VALORI = '|';
     /** FG messa costante per poterla più facilmente editare in futuro */
     const SEPARATORE_CAMPI = '||';
+
     public function getChoicesOptions($string)
     {
         $options = explode(FormTemplateController::SEPARATORE_CAMPI, $string);
@@ -67,6 +67,7 @@ class FormTemplateController extends Controller
         return $subOption[0];
     }
 
+
     /**
      * Displays a form to create a new FormTemplate entity.
      * @param $idCategoria
@@ -82,12 +83,11 @@ class FormTemplateController extends Controller
             array('ordinamento' => 'ASC')
         );
 
-        $entity = new FormTemplate($idCategoria,$campi);
+        $entity = new FormTemplate($idCategoria, $campi);
 
-        $usercheck = $this->get("usercheck.notify");
-        $diritti = $usercheck->allRole($idCategoria);
 
-        $form   = $this->createCreateForm($entity);
+        $form = $this->createCreateForm($entity)[0];
+
 
         $formbuilder = $this->createFormBuilder();
         $formbuilder->setAction($this->generateUrl('formtemplate_back', array('idCategoria' => $idCategoria)));
@@ -95,108 +95,16 @@ class FormTemplateController extends Controller
         $backForm->add('back', 'submit', array('label' => 'Indietro'));
 
 
+
         return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
             'form' => $form->createView(),
-            'firstLevels' => $firstLevels,
+            'firstLevels' => $this->createCreateForm($entity)[1],
             'back_form' => $backForm->createView()
 
         ));
 
 
 
-//        $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
-
-        //FG20151027 modifica per i diritti: prendiamo i diritti
-
-
-//        $campi = $repository->findBy(
-//            array('idcategoria' => $idCategoria),
-//            array('ordinamento' => 'ASC')
-//        );
-
-//        $formbuilder = $this->createFormBuilder();
-//        $formbuilder->add("titolo", "text", array(
-//            'label' => "Titolo",
-//            'data' => "Specificare un oggetto per la propria richiesta"
-//        ));
-//        $formbuilder->add("descrizione", "textarea", array(
-//            'label' => "Descrizione",
-//            'data' => "indicare descrizione, azienda sanitaria e UOC destinataria"
-//        ));
-//
-//        $firstLevels = array();
-//        foreach ($campi as $campo) {
-//            //FG 20151027 modifica per campi visualizzabili a seconda dei diritti
-//            if (!($diritti->campoVisualizzabile($diritti, $campo))) continue;
-//
-//            $obbligatorio = $campo->getObbligatorioinserzione();
-//            if ($campo->getTipo() == 'choice') {
-//                $class = array('class' => 'firstLevel');
-//
-//                $options = $this->getChoicesOptions($campo->getFieldset());
-//
-//                if ($obbligatorio) {
-//                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
-//                        'choices' => $options,
-//                        'expanded' => true,
-//                        'multiple' => false,
-//                        'label' => $campo->getDescrizione(),
-//                        'constraints' => new NotBlank(),
-//                        'attr' => $class
-//                    ));
-//                } else {
-//                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
-//                        'choices' => $options,
-//                        'expanded' => true,
-//                        'multiple' => false,
-//                        'label' => $campo->getDescrizione(),
-//                        'attr' => $class
-//                    ));
-//                }
-//
-//            } else {
-//                $class = array();
-//                $label = $campo->getDescrizione();
-//
-//                if ($campo->getPadre() != null) {
-//                    $class = array('class' => 'secondLevel');
-//                    $padri = $this->getFirstLevel($campo->getPadre());
-//                    $firstLevels[$this->getFather($campo->getPadre())] = $padri;
-//
-//                }
-//
-//                if ($obbligatorio) {
-//                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
-//                        'label' => $label,
-//                        'constraints' => new NotNull(),
-//                        'attr' => $class
-//                    ));
-//                } else {
-//                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
-//                        'label' => $label,
-//                        'attr' => $class
-//                    ));
-//                }
-//            }
-//        }
-
-//        $formbuilder->setAction($this->generateUrl('formtemplate_create', array('idCategoria' => $idCategoria)));
-//        $form = $formbuilder->getForm();
-
-
-//        $form->add('submit', 'submit', array('label' => 'Salva e chiudi', 'attr' => array('class' => 'bottoniera')));
-//        $formbuilder = $this->createFormBuilder();
-//        $formbuilder->setAction($this->generateUrl('formtemplate_back', array('idCategoria' => $idCategoria)));
-//        $backForm = $formbuilder->getForm();
-//        $backForm->add('back', 'submit', array('label' => 'Indietro'));
-
-
-//        return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
-//            'form' => $form->createView(),
-//            'firstLevels' => $firstLevels,
-//            'back_form' => $backForm->createView()
-//
-//        ));
     }
 
     /**
@@ -208,12 +116,8 @@ class FormTemplateController extends Controller
      */
     private function createCreateForm(FormTemplate $entity)
     {
-        $form = $this->createForm(new FormTemplateType(), $entity, array(
-            'action' => $this->generateUrl('formtemplate_create',array('idCategoria'=>$entity->getIdcategoria())),
-            'method' => 'POST',
-        ));
 
-        $form->add('submit', 'submit', array('label' => 'Salva e chiudi', 'attr' => array('class' => 'bottoniera')));
+        $form = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $entity);
 
         return $form;
     }
@@ -222,13 +126,21 @@ class FormTemplateController extends Controller
     public function createAction(Request $request, $idCategoria)
     {
 
-        $form = $this->createForm(new FormTemplateType());
-        $form->handleRequest($request);
+
 
         $em = $this->getDoctrine()->getManager();
 
 
         $campi = $request->request->all();
+
+        $campiStruttura= $em->getRepository('estarRdaBundle:Campo')->findBy(
+            array('idcategoria' => $idCategoria),
+            array('ordinamento' => 'ASC')
+        );
+
+        $form = $this->createCreateForm(new FormTemplate($idCategoria,$campiStruttura))[0];
+
+        $form->handleRequest($request);
 
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
         $richiesta = new Richiesta();

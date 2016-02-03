@@ -3,7 +3,7 @@
 <head>
 
     <title>RDA</title>
-    <meta charset="UTF-8"  name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="{{ asset('css/bootstrap.css', absolute=true) }}" rel="stylesheet" media="screen">
     {#<link href="http://symfony/rda/web/css/bootstrap.css" rel="stylesheet" media="screen">#}
@@ -25,18 +25,18 @@
     {% endblock %}
 
 
+
     {% block javascripts %}
         <script type="text/javascript" src="{{ asset('js/navbar.js', absolute=true) }}"></script>
         <script type="text/javascript" src="{{ asset('js/sidebar.js', absolute=true) }}"></script>
         <script type="text/javascript" src="{{ asset('js/levelsFieldFunctions.js', absolute=true) }}"></script>
         {% if firstLevels is defined %}
         <script>
-            $(document).ready(function(){
-                        var options = {{ firstLevels|json_encode|raw }};
+            $(document).ready(function () {
+                        var options = {{ firstLevels| json_encode |raw }};
                         firstLevel(options);
                         secondLevel();
                     }
-
             )
         </script>
         {% endif %}
