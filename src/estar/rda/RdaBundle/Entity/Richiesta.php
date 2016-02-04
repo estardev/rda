@@ -57,7 +57,7 @@ class Richiesta
     /**
      * @var boolean
      *
-     * @ORM\Column(name="urgenza", type="boolean", nullable=false)
+     * @ORM\Column(name="urgenza", type="boolean", nullable=true)
      */
     private $urgenza;
 

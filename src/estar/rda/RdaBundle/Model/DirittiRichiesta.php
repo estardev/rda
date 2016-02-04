@@ -8,6 +8,7 @@
 
 namespace estar\rda\RdaBundle\Model;
 
+use estar\rda\RdaBundle\Entity\Campo;
 
 /** Classe che rappresenta i diritti di una richiesta
  *
@@ -24,7 +25,7 @@ class DirittiRichiesta
     private $isVT;
 
     /**
-     * @return boolean true o false se è abilitato all'inserimento.
+     * @return boolean true o false se ï¿½ abilitato all'inserimento.
      */
     public function getIsAI()
     {
@@ -42,7 +43,7 @@ class DirittiRichiesta
     }
 
     /**
-     * @return boolean true o false se è validatore amministrativo.
+     * @return boolean true o false se ï¿½ validatore amministrativo.
      */
     public function getIsVA()
     {
@@ -60,7 +61,7 @@ class DirittiRichiesta
     }
 
     /**
-     * @return boolean true o false se è validatore tecnico
+     * @return boolean true o false se ï¿½ validatore tecnico
      */
     public function getIsVT()
     {
@@ -82,12 +83,12 @@ class DirittiRichiesta
      */
     public function __construct()
     {
-        $isAI = false;
-        $isVA = false;
-        $isVT = false;
+        $this->isAI = false;
+        $this->isVA = false;
+        $this->isVT = false;
     }
 
-    /** funzione di comodo che mi dice se un campo è visualizzabile oppure no
+    /** funzione di comodo che mi dice se un campo ï¿½ visualizzabile oppure no
      *
      * @param DirittiRichiesta $diritti
      * @param Campo $campo

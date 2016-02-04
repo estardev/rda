@@ -5,11 +5,11 @@ namespace estar\rda\RdaBundle\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Entity\Campo;
-
+use \Doctrine\ORM\EntityManager;
 
 /**
  * Class RichiestaModel
- * serve per esporre metodi di comodità per il trattamento delle richieste.
+ * serve per esporre metodi di comoditï¿½ per il trattamento delle richieste.
  * Gestisce la macchina a stati e la validazione
  *
  * @author Francesco Galli - francesco01.galli@estar.toscana.it
@@ -24,8 +24,17 @@ class RichiestaModel extends Controller
     const STATUS_ATTESA_VAL_AMM = 'attesa_val_amm';
     const STATUS_INSERITA_ABS = 'inserita_ABS';
 
-    /** costruttore di default. Mi serve un entity manager e l'utente corrente */
-    public function __construct($em, $user)
+
+    private $em;
+
+    private $user;
+
+
+    /** costruttore di default. Mi serve un entity manager e l'utente corrente
+     * @param $em
+     * @param $user
+     */
+    public function __construct(EntityManager $em, $user)
     {
         $this->em = $em;
         $this->user = $user;
@@ -34,7 +43,7 @@ class RichiestaModel extends Controller
 
     /** metodo che restituisce i campi da mostrare allo stato attuale
      *
-     * @return un array di campo
+     * @return array di campo
      */
     public function mostraCampi($idRichiesta) {
         //tiro su la richiesta
@@ -58,12 +67,12 @@ class RichiestaModel extends Controller
         $toReturn = array();
         foreach($campi as $campo) {
             //se posso vederlo come utente abilitato all'inserimento...
-            if ($campo->getObbligatorioinserzione()>=0 && isAbilitatoInserimento>0) {
+            if ($campo->getObbligatorioinserzione()>=0 && $isAbilitatoInserimento>0) {
                 array_push($toReturn, $campo);
                 continue;
             }
             //se non posso vederlo come utente abilitato ma come validatore tecnico si
-            if ($campo->getObbligatoriovalidazionetecnica()>=0 && isValidatoreTecnico>0) {
+            if ($campo->getObbligatoriovalidazionetecnica()>=0 && $isValidatoreTecnico>0) {
                 array_push($toReturn, $campo);
                 continue;
             }
@@ -84,7 +93,7 @@ class RichiestaModel extends Controller
 
     /** metodo che restituisce i campi necessari per il passaggio allo stato successivo
      *
-     * @return un array di campo
+     * @return array di campo
      */
     function campiNecessariProssimoPasso($idRichiesta) {
         //primo step mi tiro su la richiesta
@@ -98,10 +107,10 @@ class RichiestaModel extends Controller
         if ($status == RichiestaModel::STATUS_BOZZA) {
             $toReturn = $repository->findBy(array('obbligatorioinserzione' => 1));
         }
-        if ($status == RichiestaModel::STATUS_ATTESA_VALTEC) {
+        if ($status == RichiestaModel::STATUS_ATTESA_VAL_TEC) {
             $toReturn = $repository->findBy(array('obbligatoriovalidazionetecnica' => 1));
         }
-        if ($status == RichiestaModel::STATUS_ATTESA_VALAMM) {
+        if ($status == RichiestaModel::STATUS_ATTESA_VAL_AMM) {
             $toReturn = $repository->findBy(array('obbligatoriovalidazioneamministrativa' => 1));
         }
         return $toReturn;
@@ -114,13 +123,13 @@ class RichiestaModel extends Controller
 
 
 
-    /** metodo che restituisce gli stati a cui la richiesta può transire
+    /** metodo che restituisce gli stati a cui la richiesta puï¿½ transire
      *
-     * @return un array con il nome dei campi così come definiti nella macchina a stati
+     * @return un array con il nome dei campi cosï¿½ come definiti nella macchina a stati
      */
 
 
-    /** METODONE che ci dice se una richiesta può o non può avanzare allo stato indicato
+    /** METODONE che ci dice se una richiesta puï¿½ o non puï¿½ avanzare allo stato indicato
      *
      * @return true or false
      */
@@ -131,7 +140,7 @@ class RichiestaModel extends Controller
         //prendo lo status della richiesta
         $vecchiostatus = $richiesta->getStatus();
 
-        //punto primo: una richiesta può sempre andare indietro.
+        //punto primo: una richiesta puï¿½ sempre andare indietro.
         if ($nuovostatus == RichiestaModel::STATUS_BOZZA) return true;
         if ($nuovostatus == RichiestaModel::STATUS_ATTESA_VAL_TEC && $vecchiostatus==RichiestaModel::STATUS_ATTESA_VAL_AMM) return true;;
         //TODO da finire!
@@ -144,7 +153,7 @@ class RichiestaModel extends Controller
 
 
     /**
-     * ritorna un elenco di categorie che l'utente può accedere
+     * ritorna un elenco di categorie che l'utente puï¿½ accedere
      *
      * @return array(Categoria) un array di categorie
      */
@@ -154,11 +163,11 @@ class RichiestaModel extends Controller
         $utente = $usercheck->getUtente();
         $toReturn = array();
 
-        //Se l'utente non è loggato (caso che non dovrebbe mai succedere) ritorno l'array vuoto
+        //Se l'utente non ï¿½ loggato (caso che non dovrebbe mai succedere) ritorno l'array vuoto
         //metto la return qui per evitare successive bizze di NPE.
         if ($utente == null) return $toReturn;
 
-        // check: se l'utente è amministratore di sistema, vede tutto.
+        // check: se l'utente ï¿½ amministratore di sistema, vede tutto.
         $utenteFos = $utente->getIdFosUser();
 
         if ($utenteFos->is_granted('ROLE_ADMIN')|| $utenteFos->is_granted('ROLE_SUPERADMIN')) {

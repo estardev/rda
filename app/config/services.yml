@@ -40,6 +40,6 @@ services:
   form_template_factory:
         class: estar\rda\RdaBundle\Form\FormTemplateService
         arguments:
-            user: "@usercheck.notify"
+            user:   "@usercheck.notify"
             router: "@router"
-
+            em:     "@doctrine.orm.entity_manager"

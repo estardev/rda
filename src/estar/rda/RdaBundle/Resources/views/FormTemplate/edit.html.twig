@@ -5,11 +5,11 @@
 
     <div class="bottoniera">
 
-       <div class="bottoni">{{ form(back_form) }}</div>
-        <div class="bottoni"> {{ form(print_form) }}</div>
-        <div class="bottoni"> {{ form(delete_form) }}</div>
+       <div class="bottoni">{{ form(back_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
+        <div class="bottoni"> {{ form(print_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
+        <div class="bottoni"> {{ form(delete_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
 
-        {% if (diritti.isVA) and (stato=='inserita_ABS') %} <div class="bottoni"> {{ form(soap_form) }}</div>{% endif %}
+        {% if (diritti.isVA) and (stato=='inserita_ABS') %} <div class="bottoni"> {{ form(soap_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>{% endif %}
 
         {% if (stato!='inserita_ABS') %} <div class="bottoni"> <button class="btn btn-primary" data-toggle="modal" data-target="#confirmModal"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Cambia Stato</button></div>{% endif %}
 
@@ -18,7 +18,7 @@
         <!-- fine:20151029 -->
     </div>
 
-    {{ form(edit_form) }}
+    {{ form(edit_form, {'attr': {'novalidate': 'novalidate'}}) }}
 
 
 

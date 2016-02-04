@@ -3,7 +3,8 @@
 namespace estar\rda\RdaBundle\Form;
 
 use estar\rda\RdaBundle\Entity\FormTemplate;
-use Symfony\Component\Form\AbstractType;
+use \Doctrine\ORM\EntityManager;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -17,12 +18,15 @@ class FormTemplateService
 
     private $user;
     private $router;
+    private $em;
 
 
-    public function __construct($user, $router)
+    public function __construct($user, $router, EntityManager $em)
     {
         $this->user = $user;
         $this->router = $router;
+        $this->em = $em;
+
     }
 
     /** FG messa costante per poterla più facilmente editare in futuro */
@@ -79,83 +83,354 @@ class FormTemplateService
      * @return \Symfony\Component\Form\Form
      *
      */
-    public function build(FormBuilderInterface $builder, FormTemplate $entity)
+    public function build(FormBuilderInterface $builder, $entity, $mode)
     {
 
-        $campi = $entity->getCampi();
 
         $diritti = $this->user->allRole($entity->getIdCategoria());
 
-        $builder->add("titolo", "text", array(
-            'label' => "Titolo",
-            'data' => "Specificare un oggetto per la propria richiesta"
-        ));
-        $builder->add("descrizione", "textarea", array(
-            'label' => "Descrizione",
-            'data' => "indicare descrizione, azienda sanitaria e UOC destinataria"
-        ));
+        if ($mode == 0) {
 
-        $firstLevels = array();
-        foreach ($campi as $campo) {
-            //FG 20151027 modifica per campi visualizzabili a seconda dei diritti
-            if (!($diritti->campoVisualizzabile($diritti, $campo))) continue;
+            $campi = $entity->getCampi();
+            //sono in modalita NEW
 
-            $obbligatorio = $campo->getObbligatorioinserzione();
-            if ($campo->getTipo() == 'choice') {
-                $class = array('class' => 'firstLevel');
+            $builder->add("titolo", "text", array(
+                'label' => "Titolo",
+                'data' => "Specificare un oggetto per la propria richiesta"
+            ));
+            $builder->get('titolo')
+                ->addModelTransformer(new CallbackTransformer(
 
-                $options = $this->getChoicesOptions($campo->getFieldset());
+                    function ($originalValue) {
 
-                if ($obbligatorio) {
-                    $builder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
-                        'choices' => $options,
-                        'expanded' => true,
-                        'multiple' => false,
-                        'label' => $campo->getDescrizione(),
-                        'constraints' => new NotBlank(),
-                        'attr' => $class
-                    ));
+
+                        if (is_numeric($originalValue)) {
+                            return intval($originalValue);
+                        } else {
+                            return $originalValue;
+                        }
+
+
+                    },
+                    function ($submittedValue) {
+
+                        return $submittedValue;
+
+                    }
+                ));
+            $builder->add("descrizione", "textarea", array(
+                'label' => "Descrizione",
+                'data' => "indicare descrizione, azienda sanitaria e UOC destinataria"
+            ));
+            $builder->get('descrizione')
+                ->addModelTransformer(new CallbackTransformer(
+
+                    function ($originalValue) {
+
+
+                        if (is_numeric($originalValue)) {
+                            return intval($originalValue);
+                        } else {
+                            return $originalValue;
+                        }
+
+
+                    },
+                    function ($submittedValue) {
+
+                        return $submittedValue;
+
+                    }
+                ));
+            $firstLevels = array();
+            foreach ($campi as $campo) {
+                //FG 20151027 modifica per campi visualizzabili a seconda dei diritti
+                if (!($diritti->campoVisualizzabile($diritti, $campo))) continue;
+
+                $obbligatorio = $campo->getObbligatorioinserzione();
+                if ($campo->getTipo() == 'choice') {
+                    $class = array('class' => 'firstLevel');
+
+                    $options = $this->getChoicesOptions($campo->getFieldset());
+
+                    if ($obbligatorio) {
+                        $builder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
+                            'choices' => $options,
+                            'expanded' => true,
+                            'multiple' => false,
+                            'label' => $campo->getDescrizione(),
+                            'constraints' => new NotNull(),
+                            'attr' => $class
+                        ));
+                        $builder->get($campo->getNome() . '-' . $campo->getId())
+                            ->addModelTransformer(new CallbackTransformer(
+
+                                function ($originalValue) {
+
+
+                                    if (is_numeric($originalValue)) {
+                                        return intval($originalValue);
+                                    } else {
+                                        return $originalValue;
+                                    }
+
+
+                                },
+                                function ($submittedValue) {
+
+                                    return $submittedValue;
+
+                                }
+                            ));
+
+                    } else {
+                        $builder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
+                            'choices' => $options,
+                            'expanded' => true,
+                            'multiple' => false,
+                            'label' => $campo->getDescrizione(),
+                            'attr' => $class
+                        ));
+                        $builder->get($campo->getNome() . '-' . $campo->getId())
+                            ->addModelTransformer(new CallbackTransformer(
+
+                                function ($originalValue) {
+
+
+                                    if (is_numeric($originalValue)) {
+                                        return intval($originalValue);
+                                    } else {
+                                        return $originalValue;
+                                    }
+
+
+                                },
+                                function ($submittedValue) {
+
+                                    return $submittedValue;
+
+                                }
+                            ));
+                    }
+
                 } else {
-                    $builder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
-                        'choices' => $options,
-                        'expanded' => true,
-                        'multiple' => false,
-                        'label' => $campo->getDescrizione(),
-                        'attr' => $class
-                    ));
-                }
+                    $class = array();
+                    $label = $campo->getDescrizione();
 
-            } else {
-                $class = array();
-                $label = $campo->getDescrizione();
+                    if ($campo->getPadre() != null) {
+                        $class = array('class' => 'secondLevel');
+                        $padri = $this->getFirstLevel($campo->getPadre());
+                        $firstLevels[$this->getFather($campo->getPadre())] = $padri;
 
-                if ($campo->getPadre() != null) {
-                    $class = array('class' => 'secondLevel');
-                    $padri = $this->getFirstLevel($campo->getPadre());
-                    $firstLevels[$this->getFather($campo->getPadre())] = $padri;
+                    }
 
-                }
+                    if ($obbligatorio) {
+                        $builder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
+                            'label' => $label,
+                            'constraints' => new NotNull(),
+                            'attr' => $class
+                        ));
+                    } else {
+                        $builder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
+                            'label' => $label,
+                            'attr' => $class
+                        ));
+                    }
+                    $builder->get($campo->getNome() . '-' . $campo->getId())
+                        ->addModelTransformer(new CallbackTransformer(
 
-                if ($obbligatorio) {
-                    $builder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
-                        'label' => $label,
-                        'constraints' => new NotNull(),
-                        'attr' => $class
-                    ));
-                } else {
-                    $builder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
-                        'label' => $label,
-                        'attr' => $class
-                    ));
+                            function ($originalValue) {
+
+
+                                if (is_numeric($originalValue)) {
+                                    return intval($originalValue);
+                                } else {
+                                    return $originalValue;
+                                }
+
+
+                            },
+                            function ($submittedValue) {
+
+                                return $submittedValue;
+
+                            }
+                        ));
                 }
             }
+            $builder->setAction($this->router->generate('formtemplate_create', array('idCategoria' => $entity->getIdcategoria())));
+            $builder->setMethod('POST');
+            $builder->add('submit', 'submit', array('label' => 'Salva e chiudi', 'attr' => array('class' => 'bottoniera')));
+
+            return array(0 => $builder->getForm(), 1 => $firstLevels);
+        } else {
+            //sono in modalita EDITedit/1/28
+            $em = $this->em;
+
+            $idRichiesta = $entity->getId();
+            $idCategoria = $entity->getIdCategoria()->getId();
+
+            $query = $em->createQuery('SELECT c.id AS idcampo, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,c.padre,vc.id,vc.valore
+                                    FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
+                                    WITH c.id = vc.idcampo
+                                    AND vc.idrichiesta = :idRichiesta
+                                    ORDER BY c.ordinamento')
+                ->setparameter('idRichiesta', $idRichiesta);
+
+            $campiValorizzati = $query->getResult();
+
+
+            //FG 20151016 gestione dei campi della richiesta
+
+            $builder->add("titolo", "text", array(
+                'label' => "Titolo",
+                'data' => $entity->getTitolo()
+            ));
+            $builder->get('titolo')
+                ->addModelTransformer(new CallbackTransformer(
+
+                    function ($originalValue) {
+
+
+                        if (is_numeric($originalValue)) {
+                            return intval($originalValue);
+                        } else {
+                            return $originalValue;
+                        }
+
+
+                    },
+                    function ($submittedValue) {
+
+                        return $submittedValue;
+
+                    }
+                ));
+            $builder->add("descrizione", "textarea", array(
+                'label' => "Descrizione",
+                'data' => $entity->getDescrizione()
+            ));
+            $builder->get('descrizione')
+                ->addModelTransformer(new CallbackTransformer(
+
+                    function ($originalValue) {
+
+
+                        if (is_numeric($originalValue)) {
+                            return intval($originalValue);
+                        } else {
+                            return $originalValue;
+                        }
+
+
+                    },
+                    function ($submittedValue) {
+
+                        return $submittedValue;
+
+                    }
+                ));
+
+            //        $fieldsetVisitati = array();
+            $firstLevels = array();
+            foreach ($campiValorizzati as $campovalorizzato) {
+//            $campo = $campovalorizzato->getIdcampo();
+                $campo = $campovalorizzato;
+                //FG20151028 se il campo non è visualizzabile, skip.
+                $repository = $em->getRepository('estarRdaBundle:Campo');
+                $campoCheck = $repository->find($campo['idcampo']);
+                if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
+
+//            if ($campo->getTipo() == 'choice') {
+                if ($campo['tipo'] == 'choice') {
+                    $class = array('class' => 'firstLevel');
+
+                    $options = $this->getChoicesOptions($campo['fieldset']);
+                    $builder->add($campo['nome'] . '-' . $campo['id'], 'choice', array(
+                        'choices' => $options,
+                        'expanded' => true,
+                        'multiple' => false,
+                        'label' => $campo['descrizione'],
+                        'data' => $campo['valore'],
+                        'attr' => $class
+                    ));
+
+                    $builder->get($campo['nome'] . '-' . $campo['id'])
+                        ->addModelTransformer(new CallbackTransformer(
+
+                            function ($originalValue) {
+
+                                if ("" === $originalValue) return null;
+
+                                if (is_numeric($originalValue)) {
+                                    return intval($originalValue);
+                                } else {
+                                    return $originalValue;
+                                }
+
+
+                            },
+                            function ($submittedValue) {
+
+                                return $submittedValue;
+
+                            }
+                        ));
+
+                } else {
+                    $class = array();
+                    $label = $campo['descrizione'];
+                    if ($campo['padre'] != null) {
+                        $class = array('class' => 'secondLevel');
+                        $padri = $this->getFirstLevel($campo['padre']);
+                        $firstLevels[$this->getFather($campo['padre'])] = $padri;
+
+                    }
+                    $builder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
+                        'label' => $campo['descrizione'],
+                        'data' => $campo['valore'],
+                        'attr' => $class
+                    ));
+
+                    $builder->get($campo['nome'] . '-' . $campo['id'])
+                        ->addModelTransformer(new CallbackTransformer(
+
+                            function ($originalValue) {
+
+                                if ("" === $originalValue) return null;
+
+                                if (is_numeric($originalValue)) {
+                                    return intval($originalValue);
+                                } else {
+                                    return $originalValue;
+                                }
+
+
+                            },
+                            function ($submittedValue) {
+
+                                return $submittedValue;
+
+                            }
+                        ));
+                }
+            }
+
+//            $em = $this->getDoctrine()->getManager();
+//            $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+
+
+//        if (!$entity) {
+//            throw $this->createNotFoundException('Unable to find FormTemplate entity.');
+//        }
+
+            $builder->setAction($this->router->generate('formtemplate_update', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
+            $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'icon' => 'glyphicon glyphicon-ok')));
+
+            return array(0 => $builder->getForm(), 1 => $firstLevels);
         }
-        $builder->setAction($this->router->generate('formtemplate_create', array('idCategoria' => $entity->getIdcategoria())));
-        $builder->setMethod('POST');
-        $builder->add('submit', 'submit', array('label' => 'Salva e chiudi', 'attr' => array('class' => 'bottoniera')));
 
 
-        return array(0 => $builder->getForm(), 1 => $firstLevels);
     }
 
 

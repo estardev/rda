@@ -1,9 +1,8 @@
 <?php
 
 namespace estar\rda\RdaBundle\Entity;
-//commento per modifica
-//use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * FormTemplate
@@ -62,13 +61,10 @@ class FormTemplate
         $this->campi = $campi;
     }
 
-    /** @var  la categoria su cui stiamo operando
-     */
+
     private $idcategoria;
 
-    /**
-     * @return la
-     */
+
     public function getIdcategoria()
     {
         return $this->idcategoria;
