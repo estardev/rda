@@ -169,21 +169,26 @@ class CategoriaController extends Controller
      */
     public function editAction($id)
     {
-        $idCategoria = $id;
-        //TODO fg aggiungere il passaggio alla form della obbligatoriet� o meno dei campi (manca! � tutto obbligatorio)
 
-        $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
+        $em = $this->getDoctrine()->getManager();
+
+
+        $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($id);
+        $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $categoria, 1);
+        $editForm = $res[0];
+
+//        $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
 
         //FG20151027 modifica per i diritti: prendiamo i diritti
-        $usercheck = $this->get("usercheck.notify");
-        $diritti = $usercheck->allRole($idCategoria);
+//        $usercheck = $this->get("usercheck.notify");
+//        $diritti = $usercheck->allRole($idCategoria);
 
-        $campi = $repository->findBy(
-            array('idcategoria' => $idCategoria),
-            array('ordinamento' => 'ASC')
-        );
+//        $campi = $repository->findBy(
+//            array('idcategoria' => $idCategoria),
+//            array('ordinamento' => 'ASC')
+//        );
 
-        $formbuilder = $this->createFormBuilder();
+//        $formbuilder = $this->createFormBuilder();
 //        $formbuilder->add("titolo", "text", array(
 //            'label' => "Titolo",
 //            'data' => "Specificare un oggetto per la propria richiesta"
@@ -193,64 +198,64 @@ class CategoriaController extends Controller
 //            'data' => "indicare descrizione, azienda sanitaria e UOC destinataria"
 //        ));
 
-        $firstLevels = array();
-        foreach ($campi as $campo) {
-            //FG 20151027 modifica per campi visualizzabili a seconda dei diritti
-//            if (!($diritti->campoVisualizzabile($diritti, $campo))) continue;
+//        $firstLevels = array();
+//        foreach ($campi as $campo) {
+//            //FG 20151027 modifica per campi visualizzabili a seconda dei diritti
+////            if (!($diritti->campoVisualizzabile($diritti, $campo))) continue;
+//
+//            $obbligatorio = $campo->getObbligatorioinserzione();
+//            if ($campo->getTipo() == 'choice') {
+//                $class = array('class' => 'firstLevel');
+//
+//                $options = $this->getChoicesOptions($campo->getFieldset());
+//
+//                if ($obbligatorio) {
+//                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
+//                        'choices' => $options,
+//                        'expanded' => true,
+//                        'multiple' => false,
+//                        'label' => $campo->getOrdinamento() . '-' . $campo->getDescrizione(),
+//                        'constraints' => new NotBlank(),
+//                        'attr' => $class
+//                    ));
+//                } else {
+//                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
+//                        'choices' => $options,
+//                        'expanded' => true,
+//                        'multiple' => false,
+//                        'label' => $campo->getOrdinamento() . '-' . $campo->getDescrizione(),
+//                        'attr' => $class
+//                    ));
+//                }
+//
+//            } else {
+//                $class = array();
+//                $label = $campo->getOrdinamento() . '-' . $campo->getDescrizione();
+//
+////                if ($campo->getPadre() != null) {
+//                if ($repository->findBy(array('figlio' => $campo->getId())) or $campo->getPadre() != null) {
+//                    $class = array('class' => 'secondLevel');
+//                    if ($campo->getPadre() != null) {
+//                        $padri = $this->getFirstLevel($campo->getPadre());
+//                        $firstLevels[$this->getFather($campo->getPadre())] = $padri;
+//                    }
+//                }
+//
+//                if ($obbligatorio) {
+//                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
+//                        'label' => $label,
+//                        'constraints' => new NotNull(),
+//                        'attr' => $class
+//                    ));
+//                } else {
+//                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
+//                        'label' => $label,
+//                        'attr' => $class
+//                    ));
+//                }
+//            }
+//        }
 
-            $obbligatorio = $campo->getObbligatorioinserzione();
-            if ($campo->getTipo() == 'choice') {
-                $class = array('class' => 'firstLevel');
-
-                $options = $this->getChoicesOptions($campo->getFieldset());
-
-                if ($obbligatorio) {
-                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
-                        'choices' => $options,
-                        'expanded' => true,
-                        'multiple' => false,
-                        'label' => $campo->getOrdinamento() . '-' . $campo->getDescrizione(),
-                        'constraints' => new NotBlank(),
-                        'attr' => $class
-                    ));
-                } else {
-                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
-                        'choices' => $options,
-                        'expanded' => true,
-                        'multiple' => false,
-                        'label' => $campo->getOrdinamento() . '-' . $campo->getDescrizione(),
-                        'attr' => $class
-                    ));
-                }
-
-            } else {
-                $class = array();
-                $label = $campo->getOrdinamento() . '-' . $campo->getDescrizione();
-
-//                if ($campo->getPadre() != null) {
-                if ($repository->findBy(array('figlio' => $campo->getId())) or $campo->getPadre() != null) {
-                    $class = array('class' => 'secondLevel');
-                    if ($campo->getPadre() != null) {
-                        $padri = $this->getFirstLevel($campo->getPadre());
-                        $firstLevels[$this->getFather($campo->getPadre())] = $padri;
-                    }
-                }
-
-                if ($obbligatorio) {
-                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
-                        'label' => $label,
-                        'constraints' => new NotNull(),
-                        'attr' => $class
-                    ));
-                } else {
-                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
-                        'label' => $label,
-                        'attr' => $class
-                    ));
-                }
-            }
-        }
-        $form = $formbuilder->getForm();
 //        $editForm = $this->createEditForm($entity);
 //        $deleteForm = $this->createDeleteForm($id);
 
@@ -261,9 +266,9 @@ class CategoriaController extends Controller
 //        ));
 
         return $this->render('estarRdaBundle:Categoria:edit.html.twig', array(
-            'idCategoria' => $idCategoria,
-            'form' => $form->createView(),
-            'firstLevels' => $firstLevels,
+            'idCategoria' => $id,
+            'form' => $editForm->createView(),
+            'firstLevels' => $res[1],
 //            'back_form' => $backForm->createView()
 
         ));

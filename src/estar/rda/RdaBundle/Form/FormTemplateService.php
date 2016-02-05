@@ -4,6 +4,7 @@ namespace estar\rda\RdaBundle\Form;
 
 use estar\rda\RdaBundle\Entity\FormTemplate;
 use \Doctrine\ORM\EntityManager;
+use Symfony\Bundle\FrameworkBundle\Routing\Router as Router;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -21,7 +22,7 @@ class FormTemplateService
     private $em;
 
 
-    public function __construct($user, $router, EntityManager $em)
+    public function __construct($user,Router $router, EntityManager $em)
     {
         $this->user = $user;
         $this->router = $router;
@@ -86,8 +87,9 @@ class FormTemplateService
     public function build(FormBuilderInterface $builder, $entity, $mode)
     {
 
+        $idCategoria = (get_class($entity) == 'estar\rda\RdaBundle\Entity\Categoria') ? $entity : $entity->getIdCategoria();
 
-        $diritti = $this->user->allRole($entity->getIdCategoria());
+        $diritti = $this->user->allRole($idCategoria);
 
         if ($mode == 0) {
 
@@ -258,7 +260,7 @@ class FormTemplateService
                         ));
                 }
             }
-            $builder->setAction($this->router->generate('formtemplate_create', array('idCategoria' => $entity->getIdcategoria())));
+            $builder->setAction($this->router->generate('formtemplate_create', array('idCategoria' => $idCategoria)));
             $builder->setMethod('POST');
             $builder->add('submit', 'submit', array('label' => 'Salva e chiudi', 'attr' => array('class' => 'bottoniera')));
 
@@ -266,71 +268,84 @@ class FormTemplateService
         } else {
             //sono in modalita EDITedit/1/28
             $em = $this->em;
+            if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
+                $idRichiesta = $entity->getId();
+                $idCategoria = $idCategoria->getId();
 
-            $idRichiesta = $entity->getId();
-            $idCategoria = $entity->getIdCategoria()->getId();
-
-            $query = $em->createQuery('SELECT c.id AS idcampo, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,c.padre,vc.id,vc.valore
+                $query = $em->createQuery('SELECT c.id AS idcampo, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,c.padre,vc.id,vc.valore
                                     FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
                                     WITH c.id = vc.idcampo
                                     AND vc.idrichiesta = :idRichiesta
                                     ORDER BY c.ordinamento')
-                ->setparameter('idRichiesta', $idRichiesta);
+                    ->setparameter('idRichiesta', $idRichiesta);
 
-            $campiValorizzati = $query->getResult();
+                $campiValorizzati = $query->getResult();
+            } else {
+                $idCategoria = $idCategoria->getId();
+                $query = $em->createQuery('SELECT c.id , c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,c.padre
+                                    FROM estarRdaBundle:Campo c
+                                    WHERE c.idcategoria = :idCategoria
+                                    ORDER BY c.ordinamento')
+                    ->setparameter('idCategoria', $idCategoria);
+
+                $campiValorizzati = $query->getResult();
+
+
+            }
 
 
             //FG 20151016 gestione dei campi della richiesta
 
-            $builder->add("titolo", "text", array(
-                'label' => "Titolo",
-                'data' => $entity->getTitolo()
-            ));
-            $builder->get('titolo')
-                ->addModelTransformer(new CallbackTransformer(
-
-                    function ($originalValue) {
-
-
-                        if (is_numeric($originalValue)) {
-                            return intval($originalValue);
-                        } else {
-                            return $originalValue;
-                        }
-
-
-                    },
-                    function ($submittedValue) {
-
-                        return $submittedValue;
-
-                    }
+            if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
+                $builder->add("titolo", "text", array(
+                    'label' => "Titolo",
+                    'data' => $entity->getTitolo()
                 ));
-            $builder->add("descrizione", "textarea", array(
-                'label' => "Descrizione",
-                'data' => $entity->getDescrizione()
-            ));
-            $builder->get('descrizione')
-                ->addModelTransformer(new CallbackTransformer(
+                $builder->get('titolo')
+                    ->addModelTransformer(new CallbackTransformer(
 
-                    function ($originalValue) {
+                        function ($originalValue) {
 
 
-                        if (is_numeric($originalValue)) {
-                            return intval($originalValue);
-                        } else {
-                            return $originalValue;
+                            if (is_numeric($originalValue)) {
+                                return intval($originalValue);
+                            } else {
+                                return $originalValue;
+                            }
+
+
+                        },
+                        function ($submittedValue) {
+
+                            return $submittedValue;
+
                         }
-
-
-                    },
-                    function ($submittedValue) {
-
-                        return $submittedValue;
-
-                    }
+                    ));
+                $builder->add("descrizione", "textarea", array(
+                    'label' => "Descrizione",
+                    'data' => $entity->getDescrizione()
                 ));
+                $builder->get('descrizione')
+                    ->addModelTransformer(new CallbackTransformer(
 
+                        function ($originalValue) {
+
+
+                            if (is_numeric($originalValue)) {
+                                return intval($originalValue);
+                            } else {
+                                return $originalValue;
+                            }
+
+
+                        },
+                        function ($submittedValue) {
+
+                            return $submittedValue;
+
+                        }
+                    ));
+            }
             //        $fieldsetVisitati = array();
             $firstLevels = array();
             foreach ($campiValorizzati as $campovalorizzato) {
@@ -338,9 +353,14 @@ class FormTemplateService
                 $campo = $campovalorizzato;
                 //FG20151028 se il campo non è visualizzabile, skip.
                 $repository = $em->getRepository('estarRdaBundle:Campo');
-                $campoCheck = $repository->find($campo['idcampo']);
-                if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
+                if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
 
+                    $campoCheck = $repository->find($campo['idcampo']);
+                    if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
+                } else {
+
+                    $campo['valore'] = '';
+                }
 //            if ($campo->getTipo() == 'choice') {
                 if ($campo['tipo'] == 'choice') {
                     $class = array('class' => 'firstLevel');
@@ -423,23 +443,24 @@ class FormTemplateService
 //        if (!$entity) {
 //            throw $this->createNotFoundException('Unable to find FormTemplate entity.');
 //        }
+            if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
+                $builder->setAction($this->router->generate('formtemplate_update', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
+            }
+            else{
+                $builder->setAction($this->router->generate('categoria_update', array('id' => $idCategoria)));
+            }
+                $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'icon' => 'glyphicon glyphicon-ok')));
 
-            $builder->setAction($this->router->generate('formtemplate_update', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
-            $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'icon' => 'glyphicon glyphicon-ok')));
+                return array(0 => $builder->getForm(), 1 => $firstLevels);
+            }
 
-            return array(0 => $builder->getForm(), 1 => $firstLevels);
+
         }
 
 
-    }
-
-
-
-
-
-    /**
-     * @param OptionsResolverInterface $resolver
-     */
+        /**
+         * @param OptionsResolverInterface $resolver
+         */
 //    public function setDefaultOptions(OptionsResolverInterface $resolver)
 //    {
 //        $resolver->setDefaults(array(
@@ -447,12 +468,12 @@ class FormTemplateService
 //        ));
 //    }
 
-    /**
-     * @return string
-     */
-    public
-    function getName()
-    {
-        return 'estar_rda_rdabundle_FormTemplate';
+        /**
+         * @return string
+         */
+        public
+        function getName()
+        {
+            return 'estar_rda_rdabundle_FormTemplate';
+        }
     }
-}
