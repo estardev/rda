@@ -62,6 +62,30 @@ class Richiesta
     private $urgenza;
 
     /**
+     * @var string
+     * @ORM\Column(name="annoprogrammazione", type="string", length=100, nullable=true)
+     */
+    private $annoprogrammazione;
+
+    /**
+     * @return string
+     */
+    public function getAnnoprogrammazione()
+    {
+        return $this->annoprogrammazione;
+    }
+
+    /**
+     * @param string $annoprogrammazione
+     * @return Richiesta
+     */
+    public function setAnnoprogrammazione($annoprogrammazione)
+    {
+        $this->annoprogrammazione = $annoprogrammazione;
+        return $this;
+    }
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")

@@ -35,6 +35,17 @@ class Iter
     private $motivazione;
 
     /**
+     * @var string
+     * @ORM\Column(name="dastatogestav", type="text", length=100, nullable=true);
+     */
+    private $dastatogestav;
+
+    /**
+     * @var string
+     * @ORM\Column(name="astatogestav", type="text", length=100, nullable=true);
+     */
+    private $astatogestav;
+    /**
      * @var integer
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -61,6 +72,11 @@ class Iter
     private $idrichiesta;
 
 
+    /**
+     * @var boolean
+     * @ORM\Column(name="datafornita", type="boolean", nullable="true")
+     */
+    private $datafornita;
     /**
      * Set dataora
      *
@@ -214,4 +230,61 @@ class Iter
     {
         return $this->idrichiesta;
     }
+
+    /**
+     * @return string
+     */
+    public function getDastatogestav()
+    {
+        return $this->dastatogestav;
+    }
+
+    /**
+     * @param string $dastatogestav
+     * @return \estar\rda\RdaBundle\Entity\Iter
+     */
+    public function setDastatogestav($dastatogestav)
+    {
+        $this->dastatogestav = $dastatogestav;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAstatogestav()
+    {
+        return $this->astatogestav;
+    }
+
+    /**
+     * @param string $astatogestav
+     * @return Iter
+     */
+    public function setAstatogestav($astatogestav)
+    {
+        $this->astatogestav = $astatogestav;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDatafornita()
+    {
+        return $this->datafornita;
+    }
+
+    /**
+     * @param boolean $datafornita
+     * @return Iter
+     */
+    public function setDatafornita($datafornita)
+    {
+        $this->datafornita = $datafornita;
+        return $this;
+    }
+
+
+
 }

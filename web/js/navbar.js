@@ -48,4 +48,12 @@ $(document).ready(function()
 
     });
 
+    $(document).on("click", "#homepageMostraTutte", function () {
+
+        var homepageSelectCategoria = $('#homepageSelectCategoria').val();
+        //alert("Bottone: " + homepageSelectCategoria);
+        window.location.replace(Routing.generate('richiesta_bycategoria', {'idCategoria': homepageSelectCategoria}));
+
+    });
+
 });
