@@ -43,7 +43,7 @@ class ServerESTARController extends Controller
 
         }
         else{
-            $richiestamodel = $this->get('model.richiesta')->getPratica($note, $idpratica, $codicestato);
+            $risposta = $this->get('model.richiesta')->getPratica($utente, $note, $idpratica, $codicestato);
            //richiamoModel($idpratica, $codicestato, $note)
 
 
@@ -100,10 +100,10 @@ class ServerESTARController extends Controller
 
 
             return array(
-                'CoriceRisposta' => $messaggioErrore,
-                'codiceErrore' => $codice,
-                'DescrizioneErrore' => $descrizioneErrore,
-                'data' =>  $dataRispostaServer
+                'CoriceRisposta' => $risposta->getCodiceRisposta(),
+                'codiceErrore' => $risposta->getCodiceErrore(),
+                'DescrizioneErrore' => $risposta->getDescrizioneErrore(),
+                'data' =>  $risposta->getDataRisposta()
             );
 
         }

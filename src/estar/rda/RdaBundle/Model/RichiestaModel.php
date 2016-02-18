@@ -197,4 +197,29 @@ class RichiestaModel extends Controller
         }
         return $categoria;
     }
+
+
+    /**
+     * Processa la chiamata ricevuta da Sistematica
+     * $param Utente $utente
+     * @param string $note
+     * @param string $idpratica
+     * @param string $codicestato
+     * @return RispostaPerSistematica
+     */
+    public function getPratica($utente, $note, $idpratica, $codicestato) {
+        // Ci costruiamo l'oggetto risposta
+
+        $risposta = new RispostaPerSistematica();
+
+        //Prendiamo la richiesta
+
+        $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')->findOneBy(array('idpratica' => $idpratica));
+
+        //Se la richiesta non è trovata, ritorniamo un messaggio di errore
+        if (is_null($richiesta)) {
+            $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+        }
+
+    }
 }
