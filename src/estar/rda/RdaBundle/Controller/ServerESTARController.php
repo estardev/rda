@@ -24,21 +24,36 @@ class ServerESTARController extends Controller
      * @Soap\Param("codicemessaggio", phpType = "int")
      * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\String[]")
      */
-    public function notifyAction($messaggio=null, $idpratica, $data, $codicemessaggio)
+    public function notifyAction($utente, $pwd, $note=null, $idpratica, $dataRequest, $codicestato)
     {   $em = $this->getDoctrine()->getManager();
+        $dateTime = new \DateTime();
+        $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
+        $dataRispostaServer=  $dateTime->format(\DateTime::W3C);
+
+        if($utente != 'Sistematica' AND $pwd != md5("ciao")){
+            $messaggioErrore="KO";
+            $codice="040";  //KO
+            $descrizioneErrore="Credenziali non corrette";
+            return array(
+                'CoriceRisposta' => $messaggioErrore,
+                'codiceErrore' => $codice,
+                'DescrizioneErrore' => $descrizioneErrore,
+                'data' =>  $dataRispostaServer
+            );
+
+        }
+        else{
+            $richiestamodel = $this->get('model.richiesta')->getPratica($note, $idpratica, $codicestato);
+           //richiamoModel($idpratica, $codicestato, $note)
+
+
+            /* TODO da mandare a richestamodel per esaminare
+        //TODO: DA VERIFICARE IN PASE AL PARSER
         $messaggioErrore="OK";
         $codice="000";  //OK
-       // //$richiesta = $em->getRepository('estarRdaBundle:Iter')->findBy(
-        //    array('idrichiesta' => $idpratica),
-        //    array('id' => 'DESC'));
-        //$astato= $richiesta[0]->getAstato();
-
-        $utente = $em->getRepository('estarRdaBundle:Utente')->findBy(
-            array('nomecognome' => "Sistematica"));
-        //$idutente= $utente[0]->getId();
         $avanti=false;
         $transizione="";
-        switch($codicemessaggio){
+        switch($codicestato){
 
             case '010': $transizione="rifiutata_amm_ABS"; $avanti=true; break;
             case '020': $transizione="rifiutata_tec_ABS"; $avanti=true; break;
@@ -68,7 +83,7 @@ class ServerESTARController extends Controller
                 $iter->setAstato($articleSM->getState());
                 $iter->setIdrichiesta($richiesta);
                 $iter->setIdutente($utente[0]);
-                $iter->setMotivazione($messaggio);
+                $iter->setMotivazione($note);
                 $iter->setDataora($data);
                 $em->persist($iter);
             }
@@ -81,24 +96,17 @@ class ServerESTARController extends Controller
         }
         }
 
+            */
 
-       // $iter -> setDastato($astato);
-       // $iter -> setAstato((string)$codicemessaggio);
-       // $iter -> setIdutente($utente[0]);
-       // $iter -> setIdrichiesta($idpratica);
-       // $iter -> setMotivazione($messaggio);
-       // $iter -> setDataora($data);
-       // $em->persist($iter);
 
-        $dateTime = new \DateTime();
-        $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
-       $data=  $dateTime->format(\DateTime::W3C);
+            return array(
+                'CoriceRisposta' => $messaggioErrore,
+                'codiceErrore' => $codice,
+                'DescrizioneErrore' => $descrizioneErrore,
+                'data' =>  $dataRispostaServer
+            );
 
-        return array(
-            'risposta' => $messaggioErrore,
-            'codice' => $codice,
-            'data' =>  $data
-        );
+        }
     }
 
 }
