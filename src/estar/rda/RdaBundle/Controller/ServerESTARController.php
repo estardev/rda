@@ -18,19 +18,39 @@ class ServerESTARController extends Controller
 {
     /**
      * @Soap\Method("notify")
-     * @Soap\Param("messaggio", phpType = "string")
+     * @Soap\Param("username", phpType = "string")
+     * @Soap\Param("pwd", phpType = "string")
+     * @Soap\Param("note", phpType = "string")
      * @Soap\Param("idpratica", phpType = "int")
-     * @Soap\Param("data", phpType = "dateTime")
-     * @Soap\Param("codicemessaggio", phpType = "int")
+     * @Soap\Param("dataRequest", phpType = "dateTime")
+     * @Soap\Param("codicestato", phpType = "int")
      * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\String[]")
      */
-    public function notifyAction($utente, $pwd, $note=null, $idpratica, $dataRequest, $codicestato)
+    public function notifyAction($username, $password, $note=null, $idpratica, $dataRequest, $codicestato)
     {   $em = $this->getDoctrine()->getManager();
+
+
         $dateTime = new \DateTime();
         $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
         $dataRispostaServer=  $dateTime->format(\DateTime::W3C);
 
-        if($utente != 'Sistematica' AND $pwd != md5("ciao")){
+        $user_manager = $this->get('fos_user.user_manager');
+        $factory = $this->get('security.encoder_factory');
+        $user = $user_manager->loadUserByUsername($username);
+        $encoder = $factory->getEncoder($user);
+        $boolvalore = ($encoder->isPasswordValid($user->getPassword(),$password,$user->getSalt())) ? "true" : "false";
+
+
+
+        ////controllare che esista l'utente sistematica e che la password sia quella
+        //$utente = $em->getRepository('estarRdaBundle:Utente')->findBy(
+        //    array('username' => "$user", 'password' => $pwd));
+//
+        //$userManager = $this->container->get('fos_user.user_manager');
+
+
+
+        if($username != 'Sistematica' AND !$boolvalore){
             $messaggioErrore="KO";
             $codice="040";  //KO
             $descrizioneErrore="Credenziali non corrette";
@@ -43,6 +63,7 @@ class ServerESTARController extends Controller
 
         }
         else{
+
             $risposta = $this->get('model.richiesta')->getPratica($utente, $note, $idpratica, $codicestato);
            //richiamoModel($idpratica, $codicestato, $note)
 
@@ -97,7 +118,12 @@ class ServerESTARController extends Controller
         }
 
             */
-
+         //   return array(
+         //       'CoriceRisposta' => "no",
+         //       'codiceErrore' => 000,
+         //       'DescrizioneErrore' => "nono",
+         //       'data' =>  $dataRispostaServer
+         //   );
 
             return array(
                 'CoriceRisposta' => $risposta->getCodiceRisposta(),
@@ -105,7 +131,7 @@ class ServerESTARController extends Controller
                 'DescrizioneErrore' => $risposta->getDescrizioneErrore(),
                 'data' =>  $risposta->getDataRisposta()
             );
-
+//
         }
     }
 
