@@ -24,7 +24,16 @@ class RichiestaModel extends Controller
     const STATUS_ATTESA_VAL_TEC='attesa_val_tec';
     const STATUS_ATTESA_VAL_AMM = 'attesa_val_amm';
     const STATUS_INSERITA_ABS = 'inserita_ABS';
+    const STATUS_CHIUSA_ABS = "chiusa_ABS";
+    const STATUS_EVASA_ABS = "evasa_ABS";
 
+    const STATUSABS_CHIUSA = "Chiusa da ABS";
+    const STATUSABS_ASSEGNATAPROGRAMMAZIONE = "In Programmazione";
+    const STATUSABS_VALUTAZIONE = "In valutazione";
+    const STATUSABS_ISTRUTTORIA = "In Istruttoria";
+    const STATUSABS_INDIZIONE = "Gara Indetta";
+    const STATUSABS_ANNULLATA = "Annullata da ABS";
+    const STATUSABS_ARCHIVIATA = "Archiviata da ABS";
 
     private $em;
 
@@ -202,16 +211,31 @@ class RichiestaModel extends Controller
 
     /**
      * Processa la chiamata ricevuta da Sistematica
-     * $param Utente $utente
+     * @param Utente $utente
+     * @param DateTime $data
      * @param string $note
      * @param string $idpratica
      * @param string $codicestato
      * @return RispostaPerSistematica
      */
-    public function getPratica($utente, $note, $idpratica, $codicestato) {
+    public function getPratica($utente, $data, $note, $idpratica, $codicestato) {
         // Ci costruiamo l'oggetto risposta
 
         $risposta = new RispostaPerSistematica();
+        //Ci prendiamo la data
+        $dateTime = new \DateTime();
+        $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
+        $dataIter = new DateTime();
+        $dataFornita = false;
+        if (is_null($data)) {
+            $dataIter = $dateTime->format(\DateTime::W3C);
+            $dataFornita = false;
+        } else {
+            $dataIter = $data;
+            $dataFornita = true;
+        }
+
+
 
         //Prendiamo la richiesta
 
@@ -234,10 +258,10 @@ class RichiestaModel extends Controller
                 //Tiriamo su la macchina a stati
                 $factory = $this->get('sm.factory');
                 $articleSM = $factory->get($richiesta, 'rda');
-                if ($articleSM->can('attesa_val_tec')) {
+                if ($articleSM->can('rifiutata_tec_ABS')) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
-                    $articleSM->apply('attesa_val_tec');
+                    $articleSM->apply('rifiutata_tec_ABS');
                     $iter->setAstato($articleSM->getState());
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
@@ -245,35 +269,324 @@ class RichiestaModel extends Controller
                     $iter->setAstatogestav($richiesta->getStatusgestav());
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
-
-
-
-
+                    $iter->setDataora($dataIter);
+                    $iter->setDatafornita($dataFornita);
+                    $this->em->flush();
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
                 }
+                $risposta->setDataRisposta($dataIter);
+                return $risposta;
             case '020':
                 //valutazione amministrativa
+                //La richiesta passa in stato di valutazione amministrativa
+                //Tiriamo su la macchina a stati
+                $factory = $this->get('sm.factory');
+                $articleSM = $factory->get($richiesta, 'rda');
+                if ($articleSM->can('rifiutata_amm_ABS')) {
+                    $iter= new Iter();
+                    $iter->setDastato($articleSM->getState());
+                    $articleSM->apply('rifiutata_amm_ABS');
+                    $iter->setAstato($articleSM->getState());
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav($richiesta->getStatusgestav());
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dataIter);
+                    $iter->setDatafornita($dataFornita);
+                    $this->em->flush();
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
+                }
+                $risposta->setDataRisposta($dataIter);
+                return $risposta;
+
             case '030':
                 //attesa documentazione aggiuntiva
+
+                //La richiesta passa in stato di valutazione amministrativa
+                //Tiriamo su la macchina a stati
+                $factory = $this->get('sm.factory');
+                $articleSM = $factory->get($richiesta, 'rda');
+                if ($articleSM->can('rifiutata_amm_ABS')) {
+                    $iter= new Iter();
+                    $iter->setDastato($articleSM->getState());
+                    $articleSM->apply('rifiutata_amm_ABS');
+                    $iter->setAstato($articleSM->getState());
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $risposta->setDataRisposta($dataIter);
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav($richiesta->getStatusgestav());
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dataIter);
+                    $iter->setDatafornita($dataFornita);
+                    $this->em->flush();
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
+                    $risposta->setDataRisposta($dataIter);
+                }
+                //TODO: ricordiamoci di mettere un avviso via mail
+                return $risposta;
+
             case '040':
                 //rigetto pratica
+                //La richiesta passa in stato di rifiutata ABS
+                //Tiriamo su la macchina a stati
+                $factory = $this->get('sm.factory');
+                $articleSM = $factory->get($richiesta, 'rda');
+                if ($articleSM->can('chiusura_ABS')) {
+                    $iter= new Iter();
+                    $iter->setDastato($articleSM->getState());
+                    $articleSM->apply('chiusura_ABS');
+                    $iter->setAstato($articleSM->getState());
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $risposta->setDataRisposta($dataIter);
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSABS_CHIUSA);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dataIter);
+                    $iter->setDatafornita($dataFornita);
+                    $this->em->flush();
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
+                    $risposta->setDataRisposta($dataIter);
+                }
+                return $risposta;
+
             case '050':
                 //Assegnata programmazione
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INSERITA_ABS) {
+                    $iter= new Iter();
+                    $iter->setDastato($richiesta->getStatus());
+                    $iter->setAstato($richiesta->getStatus());
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSABS_ASSEGNATAPROGRAMMAZIONE);
+                    $richiesta->setAnnoprogrammazione($note);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dataIter);
+                    $iter->setDatafornita($dataFornita);
+                    $this->em->flush();
+
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
+                }
+                $risposta->setDataRisposta($dataIter);
+                return $risposta;
             case '060':
                 //Istruttoria
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INSERITA_ABS) {
+                    $iter= new Iter();
+                    $iter->setDastato($richiesta->getStatus());
+                    $iter->setAstato($richiesta->getStatus());
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSABS_ISTRUTTORIA);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dataIter);
+                    $iter->setDatafornita($dataFornita);
+                    $this->em->flush();
+
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
+                }
+                $risposta->setDataRisposta($dataIter);
+                return $risposta;
             case '070':
                 //Indizione
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INSERITA_ABS) {
+                    $iter= new Iter();
+                    $iter->setDastato($richiesta->getStatus());
+                    $iter->setAstato($richiesta->getStatus());
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSABS_INDIZIONE);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dataIter);
+                    $iter->setDatafornita($dataFornita);
+                    $this->em->flush();
+
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
+                }
+                $risposta->setDataRisposta($dataIter);
+                return $risposta;
+
             case '080':
                 //Valutazione
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INSERITA_ABS) {
+                    $iter= new Iter();
+                    $iter->setDastato($richiesta->getStatus());
+                    $iter->setAstato($richiesta->getStatus());
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSABS_VALUTAZIONE);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dataIter);
+                    $iter->setDatafornita($dataFornita);
+                    $this->em->flush();
+
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
+                }
+                $risposta->setDataRisposta($dataIter);
+                return $risposta;
+
             case '090':
                 //Aggiudicazione
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INSERITA_ABS) {
+                    $iter= new Iter();
+                    $iter->setDastato($richiesta->getStatus());
+                    $iter->setAstato($richiesta->getStatus());
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSABS_VALUTAZIONE);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dataIter);
+                    $iter->setDatafornita($dataFornita);
+                    $this->em->flush();
+
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
+                }
+                $risposta->setDataRisposta($dataIter);
+                return $risposta;
+
             case '100':
                 //Chiusura (iter terminato)
+                $factory = $this->get('sm.factory');
+                $articleSM = $factory->get($richiesta, 'rda');
+                if ($articleSM->can('chiusura_ABS')) {
+                    $iter= new Iter();
+                    $iter->setDastato($articleSM->getState());
+                    $articleSM->apply('evasione_ABS');
+                    $iter->setAstato($articleSM->getState());
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $risposta->setDataRisposta($dataIter);
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSABS_CHIUSA);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dataIter);
+                    $iter->setDatafornita($dataFornita);
+                    $this->em->flush();
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
+                    $risposta->setDataRisposta($dataIter);
+                }
+                return $risposta;
+
             case '110':
                 //Annullato ABS
+                $factory = $this->get('sm.factory');
+                $articleSM = $factory->get($richiesta, 'rda');
+                if ($articleSM->can('annullamento_ABS')) {
+                    $iter= new Iter();
+                    $iter->setDastato($articleSM->getState());
+                    $articleSM->apply('annullamento_ABS');
+                    $iter->setAstato($articleSM->getState());
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $risposta->setDataRisposta($dataIter);
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSABS_ANNULLATO);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dataIter);
+                    $iter->setDatafornita($dataFornita);
+                    $this->em->flush();
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
+                    $risposta->setDataRisposta($dataIter);
+                }
+                return $risposta;
+
             case '120':
                 //Archiviato ABS
+
+                $factory = $this->get('sm.factory');
+                $articleSM = $factory->get($richiesta, 'rda');
+                if ($articleSM->can('chiusura_ABS')) {
+                    $iter= new Iter();
+                    $iter->setDastato($articleSM->getState());
+                    $articleSM->apply('evasione_ABS');
+                    $iter->setAstato($articleSM->getState());
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $risposta->setDataRisposta($dataIter);
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSABS_ARCHIVIATA);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dataIter);
+                    $iter->setDatafornita($dataFornita);
+                    $this->em->flush();
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
+                    $risposta->setDataRisposta($dataIter);
+                }
+                return $risposta;
+
             default:
                 //Codice non gestito. Ritorniamo errore.
+                $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
+                $risposta->setDataRisposta($dataIter);
+                return $risposta;
         }
     }
 }

@@ -36,9 +36,9 @@ class ServerESTARController extends Controller
 
         $user_manager = $this->get('fos_user.user_manager');
         $factory = $this->get('security.encoder_factory');
-        $user = $user_manager->loadUserByUsername($username);
-        $encoder = $factory->getEncoder($user);
-        $boolvalore = ($encoder->isPasswordValid($user->getPassword(),$password,$user->getSalt())) ? "true" : "false";
+        $utente = $user_manager->loadUserByUsername($username);
+        $encoder = $factory->getEncoder($utente);
+        $boolvalore = ($encoder->isPasswordValid($utente->getPassword(),$password,$utente->getSalt())) ? "true" : "false";
 
 
 
@@ -64,7 +64,7 @@ class ServerESTARController extends Controller
         }
         else{
 
-            $risposta = $this->get('model.richiesta')->getPratica($utente, $note, $idpratica, $codicestato);
+            $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $idpratica, $codicestato);
            //richiamoModel($idpratica, $codicestato, $note)
 
 

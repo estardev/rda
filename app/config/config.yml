@@ -136,6 +136,9 @@ winzou_state_machine:
             - attesa_val_tec
             - attesa_val_amm
             - inserita_ABS
+            - evasa_ABS
+            - chiusa_ABS
+            - annullata_ABS
         # list of all possible transitions:
         transitions:
             presentata:
@@ -159,6 +162,15 @@ winzou_state_machine:
             rifiutata_tec_ABS:
                 from: [inserita_ABS]
                 to: attesa_val_tec
+            chiusura_ABS:
+                from: [inserita_ABS]
+                to: chiusa_ABS
+            evasione_ABS:
+                from: [inserita_ABS]
+                to: evasa_ABS
+            annullamento_ABS:
+                from [inserita_ABS]
+                to: annullata_ABS
         # list of all callbacks
         callbacks:
             # will be called before applying a transition
