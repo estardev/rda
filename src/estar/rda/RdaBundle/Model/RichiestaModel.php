@@ -5,6 +5,7 @@ namespace estar\rda\RdaBundle\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Entity\Campo;
+use estar\rda\RdaBundle\Entity\Iter;
 use \Doctrine\ORM\EntityManager;
 
 /**
@@ -219,7 +220,60 @@ class RichiestaModel extends Controller
         //Se la richiesta non è trovata, ritorniamo un messaggio di errore
         if (is_null($richiesta)) {
             $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+            $risposta->setCodiceErrore(RispostaPerSistematica::codiceErrorePraticaNonTrovata);
+            $risposta->setDescrizioneErrore("Non è stata trovata alcuna pratica con id ".$idpratica);
+            return $risposta;
         }
 
+        //Passiamo a gestire i vari caso
+
+        switch($codicestato){
+            case '010':
+                //valutazione tecnica
+                //La richiesta passa in stato di valutazione tecnica
+                //Tiriamo su la macchina a stati
+                $factory = $this->get('sm.factory');
+                $articleSM = $factory->get($richiesta, 'rda');
+                if ($articleSM->can('attesa_val_tec')) {
+                    $iter= new Iter();
+                    $iter->setDastato($articleSM->getState());
+                    $articleSM->apply('attesa_val_tec');
+                    $iter->setAstato($articleSM->getState());
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav($richiesta->getStatusgestav());
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+
+
+
+
+                }
+            case '020':
+                //valutazione amministrativa
+            case '030':
+                //attesa documentazione aggiuntiva
+            case '040':
+                //rigetto pratica
+            case '050':
+                //Assegnata programmazione
+            case '060':
+                //Istruttoria
+            case '070':
+                //Indizione
+            case '080':
+                //Valutazione
+            case '090':
+                //Aggiudicazione
+            case '100':
+                //Chiusura (iter terminato)
+            case '110':
+                //Annullato ABS
+            case '120':
+                //Archiviato ABS
+            default:
+                //Codice non gestito. Ritorniamo errore.
+        }
     }
 }

@@ -259,7 +259,9 @@ class RichiestaController extends Controller
     /**
      * Valida una richiesta in base al ruolo dell'utente
      *
-     * @param mixed $id The entity id
+     * @param String $id Id della richiesta
+     * @param String $transizione la transizione
+     * @param Request $request la request su cui si lavora
      *
      * @return \Symfony\Component\Form\Form The form
      */

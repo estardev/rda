@@ -13,8 +13,10 @@ class RispostaPerSistematica
 {
 
     const codiceRispostaErrore = 'KO';
-
     const codiceRispostaOk = 'OK';
+    const codiceErrorePraticaNonTrovata = '010';
+    const codiceErroreStatoNonGestito = '020';
+    const codiceErroreAltro = '030';
 
     /**
      * @var DateTime
