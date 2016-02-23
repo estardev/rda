@@ -7,6 +7,8 @@ use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Entity\Campo;
 use estar\rda\RdaBundle\Entity\Iter;
 use \Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 
 /**
  * Class RichiestaModel
@@ -39,15 +41,20 @@ class RichiestaModel extends Controller
 
     private $user;
 
+    private $container;
+
 
     /** costruttore di default. Mi serve un entity manager e l'utente corrente
-     * @param $em
-     * @param $user
+     * 20160223: aggiunti anche il service container e la session
+     * @param EntityManager $em
+     * @param Utente $user
+     * @param ContainerInterface containerInterface
      */
-    public function __construct(EntityManager $em, $user)
+    public function __construct(EntityManager $em, Utente $user, ContainerInterface $containerInterface)
     {
         $this->em = $em;
         $this->user = $user;
+        $this->container = $containerInterface;
     }
 
 
@@ -256,7 +263,7 @@ class RichiestaModel extends Controller
                 //valutazione tecnica
                 //La richiesta passa in stato di valutazione tecnica
                 //Tiriamo su la macchina a stati
-                $factory = $this->get('sm.factory');
+                $factory = $this->container->get('sm.factory');
                 $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('rifiutata_tec_ABS')) {
                     $iter= new Iter();
@@ -270,6 +277,7 @@ class RichiestaModel extends Controller
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dataIter);
+                    $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
                     $this->em->flush();
                 } else {
@@ -284,7 +292,7 @@ class RichiestaModel extends Controller
                 //valutazione amministrativa
                 //La richiesta passa in stato di valutazione amministrativa
                 //Tiriamo su la macchina a stati
-                $factory = $this->get('sm.factory');
+                $factory = $this->container->get('sm.factory');
                 $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('rifiutata_amm_ABS')) {
                     $iter= new Iter();
@@ -298,6 +306,7 @@ class RichiestaModel extends Controller
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dataIter);
+                    $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
                     $this->em->flush();
                 } else {
@@ -314,7 +323,7 @@ class RichiestaModel extends Controller
 
                 //La richiesta passa in stato di valutazione amministrativa
                 //Tiriamo su la macchina a stati
-                $factory = $this->get('sm.factory');
+                $factory = $this->container->get('sm.factory');
                 $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('rifiutata_amm_ABS')) {
                     $iter= new Iter();
@@ -329,6 +338,7 @@ class RichiestaModel extends Controller
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dataIter);
+                    $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
                     $this->em->flush();
                 } else {
@@ -345,7 +355,7 @@ class RichiestaModel extends Controller
                 //rigetto pratica
                 //La richiesta passa in stato di rifiutata ABS
                 //Tiriamo su la macchina a stati
-                $factory = $this->get('sm.factory');
+                $factory = $this->container->get('sm.factory');
                 $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('chiusura_ABS')) {
                     $iter= new Iter();
@@ -360,6 +370,7 @@ class RichiestaModel extends Controller
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dataIter);
+                    $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
                     $this->em->flush();
                 } else {
@@ -385,6 +396,7 @@ class RichiestaModel extends Controller
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dataIter);
+                    $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
                     $this->em->flush();
 
@@ -409,6 +421,7 @@ class RichiestaModel extends Controller
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dataIter);
+                    $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
                     $this->em->flush();
 
@@ -433,6 +446,7 @@ class RichiestaModel extends Controller
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dataIter);
+                    $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
                     $this->em->flush();
 
@@ -458,6 +472,7 @@ class RichiestaModel extends Controller
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dataIter);
+                    $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
                     $this->em->flush();
 
@@ -483,6 +498,7 @@ class RichiestaModel extends Controller
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dataIter);
+                    $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
                     $this->em->flush();
 
@@ -497,7 +513,7 @@ class RichiestaModel extends Controller
 
             case '100':
                 //Chiusura (iter terminato)
-                $factory = $this->get('sm.factory');
+                $factory = $this->container->get('sm.factory');
                 $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('chiusura_ABS')) {
                     $iter= new Iter();
@@ -512,6 +528,7 @@ class RichiestaModel extends Controller
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dataIter);
+                    $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
                     $this->em->flush();
                 } else {
@@ -525,7 +542,7 @@ class RichiestaModel extends Controller
 
             case '110':
                 //Annullato ABS
-                $factory = $this->get('sm.factory');
+                $factory = $this->container->get('sm.factory');
                 $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('annullamento_ABS')) {
                     $iter= new Iter();
@@ -540,6 +557,7 @@ class RichiestaModel extends Controller
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dataIter);
+                    $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
                     $this->em->flush();
                 } else {
@@ -554,7 +572,7 @@ class RichiestaModel extends Controller
             case '120':
                 //Archiviato ABS
 
-                $factory = $this->get('sm.factory');
+                $factory = $this->container->get('sm.factory');
                 $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('chiusura_ABS')) {
                     $iter= new Iter();
@@ -569,6 +587,7 @@ class RichiestaModel extends Controller
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dataIter);
+                    $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
                     $this->em->flush();
                 } else {
