@@ -74,7 +74,7 @@ class Iter
 
     /**
      * @var boolean
-     * @ORM\Column(name="datafornita", type="boolean", nullable="true")
+     * @ORM\Column(name="datafornita", type="boolean", nullable=true)
      */
     private $datafornita;
     /**
