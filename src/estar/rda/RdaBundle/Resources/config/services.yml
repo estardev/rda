@@ -20,6 +20,7 @@ services:
           em: "@doctrine.orm.entity_manager"
           user: "@security.context"
           session: "@session"
+          arguments: [@service_container]
 
     model.campo:
         class: estar\rda\RdaBundle\Model\CampoModel
