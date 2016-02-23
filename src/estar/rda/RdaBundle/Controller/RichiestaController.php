@@ -292,9 +292,9 @@ class RichiestaController extends Controller
             $iter->setAstato($articleSM->getState());
             $iter->setIdrichiesta($richiesta);
             $iter->setIdutente($utente);
-            //TODO aggiungere motivazione
             $iter->setMotivazione($messaggio);
             $iter->setDataora(new \DateTime('now'));
+            $iter->setDatafornita(true);
             $em->persist($iter);
         }
 
