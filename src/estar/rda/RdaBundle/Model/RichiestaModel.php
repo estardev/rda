@@ -225,7 +225,7 @@ class RichiestaModel extends Controller
      * @param string $codicestato
      * @return RispostaPerSistematica
      */
-    public function getPratica($utente, $data, $note, $idpratica, $codicestato) {
+    public function getPraticaAction($utente, $data, $note, $idpratica, $codicestato) {
         // Ci costruiamo l'oggetto risposta
 
         $risposta = new RispostaPerSistematica();
@@ -263,7 +263,7 @@ class RichiestaModel extends Controller
                 //valutazione tecnica
                 //La richiesta passa in stato di valutazione tecnica
                 //Tiriamo su la macchina a stati
-                $factory = $this->container->get('sm.factory');
+                $factory = $this->get('sm.factory');
                 $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('rifiutata_tec_ABS')) {
                     $iter= new Iter();
@@ -292,7 +292,7 @@ class RichiestaModel extends Controller
                 //valutazione amministrativa
                 //La richiesta passa in stato di valutazione amministrativa
                 //Tiriamo su la macchina a stati
-                $factory = $this->container->get('sm.factory');
+                $factory = $this->get('sm.factory');
                 $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('rifiutata_amm_ABS')) {
                     $iter= new Iter();
@@ -323,7 +323,7 @@ class RichiestaModel extends Controller
 
                 //La richiesta passa in stato di valutazione amministrativa
                 //Tiriamo su la macchina a stati
-                $factory = $this->container->get('sm.factory');
+                $factory = $this->get('sm.factory');
                 $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('rifiutata_amm_ABS')) {
                     $iter= new Iter();
@@ -355,7 +355,7 @@ class RichiestaModel extends Controller
                 //rigetto pratica
                 //La richiesta passa in stato di rifiutata ABS
                 //Tiriamo su la macchina a stati
-                $factory = $this->container->get('sm.factory');
+                $factory = $this->get('sm.factory');
                 $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('chiusura_ABS')) {
                     $iter= new Iter();
@@ -572,7 +572,7 @@ class RichiestaModel extends Controller
             case '120':
                 //Archiviato ABS
 
-                $factory = $this->container->get('sm.factory');
+                $factory = $this->get('sm.factory');
                 $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('chiusura_ABS')) {
                     $iter= new Iter();
