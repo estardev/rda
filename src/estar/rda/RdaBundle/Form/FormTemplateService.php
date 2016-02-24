@@ -13,6 +13,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
+use estar\rda\RdaBundle\Entity\Richiesta;
 
 class FormTemplateService
 {
@@ -144,6 +145,13 @@ class FormTemplateService
 
                     }
                 ));
+            //FG20160224 modifica per priorità
+            $builder->add("priorita", "choice", array(
+                'choices' => Richiesta::getPossibleEnumPriorita(),
+                'label' => "Priorità richiesta",
+                'data' => "3"
+            ));
+
             $firstLevels = array();
             foreach ($campi as $campo) {
                 //FG 20151027 modifica per campi visualizzabili a seconda dei diritti
