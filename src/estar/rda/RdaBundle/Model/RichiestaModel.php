@@ -8,6 +8,7 @@ use estar\rda\RdaBundle\Entity\Campo;
 use estar\rda\RdaBundle\Entity\Iter;
 use \Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use estar\rda\RdaBundle\Entity\Utente;
 
 
 /**
@@ -19,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @package estar\rda\RdaBundle\Model
  */
-class RichiestaModel extends Controller
+class RichiestaModel
 {
 
     const STATUS_BOZZA = 'bozza';
@@ -37,11 +38,11 @@ class RichiestaModel extends Controller
     const STATUSABS_ANNULLATA = "Annullata da ABS";
     const STATUSABS_ARCHIVIATA = "Archiviata da ABS";
 
-    private $em;
+    protected $em;
 
-    private $user;
+    protected $user;
 
-    private $container;
+    protected $container;
 
 
     /** costruttore di default. Mi serve un entity manager e l'utente corrente
@@ -50,7 +51,7 @@ class RichiestaModel extends Controller
      * @param Utente $user
      * @param ContainerInterface containerInterface
      */
-    public function __construct(EntityManager $em, Utente $user, ContainerInterface $containerInterface)
+    public function __construct(EntityManager $em, $user, ContainerInterface $containerInterface)
     {
         $this->em = $em;
         $this->user = $user;
@@ -68,7 +69,7 @@ class RichiestaModel extends Controller
             ->find($idRichiesta);
         $idCategoria = $richiesta->getIdCategoria()->getId();
         //tiro su il gestore dei diritti
-        $usercheck = $this->get("usercheck.notify");
+        $usercheck = $this->container->get("usercheck.notify");
         //stabiliamo i diritti per la richiesta
         $diritti = $usercheck->allRole($idCategoria);
         $isAbilitatoInserimento = $diritti[0];
@@ -175,7 +176,7 @@ class RichiestaModel extends Controller
      * @return array(Categoria) un array di categorie
      */
     public function getCategorieByUser() {
-        $usercheck = $this->get("usercheck.notify");
+        $usercheck = $this->container->get("usercheck.notify");
 
         $utente = $usercheck->getUtente();
         $toReturn = array();
@@ -225,14 +226,14 @@ class RichiestaModel extends Controller
      * @param string $codicestato
      * @return RispostaPerSistematica
      */
-    public function getPraticaAction($utente, $data, $note, $idpratica, $codicestato) {
+    public function getPratica($utente, $data, $note, $idpratica, $codicestato) {
         // Ci costruiamo l'oggetto risposta
 
         $risposta = new RispostaPerSistematica();
         //Ci prendiamo la data
         $dateTime = new \DateTime();
         $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
-        $dataIter = new DateTime();
+        $dataIter = new \DateTime();
         $dataFornita = false;
         if (is_null($data)) {
             $dataIter = $dateTime->format(\DateTime::W3C);
@@ -246,7 +247,7 @@ class RichiestaModel extends Controller
 
         //Prendiamo la richiesta
 
-        $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')->findOneBy(array('idpratica' => $idpratica));
+        $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')->findOneBy(array('id' => $idpratica));
 
         //Se la richiesta non è trovata, ritorniamo un messaggio di errore
         if (is_null($richiesta)) {
@@ -258,7 +259,7 @@ class RichiestaModel extends Controller
 
         //Passiamo a gestire i vari caso
         //Tiriamo su la macchina a stati
-        $factory = $this->get('sm.factory');
+        $factory = $this->container->get('sm.factory');
         $articleSM = $factory->get($richiesta, 'rda');
 
         switch($codicestato){
@@ -594,3 +595,4 @@ class RichiestaModel extends Controller
         }
     }
 }
+

@@ -169,7 +169,7 @@ winzou_state_machine:
                 from: [inserita_ABS]
                 to: evasa_ABS
             annullamento_ABS:
-                from [inserita_ABS]
+                from: [inserita_ABS]
                 to: annullata_ABS
         # list of all callbacks
         callbacks:
