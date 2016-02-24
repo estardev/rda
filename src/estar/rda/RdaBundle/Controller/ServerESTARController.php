@@ -38,12 +38,16 @@ class ServerESTARController extends Controller
         $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
         $dataRispostaServer = $dateTime->format(\DateTime::W3C);
 
+        try {
         $user_manager = $this->get('fos_user.user_manager');
         $factory = $this->get('security.encoder_factory');
         $utente = $user_manager->loadUserByUsername($username);
         $encoder = $factory->getEncoder($utente);
         $boolvalore = ($encoder->isPasswordValid($utente->getPassword(), $password, $utente->getSalt())) ? "true" : "false";
+        } catch(\Exception $e) {
 
+            throw new \SoapFault('Errore', 'not found');
+        }
 
         ////controllare che esista l'utente sistematica e che la password sia quella
         //$utente = $em->getRepository('estarRdaBundle:Utente')->findBy(
@@ -52,7 +56,7 @@ class ServerESTARController extends Controller
         //$userManager = $this->container->get('fos_user.user_manager');
 
 
-        if ($username != 'sistematica' AND !$boolvalore) {
+        if ($username != 'sistematica' AND $boolvalore) {
             $messaggioErrore = "KO";
             $codice = "040";  //KO
             $descrizioneErrore = "Credenziali non corrette";
@@ -72,14 +76,10 @@ class ServerESTARController extends Controller
                     'DescrizioneErrore' => $risposta->getDescrizioneErrore(),
                     'data' => $risposta->getDataRisposta()
                 );
-                ////} catch(\Exception $e) {
+                } catch(\Exception $e) {
+                    throw new \SoapFault('Errore', 'not found');
+                }
 
-                //    throw new \SoapFault('Errore', 'not found');
-                //}
-            } catch (\SoapFault $e) {
-                echo "ciao";
-
-            }
 
 
             //  return array(
