@@ -257,14 +257,14 @@ class RichiestaModel extends Controller
         }
 
         //Passiamo a gestire i vari caso
+        //Tiriamo su la macchina a stati
+        $factory = $this->get('sm.factory');
+        $articleSM = $factory->get($richiesta, 'rda');
 
         switch($codicestato){
             case '010':
                 //valutazione tecnica
                 //La richiesta passa in stato di valutazione tecnica
-                //Tiriamo su la macchina a stati
-                $factory = $this->get('sm.factory');
-                $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('rifiutata_tec_ABS')) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
@@ -291,9 +291,6 @@ class RichiestaModel extends Controller
             case '020':
                 //valutazione amministrativa
                 //La richiesta passa in stato di valutazione amministrativa
-                //Tiriamo su la macchina a stati
-                $factory = $this->get('sm.factory');
-                $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('rifiutata_amm_ABS')) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
@@ -322,9 +319,6 @@ class RichiestaModel extends Controller
                 //attesa documentazione aggiuntiva
 
                 //La richiesta passa in stato di valutazione amministrativa
-                //Tiriamo su la macchina a stati
-                $factory = $this->get('sm.factory');
-                $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('rifiutata_amm_ABS')) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
@@ -354,9 +348,6 @@ class RichiestaModel extends Controller
             case '040':
                 //rigetto pratica
                 //La richiesta passa in stato di rifiutata ABS
-                //Tiriamo su la macchina a stati
-                $factory = $this->get('sm.factory');
-                $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('chiusura_ABS')) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
@@ -513,8 +504,6 @@ class RichiestaModel extends Controller
 
             case '100':
                 //Chiusura (iter terminato)
-                $factory = $this->container->get('sm.factory');
-                $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('chiusura_ABS')) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
@@ -542,8 +531,6 @@ class RichiestaModel extends Controller
 
             case '110':
                 //Annullato ABS
-                $factory = $this->container->get('sm.factory');
-                $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('annullamento_ABS')) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
@@ -572,8 +559,6 @@ class RichiestaModel extends Controller
             case '120':
                 //Archiviato ABS
 
-                $factory = $this->get('sm.factory');
-                $articleSM = $factory->get($richiesta, 'rda');
                 if ($articleSM->can('chiusura_ABS')) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
