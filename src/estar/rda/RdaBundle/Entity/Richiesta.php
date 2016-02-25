@@ -26,12 +26,20 @@ class Richiesta
      */
     private $descrizione;
 
+
     /**
      * @var string
      *
      * @ORM\Column(name="numeroPratica", type="string", length=45, nullable=true)
      */
     private $numeropratica;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="priorita", type="string", length=45, nullable=true)
+     */
+    private $priorita;
 
     /**
      * @var string
@@ -53,13 +61,6 @@ class Richiesta
      * @ORM\Column(name="statusgestav", type="string", length=100, nullable=true)
      */
     private $statusgestav;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="urgenza", type="boolean", nullable=true)
-     */
-    private $urgenza;
 
     /**
      * @var string
@@ -261,30 +262,6 @@ class Richiesta
     }
 
     /**
-     * Set urgenza
-     *
-     * @param boolean $urgenza
-     *
-     * @return Richiesta
-     */
-    public function setUrgenza($urgenza)
-    {
-        $this->urgenza = $urgenza;
-
-        return $this;
-    }
-
-    /**
-     * Get urgenza
-     *
-     * @return boolean
-     */
-    public function getUrgenza()
-    {
-        return $this->urgenza;
-    }
-
-    /**
      * Get id
      *
      * @return integer
@@ -341,6 +318,39 @@ class Richiesta
     {
         return $this->idazienda;
     }
+
+    /**
+     * @return string
+     */
+    public function getPriorita()
+    {
+        return $this->priorita;
+    }
+
+    /**
+     * @param string $priorita
+     * @return Richiesta
+     */
+    public function setPriorita($priorita)
+    {
+        $this->priorita = $priorita;
+
+        return $this;
+    }
+
+    /**
+     * Ritorna i valori possibili per la priorità
+     * @return array
+     */
+    public static function getPossibleEnumPriorita()
+    {
+        $choices = array(
+            '1' => 'Prioritaria',
+            '2' => 'Elevata',
+            '3' => 'Standard');
+        return $choices;
+    }
+
 
     public function __toString(){return strval($this->getId());}
 }
