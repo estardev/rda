@@ -5,12 +5,15 @@ namespace estar\rda\RdaBundle\Controller;
 use BeSimple\SoapBundle\ServiceDefinition\Annotation as Soap;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 //use Symfony\Component\DependencyInjection\ContainerAware;
+//use Symfony\Component\Security\Core\Security;
+//use Symfony\Component\Security\Core\SecurityContextInterface;
+//use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use BeSimple\SoapClient;
 use BeSimple\SoapServer;
 use BeSimple\SoapCommon;
 use BeSimple\SoapBundle;
 use BeSimple\SoapWsdl;
-use Doctrine\Entity;
 use estar\rda\RdaBundle\Entity\Iter;
 use estar\rda\RdaBundle\Entity\Utente;
 
@@ -29,7 +32,8 @@ class ServerESTARController extends Controller
      * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\String[]")
      */
     public function notifyAction($username, $password, $note=null, $idpratica, $dataRequest=null, $codicestato)
-    {   $username=strtolower($username);
+    {   $boolvalore=false;
+        $username1=strtolower($username);
         $em = $this->getDoctrine()->getManager();
         //$postdata = file_get_contents("php://input");
         //file_put_contents("file1.txt",$postdata);
@@ -39,14 +43,19 @@ class ServerESTARController extends Controller
         $dataRispostaServer = $dateTime->format(\DateTime::W3C);
 
         try {
-        $user_manager = $this->get('fos_user.user_manager');
-        $factory = $this->get('security.encoder_factory');
-        $utente = $user_manager->loadUserByUsername($username);
-        $encoder = $factory->getEncoder($utente);
-        $boolvalore = ($encoder->isPasswordValid($utente->getPassword(), $password, $utente->getSalt())) ? "true" : "false";
+            $utente = $em->getRepository('estarRdaBundle:Utente')->findOneBy(
+            array('username' => "$username1", 'utentecartaoperatore' => $password));
+
+            if ($utente) {
+                //$user_manager = $this->get('fos_user.user_manager');
+                //$user = $user_manager->findUserByUsername($username);
+                //$token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                //$this->get('security.token_storage')->setToken($token);
+                $boolvalore=true;
+            }
         } catch(\Exception $e) {
 
-            throw new \SoapFault('Errore', 'not found');
+            throw new \SoapFault('Errore', 'Contattare i sistemisti');
         }
 
         ////controllare che esista l'utente sistematica e che la password sia quella
@@ -56,12 +65,12 @@ class ServerESTARController extends Controller
         //$userManager = $this->container->get('fos_user.user_manager');
 
 
-        if ($username != 'sistematica' AND $boolvalore) {
+        if ($username1 != 'sistematica'  AND !$boolvalore) {
             $messaggioErrore = "KO";
             $codice = "040";  //KO
             $descrizioneErrore = "Credenziali non corrette";
             return array(
-                'CoriceRisposta' => $messaggioErrore,
+                'CodiceRisposta' => $messaggioErrore,
                 'codiceErrore' => $codice,
                 'DescrizioneErrore' => $descrizioneErrore,
                 'data' => $dataRispostaServer
@@ -71,7 +80,7 @@ class ServerESTARController extends Controller
             try {
                 $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $idpratica, $codicestato);
                 return array(
-                    'CoriceRisposta' => $risposta->getCodiceRisposta(),
+                    'CodiceRisposta' => $risposta->getCodiceRisposta(),
                     'codiceErrore' => $risposta->getCodiceErrore(),
                     'DescrizioneErrore' => $risposta->getDescrizioneErrore(),
                     'data' => $risposta->getDataRisposta()
