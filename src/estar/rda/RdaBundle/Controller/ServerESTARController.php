@@ -32,8 +32,7 @@ class ServerESTARController extends Controller
      * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\String[]")
      */
     public function notifyAction($username, $password, $note=null, $idpratica, $dataRequest=null, $codicestato)
-    {   $boolvalore=false;
-        $username1=strtolower($username);
+    {   $username1=strtolower($username);
         $em = $this->getDoctrine()->getManager();
         //$postdata = file_get_contents("php://input");
         //file_put_contents("file1.txt",$postdata);
@@ -46,26 +45,12 @@ class ServerESTARController extends Controller
             $utente = $em->getRepository('estarRdaBundle:Utente')->findOneBy(
             array('username' => "$username1", 'utentecartaoperatore' => $password));
 
-            if ($utente) {
+            if (!$utente) {
+                    //SE C'è BISOGNO DI ABILITARE IL LOGIN TRAMITE WS ABILITARE QUESTE RIGHE
                 //$user_manager = $this->get('fos_user.user_manager');
                 //$user = $user_manager->findUserByUsername($username);
                 //$token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
                 //$this->get('security.token_storage')->setToken($token);
-                $boolvalore=true;
-            }
-        } catch(\Exception $e) {
-
-            throw new \SoapFault('Errore', 'Contattare i sistemisti');
-        }
-
-        ////controllare che esista l'utente sistematica e che la password sia quella
-        //$utente = $em->getRepository('estarRdaBundle:Utente')->findBy(
-        //    array('username' => "$user", 'password' => $pwd));
-//
-        //$userManager = $this->container->get('fos_user.user_manager');
-
-
-        if ($username1 != 'sistematica'  AND !$boolvalore) {
             $messaggioErrore = "KO";
             $codice = "040";  //KO
             $descrizioneErrore = "Credenziali non corrette";
@@ -76,8 +61,7 @@ class ServerESTARController extends Controller
                 'data' => $dataRispostaServer
             );
 
-        } else {
-            try {
+             } else {
                 $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $idpratica, $codicestato);
                 return array(
                     'CodiceRisposta' => $risposta->getCodiceRisposta(),
@@ -85,19 +69,10 @@ class ServerESTARController extends Controller
                     'DescrizioneErrore' => $risposta->getDescrizioneErrore(),
                     'data' => $risposta->getDataRisposta()
                 );
-                } catch(\Exception $e) {
-                    throw new \SoapFault('Errore', 'not found');
-                }
 
-
-
-            //  return array(
-            //      'CoriceRisposta' => 00,
-            //      'codiceErrore' => 01,
-            //      'DescrizioneErrore' => "ciao",
-            //      'data' =>  $dataRispostaServer
-            //  );
-//
+        }
+        } catch(\Exception $e) {
+            throw new \SoapFault('Errore', 'Contattare i sistemisti');
         }
     }
 }
