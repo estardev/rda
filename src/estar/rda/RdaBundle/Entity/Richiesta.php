@@ -63,13 +63,6 @@ class Richiesta
     private $statusgestav;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="urgenza", type="boolean", nullable=true)
-     */
-    private $urgenza;
-
-    /**
      * @var string
      * @ORM\Column(name="annoprogrammazione", type="string", length=100, nullable=true)
      */
@@ -266,30 +259,6 @@ class Richiesta
     public function getStatusgestav()
     {
         return $this->statusgestav;
-    }
-
-    /**
-     * Set urgenza
-     *
-     * @param boolean $urgenza
-     *
-     * @return Richiesta
-     */
-    public function setUrgenza($urgenza)
-    {
-        $this->urgenza = $urgenza;
-
-        return $this;
-    }
-
-    /**
-     * Get urgenza
-     *
-     * @return boolean
-     */
-    public function getUrgenza()
-    {
-        return $this->urgenza;
     }
 
     /**
