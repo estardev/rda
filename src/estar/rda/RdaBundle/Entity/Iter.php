@@ -36,13 +36,13 @@ class Iter
 
     /**
      * @var string
-     * @ORM\Column(name="dastatogestav", type="text", length=100, nullable=true);
+     * @ORM\Column(name="dastatogestav", type="string", length=100, nullable=true);
      */
     private $dastatogestav;
 
     /**
      * @var string
-     * @ORM\Column(name="astatogestav", type="text", length=100, nullable=true);
+     * @ORM\Column(name="astatogestav", type="string", length=100, nullable=true);
      */
     private $astatogestav;
     /**
