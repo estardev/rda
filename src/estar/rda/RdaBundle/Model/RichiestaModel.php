@@ -282,7 +282,6 @@ class RichiestaModel
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rifiutata_tec_ABS');
                     $iter->setAstato($articleSM->getState());
-                    //TODO DA GESTAV A GESTAV NON FA
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav($richiesta->getStatusgestav());
                     $iter->setIdrichiesta($richiesta);
@@ -313,9 +312,6 @@ class RichiestaModel
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rifiutata_amm_ABS');
                     $iter->setAstato($articleSM->getState());
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav($richiesta->getStatusgestav());
                     $iter->setIdrichiesta($richiesta);
@@ -323,6 +319,10 @@ class RichiestaModel
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+
                     $this->em->persist($iter);
                     $this->em->flush();
 
@@ -344,9 +344,6 @@ class RichiestaModel
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rifiutata_amm_ABS');
                     $iter->setAstato($articleSM->getState());
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav($richiesta->getStatusgestav());
                     $iter->setIdrichiesta($richiesta);
@@ -354,6 +351,10 @@ class RichiestaModel
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+
                     $this->em->persist($iter);
                     $this->em->flush();
                 } else {
@@ -374,9 +375,6 @@ class RichiestaModel
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('chiusura_ABS');
                     $iter->setAstato($articleSM->getState());
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_CHIUSA);
                     $iter->setIdrichiesta($richiesta);
@@ -384,6 +382,10 @@ class RichiestaModel
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+
                     $this->em->persist($iter);
                     $this->em->flush();
                 } else {
@@ -401,17 +403,18 @@ class RichiestaModel
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_ASSEGNATAPROGRAMMAZIONE);
-                    $richiesta->setAnnoprogrammazione($note);
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $richiesta->setAnnoprogrammazione($note);
+
                     $this->em->persist($iter);
                     $this->em->flush();
                 } else {
@@ -428,9 +431,6 @@ class RichiestaModel
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_ISTRUTTORIA);
                     $iter->setIdrichiesta($richiesta);
@@ -438,6 +438,10 @@ class RichiestaModel
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+
                     $this->em->persist($iter);
                     $this->em->flush();
                 } else {
@@ -454,9 +458,6 @@ class RichiestaModel
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_INDIZIONE);
                     $iter->setIdrichiesta($richiesta);
@@ -464,6 +465,10 @@ class RichiestaModel
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+
                     $this->em->persist($iter);
                     $this->em->flush();
                 } else {
@@ -481,9 +486,6 @@ class RichiestaModel
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_VALUTAZIONE);
                     $iter->setIdrichiesta($richiesta);
@@ -491,6 +493,10 @@ class RichiestaModel
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+
                     $this->em->persist($iter);
                     $this->em->flush();
                 } else {
@@ -508,9 +514,6 @@ class RichiestaModel
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_VALUTAZIONE);
                     $iter->setIdrichiesta($richiesta);
@@ -518,6 +521,10 @@ class RichiestaModel
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+
                     $this->em->persist($iter);
                     $this->em->flush();
                 } else {
@@ -536,9 +543,6 @@ class RichiestaModel
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('evasione_ABS');
                     $iter->setAstato($articleSM->getState());
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_CHIUSA);
                     $iter->setIdrichiesta($richiesta);
@@ -546,6 +550,10 @@ class RichiestaModel
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+
                     $this->em->persist($iter);
                     $this->em->flush();
                 } else {
@@ -565,9 +573,6 @@ class RichiestaModel
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('annullamento_ABS');
                     $iter->setAstato($articleSM->getState());
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_ANNULLATO);
                     $iter->setIdrichiesta($richiesta);
@@ -575,6 +580,10 @@ class RichiestaModel
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+
                     $this->em->persist($iter);
                     $this->em->flush();
                 } else {
@@ -595,9 +604,6 @@ class RichiestaModel
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('evasione_ABS');
                     $iter->setAstato($articleSM->getState());
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_ARCHIVIATA);
                     $iter->setIdrichiesta($richiesta);
@@ -605,6 +611,10 @@ class RichiestaModel
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+
                     $this->em->persist($iter);
                     $this->em->flush();
 
