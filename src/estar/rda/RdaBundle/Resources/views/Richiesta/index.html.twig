@@ -51,6 +51,23 @@
                         }
                 });
             });
+            $(document).on('click','.annunce',function(){
+               var id=$(this).attr('data-id');
+                $('#confirmModal').find('.id').html(id);
+
+                $('#confirmModal').modal('show');
+               // $.ajax({
+               //    type:"POST",
+               //     url: "mio.php",
+               //     data: {
+               //         id:id
+               //     },
+               //     success: function(data){}
+               //     //error:
+               // });
+                //alert(id);
+
+            });
 
         </script>
 
@@ -97,8 +114,8 @@
                 <tr data-state="richiesta">
                     <td>{{ entity.id }}</td>
                     <td>{{ entity.titolo }}</td>
-                    <td><button class="btn btn-primary" data-toggle="modal" data-target="#confirmModal"><span class="glyphicon glyphicon-list" data-var="{{ entity.id }}" aria-hidden="true"></span> {{ entity.status }}</button></td>
-                    <td><button class="btn btn-primary" data-toggle="modal" data-target="#confirmModal1"><span class="glyphicon glyphicon-list" data-var="{{ entity.id }}" aria-hidden="true"></span> {{ entity.statusgestav }}</button></td>
+                    <td><button class="btn btn-primary annunce" data-id="{{ entity.id }}" ><span class="glyphicon glyphicon-list" aria-hidden="true"></span> {{ entity.status }}</button></td>
+                    <td><button class="btn btn-primary annunce" data-id="{{ entity.id }}" ><span class="glyphicon glyphicon-list" aria-hidden="true"></span> {{ entity.statusgestav }}</button></td>
 
                     <!--<td>{{ entity.status }}</td>
                     <td>{{ entity.statusgestav }}</td>-->
@@ -145,7 +162,7 @@
                             </tr>
                             <!-- TODO Ciclo che stampa tutto l'iter in base ad un idRichiesta -->
                             <tr>
-                                <td></td>
+                                <td class="id"></td>
                                 <td>aa</td>
                                 <td>aa</td>
                                 <td>aa</td>
