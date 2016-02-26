@@ -14,9 +14,12 @@ class RispostaPerSistematica
 
     const codiceRispostaErrore = 'KO';
     const codiceRispostaOk = 'OK';
+    //TODO AUMENTARE CODICI ERRORE
+    const codiceErroreOK ='000';
     const codiceErrorePraticaNonTrovata = '010';
     const codiceErroreStatoNonGestito = '020';
     const codiceErroreAltro = '030';
+
 
     /**
      * @var DateTime
@@ -45,7 +48,7 @@ class RispostaPerSistematica
     {
         $dateTime = new \DateTime();
         $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
-        $this->dataRisposta =  $dateTime->format(\DateTime::W3C);
+        $this->dataRisposta =  $dateTime->format(\DateTime::ATOM);
 
     }
 

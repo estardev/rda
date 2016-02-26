@@ -27,19 +27,26 @@ class ServerESTARController extends Controller
      * @Soap\Param("password", phpType = "string")
      * @Soap\Param("note", phpType = "string")
      * @Soap\Param("idpratica", phpType = "int")
-     * @Soap\Param("dataRequest", phpType = "dateTime")
+     * @Soap\Param("dataRequest", phpType = "string")
      * @Soap\Param("codicestato", phpType = "int")
      * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\String[]")
      */
     public function notifyAction($username, $password, $note=null, $idpratica, $dataRequest=null, $codicestato)
     {   $username1=strtolower($username);
         $em = $this->getDoctrine()->getManager();
-        //$postdata = file_get_contents("php://input");
-        //file_put_contents("file1.txt",$postdata);
+        $postdata = file_get_contents("php://input");
+        file_put_contents(time()."_request.xml",$postdata);
+
+        //file_put_contents(time()."_user.xml",$username);
+        //file_put_contents(time()."_psw.xml",$password);
+        //file_put_contents(time()."_note.xml",$note);
+        //file_put_contents(time()."_idp.xml",$idpratica);
+        //file_put_contents(time()."_data.xml",$dataRequest);
+        //file_put_contents(time()."_cod.xml",$codicestato);
 
         $dateTime = new \DateTime();
         $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
-        $dataRispostaServer = $dateTime->format(\DateTime::W3C);
+        $dataRispostaServer = $dateTime->format(\DateTime::ATOM);
 
         try {
             $utente = $em->getRepository('estarRdaBundle:Utente')->findOneBy(

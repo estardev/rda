@@ -229,19 +229,29 @@ class RichiestaModel
     public function getPratica($utente, $data, $note, $idpratica, $codicestato) {
         // Ci costruiamo l'oggetto risposta
 
+        $dateRisposta = new \DateTime();
+        $dateRisposta->setTimeZone(new \DateTimeZone('Europe/Rome'));
+        $dataRisposta = $dateRisposta->format(\DateTime::ATOM);
+
         $risposta = new RispostaPerSistematica();
         //Ci prendiamo la data
-        $dateTime = new \DateTime();
-        $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
-        $dataFornita = false;
-        if (is_null($data)) {
-
+        //$time = strtotime($data);
+        //$newformat = date('Y-m-d\TH:i:sP',$time);
+        //file_put_contents(time()."_data.txt",
+        //    $newformat
+        //);
+        //$dataFornita = false;
+        if (empty($data)) {
+            $dateTime = new \DateTime();
+            $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
             $dataIter = $dateTime->format(\DateTime::ATOM);
+           // file_put_contents("datanulla","ciao");
             $dataFornita = false;
         } else {
             //TODO convertire la $data in oggetto!!!!!
-            $dateTime->createFromFormat(\DateTime::ATOM, $data);
+            $dateTime = new \DateTime($data, new \DateTimeZone('Europe/Rome'));
             $dataFornita = true;
+           // file_put_contents("dataok","ciao");
         }
 
 
@@ -272,16 +282,18 @@ class RichiestaModel
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rifiutata_tec_ABS');
                     $iter->setAstato($articleSM->getState());
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    //TODO DA GESTAV A GESTAV NON FA
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav($richiesta->getStatusgestav());
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataIter);
+                    $iter->setDatafornita($dataFornita);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+
                     $this->em->persist($iter);
                     $this->em->flush();
 
@@ -291,7 +303,7 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica gg non può transire nello stato richiesto "); //.$articleSM->can('rifiutata_tec_ABS')." - ".$articleSM->getState());
                 }
-                $risposta->setDataRisposta($dataIter);
+                $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
             case '020':
                 //valutazione amministrativa
@@ -320,7 +332,7 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
                 }
-                $risposta->setDataRisposta($dataIter);
+                $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '030':
@@ -335,7 +347,6 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $risposta->setDataRisposta($dataIter);
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav($richiesta->getStatusgestav());
                     $iter->setIdrichiesta($richiesta);
@@ -352,7 +363,7 @@ class RichiestaModel
                     $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
                 }
                 //TODO: ricordiamoci di mettere un avviso via mail
-                $risposta->setDataRisposta($dataIter);
+                $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '040':
@@ -366,7 +377,6 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $risposta->setDataRisposta($dataIter);
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_CHIUSA);
                     $iter->setIdrichiesta($richiesta);
@@ -382,7 +392,7 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
                 }
-                $risposta->setDataRisposta($dataIter);
+                $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '050':
@@ -410,7 +420,7 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
                 }
-                $risposta->setDataRisposta($dataIter);
+                $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
             case '060':
                 //Istruttoria
@@ -436,7 +446,7 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
                 }
-                $risposta->setDataRisposta($dataIter);
+                $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
             case '070':
                 //Indizione
@@ -462,7 +472,7 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
                 }
-                $risposta->setDataRisposta($dataIter);
+                $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '080':
@@ -489,7 +499,7 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
                 }
-                $risposta->setDataRisposta($dataIter);
+                $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '090':
@@ -516,7 +526,7 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
                 }
-                $risposta->setDataRisposta($dataIter);
+                $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '100':
@@ -529,7 +539,6 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $risposta->setDataRisposta($dataIter);
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_CHIUSA);
                     $iter->setIdrichiesta($richiesta);
@@ -546,7 +555,7 @@ class RichiestaModel
                     $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
 
                 }
-                $risposta->setDataRisposta($dataIter);
+                $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '110':
@@ -559,7 +568,6 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $risposta->setDataRisposta($dataIter);
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_ANNULLATO);
                     $iter->setIdrichiesta($richiesta);
@@ -576,7 +584,7 @@ class RichiestaModel
                     $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
 
                 }
-                $risposta->setDataRisposta($dataIter);
+                $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '120':
@@ -590,7 +598,6 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $risposta->setDataRisposta($dataIter);
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_ARCHIVIATA);
                     $iter->setIdrichiesta($richiesta);
@@ -608,7 +615,7 @@ class RichiestaModel
                     $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
 
                 }
-                $risposta->setDataRisposta($dataIter);
+                $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             default:
@@ -616,7 +623,7 @@ class RichiestaModel
                 $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                 $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                 $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
-                $risposta->setDataRisposta($dataIter);
+                $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
         }
     }
