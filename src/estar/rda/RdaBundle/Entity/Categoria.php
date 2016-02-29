@@ -37,6 +37,13 @@ class Categoria
     private $descrizione;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="gruppogestav", type="string", length=100, nullable=true)
+     */
+    private $gruppogestav;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
@@ -183,6 +190,26 @@ class Categoria
         $this->campi = $campi;
         return $this->campi;
     }
+
+    /**
+     * @return string
+     */
+    public function getGruppogestav()
+    {
+        return $this->gruppogestav;
+    }
+
+    /**
+     * @param string $gruppogestav
+     *
+     * @return Categoria
+     */
+    public function setGruppogestav($gruppogestav)
+    {
+        $this->gruppogestav = $gruppogestav;
+        return $this;
+    }
+
 
 
 }
