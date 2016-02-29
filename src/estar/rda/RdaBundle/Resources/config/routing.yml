@@ -124,3 +124,14 @@ HelloCiao:
     path: /testing
     defaults: { _controller: estarRdaBundle:TestingNotify:index }
 
+iter_byrichiesta:
+    path:     /iter/set
+    defaults: { _controller: estarRdaBundle:Iter:iterByRichiesta }
+    options:
+          expose: true
+
+iter_byrichiestagestav:
+    path:     /itergestav/set
+    defaults: { _controller: estarRdaBundle:Iter:iterByRichiestaGestav }
+    options:
+          expose: true
