@@ -55,7 +55,7 @@
                var idrichiesta=$(this).attr('data-id');
                 $('#iterModal').modal('show');
                 $('#numeropratica').html('<h4 id="numeropratica" class="modal-title">Iter Pratica '+idrichiesta+ '</h4>');
-                $('#richiestamodel').html('<tbody><tr><td>In Caricamento...</tr></td></tbody>');
+                $('#richiestamodel').html('<tbody><td class="warning"><td>In Caricamento...</td></tr></tbody>');
                 //alert('s1');
                 $.ajax({
                     type: "POST",
