@@ -29,6 +29,42 @@ class IterController extends Controller
             'entities' => $entities,
         ));
     }
+
+    public function iterByRichiestaAction()
+    {
+        $request = $this->get('request');
+        $idRichiesta = $request->request->get('idrichiesta');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('estarRdaBundle:Iter')->findBy(
+            array('idrichiesta' => $idRichiesta),
+            array('dataora' => 'DESC')
+            );
+        //TODO: fare un filtro sui permessi dell'utente appena pronti
+        //TODO: fare un filtro sui permessi dell'utente relativi agli stati
+        //Sono tutti pulsanti che puntano a FormTemplateController
+        return $this->render('estarRdaBundle:Richiesta:itertable.html.twig', array(
+            'entities' => $entities
+        ));
+    }
+
+    public function iterByRichiestaGestavAction()
+    {
+        $request = $this->get('request');
+        $idRichiesta = $request->request->get('idrichiesta');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('estarRdaBundle:Iter')->findBy(array('idrichiesta' => $idRichiesta));
+        //TODO: fare un filtro sui permessi dell'utente appena pronti
+        //TODO: fare un filtro sui permessi dell'utente relativi agli stati
+        //Sono tutti pulsanti che puntano a FormTemplateController
+        return $this->render('estarRdaBundle:Richiesta:itertablegestav.html.twig', array(
+            'entities' => $entities
+        ));
+    }
+
     /**
      * Creates a new Iter entity.
      *

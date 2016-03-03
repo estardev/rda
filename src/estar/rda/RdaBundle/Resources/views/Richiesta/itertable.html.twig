@@ -1,0 +1,26 @@
+<thead>
+<tr class="alert-info">
+    <th>Data</th>
+    <th>Da Stato</th>
+    <th>A Stato</th>
+    <th>Da Stato Gestav</th>
+    <th>A Stato Gestav</th>
+    <th>Motivazione</th>
+</tr>
+</thead>
+
+<tbody>
+
+<!-- TODO Ciclo che stampa tutto l'iter in base ad un idRichiesta -->
+{% for entity in entities %}
+<tr>
+
+    <td>{{ entity.dataora|date('d-m-Y H:i:s') }}</td>
+    <td>{{ entity.dastato }}</td>
+    <td>{{ entity.astato }}</td>
+    <td>{{ entity.dastatogestav }}</td>
+    <td>{{ entity.astatogestav }}</td>
+    <td>{{ entity.motivazione }}</td>
+</tr>
+{% endfor %}
+</tbody>
