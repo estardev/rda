@@ -17,6 +17,7 @@ class CategoriaType extends AbstractType
         $builder
             ->add('nome', null, array('label' => 'Nome'))
             ->add('descrizione', null, array('label' => 'Descrizione'))
+            ->add('gruppogestav', null, array('label' => 'Gruppo Utente Gestav'))
             ->add('idarea', 'entity', array(
         'class' => 'estar\rda\RdaBundle\Entity\Area',
         'choice_label' => 'descrizione',

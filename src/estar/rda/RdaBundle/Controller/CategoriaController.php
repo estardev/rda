@@ -114,7 +114,7 @@ class CategoriaController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('submit', 'submit', array('label' => 'Crea'));
 
         return $form;
     }
@@ -139,6 +139,19 @@ class CategoriaController extends Controller
             'entity' => $entity,
             'form' => $form->createView(),
         ));
+    }
+
+    public function newtestataAction()
+
+    {
+        $entity = new Categoria();
+        $form   = $this->createCreateForm($entity);
+
+        return $this->render('estarRdaBundle:Area:new.html.twig', array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        ));
+
     }
 
     /**
@@ -274,6 +287,27 @@ class CategoriaController extends Controller
         ));
     }
 
+    public function edittestataAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('estarRdaBundle:Categoria')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Categoria entity.');
+        }
+
+        $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($id);
+
+        return $this->render('estarRdaBundle:Categoria:edittestata.html.twig', array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
+
+    }
+
     /**
      * Creates a form to edit a Categoria entity.
      *
@@ -284,11 +318,11 @@ class CategoriaController extends Controller
     private function createEditForm(Categoria $entity)
     {
         $form = $this->createForm(new CategoriaType(), $entity, array(
-            'action' => $this->generateUrl('categoria_update', array('id' => $entity->getId())),
+            'action' => $this->generateUrl('categoria_updatetestata', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', 'submit', array('label' => 'Aggiorna'));
 
         return $form;
     }
@@ -348,6 +382,34 @@ class CategoriaController extends Controller
         ));
     }
 
+    public function updatetestataAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('estarRdaBundle:Categoria')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Area entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($entity);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('categoria_edittestata', array('id' => $id)));
+        }
+
+        return $this->render('estarRdaBundle:Categoria:edittestata.html.twig', array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
+
+    }
+
     /**
      * Deletes a Categoria entity.
      *
@@ -384,7 +446,7 @@ class CategoriaController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('categoria_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->add('submit', 'submit', array('label' => 'Cancella'))
             ->getForm();
     }
 
