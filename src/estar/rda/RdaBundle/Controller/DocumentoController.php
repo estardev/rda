@@ -2,6 +2,8 @@
 
 namespace estar\rda\RdaBundle\Controller;
 
+use estar\rda\RdaBundle\Entity\Richiestadocumentolibero;
+use estar\rda\RdaBundle\Form\DocumentoliberoType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -56,6 +58,35 @@ class DocumentoController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param string $idRichiesta
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function createLiberoAction(Request $request, $idRichiesta)
+    {
+        $entity = new Richiestadocumentolibero();
+        $form = $this->createCreateFormLibero($entity, $idRichiesta);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+
+            $em = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository('estarRdaBundle:Richiesta');
+            $richiesta = $repository->find($idRichiesta);
+            $entity->setIdrichiesta($richiesta);
+            $em->persist($entity);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('documento_liberoByRichiesta', array('idRichiesta' => $idRichiesta)));
+        }
+
+        return $this->render('estarRdaBundle:Documento:new.html.twig', array(
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
      * Creates a form to create a Documento entity.
      *
      * @param Documento $entity The entity
@@ -70,6 +101,24 @@ class DocumentoController extends Controller
         ));
 
         $form->add('submit', 'submit', array('label' => 'Create'));
+
+        return $form;
+    }
+
+    /**
+     * Crea una form per aggiungere un documento libero
+     * @param Documento $entity
+     * @param string $idRichiesta
+     * @return \Symfony\Component\Form\Form
+     */
+    private function createCreateFormLibero(Richiestadocumentolibero $entity, $idRichiesta)
+    {
+        $form = $this->createForm(new DocumentoliberoType(), $entity, array(
+            'action' => $this->generateUrl('documento_createlibero', array('idRichiesta' => $idRichiesta)),
+            'method' => 'POST',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Aggiungi nuovo Allegato'));
 
         return $form;
     }
@@ -301,5 +350,61 @@ class DocumentoController extends Controller
         ));
     }
 
+
+    /**
+     * Mostra tutti i documenti "liberi" aggiunti alla richiesta
+     * @param String $idRichiesta
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function liberoByRichiestaAction($idRichiesta)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('estarRdaBundle:Richiesta');
+        $richiesta = $repository->find($idRichiesta);
+
+        $repository = $em->getRepository('estarRdaBundle:Richiestadocumentolibero');
+
+        $entities = $repository->findBy(
+            array('idrichiesta' => $idRichiesta)
+        );
+
+        $documenti = array();
+        foreach ($entities as $entity) {
+            $documento = $entity->getId();
+
+//            array_push($documenti, $documento);
+            $documenti[$documento] = array(
+                'documento' => $documento
+            );
+
+            //Per ogni riga di documento passare alla view:
+            // - id di categoria_documento                                                  v
+            // - nome e descrizione del documento                                           v
+
+            //FG 20160307 il documento è sempre "riuploadabile"
+            $documenti[$documento]['upload'] = true;
+            //FG 20160307 non è mai "mancante".
+            $documenti[$documento]['alert'] = false;
+            //$documenti[$documento->getId()]['path'] = $path;
+        }
+        foreach ($documenti as $documento) {
+            //if (primocaso) metti pulsante upload che transiziona verso richiestadocumentocontroller.uploadform
+            //if (secondocaso) metti pulsante edit che transiziona verso richiestadocumentocontroller.editaction
+            //if (terzocaso) c'è da studiare qualcosa
+        }
+        //Ne aggiungiamo sempre uno in più
+        $rdl = new Richiestadocumentolibero();
+        $rdl->setIdrichiesta($richiesta);
+        $form = $this->createCreateFormLibero($rdl, $idRichiesta);
+        //$file = $rd->getdocFile();
+        return $this->render('estarRdaBundle:Documento:indexlibero.html.twig', array(
+            'entities' => $entities,
+            'idRichiesta' => $idRichiesta,
+            'create_form' => $form->createView(),
+            'rdl' => $rdl
+        ));
+    }
 
 }

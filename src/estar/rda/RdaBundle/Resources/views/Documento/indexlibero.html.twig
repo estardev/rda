@@ -1,0 +1,71 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <div class="panel panel-default" xmlns="http://www.w3.org/1999/html">
+        <div class="panel-heading"><h4>Documenti Liberi</h4></div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Descrizione</th>
+                <th>Azioni</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for entity in entities %}
+                <tr>
+                    <td>{{ entity.descrizione }}</td>
+                    <td>
+                        <div class="btn-group" role="group">
+
+
+                            <form class="form" method="post" enctype="multipart/form-data">
+
+                            <input onclick="$('#docfile').click();" type="text" name="subfile" id="subfile"
+                                   class="form-control" style="display: inline;width:50%"
+                                   value="{{ (vich_uploader_asset(entity, 'docFile')) }}"/>
+                            <input type="file" name="docfile" class="form-control "
+                                   style="visibility:hidden;" id="docfile"/>
+                            <script>
+                                $('#docfile').change(function () {
+                                    var path = $(this).val();
+                                    var file = path.replace("C:\\fakepath\\", "");
+                                    $subfile = $('#subfile');
+                                    $subfile.val(file)
+                                            .html(file)
+                                            .text(file);
+                                });
+
+                            </script>
+
+
+                            {# in caso di documento gi� presente deve essere presente l'upload con il pulsante "sostituisci"#}
+
+                            </form>
+                        </div>
+                    </td>
+                    <td>
+                        <form method="get">
+                            <button type="submit" class="btn btn-default"
+                                    ><span
+                                        class="glyphicon glyphicon-download"
+                                        aria-hidden="true"></span><a
+                                        href="{{ app.request.basePath }}/{{ (vich_uploader_asset(entity, 'docFile')) }}"
+                                        download
+                                        > Scarica</a>
+                            </button>
+
+                        </form>
+
+
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <h1>Aggiunta nuovo allegato</h1>
+
+        {{ form(create_form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+    </div>
+{% endblock %}

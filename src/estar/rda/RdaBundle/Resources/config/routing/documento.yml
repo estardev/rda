@@ -15,6 +15,11 @@ documento_create:
     defaults: { _controller: "estarRdaBundle:Documento:create" }
     methods:  POST
 
+documento_createlibero:
+    path:     /createlibero/{idRichiesta}
+    defaults: { _controller: "estarRdaBundle:Documento:createlibero" }
+    methods:  POST
+
 documento_edit:
     path:     /{id}/edit
     defaults: { _controller: "estarRdaBundle:Documento:edit" }
@@ -32,4 +37,8 @@ documento_delete:
 documento_byCategoria:
     path:     /byCategoria/{idCategoria}/{idRichiesta}
     defaults: { _controller: "estarRdaBundle:Documento:indexByCategoriaRichiesta" }
+
+documento_liberoByRichiesta:
+    path:     /liberoByRichiesta/{idRichiesta}
+    defaults: { _controller: "estarRdaBundle:Documento:liberoByRichiesta" }
 

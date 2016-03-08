@@ -4,6 +4,8 @@ namespace estar\rda\RdaBundle\Namer;
 
 use Vich\UploaderBundle\Naming\NamerInterface;
 use Vich\UploaderBundle\Mapping\PropertyMapping;
+use estar\rda\RdaBundle\Entity\Richiestadocumento;
+use estar\rda\RdaBundle\Entity\Richiestadocumentolibero;
 /**
  * Namer class.
  */
@@ -18,10 +20,16 @@ class Namer implements NamerInterface
      */
     function name($obj, PropertyMapping $field)
     {
-        $file = $obj->docFile;
+        if ($obj instanceof Richiestadocumento)
+            $file = $obj->docFile;
+        else
+            $file = $obj->getImageFile();
         $extension = $file->guessExtension();
         $idRich = $obj->getIdrichiesta();
-        $idDoc = $obj->getIddocumento();
+        if ($obj instanceof Richiestadocumento)
+            $idDoc = $obj->getIddocumento();
+        else
+            $idDoc = "libero".substr(md5(rand()), 0, 7);
         return 'Richiesta_'.$idRich.'_Documento_'.$idDoc.'.'.$extension;
     }
 }

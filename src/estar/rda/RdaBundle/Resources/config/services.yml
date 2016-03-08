@@ -42,3 +42,13 @@ services:
             class: estar\rda\RdaBundle\Namer\DirectoryNamer
             tags:
                 - { name: filePath }
+
+    namer.richiesta_documentolibero:
+        class: estar\rda\RdaBundle\Namer\NamerLibero
+        tags:
+            - { name: filePath }
+
+    directory_namer.richiesta_documentolibero:
+            class: estar\rda\RdaBundle\Namer\DirectoryNamerLibero
+            tags:
+                - { name: filePath }
