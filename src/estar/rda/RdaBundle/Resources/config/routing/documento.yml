@@ -39,6 +39,6 @@ documento_byCategoria:
     defaults: { _controller: "estarRdaBundle:Documento:indexByCategoriaRichiesta" }
 
 documento_liberoByRichiesta:
-    path:     /liberoByRichiesta/{idRichiesta}
+    path:     /liberoByRichiesta/{idRichiesta}/{idCategoria}
     defaults: { _controller: "estarRdaBundle:Documento:liberoByRichiesta" }
 

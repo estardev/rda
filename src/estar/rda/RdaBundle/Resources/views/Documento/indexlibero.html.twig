@@ -2,7 +2,7 @@
 
 {% block body -%}
     <div class="panel panel-default" xmlns="http://www.w3.org/1999/html">
-        <div class="panel-heading"><h4>Documenti Liberi</h4></div>
+        <div class="panel-heading"><h4>Allegati Liberi</h4></div>
 
         <table class="table">
             <thead>
@@ -64,8 +64,9 @@
             </tbody>
         </table>
         <h1>Aggiunta nuovo allegato</h1>
-
-        {{ form(create_form, {'attr': {'novalidate': 'novalidate'}}) }}
-
     </div>
+    <div class="panel-heading"><h4>Aggiunta nuovo Allegato</h4>
+        {{ form(create_form, {'attr': {'novalidate': 'novalidate'}}) }}
+    </div>
+    <a href="{{ path('richiesta_bycategoria', { 'idCategoria': idCategoria}) }}"> Indietro alla Lista</a></button>
 {% endblock %}
