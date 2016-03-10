@@ -222,17 +222,27 @@ class RichiestaController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Richiesta entity.');
         }
+        //FGDO 20160310 modifica per cancellazione logica
 
+        $factory = $this->container->get('sm.factory');
+        $articleSM = $factory->get($entity, 'rda');
 
-        $vcr = $em->getRepository('estarRdaBundle:Valorizzazionecamporichiesta')->findby(
-            array('idrichiesta' => $id)
-        );
+        $dateTime = new \DateTime();
+        $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
+        $dataIter = $dateTime->format(\DateTime::ATOM);
 
-        foreach ($vcr as $item) {
-            $em->remove($item);
-        }
-        $em->remove($entity);
-        //TODO va ripetuto per i campi documento
+        $iter= new Iter();
+        $iter->setDastato($articleSM->getState());
+        $articleSM->apply('cancellazione');
+        $iter->setAstato($articleSM->getState());
+        $iter->setDastatogestav($entity->getStatusgestav());
+        $iter->setAstatogestav($entity->getStatusgestav());
+        $iter->setIdrichiesta($entity);
+        $iter->setMotivazione('richiesta cancellata');
+        $iter->setDataora($dataIter);
+        $iter->setIdutente($this->getUser());
+        $iter->setDatafornita(false);
+
         $em->flush();
 //        }
 

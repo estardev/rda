@@ -322,10 +322,15 @@ class FormTemplateController extends Controller
         $ClientSoapForm = $formbuilder->getForm();
         $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane')));
 
-        $formbuilder = $this->createFormBuilder();
-        $formbuilder->setAction($this->generateUrl('richiesta_delete', array('id' => $idRichiesta)));
-        $deleteForm = $formbuilder->getForm();
-        $deleteForm->add('submit_delete', 'submit', array('label' => ' Elimina', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));
+        //FGDO20130310 il tasto "elimina" compare se e solo se la transizione si può fare
+        $factory = $this->container->get('sm.factory');
+        $articleSM = $factory->get($richiesta, 'rda');
+        if ($articleSM->can('cancellazione')) {
+            $formbuilder = $this->createFormBuilder();
+            $formbuilder->setAction($this->generateUrl('richiesta_delete', array('id' => $idRichiesta)));
+            $deleteForm = $formbuilder->getForm();
+            $deleteForm->add('submit_delete', 'submit', array('label' => ' Elimina', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));
+        }
 
         $formbuilder = $this->createFormBuilder();
         $formbuilder->setAction($this->generateUrl('formtemplate_print', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));

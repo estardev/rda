@@ -133,6 +133,8 @@ winzou_state_machine:
         # list of all possible states:
         states:
             - bozza
+            - eliminata
+            - annullata
             - attesa_val_tec
             - attesa_val_amm
             - inserita_ABS
@@ -156,6 +158,12 @@ winzou_state_machine:
             validazione_amm:
                 from: [attesa_val_amm]
                 to: inserita_ABS
+            cancellazione:
+                from: [bozza, attesa_val_tec, attesa_val_amm]
+                to: eliminata
+            annullamento:
+                from: [bozza, atttesa_val_tec, attesa_val_amm, inserita_ABS]
+                to: annullata
             rifiutata_amm_ABS:
                 from: [inserita_ABS]
                 to: attesa_val_amm

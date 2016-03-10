@@ -68,6 +68,7 @@ class Richiesta
      */
     private $annoprogrammazione;
 
+
     /**
      * @return string
      */
