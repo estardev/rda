@@ -77,6 +77,12 @@ class Iter
      * @ORM\Column(name="datafornita", type="boolean", nullable=true)
      */
     private $datafornita;
+
+    /**
+     * @var string
+     * @ORM\Column(name="numeroprotocollo", type="string", length=100, nullable=true)
+     */
+    private $numeroprotocollo;
     /**
      * Set dataora
      *
@@ -282,6 +288,24 @@ class Iter
     public function setDatafornita($datafornita)
     {
         $this->datafornita = $datafornita;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNumeroprotocollo()
+    {
+        return $this->numeroprotocollo;
+    }
+
+    /**
+     * @param string $numeroprotocollo
+     * @return Iter
+     */
+    public function setNumeroprotocollo($numeroprotocollo)
+    {
+        $this->numeroprotocollo = $numeroprotocollo;
         return $this;
     }
 

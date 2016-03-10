@@ -354,9 +354,10 @@ class DocumentoController extends Controller
     /**
      * Mostra tutti i documenti "liberi" aggiunti alla richiesta
      * @param String $idRichiesta
+     * @param string $idCategoria
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function liberoByRichiestaAction($idRichiesta)
+    public function liberoByRichiestaAction($idRichiesta, $idCategoria)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -402,6 +403,7 @@ class DocumentoController extends Controller
         return $this->render('estarRdaBundle:Documento:indexlibero.html.twig', array(
             'entities' => $entities,
             'idRichiesta' => $idRichiesta,
+            'idCategoria' => $idCategoria,
             'create_form' => $form->createView(),
             'rdl' => $rdl
         ));
