@@ -60,13 +60,7 @@ class SistematicaClientController extends Controller
         return $options[$key];
     }
 
-    /**
-     * @param $idRichiesta
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function indexAction($idCategoria, $idRichiesta)
-    {
-        // generazione file pdf e zip
+    public function num(){
         $directory_sender = "sender";
         $max = 0;
         $results = scandir($directory_sender);
@@ -80,7 +74,14 @@ class SistematicaClientController extends Controller
                     $max = $primo;
             }
         }
-        $num = $max + 1;
+        return $num = $max + 1;
+    }
+
+    public function generateZip($idCategoria, $idRichiesta)
+    {
+        // generazione file pdf e zip
+        $directory_sender = "sender";
+        $num=$this->num();
         $path = $num . "_Richiesta_" . $idRichiesta . "_categoria_" . $idCategoria;
         if (!is_dir($directory_sender . "/" . $path)) mkdir($directory_sender . "/" . $path, 0777);
 
@@ -200,23 +201,113 @@ class SistematicaClientController extends Controller
         ));
 
 
-        /*if(file_exists($path."/Richiesta".$idRichiesta.".pdf")){
-            unlink($path."/Richiesta".$idRichiesta.".pdf");
-        }
-        if(file_exists($path.'/'.$path.'.zip')){
-            unlink($path.'/'.$path.'.zip');
-        }*/
-
-        //$response = new Response(
         $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" . $num . "_Richiesta" . $idRichiesta . ".pdf");
-        //);
-
-        $zip = \Comodojo\Zip\Zip::create($directory_sender . '/' . $path . '/' . $path . '.zip');
+           $zip = \Comodojo\Zip\Zip::create($directory_sender . '/' . $path . '/' . $path . '.zip');
 
         $pathdocumenti='documenti/Richiesta_'.$idRichiesta;
+        $documenti=$em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idRichiesta' => $idRichiesta));
+        foreach($documenti as $documentidazippare) {
+            if (is_null($documentidazippare->getNumeroprotocollo()))
+                $zip->setPath($pathdocumenti)->add($documentidazippare->getFilepath());
+        }
+
+        $documentiliberi=$em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idRichiesta' => $idRichiesta));
+        foreach($documentiliberi as $documentiliberidazippare) {
+            if (is_null($documentiliberidazippare->getNumeroprotocollo()))
+                $zip->setPath($pathdocumenti)->add($documentiliberidazippare->getFilepath());
+        }
+
         //TODO prendere tutti i file e documenti
-        $zip->add($directory_sender . "/" . $path, true)->add($pathdocumenti, true);
+        $zip->add($directory_sender . "/" . $path, true); //->add($pathdocumenti, true);
         $zip->close();
+
+       return array('esito'=>true, 'progressivo'=>$num, 'path'=>$path );
+           //true;
+    }
+
+    /**
+     * @param $idRichiesta
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function indexAction($idCategoria, $idRichiesta, $tipologia){
+
+        $em = $this->getDoctrine()->getManager();
+        $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
+        $gruppogestav = $categoria->getGruppogestav();
+
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $azienda=$richiesta->getIdazienda()->getNome();
+
+
+        switch($tipologia) {
+
+            case "Annulamento":
+                $pathfile = "";
+                $nomefile = "";
+                $protocollo = $richiesta->getNumeroprotocollo();
+                break;
+
+            case "Nuova":
+                $ritorno = generateZip($idCategoria, $idRichiesta);
+                if ($ritorno['esito']) {
+                    $protocollo = "";
+                    $pathfile="sender/".$ritorno['path']."/".$ritorno['path'].".zip";
+                    $nomefile=$ritorno['path'].'.zip';
+
+                }
+                break;
+            case "Documentazione Aggiuntiva":
+                $ritorno = generateZip($idCategoria, $idRichiesta);
+                if ($ritorno['esito']) {
+                    $protocollo = $richiesta->getNumeroprotocollo();
+                    $pathfile="sender/".$ritorno['path']."/".$ritorno['path'].".zip";
+                    $nomefile=$ritorno['path'].'.zip';
+
+                }
+                break;
+        }
+                $risposta = $this->get('model.client');
+                $risposta->setIdPratica($idRichiesta);
+                $risposta->setNomefile($nomefile);
+                $risposta->setPath($pathfile);
+                $risposta->setTipologia($tipologia);
+                $risposta->setCategoriamerceologica($gruppogestav);
+                $risposta->setNumeroProtocollo($protocollo);
+                $risposta->setStrutturarichiedente($azienda);
+
+                $esito=$risposta->RequestWebServer();
+
+
+        $numprotocollo=$esito['protocollo'];
+
+        //TODO: aggiungere il protocollo in richiesta solo se tipologia è nuova
+        //TODO: aggiungere il protocollo in iter, richiestadocumenti e richiestadocumentiliberi se protocollo null
+
+        // scrivo il numero di protocollo sulla richiesta
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $richiesta->setNumeroprotocollo($numprotocollo);
+        $em->persist($richiesta);
+
+
+
+        $em->flush();
+
+        //return $this->redirect($this->generateUrl("richiesta"));
+        return $this->render('@estarRda/Testing/index.html.twig', array(
+            'hello' => $myrespons,
+        ));
+
+
+
+        }
+
+
+
+
+    }
+
+
+/*
 
         // estrazione parametri per la richiesta
         $em = $this->getDoctrine()->getManager();
@@ -261,7 +352,7 @@ class SistematicaClientController extends Controller
         $em->flush();
 
         $richiestadocumento = $em->getRepository('estarRdaBundle:Richiestadocumento')->findOneBy(
-        array('idrichiesta' => $idRichiesta)
+            array('idrichiesta' => $idRichiesta)
         );
         if(!empty($richiestadocumento)){
             $richiestadocumento->setNumeroprotocollo($numProt);
@@ -277,6 +368,7 @@ class SistematicaClientController extends Controller
         unlink($path . "_protocollo.txt");
 
         return $this->redirect($this->generateUrl("richiesta"));
-    }
+
+}
 
 }
