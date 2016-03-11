@@ -52,3 +52,9 @@ services:
             class: estar\rda\RdaBundle\Namer\DirectoryNamerLibero
             tags:
                 - { name: filePath }
+
+    model.client:
+            class: estar\rda\RdaBundle\Model\ClientSistematica
+            arguments:
+              em: "@doctrine.orm.entity_manager"
+              user: "@security.context"

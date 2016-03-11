@@ -26,6 +26,8 @@ use BeSimple\SoapClient\Tests\AxisInterop\Fixtures\base64Binary;
 
 class SistematicaClientController extends Controller
 {
+
+
     // cancellazione di cartella non vuota
     public static function delTree($dir)
     {
@@ -219,27 +221,27 @@ class SistematicaClientController extends Controller
         // estrazione parametri per la richiesta
         $em = $this->getDoctrine()->getManager();
         $parametri = $em->getRepository('estarRdaBundle:Sistematica')->find(1);
-        $user = $parametri->getUser();
-        $psw = $parametri->getPsw();
-        $wsdl = $parametri->getWsdl();
-        $storyboardcode = $parametri->getStoryboardcode();
-        $setmetaviewname = $parametri->getSetmetaviewname();
-        $setdirection = $parametri->getSetdirection();
-        $contactSettype1 = $parametri->getContactSettype1();
-        $contactReferencetype1 = $parametri->getContactReferencetype1();
-        $contactReferencecode1 = $parametri->getContactReferencecode1();
-        $contactSettype2 = $parametri->getContactSettype2();
-        $contactReferencetype2 = $parametri->getContactReferencetype2();
-        $contactReferencecode2 = $parametri->getContactReferencecode2();
-        $contactSettype3 = $parametri->getContactSettype3();
-        $contactReferencetype3 = $parametri->getContactReferencetype3();
-        $contactReferencecode3 = $parametri->getContactReferencecode3();
-        $variableSetkey1 = $parametri->getVariableSetkey1();
-        $variableSettype1 = $parametri->getVariableSettype1();
-        $variableSetvaluestring1 = $parametri->getVariableSetvaluestring1();
-        $attachmentSetfileset1 = $parametri->getAttachmentSetfileset1();
-        $attachmentSetcontenttype1 = $parametri->getAttachmentSetcontenttype1();
-        $requestSetinstanceoperation = $parametri->getRequestSetinstanceoperation();
+        //$user = $parametri->getUser();
+        //$psw = $parametri->getPsw();
+        //$wsdl = $parametri->getWsdl();
+        //$storyboardcode = $parametri->getStoryboardcode();
+        //$setmetaviewname = $parametri->getSetmetaviewname();
+        //$setdirection = $parametri->getSetdirection();
+        //$contactSettype1 = $parametri->getContactSettype1();
+        //$contactReferencetype1 = $parametri->getContactReferencetype1();
+        //$contactReferencecode1 = $parametri->getContactReferencecode1();
+        //$contactSettype2 = $parametri->getContactSettype2();
+        //$contactReferencetype2 = $parametri->getContactReferencetype2();
+        //$contactReferencecode2 = $parametri->getContactReferencecode2();
+        //$contactSettype3 = $parametri->getContactSettype3();
+        //$contactReferencetype3 = $parametri->getContactReferencetype3();
+        //$contactReferencecode3 = $parametri->getContactReferencecode3();
+        //$variableSetkey1 = $parametri->getVariableSetkey1();
+        //$variableSettype1 = $parametri->getVariableSettype1();
+        //$variableSetvaluestring1 = $parametri->getVariableSetvaluestring1();
+        //$attachmentSetfileset1 = $parametri->getAttachmentSetfileset1();
+        //$attachmentSetcontenttype1 = $parametri->getAttachmentSetcontenttype1();
+        //$requestSetinstanceoperation = $parametri->getRequestSetinstanceoperation();
 
         // esecuzione file java
         // abilitare su php.ini di apache (wamp) safe_mode_exec_dir=off

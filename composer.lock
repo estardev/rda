@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3dd894d94b6015b3bca897037df5565f",
-    "content-hash": "b29ebe4d245ca9c4dd09c5e02cd16897",
+    "hash": "9806b0514e3f80a502ae1e3fb0159ef7",
+    "content-hash": "75b6631d6212ec445e5efcbb0c7fc319",
     "packages": [
         {
             "name": "ass/xmlsecurity",
@@ -1195,6 +1195,43 @@
             "time": "2016-01-05 21:34:58"
         },
         {
+            "name": "fergusean/nusoap",
+            "version": "0.9.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fergusean/nusoap.git",
+                "reference": "463c772ae805aed7f396d89e6dce1dc0ce4c038b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fergusean/nusoap/zipball/463c772ae805aed7f396d89e6dce1dc0ce4c038b",
+                "reference": "463c772ae805aed7f396d89e6dce1dc0ce4c038b",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "lib/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPLv2"
+            ],
+            "authors": [
+                {
+                    "name": "Dietrich Ayala",
+                    "homepage": "http://sourceforge.net/u/dietricha/profile/"
+                },
+                {
+                    "name": "Scott Nichol",
+                    "homepage": "http://sourceforge.net/u/snichol/profile/"
+                }
+            ],
+            "description": "NuSOAP re-packaged for Packagist/Composer",
+            "time": "2014-05-19 03:44:33"
+        },
+        {
             "name": "friendsofsymfony/jsrouting-bundle",
             "version": "1.6.0",
             "source": {
@@ -1258,12 +1295,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSUserBundle.git",
-                "reference": "a39d000577d735444bee97de9f5ee382e3f85fa1"
+                "reference": "16b04c49af05dd3fb381e4abe04f0e5e231ac76d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/a39d000577d735444bee97de9f5ee382e3f85fa1",
-                "reference": "a39d000577d735444bee97de9f5ee382e3f85fa1",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/16b04c49af05dd3fb381e4abe04f0e5e231ac76d",
+                "reference": "16b04c49af05dd3fb381e4abe04f0e5e231ac76d",
                 "shasum": ""
             },
             "require": {
@@ -1319,7 +1356,7 @@
             "keywords": [
                 "User management"
             ],
-            "time": "2016-03-01 11:42:24"
+            "time": "2016-03-08 11:05:28"
         },
         {
             "name": "incenteev/composer-parameter-handler",
@@ -1811,6 +1848,54 @@
                 "psr-3"
             ],
             "time": "2016-03-01 18:00:40"
+        },
+        {
+            "name": "noiselabs/nusoap-bundle",
+            "version": "0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/noiselabs/NoiselabsNuSOAPBundle.git",
+                "reference": "e0fb4c102f56d0967ab0062a1b7f6804efb76e1d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/noiselabs/NoiselabsNuSOAPBundle/zipball/e0fb4c102f56d0967ab0062a1b7f6804efb76e1d",
+                "reference": "e0fb4c102f56d0967ab0062a1b7f6804efb76e1d",
+                "shasum": ""
+            },
+            "require": {
+                "fergusean/nusoap": "0.9.5",
+                "php": ">=5.3.3",
+                "symfony/framework-bundle": "~2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "NoiseLabs\\Bundle\\NuSOAPBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Vítor Brandão",
+                    "email": "vitor@noiselabs.org",
+                    "homepage": "http://noiselabs.org"
+                }
+            ],
+            "description": "Symfony2 bundle for NuSOAP - SOAP Toolkit for PHP",
+            "homepage": "https://github.com/noiselabs/NoiselabsNuSOAPBundle",
+            "keywords": [
+                "noiselabs",
+                "soap",
+                "symfony"
+            ],
+            "time": "2015-05-19 17:59:44"
         },
         {
             "name": "ocramius/proxy-manager",
