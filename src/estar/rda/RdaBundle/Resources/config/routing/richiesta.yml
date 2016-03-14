@@ -35,6 +35,11 @@ richiesta_delete:
     defaults: { _controller: "estarRdaBundle:Richiesta:delete" }
     methods:  [POST, DELETE]
 
+richiesta_annulla:
+    path:     /{id}/delete
+    defaults: { _controller: "estarRdaBundle:Richiesta:annulla" }
+    methods:  [POST, DELETE]
+
 richiesta_valida:
     path:     /{id}/valida/{transizione}
     defaults: { _controller: "estarRdaBundle:Richiesta:valida" }

@@ -162,7 +162,7 @@ winzou_state_machine:
                 from: [bozza, attesa_val_tec, attesa_val_amm]
                 to: eliminata
             annullamento:
-                from: [bozza, atttesa_val_tec, attesa_val_amm, inserita_ABS]
+                from: [inserita_ABS]
                 to: annullata
             rifiutata_amm_ABS:
                 from: [inserita_ABS]

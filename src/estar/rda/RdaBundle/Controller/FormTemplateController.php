@@ -325,11 +325,20 @@ class FormTemplateController extends Controller
         //FGDO20130310 il tasto "elimina" compare se e solo se la transizione si può fare
         $factory = $this->container->get('sm.factory');
         $articleSM = $factory->get($richiesta, 'rda');
+        $deleteForm = $formbuilder->getForm();
         if ($articleSM->can('cancellazione')) {
             $formbuilder = $this->createFormBuilder();
             $formbuilder->setAction($this->generateUrl('richiesta_delete', array('id' => $idRichiesta)));
             $deleteForm = $formbuilder->getForm();
             $deleteForm->add('submit_delete', 'submit', array('label' => ' Elimina', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));
+        }
+
+        $annullaForm = $formbuilder->getForm();
+        if ($articleSM->can('annullamento')) {
+            $formbuilder = $this->createFormBuilder();
+            $formbuilder->setAction($this->generateUrl('richiesta_annulla', array('id' => $idRichiesta)));
+            $annullaForm = $formbuilder->getForm();
+            $annullaForm->add('submit_annulla', 'submit', array('label' => ' Annulla', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));
         }
 
         $formbuilder = $this->createFormBuilder();
@@ -376,6 +385,7 @@ class FormTemplateController extends Controller
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'annulla_form' => $annullaForm->createView(),
             'print_form' => $printForm->createView(),
             'valida_forms' => $validaForms,
             'soap_form' => $ClientSoapForm->createView(),

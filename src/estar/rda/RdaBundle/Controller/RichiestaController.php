@@ -250,6 +250,53 @@ class RichiestaController extends Controller
     }
 
     /**
+     * Annulla una richiesta
+     * @param Request $request
+     * @param string $id idrichiesta
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \SM\SMException
+     */
+    public function annullaAction(Request $request, $id)
+    {
+        $form = $this->createDeleteForm($id);
+        $form->handleRequest($request);
+
+//        if ($form->isValid()) {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Richiesta entity.');
+        }
+        //FGDO 20160310 modifica per cancellazione logica
+
+        $factory = $this->container->get('sm.factory');
+        $articleSM = $factory->get($entity, 'rda');
+
+        $dateTime = new \DateTime();
+        $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
+        $dataIter = $dateTime->format(\DateTime::ATOM);
+
+        $iter= new Iter();
+        $iter->setDastato($articleSM->getState());
+        $articleSM->apply('annullamento');
+        $iter->setAstato($articleSM->getState());
+        $iter->setDastatogestav($entity->getStatusgestav());
+        $iter->setAstatogestav($entity->getStatusgestav());
+        $iter->setIdrichiesta($entity);
+        $iter->setMotivazione('richiesta cancellata');
+        $iter->setDataora($dataIter);
+        $iter->setIdutente($this->getUser());
+        $iter->setDatafornita(false);
+
+        $em->flush();
+
+        //TODO inserire il codice per l'invocazione al webservice di annullamento
+
+        return $this->redirect($this->generateUrl('richiesta'));
+    }
+
+    /**
      * Creates a form to delete a Richiesta entity by id.
      *
      * @param mixed $id The entity id

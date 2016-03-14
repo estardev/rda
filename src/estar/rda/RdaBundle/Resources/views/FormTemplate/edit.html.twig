@@ -8,9 +8,15 @@
        <div class="bottoni">{{ form(back_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
         <div class="bottoni"> {{ form(print_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
         {%
-            if (stato=='bozza' or stato=='attesa_val_tec' or stato =='attesa_val_amm' or stato == 'inserita_ABS')
+            if (stato=='bozza' or stato=='attesa_val_tec' or stato =='attesa_val_amm' )
         %}
             <div class="bottoni"> {{ form(delete_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
+        {% endif %}
+
+        {%
+        if (stato=='inserita_ABS' )
+        %}
+            <div class="bottoni"> {{ form(annulla_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
         {% endif %}
 
         {% if (diritti.isVA) and (stato=='inserita_ABS') %} <div class="bottoni"> {{ form(soap_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>{% endif %}
