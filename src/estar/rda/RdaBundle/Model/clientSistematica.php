@@ -142,6 +142,27 @@ class ClientSistematica
     /**
      * @var string
      */
+    private $gruppogestav;
+
+    /**
+     * @return string
+     */
+    public function getGruppogestav()
+    {
+        return $this->gruppogestav;
+    }
+
+    /**
+     * @param string $gruppogestav
+     */
+    public function setGruppogestav($gruppogestav)
+    {
+        $this->gruppogestav = $gruppogestav;
+    }
+
+    /**
+     * @var string
+     */
     private $strutturarichiedente;
 
     /**
