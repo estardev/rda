@@ -281,23 +281,49 @@ class SistematicaClientController extends Controller
         $numprotocollo=$esito['protocollo'];
 
         //TODO: aggiungere il protocollo in richiesta solo se tipologia è nuova
-        //TODO: aggiungere il protocollo in iter, richiestadocumenti e richiestadocumentiliberi se protocollo null
-
-        // scrivo il numero di protocollo sulla richiesta
+       // scrivo il numero di protocollo sulla richiesta
+        if($tipologia=="Nuova"){
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         $richiesta->setNumeroprotocollo($numprotocollo);
         $em->persist($richiesta);
+        }
 
+        //TODO: aggiungere il protocollo in iter, richiestadocumenti e richiestadocumentiliberi se protocollo null
 
+        $documentiliberi=$em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idRichiesta' => $idRichiesta));
+        foreach($documentiliberi as $documentiliberiscrittura) {
+            if (is_null($documentiliberiscrittura->getNumeroprotocollo()))
+            {
+                $documentiliberiscrittura->setNumeroprotocollo($numprotocollo);
+                $em->persist($documentiliberiscrittura);
+            }
+        }
+        $documenti=$em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idRichiesta' => $idRichiesta));
+        foreach($documenti as $documentiscrittura) {
+            if (is_null($documentiscrittura->getNumeroprotocollo()))
+            {
+                $documentiscrittura->setNumeroprotocollo($numprotocollo);
+                $em->persist($documentiscrittura);
+            }
+        }
+
+        $iter=$em->getRepository('estarRdaBundle:Iter')->findBy(array('idRichiesta' => $idRichiesta));
+        foreach($iter as $iterscrittura) {
+            if (is_null($iterscrittura->getNumeroprotocollo()))
+            {
+                $iterscrittura->setNumeroprotocollo($numprotocollo);
+                $em->persist($iterscrittura);
+            }
+        }
 
         $em->flush();
 
         //return $this->redirect($this->generateUrl("richiesta"));
-        return $this->render('@estarRda/Testing/index.html.twig', array(
-            'hello' => $myrespons,
-        ));
+        //return $this->render('@estarRda/Testing/index.html.twig', array(
+        //    'hello' => $myrespons,
+        //));
 
-
+        return $this->redirect($this->generateUrl("richiesta"));
 
         }
 
