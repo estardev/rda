@@ -288,6 +288,9 @@ class FormTemplateController extends Controller
         $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 1);
         $editForm = $res[0];
 
+        if(is_null($richiesta->getNumeroprotocollo())){
+            $tipologia="Nuova";
+        } else $tipologia="Documentazione Aggiuntiva";
 
         //FG20151028 modifica per i diritti: prendiamo i diritti
 //        $usercheck = $this->get("usercheck.notify");
@@ -318,7 +321,7 @@ class FormTemplateController extends Controller
 
         $formbuilder = $this->createFormBuilder();
 
-        $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => "Nuova")));
+        $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => $tipologia)));
         $ClientSoapForm = $formbuilder->getForm();
         $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane')));
 
@@ -414,6 +417,11 @@ class FormTemplateController extends Controller
         $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 1);
         $editForm = $res[0];
 
+        if(is_null($richiesta->getNumeroprotocollo())){
+            $tipologia="Nuova";
+        } else $tipologia="Documentazione Aggiuntiva";
+
+
         $editForm->handleRequest($request);
 
         if($editForm->isValid()) {
@@ -456,7 +464,7 @@ class FormTemplateController extends Controller
 
         $formbuilder = $this->createFormBuilder();
 
-        $formbuilder->setAction($this->generateUrl('sistematicaclient_show', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
+        $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => $tipologia)));
         $ClientSoapForm = $formbuilder->getForm();
         $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane')));
 

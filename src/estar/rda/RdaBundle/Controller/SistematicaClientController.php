@@ -205,13 +205,13 @@ class SistematicaClientController extends Controller
            $zip = \Comodojo\Zip\Zip::create($directory_sender . '/' . $path . '/' . $path . '.zip');
 
         $pathdocumenti='documenti/Richiesta_'.$idRichiesta;
-        $documenti=$em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idRichiesta' => $idRichiesta));
+        $documenti=$em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
         foreach($documenti as $documentidazippare) {
             if (is_null($documentidazippare->getNumeroprotocollo()))
                 $zip->setPath($pathdocumenti)->add($documentidazippare->getFilepath());
         }
 
-        $documentiliberi=$em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idRichiesta' => $idRichiesta));
+        $documentiliberi=$em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
         foreach($documentiliberi as $documentiliberidazippare) {
             if (is_null($documentiliberidazippare->getNumeroprotocollo()))
                 $zip->setPath($pathdocumenti)->add($documentiliberidazippare->getFilepath());
@@ -226,7 +226,9 @@ class SistematicaClientController extends Controller
     }
 
     /**
-     * @param $idRichiesta
+     * @param string $idRichiesta
+     * @param string $idCategoria
+     * @param string $tipologia
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction($idCategoria, $idRichiesta, $tipologia){
@@ -234,6 +236,7 @@ class SistematicaClientController extends Controller
         $em = $this->getDoctrine()->getManager();
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
         $gruppogestav = $categoria->getGruppogestav();
+        $categoriamerciologica= $categoria->getNome();
 
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         $azienda=$richiesta->getIdazienda()->getNome();
@@ -248,7 +251,7 @@ class SistematicaClientController extends Controller
                 break;
 
             case "Nuova":
-                $ritorno = generateZip($idCategoria, $idRichiesta);
+                $ritorno = $this->generateZip($idCategoria, $idRichiesta);
                 if ($ritorno['esito']) {
                     $protocollo = "";
                     $pathfile="sender/".$ritorno['path']."/".$ritorno['path'].".zip";
@@ -257,7 +260,7 @@ class SistematicaClientController extends Controller
                 }
                 break;
             case "Documentazione Aggiuntiva":
-                $ritorno = generateZip($idCategoria, $idRichiesta);
+                $ritorno = $this->generateZip($idCategoria, $idRichiesta);
                 if ($ritorno['esito']) {
                     $protocollo = $richiesta->getNumeroprotocollo();
                     $pathfile="sender/".$ritorno['path']."/".$ritorno['path'].".zip";
@@ -271,7 +274,8 @@ class SistematicaClientController extends Controller
                 $risposta->setNomefile($nomefile);
                 $risposta->setPath($pathfile);
                 $risposta->setTipologia($tipologia);
-                $risposta->setCategoriamerceologica($gruppogestav);
+                $risposta->setCategoriamerceologica($categoriamerciologica);
+                $risposta->getGruppogestav($gruppogestav);
                 $risposta->setNumeroProtocollo($protocollo);
                 $risposta->setStrutturarichiedente($azienda);
 
