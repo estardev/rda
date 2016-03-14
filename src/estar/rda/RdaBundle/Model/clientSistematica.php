@@ -193,8 +193,8 @@ class ClientSistematica
         $contactsettype2 = $parametri->getContactSettype2();
         $contactreferencetype2 = $parametri->getContactReferencetype2();
         $contactReferencecode2 = $parametri->getContactReferencecode2();
-        $contactSettype3 = $parametri->getContactSettype3();
-        $contactReferencetype3 = $parametri->getContactReferencetype3();
+        $contactsettype3 = $parametri->getContactSettype3();
+        $contactreferencetype3 = $parametri->getContactReferencetype3();
         $contactReferencecode3 = $parametri->getContactReferencecode3();
         $variableSetkey1 = $parametri->getVariableSetkey1();
         $variableSettype1 = $parametri->getVariableSettype1();
@@ -218,8 +218,8 @@ class ClientSistematica
                <searchValue>GBESTARAREADLCC</searchValue>
              </contact>
               <contact>
-               <type>T</type>
-              <referenceType>GBOX</referenceType>
+               <type>'.$contactsettype3.'</type>
+              <referenceType>'.$contactreferencetype3.'</referenceType>
                <searchType>CODE</searchType>
                <searchValue>GBESTAVSEDAFSOLD</searchValue>
              </contact>';
@@ -328,26 +328,23 @@ class ClientSistematica
 
 
 
-        /*		LEGGERE!!!!
-
-        http://stackoverflow.com/questions/704608/how-to-use-nusoap-for-messages-with-multiple-namespaces
-
-        Notice: Undefined property: nusoap_client::$operation in ./lib/nusoap.php  on line 7674
-        So I went the lazy route and went into nusoap.php and added this code before line 7674 to make it happy:
-
-            if(empty($this->operation)) {
-                $this->operation = "";
-            }
-
-        */
-
         $response = $client->send($request_xml, $soapaction, '');
 
-        //echo '<h2>Request</h2><pre>' . htmlspecialchars($client->request, ENT_QUOTES) . '</pre>';
-        //echo '<h2>Response</h2><pre>' . htmlspecialchars($client->response, ENT_QUOTES) . '</pre>';
         file_put_contents("REQUESTserver/".$number."_richiestaclient.xml",$client->request );
         file_put_contents("REQUESTserver/".$number."_rispostastaclient.xml",$client->response );
-        //echo '<h2>Debug</h2><pre>' . htmlspecialchars($client->getDebug(), ENT_QUOTES) . '</pre>';
+
+        $rispostaSistematica= file_get_contents("REQUESTserver/".$number."_rispostastaclient.xml");
+
+
+
+        $ProtocolResp = simplexml_load_string($rispostaSistematica);
+        $numProt = $ProtocolResp->identifier;
+        $identifierDate=$ProtocolResp->identifierDate;
+        $idChiaveUnivoca=$ProtocolResp->id;
+        $viewUrl=$ProtocolResp->viewUrl;
+
+
+        return array('protocollo'=> $numProt, 'dataprotocollo'=> $identifierDate, 'chiavesistematica'=>$idChiaveUnivoca, 'urlprotocollo'=>$viewUrl);
 
 
 
