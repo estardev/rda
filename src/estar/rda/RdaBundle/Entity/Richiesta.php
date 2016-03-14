@@ -340,7 +340,7 @@ class Richiesta
     }
 
     /**
-     * Ritorna i valori possibili per la priorità
+     * Ritorna i valori possibili per la prioritï¿½
      * @return array
      */
     public static function getPossibleEnumPriorita()
