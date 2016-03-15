@@ -28,3 +28,11 @@ categoriadocumento_delete:
     path:     /{id}/delete
     defaults: { _controller: "estarRdaBundle:Categoriadocumento:delete" }
     methods:  [POST, DELETE]
+
+categoriadocumento_byCategoria:
+    path:     /{idCategoria}/byCategoria
+    defaults: { _controller: "estarRdaBundle:Categoriadocumento:byCategoria" }
+
+categoriadocumento_createByCategoria:
+    path:     /{idCategoria}/createByCategoria
+    defaults: { _controller: "estarRdaBundle:Categoriadocumento:createByCategoria" }

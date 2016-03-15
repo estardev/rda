@@ -100,7 +100,7 @@ class DocumentoController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('submit', 'submit', array('label' => 'Crea'));
 
         return $form;
     }
@@ -270,7 +270,7 @@ class DocumentoController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('documento_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->add('submit', 'submit', array('label' => 'Elimina'))
             ->getForm();
     }
 
