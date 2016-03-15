@@ -4,6 +4,7 @@ namespace estar\rda\RdaBundle\Controller;
 
 
 use estar\rda\RdaBundle\Entity\Campo;
+use estar\rda\RdaBundle\Entity\Utente;
 use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Entity\Valorizzazionecamporichiesta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -106,6 +107,8 @@ class FormTemplateController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        $utente = $this->getUser();
+        $idazienda= $utente->getIdazienda();
         $campi = $request->request->all();
 
         $campiStruttura = $em->getRepository('estarRdaBundle:Campo')->findBy(
@@ -123,6 +126,7 @@ class FormTemplateController extends Controller
             $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
             $richiesta = new Richiesta();
             $richiesta->setIdcategoria($categoria);
+            $richiesta->setIdazienda($idazienda);
             $richiesta->setStatus('bozza');
             $richiesta->setTitolo($campi['form']['titolo']);
             $richiesta->setDescrizione($campi['form']['descrizione']);
