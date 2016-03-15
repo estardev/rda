@@ -4,6 +4,7 @@ namespace estar\rda\RdaBundle\Controller;
 
 
 use estar\rda\RdaBundle\Entity\Campo;
+use estar\rda\RdaBundle\Entity\Utente;
 use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Entity\Valorizzazionecamporichiesta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -106,6 +107,8 @@ class FormTemplateController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        $utente = $this->getUser();
+        $idazienda= $utente->getIdazienda();
         $campi = $request->request->all();
 
         $campiStruttura = $em->getRepository('estarRdaBundle:Campo')->findBy(
@@ -123,6 +126,7 @@ class FormTemplateController extends Controller
             $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
             $richiesta = new Richiesta();
             $richiesta->setIdcategoria($categoria);
+            $richiesta->setIdazienda($idazienda);
             $richiesta->setStatus('bozza');
             $richiesta->setTitolo($campi['form']['titolo']);
             $richiesta->setDescrizione($campi['form']['descrizione']);
@@ -288,6 +292,9 @@ class FormTemplateController extends Controller
         $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 1);
         $editForm = $res[0];
 
+        if(is_null($richiesta->getNumeroprotocollo())){
+            $tipologia="Nuova";
+        } else $tipologia="Documentazione Aggiuntiva";
 
         //FG20151028 modifica per i diritti: prendiamo i diritti
 //        $usercheck = $this->get("usercheck.notify");
@@ -318,7 +325,7 @@ class FormTemplateController extends Controller
 
         $formbuilder = $this->createFormBuilder();
 
-        $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => "Nuova")));
+        $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => $tipologia)));
         $ClientSoapForm = $formbuilder->getForm();
         $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane')));
 
@@ -414,6 +421,11 @@ class FormTemplateController extends Controller
         $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 1);
         $editForm = $res[0];
 
+        if(is_null($richiesta->getNumeroprotocollo())){
+            $tipologia="Nuova";
+        } else $tipologia="Documentazione Aggiuntiva";
+
+
         $editForm->handleRequest($request);
 
         if($editForm->isValid()) {
@@ -456,7 +468,7 @@ class FormTemplateController extends Controller
 
         $formbuilder = $this->createFormBuilder();
 
-        $formbuilder->setAction($this->generateUrl('sistematicaclient_show', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
+        $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => $tipologia)));
         $ClientSoapForm = $formbuilder->getForm();
         $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane')));
 

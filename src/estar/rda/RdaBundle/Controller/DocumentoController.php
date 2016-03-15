@@ -60,12 +60,13 @@ class DocumentoController extends Controller
     /**
      * @param Request $request
      * @param string $idRichiesta
+     * @param string $idCategoria
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function createLiberoAction(Request $request, $idRichiesta)
+    public function createLiberoAction(Request $request, $idRichiesta, $idCategoria)
     {
         $entity = new Richiestadocumentolibero();
-        $form = $this->createCreateFormLibero($entity, $idRichiesta);
+        $form = $this->createCreateFormLibero($entity, $idRichiesta, $idCategoria);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -77,7 +78,7 @@ class DocumentoController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('documento_liberoByRichiesta', array('idRichiesta' => $idRichiesta)));
+            return $this->redirect($this->generateUrl('documento_liberoByRichiesta', array('idRichiesta' => $idRichiesta, 'idCategoria' => $idCategoria)));
         }
 
         return $this->render('estarRdaBundle:Documento:new.html.twig', array(
@@ -109,12 +110,13 @@ class DocumentoController extends Controller
      * Crea una form per aggiungere un documento libero
      * @param Documento $entity
      * @param string $idRichiesta
+     * @param string $idCategoria
      * @return \Symfony\Component\Form\Form
      */
-    private function createCreateFormLibero(Richiestadocumentolibero $entity, $idRichiesta)
+    private function createCreateFormLibero(Richiestadocumentolibero $entity, $idRichiesta, $idCategoria)
     {
         $form = $this->createForm(new DocumentoliberoType(), $entity, array(
-            'action' => $this->generateUrl('documento_createlibero', array('idRichiesta' => $idRichiesta)),
+            'action' => $this->generateUrl('documento_createlibero', array('idRichiesta' => $idRichiesta, 'idCategoria' => $idCategoria)),
             'method' => 'POST',
         ));
 
@@ -398,7 +400,7 @@ class DocumentoController extends Controller
         //Ne aggiungiamo sempre uno in più
         $rdl = new Richiestadocumentolibero();
         $rdl->setIdrichiesta($richiesta);
-        $form = $this->createCreateFormLibero($rdl, $idRichiesta);
+        $form = $this->createCreateFormLibero($rdl, $idRichiesta, $idCategoria);
         //$file = $rd->getdocFile();
         return $this->render('estarRdaBundle:Documento:indexlibero.html.twig', array(
             'entities' => $entities,

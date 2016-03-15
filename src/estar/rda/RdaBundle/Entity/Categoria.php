@@ -44,6 +44,15 @@ class Categoria
     private $gruppogestav;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="nomegestav", type="string", length=255, nullable=true)
+     */
+    private $nomegestav;
+
+
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
@@ -150,6 +159,7 @@ class Categoria
         return strval($this->getId());
     }
 
+
     /**
      * @return mixed
      */
@@ -210,6 +220,23 @@ class Categoria
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getNomegestav()
+    {
+        return $this->nomegestav;
+    }
+
+    /**
+     * @param string $nomegestav
+     * @return Categoria
+     */
+    public function setNomegestav($nomegestav)
+    {
+        $this->nomegestav = $nomegestav;
+        return $this;
+    }
 
 
 }

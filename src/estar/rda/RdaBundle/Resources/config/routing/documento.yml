@@ -16,7 +16,7 @@ documento_create:
     methods:  POST
 
 documento_createlibero:
-    path:     /createlibero/{idRichiesta}
+    path:     /createlibero/{idRichiesta}/{idCategoria}
     defaults: { _controller: "estarRdaBundle:Documento:createlibero" }
     methods:  POST
 
@@ -35,7 +35,7 @@ documento_delete:
     methods:  [POST, DELETE]
 
 documento_byCategoria:
-    path:     /byCategoria/{idCategoria}/{idRichiesta}
+    path:     /byCategoria/{idRichiesta}/{idCategoria}
     defaults: { _controller: "estarRdaBundle:Documento:indexByCategoriaRichiesta" }
 
 documento_liberoByRichiesta:
