@@ -63,22 +63,19 @@ class CategoriadocumentoController extends Controller
     public function createByCategoriaAction($idCategoria, Request $request)
     {
         //TODO da finire
+        $em = $this->getDoctrine()->getManager();
         $entity = new Categoriadocumento();
-        $form = $this->createCreateForm($entity);
-        $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('categoriadocumento_show', array('id' => $entity->getId())));
-        }
-
-        return $this->render('estarRdaBundle:Categoriadocumento:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        ));
+        $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
+        $campi = $request->request->all();
+        $documento = $em->getRepository('estarRdaBundle:Documento')->find($campi['form']['iddocumento']);
+        $necessarioperabs = $campi['form']['necessarioperabs'];
+        $entity->setIdcategoria($categoria);
+        $entity->setIddocumento($documento);
+        $entity->setNecessarioperabs($necessarioperabs);
+        $em->persist($entity);
+        $em->flush();
+        return $this->redirect($this->generateUrl('categoriadocumento_byCategoria', array('idCategoria' => $idCategoria)));
     }
 
     /**
@@ -112,19 +109,14 @@ class CategoriadocumentoController extends Controller
         $form = $this->createFormBuilder()
             ->add('necessarioperabs','choice', array(
                 'label' => 'Necessario per ABS',
+                'choices_as_values' => true,
                 'choices'  => array(
                     'No' => false,
                     'Si' => true,)))
             ->add('iddocumento', 'entity', array(
                 'class' => 'estar\rda\RdaBundle\Entity\Documento',
-                'choice_label' => 'nome',
+                'choice_label' => 'nomedescrizione',
                 'label' => 'Documento',
-            ))
-            ->add('idcategoria', 'entity', array(
-                'class' => 'estar\rda\RdaBundle\Entity\Categoria',
-                'choice_label' => 'descrizione',
-                'label' => 'Categoria',
-                'data' => $categoria,
             ))
             -> setAction($this->generateUrl('categoriadocumento_createByCategoria', array('idCategoria' => $categoria->getId())))
             ->add('submit', 'submit', array('label' => 'Aggiungi'))

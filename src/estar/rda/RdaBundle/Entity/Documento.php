@@ -96,4 +96,12 @@ class Documento
     }
 
     public function __toString(){return strval($this->getId());}
+
+    /**
+     * @return string una descrizione decente
+     */
+    public function getNomeDescrizione()
+    {
+        return $this->getNome().' - '.$this->getDescrizione();
+    }
 }
