@@ -146,7 +146,7 @@ class SistematicaClientController extends Controller
             $html = $this->renderView('::printbase.html.twig', array(
                 'form' => $form->createView()
             ));
-            $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" . 'Documento_' . $idDoc . '_' . $nomedescrizione . "_Richiesta" . $idRichiesta . ".pdf");
+            $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" . 'Documento_' . $idDoc . '_' . $nomedescrizione . "_Richiesta_" . $idRichiesta . ".pdf");
         }
 
         $usercheck = $this->get("usercheck.notify");
@@ -201,8 +201,10 @@ class SistematicaClientController extends Controller
         ));
 
 
-        $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" . $num . "_Richiesta" . $idRichiesta . ".pdf");
-           $zip = \Comodojo\Zip\Zip::create($directory_sender . '/' . $path . '/' . $path . '.zip');
+        $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" . $num . "_Richiesta_" . $idRichiesta . ".pdf");
+        $zip = \Comodojo\Zip\Zip::create($directory_sender . '/' . $path . '/' . $path . '.zip');
+
+        $zip->add($directory_sender . "/" . $path, true); //->add($pathdocumenti, true);
 
         $pathdocumenti='documenti/Richiesta_'.$idRichiesta;
         $documenti=$em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
@@ -218,7 +220,7 @@ class SistematicaClientController extends Controller
         }
 
         //TODO prendere tutti i file e documenti
-        $zip->add($directory_sender . "/" . $path, true); //->add($pathdocumenti, true);
+
         $zip->close();
 
        return array('esito'=>true, 'progressivo'=>$num, 'path'=>$path );
@@ -236,7 +238,7 @@ class SistematicaClientController extends Controller
         $em = $this->getDoctrine()->getManager();
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
         $gruppogestav = $categoria->getGruppogestav();
-        $categoriamerciologica= $categoria->getNome();
+        $categoriamerciologica= $categoria->getNomegestav();
 
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         $azienda=$richiesta->getIdazienda()->getNome();
@@ -253,7 +255,7 @@ class SistematicaClientController extends Controller
             case "Nuova":
                 $ritorno = $this->generateZip($idCategoria, $idRichiesta);
                 if ($ritorno['esito']) {
-                    $protocollo = "";
+                    $protocollo = "xxxxx";
                     $pathfile="sender/".$ritorno['path']."/".$ritorno['path'].".zip";
                     $nomefile=$ritorno['path'].'.zip';
 
@@ -275,13 +277,13 @@ class SistematicaClientController extends Controller
                 $risposta->setPath($pathfile);
                 $risposta->setTipologia($tipologia);
                 $risposta->setCategoriamerceologica($categoriamerciologica);
-                $risposta->getGruppogestav($gruppogestav);
+                $risposta->setGruppogestav($gruppogestav);
                 $risposta->setNumeroProtocollo($protocollo);
                 $risposta->setStrutturarichiedente($azienda);
 
                 $esito=$risposta->RequestWebServer();
 
-
+        if($esito['esito']==true){
         $numprotocollo=$esito['protocollo'];
 
         //TODO: aggiungere il protocollo in richiesta solo se tipologia è nuova
@@ -327,9 +329,11 @@ class SistematicaClientController extends Controller
         //    'hello' => $myrespons,
         //));
 
+        }
         return $this->redirect($this->generateUrl("richiesta"));
 
-        }
+
+    }
 
 
 

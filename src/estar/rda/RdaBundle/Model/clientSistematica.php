@@ -257,9 +257,10 @@ class ClientSistematica
         //$dateTime = date('Y-m-d').'T'.date('H:i:s');
         $client = new \nusoap_client($wsdl);
         $client->endpoint = 'http://devbss3.grupposistematica.it/isharedoc/webservices/instanceService3';
+        $client->operation = "InstanceMessageCreate";
         $client->soap_defencoding = 'utf-8';
         $client->username='$headerusername';
-        $client->password='.$headerpassword.';
+        $client->password='$headerpassword';
         $client->useHTTPPersistentConnection(); // Uses http 1.1 instead of 1.0
         $soapaction = "http://devbss3.grupposistematica.it/isharedoc/webservices/instanceService3/";
 
@@ -329,7 +330,7 @@ class ClientSistematica
                <id>236439</id>
             </reference>
              <reference>
-               <appIdentifier>'.$this->getNumeroProtocollo().'</appIdentifier>
+               <appIdentifier>0000088</appIdentifier>
                <appIdentifierDate>2016-03-01T10:44:49.112+01:00</appIdentifierDate>
             </reference>
          </references>
@@ -338,15 +339,14 @@ class ClientSistematica
                <fileset>isharedocMailAttach</fileset>
                <filename>'.$this->getNomefile().'</filename>
               <contentType>application/octet-stream</contentType>
-              <data>'.  base64_encode(file_get_contents($this->getPath().'/'.$this->getNomefile())).'</data>
+              <data>'.base64_encode(file_get_contents($this->getPath())).'</data>
             </attachment>
          </attachments>
          <startWorkflow>true</startWorkflow>
 
       </ins:InstanceMessageCreateRequest>
    </soapenv:Body>
-</soapenv:Envelope>';
-
+</soapenv:Envelope>'; //appIdentifier '.$this->getNumeroProtocollo().'
 
 
         $response = $client->send($request_xml, $soapaction, '');
@@ -354,18 +354,19 @@ class ClientSistematica
         file_put_contents("REQUESTserver/".$number."_richiestaclient.xml",$client->request );
         file_put_contents("REQUESTserver/".$number."_rispostastaclient.xml",$client->response );
 
-        $rispostaSistematica= file_get_contents("REQUESTserver/".$number."_rispostastaclient.xml");
+        if($rispostaSistematica= file_get_contents("REQUESTserver/".$number."_rispostastaclient.xml")){
+            $ProtocolResp = simplexml_load_string($rispostaSistematica);
+            $numProt = $ProtocolResp->identifier;
+            $identifierDate=$ProtocolResp->identifierDate;
+            $idChiaveUnivoca=$ProtocolResp->id;
+            $viewUrl=$ProtocolResp->viewUrl;
+            return array('esito'=>true ,'protocollo'=> $numProt, 'dataprotocollo'=> $identifierDate, 'chiavesistematica'=>$idChiaveUnivoca, 'urlprotocollo'=>$viewUrl);
+        }
+        else
+            return array('esito'=>false);
 
 
 
-        $ProtocolResp = simplexml_load_string($rispostaSistematica);
-        $numProt = $ProtocolResp->identifier;
-        $identifierDate=$ProtocolResp->identifierDate;
-        $idChiaveUnivoca=$ProtocolResp->id;
-        $viewUrl=$ProtocolResp->viewUrl;
-
-
-        return array('protocollo'=> $numProt, 'dataprotocollo'=> $identifierDate, 'chiavesistematica'=>$idChiaveUnivoca, 'urlprotocollo'=>$viewUrl);
 
 
 
