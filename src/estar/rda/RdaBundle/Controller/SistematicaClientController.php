@@ -219,7 +219,6 @@ class SistematicaClientController extends Controller
                 $zip->setPath($pathdocumenti)->add($documentiliberidazippare->getFilepath());
         }
 
-        //TODO prendere tutti i file e documenti
 
         $zip->close();
 
@@ -296,7 +295,7 @@ class SistematicaClientController extends Controller
 
         //TODO: aggiungere il protocollo in iter, richiestadocumenti e richiestadocumentiliberi se protocollo null
 
-        $documentiliberi=$em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idRichiesta' => $idRichiesta));
+        $documentiliberi=$em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
         foreach($documentiliberi as $documentiliberiscrittura) {
             if (is_null($documentiliberiscrittura->getNumeroprotocollo()))
             {
@@ -304,7 +303,7 @@ class SistematicaClientController extends Controller
                 $em->persist($documentiliberiscrittura);
             }
         }
-        $documenti=$em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idRichiesta' => $idRichiesta));
+        $documenti=$em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
         foreach($documenti as $documentiscrittura) {
             if (is_null($documentiscrittura->getNumeroprotocollo()))
             {
@@ -313,7 +312,7 @@ class SistematicaClientController extends Controller
             }
         }
 
-        $iter=$em->getRepository('estarRdaBundle:Iter')->findBy(array('idRichiesta' => $idRichiesta));
+        $iter=$em->getRepository('estarRdaBundle:Iter')->findBy(array('idrichiesta' => $idRichiesta));
         foreach($iter as $iterscrittura) {
             if (is_null($iterscrittura->getNumeroprotocollo()))
             {
