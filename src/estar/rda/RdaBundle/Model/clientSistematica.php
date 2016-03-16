@@ -361,8 +361,6 @@ class ClientSistematica
             $responseXML=str_replace('<SOAP-ENV:Body>','',$responseXML);
             $responseXML=str_replace('</SOAP-ENV:Body></SOAP-ENV:Envelope>','',$responseXML);
             $xml=simplexml_load_string($responseXML);
-            //TODO prova
-            echo "ciao";
             $idChiaveUnivoca= $xml->id;
             $numProt = $xml->identifier;
             $identifierDate=$xml->identifierDate;
