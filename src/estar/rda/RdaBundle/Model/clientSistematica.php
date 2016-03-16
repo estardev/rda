@@ -350,16 +350,24 @@ class ClientSistematica
 
 
         $response = $client->send($request_xml, $soapaction, '');
-
+        $res=$client->responseData;
         file_put_contents("REQUESTserver/".$number."_richiestaclient.xml",$client->request );
         file_put_contents("REQUESTserver/".$number."_rispostastaclient.xml",$client->response );
-
         if($rispostaSistematica= file_get_contents("REQUESTserver/".$number."_rispostastaclient.xml")){
-            $ProtocolResp = simplexml_load_string($rispostaSistematica);
-            $numProt = $ProtocolResp->identifier;
-            $identifierDate=$ProtocolResp->identifierDate;
-            $idChiaveUnivoca=$ProtocolResp->id;
-            $viewUrl=$ProtocolResp->viewUrl;
+
+            $responseXML=strstr($res,"<SOAP-ENV:Body>");
+            $ultimaposizione= strpos($responseXML,"------=_Part");
+            $responseXML=substr($responseXML,0,$ultimaposizione-1);
+            $responseXML=str_replace('<SOAP-ENV:Body>','',$responseXML);
+            $responseXML=str_replace('</SOAP-ENV:Body></SOAP-ENV:Envelope>','',$responseXML);
+            $xml=simplexml_load_string($responseXML);
+            //TODO prova
+            echo "ciao";
+            $idChiaveUnivoca= $xml->id;
+            $numProt = $xml->identifier;
+            $identifierDate=$xml->identifierDate;
+            $viewUrl=$xml->viewUrl;
+
             return array('esito'=>true ,'protocollo'=> $numProt, 'dataprotocollo'=> $identifierDate, 'chiavesistematica'=>$idChiaveUnivoca, 'urlprotocollo'=>$viewUrl);
         }
         else
