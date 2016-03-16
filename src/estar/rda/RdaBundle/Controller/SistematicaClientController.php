@@ -295,16 +295,16 @@ class SistematicaClientController extends Controller
 
         //TODO: aggiungere il protocollo in iter, richiestadocumenti e richiestadocumentiliberi se protocollo null
 
-        $documentiliberi=$em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
-        foreach($documentiliberi as $documentiliberiscrittura) {
+        $documentiliberiscr=$em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
+        foreach($documentiliberiscr as $documentiliberiscrittura) {
             if (is_null($documentiliberiscrittura->getNumeroprotocollo()))
             {
                 $documentiliberiscrittura->setNumeroprotocollo($numprotocollo);
                 $em->persist($documentiliberiscrittura);
             }
         }
-        $documenti=$em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
-        foreach($documenti as $documentiscrittura) {
+        $documentiscr=$em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
+        foreach($documentiscr as $documentiscrittura) {
             if (is_null($documentiscrittura->getNumeroprotocollo()))
             {
                 $documentiscrittura->setNumeroprotocollo($numprotocollo);
@@ -339,69 +339,3 @@ class SistematicaClientController extends Controller
 
     }
 
-
-/*
-
-        // estrazione parametri per la richiesta
-        $em = $this->getDoctrine()->getManager();
-        $parametri = $em->getRepository('estarRdaBundle:Sistematica')->find(1);
-        //$user = $parametri->getUser();
-        //$psw = $parametri->getPsw();
-        //$wsdl = $parametri->getWsdl();
-        //$storyboardcode = $parametri->getStoryboardcode();
-        //$setmetaviewname = $parametri->getSetmetaviewname();
-        //$setdirection = $parametri->getSetdirection();
-        //$contactSettype1 = $parametri->getContactSettype1();
-        //$contactReferencetype1 = $parametri->getContactReferencetype1();
-        //$contactReferencecode1 = $parametri->getContactReferencecode1();
-        //$contactSettype2 = $parametri->getContactSettype2();
-        //$contactReferencetype2 = $parametri->getContactReferencetype2();
-        //$contactReferencecode2 = $parametri->getContactReferencecode2();
-        //$contactSettype3 = $parametri->getContactSettype3();
-        //$contactReferencetype3 = $parametri->getContactReferencetype3();
-        //$contactReferencecode3 = $parametri->getContactReferencecode3();
-        //$variableSetkey1 = $parametri->getVariableSetkey1();
-        //$variableSettype1 = $parametri->getVariableSettype1();
-        //$variableSetvaluestring1 = $parametri->getVariableSetvaluestring1();
-        //$attachmentSetfileset1 = $parametri->getAttachmentSetfileset1();
-        //$attachmentSetcontenttype1 = $parametri->getAttachmentSetcontenttype1();
-        //$requestSetinstanceoperation = $parametri->getRequestSetinstanceoperation();
-
-        // esecuzione file java
-        // abilitare su php.ini di apache (wamp) safe_mode_exec_dir=off
-        //exec($path . "_esec.bat", $output, $return);
-        exec("java -cp ./client/src TestClient ".$path." ../../sender/".$path."/", $output, $return);
-
-
-        // estrazione del numero di protocollo dalla risposta
-        //$numProt = file_get_contents("/client/src/" . $path . "_protocollo.txt", FILE_USE_INCLUDE_PATH);
-        $numProt = file_get_contents($path . "_protocollo.txt", FILE_USE_INCLUDE_PATH);
-
-        // scrittura del numero di protocollo sulla richiesta
-        $em = $this->getDoctrine()->getManager();
-        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
-        $richiesta->setNumeroprotocollo($numProt);
-        $em->persist($richiesta);
-        $em->flush();
-
-        $richiestadocumento = $em->getRepository('estarRdaBundle:Richiestadocumento')->findOneBy(
-            array('idrichiesta' => $idRichiesta)
-        );
-        if(!empty($richiestadocumento)){
-            $richiestadocumento->setNumeroprotocollo($numProt);
-            $em->persist($richiestadocumento);
-            $em->flush();
-        }
-
-        // cancellazione file
-        // da decommentare nel caso non volessimo più fare storage delle richieste zippate e inviate
-        //$this->delTree($path);
-        //unlink($batfile);
-        //unlink("client/src/" . $path . "_protocollo.txt");
-        unlink($path . "_protocollo.txt");
-
-        return $this->redirect($this->generateUrl("richiesta"));
-
-}
-
-}
