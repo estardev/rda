@@ -49,7 +49,7 @@
     {{ navbar() }}
 {% endblock %}
 <body>
-<div class="container">
+<div>
     <!-- sidebar -->
     <div class="col-sm-12 col-md-2" id="sidebar" role="navigation">
         {% block sidebar %}
@@ -58,7 +58,7 @@
     </div>
 
     <!-- main area -->
-    <div class="content col-sm-12 col-md-10" style="display: none">
+    <div class="container col-sm-12 col-md-10" style="display: none">
         {% block body %}{% endblock %}
     </div>
 
