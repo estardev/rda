@@ -280,17 +280,28 @@ class FormTemplateService
                 $idRichiesta = $entity->getId();
                 $idCategoria = $idCategoria->getId();
 
-                $query = $em->createQuery('SELECT c.id AS idcampo, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,c.padre,vc.id,vc.valore
+                //FG bugfix: in edit tira giù i campi tutte le categorie.
+                $query = $em->createQuery('SELECT c.id AS idcampo, identity (c.idcategoria) as pippocategoria, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,c.padre,vc.id,vc.valore
                                     FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
                                     WITH c.id = vc.idcampo
                                     AND vc.idrichiesta = :idRichiesta
+                                    AND c.idcategoria = :idCategoria
                                     ORDER BY c.ordinamento')
-                    ->setparameter('idRichiesta', $idRichiesta);
+                    ->setparameters(array('idRichiesta' => $idRichiesta, 'idCategoria' => $idCategoria));
 
-                $campiValorizzati = $query->getResult();
+
+                //FG20160317 hack: non c'è verso di far capire a doctrine che voglio solo quelli di una categoria.
+                $campiValorizzatiIntermedi = $query->getResult();
+                //Itero sul risultato e sego. Mi vergogno di me stesso.
+                $campiValorizzati = array();
+                foreach ($campiValorizzatiIntermedi as $campovalorizzato) {
+                    $campoTemp = $campovalorizzato;
+                    if ($campoTemp['pippocategoria'] == $idCategoria)
+                        array_push($campiValorizzati, $campoTemp);
+                }
             } else {
                 $idCategoria = $idCategoria->getId();
-                $query = $em->createQuery('SELECT c.id , c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,c.padre
+                $query = $em->createQuery('SELECT c.id, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,c.padre
                                     FROM estarRdaBundle:Campo c
                                     WHERE c.idcategoria = :idCategoria
                                     ORDER BY c.ordinamento')
