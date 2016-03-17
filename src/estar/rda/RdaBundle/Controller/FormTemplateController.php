@@ -283,6 +283,9 @@ class FormTemplateController extends Controller
     /**
      * Displays a form to edit an existing Richiesta entity.
      *
+     * @param string $idCategoria la categoria
+     * @param string $idRichiesta la richiesta
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction($idCategoria, $idRichiesta)
     {
