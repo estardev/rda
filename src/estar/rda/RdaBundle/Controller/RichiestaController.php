@@ -239,16 +239,18 @@ class RichiestaController extends Controller
         $iter->setAstatogestav($entity->getStatusgestav());
         $iter->setIdrichiesta($entity);
         $iter->setMotivazione('richiesta cancellata');
-        $iter->setDataora($dataIter);
+        $iter->setDataora(new \DateTime('now'));
         $iter->setIdutente($this->getUser());
         $iter->setDatafornita(false);
-
+        $em->persist($iter);
         $em->flush();
 //        }
 
         return $this->redirect($this->generateUrl('richiesta'));
     }
 
+
+    //TODO Parte integrata nel caso di "Annullamento" della richiesta tramite invocazione di webservice
     /**
      * Annulla una richiesta
      * @param Request $request
@@ -273,10 +275,6 @@ class RichiestaController extends Controller
         $factory = $this->container->get('sm.factory');
         $articleSM = $factory->get($entity, 'rda');
 
-        $dateTime = new \DateTime();
-        $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
-        $dataIter = $dateTime->format(\DateTime::ATOM);
-
         $iter= new Iter();
         $iter->setDastato($articleSM->getState());
         $articleSM->apply('annullamento');
@@ -285,13 +283,13 @@ class RichiestaController extends Controller
         $iter->setAstatogestav($entity->getStatusgestav());
         $iter->setIdrichiesta($entity);
         $iter->setMotivazione('richiesta cancellata');
-        $iter->setDataora($dataIter);
+        $iter->setDataora(new \DateTime('now'));
         $iter->setIdutente($this->getUser());
         $iter->setDatafornita(false);
-
+        $em->persist($iter);
         $em->flush();
 
-        //TODO inserire il codice per l'invocazione al webservice di annullamento
+        //TODO inserire il codice per l'invocazione al webservice di annullamento -
 
         return $this->redirect($this->generateUrl('richiesta'));
     }

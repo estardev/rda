@@ -332,6 +332,10 @@ class FormTemplateController extends Controller
         $ClientSoapForm = $formbuilder->getForm();
         $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane')));
 
+        $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => "Annullamento")));
+        $AnnullaSoapForm = $formbuilder->getForm();
+        $AnnullaSoapForm->add('submit', 'submit', array('label' => ' Annulla', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));
+
         //FGDO20130310 il tasto "elimina" compare se e solo se la transizione si può fare
         $factory = $this->container->get('sm.factory');
         $articleSM = $factory->get($richiesta, 'rda');
@@ -341,14 +345,6 @@ class FormTemplateController extends Controller
             $formbuilder->setAction($this->generateUrl('richiesta_delete', array('id' => $idRichiesta)));
             $deleteForm = $formbuilder->getForm();
             $deleteForm->add('submit_delete', 'submit', array('label' => ' Elimina', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));
-        }
-
-        $annullaForm = $formbuilder->getForm();
-        if ($articleSM->can('annullamento')) {
-            $formbuilder = $this->createFormBuilder();
-            $formbuilder->setAction($this->generateUrl('richiesta_annulla', array('id' => $idRichiesta)));
-            $annullaForm = $formbuilder->getForm();
-            $annullaForm->add('submit_annulla', 'submit', array('label' => ' Annulla', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));
         }
 
         $formbuilder = $this->createFormBuilder();
@@ -376,7 +372,7 @@ class FormTemplateController extends Controller
 
         $validaForms = array();
         foreach ($possibili as $key => $value) {
-
+            if($value=="cancellazione")continue;
             $formbuilder->setAction($this->generateUrl('richiesta_valida', array('id' => $idRichiesta, 'transizione' => $value)));
             $validaForm = $formbuilder->getForm();
             //$formbuilder = $this->createFormBuilder();
@@ -395,7 +391,7 @@ class FormTemplateController extends Controller
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            'annulla_form' => $annullaForm->createView(),
+            'annulla_form' => $AnnullaSoapForm->createView(),
             'print_form' => $printForm->createView(),
             'valida_forms' => $validaForms,
             'soap_form' => $ClientSoapForm->createView(),
@@ -474,6 +470,12 @@ class FormTemplateController extends Controller
         $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => $tipologia)));
         $ClientSoapForm = $formbuilder->getForm();
         $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane')));
+
+        $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => "Annullamento")));
+        $ClientSoapForm = $formbuilder->getForm();
+        $ClientSoapForm->add('submit', 'submit', array('label' => ' Annulla', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));
+
+
 
         $formbuilder = $this->createFormBuilder();
         $formbuilder->setAction($this->generateUrl('richiesta_delete', array('id' => $idRichiesta)));
