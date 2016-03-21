@@ -12,6 +12,7 @@ use BeSimple\SoapBundle;
 use BeSimple\SoapWsdl;
 use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Entity\Campo;
+use estar\rda\RdaBundle\Entity\Iter;
 use estar\rda\RdaBundle\Form\FormTemplateType;
 use estar\rda\RdaBundle\Entity\Valorizzazionecamporichiesta;
 use Symfony\Component\HttpFoundation\Request;
@@ -245,7 +246,7 @@ class SistematicaClientController extends Controller
 
         switch($tipologia) {
 
-            case "Annulamento":
+            case "Annullamento":
                 $pathfile = "";
                 $nomefile = "";
                 $protocollo = $richiesta->getNumeroprotocollo();
@@ -282,8 +283,9 @@ class SistematicaClientController extends Controller
 
                 $esito=$risposta->RequestWebServer();
 
-        if($esito['esito']==true){
-        $numprotocollo=$esito['protocollo'];
+        if($esito['esito']==true and ($tipologia=="Nuova" or $tipologia=="Documentazione Aggiuntiva")) {
+            $numprotocollo = $esito['protocollo'];
+
 
         //TODO: aggiungere il protocollo in richiesta solo se tipologia è nuova
        // scrivo il numero di protocollo sulla richiesta
@@ -323,12 +325,38 @@ class SistematicaClientController extends Controller
 
         $em->flush();
 
+
         //return $this->redirect($this->generateUrl("richiesta"));
         //return $this->render('@estarRda/Testing/index.html.twig', array(
         //    'hello' => $myrespons,
         //));
 
         }
+
+else if ($esito['esito']==true and $tipologia=="Annullamento")
+{   $numprotocollo = $esito['protocollo'];
+    $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+
+    $factory = $this->container->get('sm.factory');
+    $articleSM = $factory->get($richiesta, 'rda');
+    if($articleSM->can('annullamento')){
+        $iter= new Iter();
+        $iter->setDastato($articleSM->getState());
+        $articleSM->apply('annullamento');
+        $iter->setAstato($articleSM->getState());
+        $iter->setNumeroprotocollo($numprotocollo);
+        $iter->setDastatogestav($entity->getStatusgestav());
+        $iter->setAstatogestav($entity->getStatusgestav());
+        $iter->setIdrichiesta($entity);
+        $iter->setMotivazione("richiesta Annullata dall'utente");
+        $iter->setDataora(new \DateTime('now'));
+        $iter->setIdutente($this->getUser());
+        $iter->setDatafornita(false);
+        $em->persist($iter);
+        $em->flush();
+    }
+}
+
         return $this->redirect($this->generateUrl("richiesta"));
 
 
