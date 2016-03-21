@@ -10,6 +10,7 @@ use BeSimple\SoapClient;
 use BeSimple\SoapCommon;
 use BeSimple\SoapBundle;
 use BeSimple\SoapWsdl;
+use estar\rda\RdaBundle\Controller\FormTemplateController;
 use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Entity\Campo;
 use estar\rda\RdaBundle\Entity\Iter;
@@ -27,7 +28,10 @@ use BeSimple\SoapClient\Tests\AxisInterop\Fixtures\base64Binary;
 
 class SistematicaClientController extends Controller
 {
-
+    /** FG messa costante per poterla più facilmente editare in futuro */
+    const SEPARATORE_VALORI = '|';
+    /** FG messa costante per poterla più facilmente editare in futuro */
+    const SEPARATORE_CAMPI = '||';
 
     // cancellazione di cartella non vuota
     public static function delTree($dir)
@@ -39,12 +43,14 @@ class SistematicaClientController extends Controller
         return rmdir($dir);
     }
 
+
+
     public function getChoicesOptions($string)
     {
-        $options = explode('||', $string);
+        $options = explode(FormTemplateController::SEPARATORE_CAMPI, $string);
         $returnOptions = array();
         foreach ($options as $option) {
-            $subOption = explode('|', $option);
+            $subOption = explode(FormTemplateController::SEPARATORE_VALORI, $option);
             if (count($subOption) > 1) {
                 $returnOptions[$subOption[0]] = $subOption[1];
             } else {
@@ -61,6 +67,25 @@ class SistematicaClientController extends Controller
         return $options[$key];
     }
 
+    function getFirstLevel($string)
+    {
+        $options = explode(FormTemplateController::SEPARATORE_CAMPI, $string);
+        $returnOptions = array();
+        foreach ($options as $option) {
+            $subOption = explode(FormTemplateController::SEPARATORE_VALORI, $option);
+            array_push($returnOptions, $subOption[1]);
+        }
+
+        return $returnOptions;
+    }
+
+    function getFather($string)
+    {
+        $options = explode(FormTemplateController::SEPARATORE_CAMPI, $string);
+        $subOption = explode(FormTemplateController::SEPARATORE_VALORI, $options[0]);
+
+        return $subOption[0];
+    }
     public function num(){
         $directory_sender = "sender";
         $max = 0;
@@ -152,12 +177,20 @@ class SistematicaClientController extends Controller
 
         $usercheck = $this->get("usercheck.notify");
         $diritti = $usercheck->allRole($idCategoria);
-        $query = $em->createQuery('SELECT c.id as idcampo,c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
+        $query = $em->createQuery('SELECT c.id AS idcampo, identity (c.idcategoria) as pippocategoria, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
                                     FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
                                     WITH c.id = vc.idcampo
                                     AND vc.idrichiesta = :idRichiesta')
             ->setparameter('idRichiesta', $idRichiesta);
-        $campiValorizzati = $query->getResult();
+        //FG20160317 hack: non c'è verso di far capire a doctrine che voglio solo quelli di una categoria.
+        $campiValorizzatiIntermedi = $query->getResult();
+        //Itero sul risultato e sego. Mi vergogno di me stesso.
+        $campiValorizzati = array();
+        foreach ($campiValorizzatiIntermedi as $campovalorizzato) {
+            $campoTemp = $campovalorizzato;
+            if ($campoTemp['pippocategoria'] == $idCategoria)
+                array_push($campiValorizzati, $campoTemp);
+        }
 
         $formbuilder = $this->createFormBuilder();
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);

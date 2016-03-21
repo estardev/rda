@@ -472,8 +472,8 @@ class FormTemplateController extends Controller
         $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane')));
 
         $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => "Annullamento")));
-        $ClientSoapForm = $formbuilder->getForm();
-        $ClientSoapForm->add('submit', 'submit', array('label' => ' Annulla', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));
+        $AnnullaSoapForm = $formbuilder->getForm();
+        $AnnullaSoapForm->add('submit', 'submit', array('label' => ' Annulla', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));
 
 
 
@@ -526,6 +526,7 @@ class FormTemplateController extends Controller
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'annulla_form' => $AnnullaSoapForm->createView(),
             'print_form' => $printForm->createView(),
             'valida_forms' => $validaForms,
             'soap_form' => $ClientSoapForm->createView(),

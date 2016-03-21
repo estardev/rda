@@ -246,6 +246,19 @@ class ClientSistematica
              </contact>';
 
 
+        if($this->tipologia=="Annullamento"){
+            $attachmentfile="<attachments/>";
+        } else {
+        $attachmentfile=" <attachments>
+             <attachment>
+               <fileset>isharedocMailAttach</fileset>
+               <filename>'.$this->getNomefile().'</filename>
+              <contentType>application/octet-stream</contentType>
+              <data>'.base64_encode(file_get_contents($this->getPath())).'</data>
+            </attachment>
+         </attachments>";
+        }
+
         $guid = trim(com_create_guid(),'{}');
         $guidBase64 = base64_encode($guid);
 
@@ -256,6 +269,9 @@ class ClientSistematica
         $number=time().rand();
         //$dateTime = date('Y-m-d').'T'.date('H:i:s');
         $client = new \nusoap_client($wsdl);
+
+
+
         $client->endpoint = 'http://devbss3.grupposistematica.it/isharedoc/webservices/instanceService3';
         $client->operation = "InstanceMessageCreate";
         $client->soap_defencoding = 'utf-8';
@@ -334,14 +350,7 @@ class ClientSistematica
                <appIdentifierDate>2016-03-01T10:44:49.112+01:00</appIdentifierDate>
             </reference>
          </references>
-          <attachments>
-             <attachment>
-               <fileset>isharedocMailAttach</fileset>
-               <filename>'.$this->getNomefile().'</filename>
-              <contentType>application/octet-stream</contentType>
-              <data>'.base64_encode(file_get_contents($this->getPath())).'</data>
-            </attachment>
-         </attachments>
+         '.$attachmentfile.'
          <startWorkflow>true</startWorkflow>
 
       </ins:InstanceMessageCreateRequest>
