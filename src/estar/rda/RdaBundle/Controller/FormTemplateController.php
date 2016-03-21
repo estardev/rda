@@ -545,12 +545,21 @@ class FormTemplateController extends Controller
         $usercheck = $this->get("usercheck.notify");
         $diritti = $usercheck->allRole($idCategoria);
         //FG il controllo dei campi è intenzionalmente tenuto fuori da ACL
-        $query = $em->createQuery('SELECT c.id AS idcampo,c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
+        $query = $em->createQuery('SELECT c.id AS idcampo, identity (c.idcategoria) as pippocategoria, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
                                     FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
                                     WITH c.id = vc.idcampo
                                     AND vc.idrichiesta = :idRichiesta')
             ->setparameter('idRichiesta', $idRichiesta);
-        $campiValorizzati = $query->getResult();
+        //FG20160317 hack: non c'è verso di far capire a doctrine che voglio solo quelli di una categoria.
+        $campiValorizzatiIntermedi = $query->getResult();
+        //Itero sul risultato e sego. Mi vergogno di me stesso.
+        $campiValorizzati = array();
+        foreach ($campiValorizzatiIntermedi as $campovalorizzato) {
+            $campoTemp = $campovalorizzato;
+            if ($campoTemp['pippocategoria'] == $idCategoria)
+                array_push($campiValorizzati, $campoTemp);
+        }
+
 //        $repository = $this->getDoctrine()
 //            ->getRepository('estarRdaBundle:Campo');
 //
