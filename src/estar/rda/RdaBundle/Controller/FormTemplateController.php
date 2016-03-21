@@ -538,8 +538,7 @@ class FormTemplateController extends Controller
 
     }
 
-    public
-    function printAction($idCategoria, $idRichiesta)
+    public function printAction($idCategoria, $idRichiesta)
     {
 
 
@@ -562,21 +561,6 @@ class FormTemplateController extends Controller
                 array_push($campiValorizzati, $campoTemp);
         }
 
-//        $repository = $this->getDoctrine()
-//            ->getRepository('estarRdaBundle:Campo');
-//
-//        $campi = $repository->findBy(
-//            array('idcategoria' => $idCategoria),
-//            array('ordinamento' => 'ASC')
-//        );
-
-
-//        $repository = $this->getDoctrine()
-//            ->getRepository('estarRdaBundle:Valorizzazionecamporichiesta');
-//
-//        $campiValorizzati = $repository->findBy(
-//            array('idrichiesta' => $idRichiesta)
-//        );
 
         $formbuilder = $this->createFormBuilder();
 //        $fieldsetVisitati = array();
