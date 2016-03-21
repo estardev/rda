@@ -10,10 +10,6 @@ namespace estar\rda\RdaBundle\Model;
 use nusoap_client;
 
 
-
-
-
-
 class ClientSistematica
 {
     /**
@@ -253,14 +249,14 @@ class ClientSistematica
         if($this->tipologia=="Annullamento"){
             $attachmentfile="<attachments/>";
         } else {
-        $attachmentfile=" <attachments>
+            $attachmentfile='<attachments>
              <attachment>
                <fileset>isharedocMailAttach</fileset>
                <filename>'.$this->getNomefile().'</filename>
               <contentType>application/octet-stream</contentType>
               <data>'.base64_encode(file_get_contents($this->getPath())).'</data>
             </attachment>
-         </attachments>";
+         </attachments>';
         }
 
         $guid = trim(com_create_guid(),'{}');
@@ -383,12 +379,6 @@ class ClientSistematica
         }
         else
             return array('esito'=>false);
-
-
-
-
-
-
 
 
     }
