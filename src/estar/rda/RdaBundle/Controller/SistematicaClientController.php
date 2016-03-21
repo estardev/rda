@@ -10,6 +10,7 @@ use BeSimple\SoapClient;
 use BeSimple\SoapCommon;
 use BeSimple\SoapBundle;
 use BeSimple\SoapWsdl;
+use estar\rda\RdaBundle\Model\ClientSistematica;
 use estar\rda\RdaBundle\Controller\FormTemplateController;
 use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Entity\Campo;
