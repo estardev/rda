@@ -243,7 +243,7 @@ class SistematicaClientController extends Controller
 
 
         $pathdocumenti='documenti/Richiesta_'.$idRichiesta;
-        mkdir( $pathdocumenti, 0777);
+        if (!is_dir($pathdocumenti)) mkdir( $pathdocumenti, 0777);
         $documenti=$em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
         foreach($documenti as $documentidazippare) {
             if (is_null($documentidazippare->getNumeroprotocollo()))
