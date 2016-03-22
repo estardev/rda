@@ -241,7 +241,9 @@ class SistematicaClientController extends Controller
 
         $zip->add($directory_sender . "/" . $path, true); //->add($pathdocumenti, true);
 
+
         $pathdocumenti='documenti/Richiesta_'.$idRichiesta;
+        mkdir( $pathdocumenti, 0777);
         $documenti=$em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
         foreach($documenti as $documentidazippare) {
             if (is_null($documentidazippare->getNumeroprotocollo()))
@@ -260,6 +262,7 @@ class SistematicaClientController extends Controller
        return array('esito'=>true, 'progressivo'=>$num, 'path'=>$path );
            //true;
     }
+
 
     /**
      * @param string $idRichiesta

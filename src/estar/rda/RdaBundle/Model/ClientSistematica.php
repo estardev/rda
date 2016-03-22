@@ -259,7 +259,7 @@ class ClientSistematica
          </attachments>';
         }
 
-        $guid = trim($this->getGUID(),'{}');
+        $guid = $this->getGUID();
         $guidBase64 = base64_encode($guid);
 
         date_default_timezone_set('Europe/Rome');
@@ -363,22 +363,26 @@ class ClientSistematica
         file_put_contents("REQUESTserver/".$number."_richiestaclient.xml",$client->request );
         file_put_contents("REQUESTserver/".$number."_rispostastaclient.xml",$client->response );
         if($rispostaSistematica= file_get_contents("REQUESTserver/".$number."_rispostastaclient.xml")){
+            if(!strstr($rispostaSistematica,"<SOAP-ENV:Fault>")){
+                $responseXML=strstr($res,"<SOAP-ENV:Body>");
+                $ultimaposizione= strpos($responseXML,"------=_Part");
+                $responseXML=substr($responseXML,0,$ultimaposizione-1);
+                $responseXML=str_replace('<SOAP-ENV:Body>','',$responseXML);
+                $responseXML=str_replace('</SOAP-ENV:Body></SOAP-ENV:Envelope>','',$responseXML);
 
-            $responseXML=strstr($res,"<SOAP-ENV:Body>");
-            $ultimaposizione= strpos($responseXML,"------=_Part");
-            $responseXML=substr($responseXML,0,$ultimaposizione-1);
-            $responseXML=str_replace('<SOAP-ENV:Body>','',$responseXML);
-            $responseXML=str_replace('</SOAP-ENV:Body></SOAP-ENV:Envelope>','',$responseXML);
-            $xml=simplexml_load_string($responseXML);
-            $idChiaveUnivoca= $xml->id;
-            $numProt = $xml->identifier;
-            $identifierDate=$xml->identifierDate;
-            $viewUrl=$xml->viewUrl;
+                $xml=simplexml_load_string($responseXML);
+                $idChiaveUnivoca= $xml->id;
+                $numProt = $xml->identifier;
+                $identifierDate=$xml->identifierDate;
+                $viewUrl=$xml->viewUrl;
 
-            return array('esito'=>true ,'protocollo'=> $numProt, 'dataprotocollo'=> $identifierDate, 'chiavesistematica'=>$idChiaveUnivoca, 'urlprotocollo'=>$viewUrl);
-        }
-        else
-            return array('esito'=>false);
+                return array('esito'=>true ,'codice'=> 0 ,'protocollo'=> $numProt, 'dataprotocollo'=> $identifierDate, 'chiavesistematica'=>$idChiaveUnivoca, 'urlprotocollo'=>$viewUrl);
+            }
+            else{
+                return array('esito'=>false, 'codice'=> 1 ); //trovato un fault
+            }
+             }
+        else return array('esito'=>false, 'codice'=> 2); //non trovato il file dentro REQUESTserver/".$number."_rispostastaclient.xml
 
 
     }
