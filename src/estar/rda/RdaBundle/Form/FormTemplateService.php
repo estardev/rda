@@ -468,8 +468,14 @@ class FormTemplateService
             else{
                 $builder->setAction($this->router->generate('categoria_update', array('id' => $idCategoria)));
             }
+                $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+                //TODO non riesco a tirare su la statemachine e quindi ho preso l'ultimo stato dalla richiesta
+                $stato=$richiesta->getStatus();
+                if($stato=='inviata_ABS'){
+                $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'disabled'=>'disabled', 'icon' => 'glyphicon glyphicon-ok')));
+                }else{
                 $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'icon' => 'glyphicon glyphicon-ok')));
-
+                }
                 return array(0 => $builder->getForm(), 1 => $firstLevels);
             }
 

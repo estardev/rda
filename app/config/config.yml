@@ -121,8 +121,8 @@ fos_user:
 knp_snappy:
     pdf:
         enabled:    true
- #       binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
-        binary:     /usr/bin/wkhtmltopdf
+        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+ #       binary:     /usr/bin/wkhtmltopdf
         options:    []
 
 winzou_state_machine:
@@ -138,6 +138,7 @@ winzou_state_machine:
             - attesa_val_tec
             - attesa_val_amm
             - da_inviare_ABS
+            - inviata_ABS
             - evasa_ABS
             - chiusa_ABS
             - annullata_ABS
@@ -158,6 +159,9 @@ winzou_state_machine:
             validazione_amm:
                 from: [attesa_val_amm]
                 to: da_inviare_ABS
+            inviato_ABS:
+                from: [da_inviare_ABS]
+                to: inviata_ABS
             cancellazione:
                 from: [bozza, attesa_val_tec, attesa_val_amm]
                 to: eliminata

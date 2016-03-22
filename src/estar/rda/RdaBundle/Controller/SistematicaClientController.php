@@ -323,6 +323,24 @@ class SistematicaClientController extends Controller
         if($esito['esito']==true and ($tipologia=="Nuova" or $tipologia=="Documentazione Aggiuntiva")) {
             $numprotocollo = $esito['protocollo'];
 
+            $factory = $this->container->get('sm.factory');
+            $articleSM = $factory->get($richiesta, 'rda');
+            if($articleSM->can('inviato_ABS')){
+                $iter= new Iter();
+                $iter->setDastato($articleSM->getState());
+                $articleSM->apply('inviato_ABS');
+                $iter->setAstato($articleSM->getState());
+                $iter->setNumeroprotocollo($numprotocollo);
+                $iter->setIdrichiesta($richiesta);
+                $iter->setMotivazione("Inviato e protocollato");
+                $iter->setDataora(new \DateTime('now'));
+                $iter->setIdutente($this->getUser());
+                $iter->setDatafornita(false);
+                $em->persist($iter);
+
+
+
+
 
         //TODO: aggiungere il protocollo in richiesta solo se tipologia è nuova
        // scrivo il numero di protocollo sulla richiesta
@@ -351,14 +369,14 @@ class SistematicaClientController extends Controller
             }
         }
 
-        $iter=$em->getRepository('estarRdaBundle:Iter')->findBy(array('idrichiesta' => $idRichiesta));
-        foreach($iter as $iterscrittura) {
-            if (is_null($iterscrittura->getNumeroprotocollo()))
-            {
-                $iterscrittura->setNumeroprotocollo($numprotocollo);
-                $em->persist($iterscrittura);
-            }
-        }
+        //$iter=$em->getRepository('estarRdaBundle:Iter')->findBy(array('idrichiesta' => $idRichiesta));
+        //foreach($iter as $iterscrittura) {
+        //    if (is_null($iterscrittura->getNumeroprotocollo()))
+        //    {
+        //        $iterscrittura->setNumeroprotocollo($numprotocollo);
+        //        $em->persist($iterscrittura);
+        //    }
+        //}
 
         $em->flush();
 
@@ -403,4 +421,5 @@ else if ($esito['esito']==true and $tipologia=="Annullamento")
 
 
     }
+}
 
