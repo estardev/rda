@@ -121,8 +121,8 @@ fos_user:
 knp_snappy:
     pdf:
         enabled:    true
-        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
-  #      binary:     /usr/bin/wkhtmltopdf
+  #      binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+        binary:     /usr/bin/wkhtmltopdf
         options:    []
 
 winzou_state_machine:
