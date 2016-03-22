@@ -336,7 +336,7 @@ class ClientSistematica
                 	<valueString>'.$sottoCategoriaMerceologica.'</valueString>
 			</variable>
 			<variable>
-	<key>prioritaPortale</key>
+	            <key>prioritaPortale</key>
                	<type>string</type>
                 	<valueString>Alta</valueString>
 			</variable>

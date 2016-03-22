@@ -26,7 +26,7 @@ class ListaRichiesteFromSidebarController extends Controller
                 $entities = $query->getResult();
                 break;
             case 'lavorate_1':
-                $criteria = array('status' => 'inserita_ABS');
+                $criteria = array('status' => 'da_inviare_ABS');
                 $entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy($criteria);
                 break;
         }
