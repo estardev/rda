@@ -259,8 +259,8 @@ class SistematicaClientController extends Controller
 
         $zip->close();
 
-       return array('esito'=>true, 'progressivo'=>$num, 'path'=>$path );
-           //true;
+        return array('esito'=>true, 'progressivo'=>$num, 'path'=>$path );
+        //true;
     }
 
 
@@ -308,17 +308,17 @@ class SistematicaClientController extends Controller
                 }
                 break;
         }
-                $risposta = $this->get('model.client');
-                $risposta->setIdPratica($idRichiesta);
-                $risposta->setNomefile($nomefile);
-                $risposta->setPath($pathfile);
-                $risposta->setTipologia($tipologia);
-                $risposta->setCategoriamerceologica($categoriamerciologica);
-                $risposta->setGruppogestav($gruppogestav);
-                $risposta->setNumeroProtocollo($protocollo);
-                $risposta->setStrutturarichiedente($azienda);
+        $risposta = $this->get('model.client');
+        $risposta->setIdPratica($idRichiesta);
+        $risposta->setNomefile($nomefile);
+        $risposta->setPath($pathfile);
+        $risposta->setTipologia($tipologia);
+        $risposta->setCategoriamerceologica($categoriamerciologica);
+        $risposta->setGruppogestav($gruppogestav);
+        $risposta->setNumeroProtocollo($protocollo);
+        $risposta->setStrutturarichiedente($azienda);
 
-                $esito=$risposta->RequestWebServer();
+        $esito=$risposta->RequestWebServer();
 
         if($esito['esito']==true and ($tipologia=="Nuova" or $tipologia=="Documentazione Aggiuntiva")) {
             $numprotocollo = $esito['protocollo'];
@@ -342,77 +342,76 @@ class SistematicaClientController extends Controller
 
 
 
-        //TODO: aggiungere il protocollo in richiesta solo se tipologia è nuova
-       // scrivo il numero di protocollo sulla richiesta
-        if($tipologia=="Nuova"){
-        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
-        $richiesta->setNumeroprotocollo($numprotocollo);
-        $em->persist($richiesta);
-        }
+                //TODO: aggiungere il protocollo in richiesta solo se tipologia è nuova
+                // scrivo il numero di protocollo sulla richiesta
+                if($tipologia=="Nuova"){
+                    $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+                    $richiesta->setNumeroprotocollo($numprotocollo);
+                    $em->persist($richiesta);
+                }
 
-        //TODO: aggiungere il protocollo in iter, richiestadocumenti e richiestadocumentiliberi se protocollo null
+                //TODO: aggiungere il protocollo in iter, richiestadocumenti e richiestadocumentiliberi se protocollo null
 
-        $documentiliberiscr=$em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
-        foreach($documentiliberiscr as $documentiliberiscrittura) {
-            if (is_null($documentiliberiscrittura->getNumeroprotocollo()))
-            {
-                $documentiliberiscrittura->setNumeroprotocollo($numprotocollo);
-                $em->persist($documentiliberiscrittura);
+                $documentiliberiscr=$em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
+                foreach($documentiliberiscr as $documentiliberiscrittura) {
+                    if (is_null($documentiliberiscrittura->getNumeroprotocollo()))
+                    {
+                        $documentiliberiscrittura->setNumeroprotocollo($numprotocollo);
+                        $em->persist($documentiliberiscrittura);
+                    }
+                }
+                $documentiscr=$em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
+                foreach($documentiscr as $documentiscrittura) {
+                    if (is_null($documentiscrittura->getNumeroprotocollo()))
+                    {
+                        $documentiscrittura->setNumeroprotocollo($numprotocollo);
+                        $em->persist($documentiscrittura);
+                    }
+                }
+
+                //$iter=$em->getRepository('estarRdaBundle:Iter')->findBy(array('idrichiesta' => $idRichiesta));
+                //foreach($iter as $iterscrittura) {
+                //    if (is_null($iterscrittura->getNumeroprotocollo()))
+                //    {
+                //        $iterscrittura->setNumeroprotocollo($numprotocollo);
+                //        $em->persist($iterscrittura);
+                //    }
+                //}
+
+                $em->flush();
+
+                //return $this->redirect($this->generateUrl("richiesta"));
+                //return $this->render('@estarRda/Testing/index.html.twig', array(
+                //    'hello' => $myrespons,
+                //));
+
             }
-        }
-        $documentiscr=$em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
-        foreach($documentiscr as $documentiscrittura) {
-            if (is_null($documentiscrittura->getNumeroprotocollo()))
-            {
-                $documentiscrittura->setNumeroprotocollo($numprotocollo);
-                $em->persist($documentiscrittura);
+
+            else if ($esito['esito']==true and $tipologia=="Annullamento")
+            {   $numprotocollo = $esito['protocollo'];
+                $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+
+                $factory = $this->container->get('sm.factory');
+                $articleSM = $factory->get($richiesta, 'rda');
+                if($articleSM->can('annullamento')){
+                    $iter= new Iter();
+                    $iter->setDastato($articleSM->getState());
+                    $articleSM->apply('annullamento');
+                    $iter->setAstato($articleSM->getState());
+                    $iter->setNumeroprotocollo($numprotocollo);
+                    $iter->setDastatogestav($entity->getStatusgestav());
+                    $iter->setAstatogestav($entity->getStatusgestav());
+                    $iter->setIdrichiesta($entity);
+                    $iter->setMotivazione("richiesta Annullata dall'utente");
+                    $iter->setDataora(new \DateTime('now'));
+                    $iter->setIdutente($this->getUser());
+                    $iter->setDatafornita(false);
+                    $em->persist($iter);
+                    $em->flush();
+                }
             }
-        }
-
-        //$iter=$em->getRepository('estarRdaBundle:Iter')->findBy(array('idrichiesta' => $idRichiesta));
-        //foreach($iter as $iterscrittura) {
-        //    if (is_null($iterscrittura->getNumeroprotocollo()))
-        //    {
-        //        $iterscrittura->setNumeroprotocollo($numprotocollo);
-        //        $em->persist($iterscrittura);
-        //    }
-        //}
-
-        $em->flush();
-
-        //return $this->redirect($this->generateUrl("richiesta"));
-        //return $this->render('@estarRda/Testing/index.html.twig', array(
-        //    'hello' => $myrespons,
-        //));
 
         }
-
-else if ($esito['esito']==true and $tipologia=="Annullamento")
-{   $numprotocollo = $esito['protocollo'];
-    $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
-
-    $factory = $this->container->get('sm.factory');
-    $articleSM = $factory->get($richiesta, 'rda');
-    if($articleSM->can('annullamento')){
-        $iter= new Iter();
-        $iter->setDastato($articleSM->getState());
-        $articleSM->apply('annullamento');
-        $iter->setAstato($articleSM->getState());
-        $iter->setNumeroprotocollo($numprotocollo);
-        $iter->setDastatogestav($entity->getStatusgestav());
-        $iter->setAstatogestav($entity->getStatusgestav());
-        $iter->setIdrichiesta($entity);
-        $iter->setMotivazione("richiesta Annullata dall'utente");
-        $iter->setDataora(new \DateTime('now'));
-        $iter->setIdutente($this->getUser());
-        $iter->setDatafornita(false);
-        $em->persist($iter);
-        $em->flush();
-    }
-}
-
-
-    }
 
         return $this->redirect($this->generateUrl("richiesta"));
 
