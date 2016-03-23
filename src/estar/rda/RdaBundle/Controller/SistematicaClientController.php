@@ -380,7 +380,6 @@ class SistematicaClientController extends Controller
 
         $em->flush();
 
-
         //return $this->redirect($this->generateUrl("richiesta"));
         //return $this->render('@estarRda/Testing/index.html.twig', array(
         //    'hello' => $myrespons,
@@ -412,12 +411,10 @@ else if ($esito['esito']==true and $tipologia=="Annullamento")
     }
 }
 
-        return $this->redirect($this->generateUrl("richiesta"));
-
 
     }
 
-
+        return $this->redirect($this->generateUrl("richiesta"));
 
 
     }
