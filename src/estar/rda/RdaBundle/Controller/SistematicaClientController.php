@@ -410,9 +410,15 @@ class SistematicaClientController extends Controller
                     $em->flush();
                 }
             }
-
+            $this->get('session')->getFlashBag()->add(
+                'success',
+                'Tutto è andato bene'
+            );
         }
-
+        $this->get('session')->getFlashBag()->add(
+            'error',
+            'C\'è stato un errore nell\'invio, riprovare'
+        );
         return $this->redirect($this->generateUrl("richiesta"));
 
 

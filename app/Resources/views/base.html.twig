@@ -21,7 +21,6 @@
     <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 
     {% block header %}
-
     {% endblock %}
 
 
@@ -49,6 +48,33 @@
     {{ navbar() }}
 {% endblock %}
 <body>
+{% for message in app.session.flashbag.get('success') %}
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+        </button>
+        <p>{{ message }}</p>
+    </div>
+{% endfor %}
+{% for message in app.session.flashbag.get('error') %}
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+        </button>
+        <p>{{ message }}</p>
+    </div>
+{% endfor %}
+{% for message in app.session.flashbag.get('notice') %}
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+        </button>
+        <p>{{ message }}</p>
+    </div>
+{% endfor %}
 <div class="row">
     <!-- sidebar -->
     <div class="col-sm-12 col-md-2" id="sidebar" role="navigation">
