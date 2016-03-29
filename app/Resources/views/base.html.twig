@@ -49,14 +49,7 @@
 {% endblock %}
 <body>
 
-    {% for flashMessage in app.session.flashbag.get('notice') %}
-        <div class="alert alert-{{ flashMessage.alert }} alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert">
-                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-            </button>
-            <strong>{{ flashMessage.title }}</strong> {{ flashMessage.message }}
-        </div>
-    {% endfor %}
+
 
 <div class="row">
     <!-- sidebar -->
@@ -68,6 +61,14 @@
 
     <!-- main area -->
     <div class="container col-sm-12 col-md-10" style="display: none">
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="alert alert-{{ flashMessage.alert }} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <strong>{{ flashMessage.title }}</strong> {{ flashMessage.message }}
+            </div>
+        {% endfor %}
         {% block body %}{% endblock %}
     </div>
 
