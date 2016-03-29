@@ -45,7 +45,6 @@ class SistematicaClientController extends Controller
     }
 
 
-
     public function getChoicesOptions($string)
     {
         $options = explode(FormTemplateController::SEPARATORE_CAMPI, $string);
@@ -87,7 +86,9 @@ class SistematicaClientController extends Controller
 
         return $subOption[0];
     }
-    public function num(){
+
+    public function num()
+    {
         $directory_sender = "sender";
         $max = 0;
         $results = scandir($directory_sender);
@@ -108,7 +109,7 @@ class SistematicaClientController extends Controller
     {
         // generazione file pdf e zip
         $directory_sender = "sender";
-        $num=$this->num();
+        $num = $this->num();
         $path = $num . "_Richiesta_" . $idRichiesta . "_categoria_" . $idCategoria;
         if (!is_dir($directory_sender . "/" . $path)) mkdir($directory_sender . "/" . $path, 0777);
 
@@ -120,7 +121,7 @@ class SistematicaClientController extends Controller
 
         foreach ($arrayiddocumento as $idDoc) {
             $idD = $idDoc;
-            $idDoc= $idD['iddocu'];
+            $idDoc = $idD['iddocu'];
             $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery('SELECT c.id as idcampo,c.nome,c.descrizione,c.fieldset,c.tipo,vc.id,vc.valore
                                     FROM estarRdaBundle:Campodocumento c
@@ -242,16 +243,16 @@ class SistematicaClientController extends Controller
         $zip->add($directory_sender . "/" . $path, true); //->add($pathdocumenti, true);
 
 
-        $pathdocumenti='documenti/Richiesta_'.$idRichiesta;
-        if (!is_dir($pathdocumenti)) mkdir( $pathdocumenti, 0777);
-        $documenti=$em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
-        foreach($documenti as $documentidazippare) {
+        $pathdocumenti = 'documenti/Richiesta_' . $idRichiesta;
+        if (!is_dir($pathdocumenti)) mkdir($pathdocumenti, 0777);
+        $documenti = $em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
+        foreach ($documenti as $documentidazippare) {
             if (is_null($documentidazippare->getNumeroprotocollo()))
                 $zip->setPath($pathdocumenti)->add($documentidazippare->getFilepath());
         }
 
-        $documentiliberi=$em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
-        foreach($documentiliberi as $documentiliberidazippare) {
+        $documentiliberi = $em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
+        foreach ($documentiliberi as $documentiliberidazippare) {
             if (is_null($documentiliberidazippare->getNumeroprotocollo()))
                 $zip->setPath($pathdocumenti)->add($documentiliberidazippare->getFilepath());
         }
@@ -259,7 +260,7 @@ class SistematicaClientController extends Controller
 
         $zip->close();
 
-        return array('esito'=>true, 'progressivo'=>$num, 'path'=>$path );
+        return array('esito' => true, 'progressivo' => $num, 'path' => $path);
         //true;
     }
 
@@ -270,18 +271,19 @@ class SistematicaClientController extends Controller
      * @param string $tipologia
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($idCategoria, $idRichiesta, $tipologia){
+    public function indexAction($idCategoria, $idRichiesta, $tipologia)
+    {
 
         $em = $this->getDoctrine()->getManager();
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
         $gruppogestav = $categoria->getGruppogestav();
-        $categoriamerciologica= $categoria->getNomegestav();
+        $categoriamerciologica = $categoria->getNomegestav();
 
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
-        $azienda=$richiesta->getIdazienda()->getNome();
+        $azienda = $richiesta->getIdazienda()->getNome();
 
 
-        switch($tipologia) {
+        switch ($tipologia) {
 
             case "Annullamento":
                 $pathfile = "";
@@ -293,8 +295,8 @@ class SistematicaClientController extends Controller
                 $ritorno = $this->generateZip($idCategoria, $idRichiesta);
                 if ($ritorno['esito']) {
                     $protocollo = "xxxxx";
-                    $pathfile="sender/".$ritorno['path']."/".$ritorno['path'].".zip";
-                    $nomefile=$ritorno['path'].'.zip';
+                    $pathfile = "sender/" . $ritorno['path'] . "/" . $ritorno['path'] . ".zip";
+                    $nomefile = $ritorno['path'] . '.zip';
 
                 }
                 break;
@@ -302,8 +304,8 @@ class SistematicaClientController extends Controller
                 $ritorno = $this->generateZip($idCategoria, $idRichiesta);
                 if ($ritorno['esito']) {
                     $protocollo = $richiesta->getNumeroprotocollo();
-                    $pathfile="sender/".$ritorno['path']."/".$ritorno['path'].".zip";
-                    $nomefile=$ritorno['path'].'.zip';
+                    $pathfile = "sender/" . $ritorno['path'] . "/" . $ritorno['path'] . ".zip";
+                    $nomefile = $ritorno['path'] . '.zip';
 
                 }
                 break;
@@ -318,15 +320,15 @@ class SistematicaClientController extends Controller
         $risposta->setNumeroProtocollo($protocollo);
         $risposta->setStrutturarichiedente($azienda);
 
-        $esito=$risposta->RequestWebServer();
+        $esito = $risposta->RequestWebServer();
 
-        if($esito['esito']==true and ($tipologia=="Nuova" or $tipologia=="Documentazione Aggiuntiva")) {
+        if ($esito['esito'] == true and ($tipologia == "Nuova" or $tipologia == "Documentazione Aggiuntiva")) {
             $numprotocollo = $esito['protocollo'];
 
             $factory = $this->container->get('sm.factory');
             $articleSM = $factory->get($richiesta, 'rda');
-            if($articleSM->can('inviato_ABS')){
-                $iter= new Iter();
+            if ($articleSM->can('inviato_ABS')) {
+                $iter = new Iter();
                 $iter->setDastato($articleSM->getState());
                 $articleSM->apply('inviato_ABS');
                 $iter->setAstato($articleSM->getState());
@@ -339,12 +341,9 @@ class SistematicaClientController extends Controller
                 $em->persist($iter);
 
 
-
-
-
                 //TODO: aggiungere il protocollo in richiesta solo se tipologia è nuova
                 // scrivo il numero di protocollo sulla richiesta
-                if($tipologia=="Nuova"){
+                if ($tipologia == "Nuova") {
                     $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
                     $richiesta->setNumeroprotocollo($numprotocollo);
                     $em->persist($richiesta);
@@ -352,18 +351,16 @@ class SistematicaClientController extends Controller
 
                 //TODO: aggiungere il protocollo in iter, richiestadocumenti e richiestadocumentiliberi se protocollo null
 
-                $documentiliberiscr=$em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
-                foreach($documentiliberiscr as $documentiliberiscrittura) {
-                    if (is_null($documentiliberiscrittura->getNumeroprotocollo()))
-                    {
+                $documentiliberiscr = $em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
+                foreach ($documentiliberiscr as $documentiliberiscrittura) {
+                    if (is_null($documentiliberiscrittura->getNumeroprotocollo())) {
                         $documentiliberiscrittura->setNumeroprotocollo($numprotocollo);
                         $em->persist($documentiliberiscrittura);
                     }
                 }
-                $documentiscr=$em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
-                foreach($documentiscr as $documentiscrittura) {
-                    if (is_null($documentiscrittura->getNumeroprotocollo()))
-                    {
+                $documentiscr = $em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
+                foreach ($documentiscr as $documentiscrittura) {
+                    if (is_null($documentiscrittura->getNumeroprotocollo())) {
                         $documentiscrittura->setNumeroprotocollo($numprotocollo);
                         $em->persist($documentiscrittura);
                     }
@@ -384,42 +381,53 @@ class SistematicaClientController extends Controller
                 //return $this->render('@estarRda/Testing/index.html.twig', array(
                 //    'hello' => $myrespons,
                 //));
+                $this->get('session')->getFlashBag()->add(
+                    'success',
+                    'Pratica protocollata correttamente!'
+                );
 
+            } else {
+                $this->get('session')->getFlashBag()->add(
+                    'error',
+                    'C\'è stato un errore nell\'invio, riprovare'
+                );
+            }
+            return $this->redirect($this->generateUrl("richiesta"));
+
+        } else if ($esito['esito'] == true and $tipologia == "Annullamento") {
+            $numprotocollo = $esito['protocollo'];
+            $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+
+            $factory = $this->container->get('sm.factory');
+            $articleSM = $factory->get($richiesta, 'rda');
+            if ($articleSM->can('annullamento')) {
+                $iter = new Iter();
+                $iter->setDastato($articleSM->getState());
+                $articleSM->apply('annullamento');
+                $iter->setAstato($articleSM->getState());
+                $iter->setNumeroprotocollo($numprotocollo);
+                $iter->setDastatogestav($entity->getStatusgestav());
+                $iter->setAstatogestav($entity->getStatusgestav());
+                $iter->setIdrichiesta($entity);
+                $iter->setMotivazione("richiesta Annullata dall'utente");
+                $iter->setDataora(new \DateTime('now'));
+                $iter->setIdutente($this->getUser());
+                $iter->setDatafornita(false);
+                $em->persist($iter);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add(
+                    'success',
+                    'Pratica annullata correttamente!'
+                );
+            } else {
+                $this->get('session')->getFlashBag()->add(
+                    'error',
+                    'C\'è stato un errore nell\'invio, riprovare'
+                );
             }
 
-            else if ($esito['esito']==true and $tipologia=="Annullamento")
-            {   $numprotocollo = $esito['protocollo'];
-                $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
-
-                $factory = $this->container->get('sm.factory');
-                $articleSM = $factory->get($richiesta, 'rda');
-                if($articleSM->can('annullamento')){
-                    $iter= new Iter();
-                    $iter->setDastato($articleSM->getState());
-                    $articleSM->apply('annullamento');
-                    $iter->setAstato($articleSM->getState());
-                    $iter->setNumeroprotocollo($numprotocollo);
-                    $iter->setDastatogestav($entity->getStatusgestav());
-                    $iter->setAstatogestav($entity->getStatusgestav());
-                    $iter->setIdrichiesta($entity);
-                    $iter->setMotivazione("richiesta Annullata dall'utente");
-                    $iter->setDataora(new \DateTime('now'));
-                    $iter->setIdutente($this->getUser());
-                    $iter->setDatafornita(false);
-                    $em->persist($iter);
-                    $em->flush();
-                }
-            }
-            $this->get('session')->getFlashBag()->add(
-                'success',
-                'Tutto è andato bene'
-            );
+            return $this->redirect($this->generateUrl("richiesta"));
         }
-        $this->get('session')->getFlashBag()->add(
-            'error',
-            'C\'è stato un errore nell\'invio, riprovare'
-        );
-        return $this->redirect($this->generateUrl("richiesta"));
 
 
     }
