@@ -381,15 +381,24 @@ class SistematicaClientController extends Controller
                 //return $this->render('@estarRda/Testing/index.html.twig', array(
                 //    'hello' => $myrespons,
                 //));
+
                 $this->get('session')->getFlashBag()->add(
-                    'success',
-                    'Pratica protocollata correttamente!'
+                    'notice',
+                    array(
+                        'alert' => 'success',
+                        'title' => 'Success!',
+                        'message' => 'Pratica protocollata correttamente!'
+                    )
                 );
 
             } else {
                 $this->get('session')->getFlashBag()->add(
-                    'error',
-                    'C\'è stato un errore nell\'invio, riprovare'
+                    'notice',
+                    array(
+                        'alert' => 'danger',
+                        'title' => 'warning!',
+                        'message' => 'C\'è stato un errore nell\'invio, riprovare'
+                    )
                 );
             }
             return $this->redirect($this->generateUrl("richiesta"));
@@ -416,13 +425,22 @@ class SistematicaClientController extends Controller
                 $em->persist($iter);
                 $em->flush();
                 $this->get('session')->getFlashBag()->add(
-                    'success',
-                    'Pratica annullata correttamente!'
+                    'notice',
+                    array(
+                        'alert' => 'success',
+                        'title' => 'Success!',
+                        'message' => 'Pratica annullata correttamente!'
+                    )
                 );
             } else {
+
                 $this->get('session')->getFlashBag()->add(
-                    'error',
-                    'C\'è stato un errore nell\'invio, riprovare'
+                    'notice',
+                    array(
+                        'alert' => 'danger',
+                        'title' => 'warning!',
+                        'message' => 'C\'è stato un errore nell\'invio, riprovare'
+                    )
                 );
             }
 
@@ -430,9 +448,14 @@ class SistematicaClientController extends Controller
         }
 
         $this->get('session')->getFlashBag()->add(
-            'error',
-            'C\'è stato un errore nell\'invio, riprovare'
+            'notice',
+            array(
+                'alert' => 'info',
+                'title' => 'info!',
+                'message' => 'Contattare'
+            )
         );
+
         return $this->redirect($this->generateUrl("richiesta"));
 
 
