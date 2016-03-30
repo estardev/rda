@@ -24,10 +24,14 @@ class RichiestaModel
 {
 
     const STATUS_BOZZA = 'bozza';
+    const STATUS_ELIMINATA = 'eliminata';
+    const STATUS_ANNULLATA = 'annullata';
     const STATUS_ATTESA_VAL_TEC='attesa_val_tec';
     const STATUS_ATTESA_VAL_AMM = 'attesa_val_amm';
     const STATUS_da_inviare_ABS = 'da_inviare_ABS';
+    const STATUS_inviata_ABS = 'inviata_ABS';
     const STATUS_CHIUSA_ABS = "chiusa_ABS";
+    const STATUS_ANNULLATA_ABS = "annullata_ABS";
     const STATUS_EVASA_ABS = "evasa_ABS";
 
     const STATUSABS_CHIUSA = "Chiusa da ABS";
