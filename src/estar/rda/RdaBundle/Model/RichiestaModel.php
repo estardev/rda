@@ -171,6 +171,67 @@ class RichiestaModel
 
 
     /**
+     * Ritorna tutte le richieste che un utente può vedere a seconda delle categorie.
+     * @param $idCategoria
+     * @param $dirittiRichiesta
+     * @return array(Richiesta)
+     */
+    public function getRichiesteByUser($idCategoria, DirittiRichiesta $dirittiRichiesta) {
+
+        //Primo passo: ci troviamo tutte le richieste della categoria.
+        $entities = $this->em->getRepository('estarRdaBundle:Richiesta')->findBy(array('idcategoria' => $idCategoria));
+        $utente = $dirittiRichiesta->getUser();
+        $toReturn = array();
+        //Se l'utente è validatore amministrativo
+        if ($dirittiRichiesta->getIsVA()) {
+            foreach($entities as $entity) {
+                //Vede tutte quelle in attesa di validazione amministrativa
+                if ($entity->getStatus() == RichiestaModel::STATUS_ATTESA_VAL_AMM) {
+                    array_push($toReturn, $entity);
+                    continue;
+                }
+                //Vede tutte quelle che ha inserito
+                $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
+                    'idrichiesta'=>$entity->getId()));
+                if ($iter)
+                    array_push($toReturn, $entity);
+            }
+
+        }
+
+        //Se l'utente è validatore tenico
+        if ($dirittiRichiesta->getIsVT()) {
+            foreach($entities as $entity) {
+                //Vede tutte quelle in attesa di validazione tecnica
+                if ($entity->getStatus() == RichiestaModel::STATUS_ATTESA_VAL_TEC) {
+                    array_push($toReturn, $entity);
+                    continue;
+                }
+                //Vede tutte quelle che ha inserito
+                $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
+                    'idrichiesta'=>$entity->getId()));
+                if ($iter)
+                    array_push($toReturn, $entity);
+            }
+        }
+
+        //Se l'utente è utente
+        if ($dirittiRichiesta->getIsAI()) {
+            //vede soltanto le sue
+            //ciclo su richiesta, guardo per ogni richiesta se c'è un iter con utente = utente
+            foreach($entities as $entity) {
+                $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
+                    'idrichiesta'=>$entity->getId()));
+                if ($iter)
+                    array_push($toReturn, $entity);
+
+            }
+        }
+
+        return $toReturn;
+    }
+
+    /**
      * ritorna un elenco di categorie che l'utente pu� accedere
      *
      * @return array(Categoria) un array di categorie

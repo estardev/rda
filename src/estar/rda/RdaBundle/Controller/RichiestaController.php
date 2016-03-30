@@ -43,12 +43,16 @@ class RichiestaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy(array('idcategoria' => $idCategoria));
+        $usercheck = $this->get("usercheck.notify");
+        $diritti = $usercheck->allRole($idCategoria);
+
+        //$entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy(array('idcategoria' => $idCategoria));
+        $richieste = $this->get('model.richiesta')->getRichiesteByUser($idCategoria, $diritti);
         //TODO: fare un filtro sui permessi dell'utente appena pronti
         //TODO: fare un filtro sui permessi dell'utente relativi agli stati
         //Sono tutti pulsanti che puntano a FormTemplateController
         return $this->render('estarRdaBundle:Richiesta:index.html.twig', array(
-            'entities' => $entities
+            'entities' => $richieste
         ));
     }
 

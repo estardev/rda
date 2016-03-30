@@ -130,6 +130,7 @@ class UserCheckController extends Controller
     /** ritorna tutti i ruoli per una categoria dato l'utente loggato
      *
      * @author Francesco Galli
+     * @param $categoria la categoria su cui si lavora
      * @return DirittiRichiesta i diritti della richiesta
      */
     public function allRole($categoria)
@@ -164,7 +165,7 @@ class UserCheckController extends Controller
             if ($diritto['valamm'] >0 ) $dirittiRichiesta->setIsVA(true);
             if ($diritto['valtec'] >0 ) $dirittiRichiesta->setIsVT(true);
         }
-
+        $dirittiRichiesta->setUser($utente);
         return $dirittiRichiesta;
         //vecchio codice di Demetrio
         //$idgruppoutente = $this->getIdUtenteGruppoUtente();

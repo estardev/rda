@@ -9,6 +9,7 @@
 namespace estar\rda\RdaBundle\Model;
 
 use estar\rda\RdaBundle\Entity\Campo;
+use estar\rda\RdaBundle\Entity\Utente;
 
 /** Classe che rappresenta i diritti di una richiesta
  *
@@ -23,6 +24,26 @@ class DirittiRichiesta
 
 
     private $isVT;
+    /**
+     * @var Utente
+     */
+    private $user;
+
+    /**
+     * @return Utente
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param Utente $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
 
     /**
      * @return boolean true o false se � abilitato all'inserimento.
