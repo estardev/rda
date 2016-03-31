@@ -107,6 +107,32 @@ class Richiesta
     private $idcategoria;
 
     /**
+     * @var \estar\rda\RdaBundle\Entity\Utente
+     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Utente")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idUtente", referencedColumnName="id")
+     * })
+     */
+    private $idutente;
+
+    /**
+     * @return Utente
+     */
+    public function getIdutente()
+    {
+        return $this->idutente;
+    }
+
+    /**
+     * @param Utente $idutente
+     */
+    public function setIdutente($idutente)
+    {
+        $this->idutente = $idutente;
+    }
+
+
+    /**
      * @var \estar\rda\RdaBundle\Entity\Azienda
      *
      * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Azienda")

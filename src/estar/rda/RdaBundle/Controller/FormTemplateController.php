@@ -4,6 +4,7 @@ namespace estar\rda\RdaBundle\Controller;
 
 
 use estar\rda\RdaBundle\Entity\Campo;
+use estar\rda\RdaBundle\Entity\Iter;
 use estar\rda\RdaBundle\Entity\Utente;
 use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Entity\Valorizzazionecamporichiesta;
@@ -125,6 +126,7 @@ class FormTemplateController extends Controller
         if ($form->isValid()) {
             $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
             $richiesta = new Richiesta();
+            $richiesta->setIdutente($utente);
             $richiesta->setIdcategoria($categoria);
             $richiesta->setIdazienda($idazienda);
             $richiesta->setStatus('bozza');
@@ -132,7 +134,6 @@ class FormTemplateController extends Controller
             $richiesta->setDescrizione($campi['form']['descrizione']);
             $richiesta->setPriorita($campi['form']['priorita']);
             $em->persist($richiesta);
-
 
             foreach ($campi['form'] as $key => $value) {
                 if (!strrpos($key, "-")) {
@@ -152,6 +153,19 @@ class FormTemplateController extends Controller
 
             }
 
+            $em->flush();
+            $dateTime = new \DateTime();
+            $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
+            $dataFornita = false;
+            $iter= new Iter();
+            $iter->setIdutente($utente);
+            $iter->setIdrichiesta($richiesta);
+            $iter->setDataora($dateTime);
+            $iter->setDatafornita($dataFornita);
+            $iter->setDastato('bozza');
+            $iter->setAstato('');
+            $iter->setMotivazione('inserita nuova richiesta');
+            $em->persist($iter);
             $em->flush();
 
             return $this->redirect($this->generateUrl("richiesta_bycategoria", array("idCategoria" => $idCategoria)));
