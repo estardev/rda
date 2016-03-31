@@ -166,22 +166,23 @@ winzou_state_machine:
                 from: [bozza, attesa_val_tec, attesa_val_amm]
                 to: eliminata
             annullamento:
-                from: [da_inviare_ABS]
+                from: [inviata_ABS]
                 to: annullata
             rifiutata_amm_ABS:
-                from: [da_inviare_ABS]
+                from: [inviata_ABS]
                 to: attesa_val_amm
             rifiutata_tec_ABS:
-                from: [da_inviare_ABS]
+                from: [inviata_ABS]
                 to: attesa_val_tec
             chiusura_ABS:
-                from: [da_inviare_ABS]
+                from: [inviata_ABS]
                 to: chiusa_ABS
             evasione_ABS:
-                from: [da_inviare_ABS]
+                from: [inviata_ABS]
                 to: evasa_ABS
             annullamento_ABS:
-                from: [da_inviare_ABS]
+                #from: [da_inviare_ABS]
+                from: [inviata_ABS]
                 to: annullata_ABS
         # list of all callbacks
         callbacks:
