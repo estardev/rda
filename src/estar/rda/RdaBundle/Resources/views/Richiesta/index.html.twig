@@ -148,16 +148,19 @@
                                         target="_blank"
                                         href="{{ path('formtemplate_print', { 'idRichiesta': entity.id, 'idCategoria': entity.idcategoria }) }}">
                                     Genera PDF</a></button>
+
                             {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ABS' or entity.status == 'chiusa_ABS' or entity.status == 'annullata_ABS') %}
                                 <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-pencil"
                                                                                     aria-hidden="true"></span><a
                                             href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
                                         Modifica</a></button>
                             {% endif %}
+
                             <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-book"
                                                                                 aria-hidden="true"></span><a
                                         href="{{ path('documento_byCategoria', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
                                     Documenti</a></button>
+
                             <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-book"
                                                                                 aria-hidden="true"></span><a
                                         href="{{ path('documento_liberoByRichiesta', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
