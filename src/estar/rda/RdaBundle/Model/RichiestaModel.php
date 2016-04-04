@@ -28,8 +28,8 @@ class RichiestaModel
     const STATUS_ANNULLATA = 'annullata';
     const STATUS_ATTESA_VAL_TEC = 'attesa_val_tec';
     const STATUS_ATTESA_VAL_AMM = 'attesa_val_amm';
-    const STATUS_da_inviare_ABS = 'da_inviare_ABS';
-    const STATUS_inviata_ABS = 'inviata_ABS';
+    const STATUS_DA_INVIARE_ABS = 'da_inviare_ABS';
+    const STATUS_INVIATA_ABS = 'inviata_ABS';
     const STATUS_CHIUSA_ABS = "chiusa_ABS";
     const STATUS_ANNULLATA_ABS = "annullata_ABS";
     const STATUS_EVASA_ABS = "evasa_ABS";
@@ -190,10 +190,12 @@ class RichiestaModel
 
         //Se l'utente è validatore amministrativo
         if ($dirittiRichiesta->getIsVA()) {
-            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente OR r.status=:stato");
+            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3");
             $query->setParameters(array(
                 'idutente'=> $idUtente,
-                'stato'=> RichiestaModel::STATUS_ATTESA_VAL_AMM,
+                'stato1'=> RichiestaModel::STATUS_ATTESA_VAL_AMM,
+                'stato2'=> RichiestaModel::STATUS_DA_INVIARE_ABS,
+                'stato3'=> RichiestaModel::STATUS_INVIATA_ABS,
             ));
             $richiesteutente = $query->getResult();
 
@@ -490,7 +492,7 @@ class RichiestaModel
 
             case '050':
                 //Assegnata programmazione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_da_inviare_ABS) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_DA_INVIARE_ABS) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -518,7 +520,7 @@ class RichiestaModel
                 return $risposta;
             case '060':
                 //Istruttoria
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_da_inviare_ABS) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_DA_INVIARE_ABS) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -545,7 +547,7 @@ class RichiestaModel
                 return $risposta;
             case '070':
                 //Indizione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_da_inviare_ABS) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_DA_INVIARE_ABS) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -573,7 +575,7 @@ class RichiestaModel
 
             case '080':
                 //Valutazione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_da_inviare_ABS) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_DA_INVIARE_ABS) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -601,7 +603,7 @@ class RichiestaModel
 
             case '090':
                 //Aggiudicazione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_da_inviare_ABS) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_DA_INVIARE_ABS) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());

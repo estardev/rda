@@ -401,7 +401,7 @@ class SistematicaClientController extends Controller
                     )
                 );
             }
-            return $this->redirect($this->generateUrl("richiesta"));
+            return $this->redirect($this->generateUrl("richiesta_bycategoria", array('idCategoria' => $idCategoria)));
 
         } else if ($esito['esito'] == true and $tipologia == "Annullamento") {
             $numprotocollo = $esito['protocollo'];
@@ -444,7 +444,7 @@ class SistematicaClientController extends Controller
                 );
             }
 
-            return $this->redirect($this->generateUrl("richiesta"));
+            return $this->redirect($this->generateUrl("richiesta_bycategoria", array('idCategoria' => $idCategoria)));
         }
 
         $this->get('session')->getFlashBag()->add(
@@ -456,7 +456,7 @@ class SistematicaClientController extends Controller
             )
         );
 
-        return $this->redirect($this->generateUrl("richiesta"));
+        return $this->redirect($this->generateUrl("richiesta_bycategoria", array('idCategoria' => $idCategoria)));
 
 
     }
