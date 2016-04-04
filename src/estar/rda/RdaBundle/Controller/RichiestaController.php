@@ -358,13 +358,17 @@ class RichiestaController extends Controller
             $em->persist($iter);
         }
 
-
-
-
-
-
-
         $em->flush();
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            array(
+                'alert' => 'info',
+                'title' => 'Informazione!',
+                'message' => 'Passato nello stato '.$richiesta->getStatus().' con la motivazione: "'.$messaggio.'".'
+            )
+        );
+
 
         return $this->redirect($this->generateUrl("richiesta_bycategoria", array('idCategoria' => $idcategoria)));
     }
