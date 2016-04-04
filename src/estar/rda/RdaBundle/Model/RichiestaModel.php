@@ -26,7 +26,7 @@ class RichiestaModel
     const STATUS_BOZZA = 'bozza';
     const STATUS_ELIMINATA = 'eliminata';
     const STATUS_ANNULLATA = 'annullata';
-    const STATUS_ATTESA_VAL_TEC='attesa_val_tec';
+    const STATUS_ATTESA_VAL_TEC = 'attesa_val_tec';
     const STATUS_ATTESA_VAL_AMM = 'attesa_val_amm';
     const STATUS_da_inviare_ABS = 'da_inviare_ABS';
     const STATUS_inviata_ABS = 'inviata_ABS';
@@ -185,54 +185,80 @@ class RichiestaModel
         //Primo passo: ci troviamo tutte le richieste della categoria.
         $entities = $this->em->getRepository('estarRdaBundle:Richiesta')->findBy(array('idcategoria' => $idCategoria));
         $utente = $dirittiRichiesta->getUser();
+        $idUtente=$utente->getId();
         $toReturn = array();
+
         //Se l'utente è validatore amministrativo
         if ($dirittiRichiesta->getIsVA()) {
-            foreach($entities as $entity) {
-                //Vede tutte quelle in attesa di validazione amministrativa
-                if ($entity->getStatus() == RichiestaModel::STATUS_ATTESA_VAL_AMM) {
-                    array_push($toReturn, $entity);
-                    continue;
-                }
-                //Vede tutte quelle che ha inserito
-                $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
-                    'idrichiesta'=>$entity->getId()));
-                if ($iter)
-                    array_push($toReturn, $entity);
-            }
+            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente OR r.status=:stato");
+            $query->setParameters(array(
+                'idutente'=> $idUtente,
+                'stato'=> RichiestaModel::STATUS_ATTESA_VAL_AMM,
+            ));
+            $richiesteutente = $query->getResult();
+
+            //            foreach($entities as $entity) {
+            //            //Vede tutte quelle in attesa di validazione amministrativa
+            //            if ($entity->getStatus() == RichiestaModel::STATUS_ATTESA_VAL_AMM) {
+            //                array_push($toReturn, $entity);
+            //                continue;
+            //            }
+            //            //Vede tutte quelle che ha inserito
+            //            $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
+            //                'idrichiesta'=>$entity->getId()));
+            //            if ($iter)
+            //                array_push($toReturn, $entity);
+            //        }
 
         }
 
         //Se l'utente è validatore tenico
-        if ($dirittiRichiesta->getIsVT()) {
-            foreach($entities as $entity) {
-                //Vede tutte quelle in attesa di validazione tecnica
-                if ($entity->getStatus() == RichiestaModel::STATUS_ATTESA_VAL_TEC) {
-                    array_push($toReturn, $entity);
-                    continue;
-                }
-                //Vede tutte quelle che ha inserito
-                $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
-                    'idrichiesta'=>$entity->getId()));
-                if ($iter)
-                    array_push($toReturn, $entity);
-            }
+        else if ($dirittiRichiesta->getIsVT()) {
+
+            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente OR r.status=:stato");
+            $query->setParameters(array(
+                'idutente'=> $idUtente,
+                'stato'=> RichiestaModel::STATUS_ATTESA_VAL_TEC,
+            ));
+            $richiesteutente = $query->getResult();
+
+
+
+            //          foreach($entities as $entity) {
+            //              //Vede tutte quelle in attesa di validazione tecnica
+            //              if ($entity->getStatus() == RichiestaModel::STATUS_ATTESA_VAL_TEC) {
+            //                  array_push($toReturn, $entity);
+            //                  continue;
+            //              }
+            //              //Vede tutte quelle che ha inserito
+            //              $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
+            //                  'idrichiesta'=>$entity->getId()));
+            //              if ($iter)
+            //                  array_push($toReturn, $entity);
+            //          }
         }
 
         //Se l'utente è utente
-        if ($dirittiRichiesta->getIsAI()) {
+        else if ($dirittiRichiesta->getIsAI()) {
             //vede soltanto le sue
             //ciclo su richiesta, guardo per ogni richiesta se c'è un iter con utente = utente
-            foreach($entities as $entity) {
-                $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
-                    'idrichiesta'=>$entity->getId()));
-                if ($iter)
-                    array_push($toReturn, $entity);
 
-            }
+            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente");
+            $query->setParameter('idutente', $idUtente);
+            $richiesteutente = $query->getResult();
+
+
+            //foreach($entities as $entity) {
+            //    $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
+            //        'idrichiesta'=>$entity->getId()));
+            //    if ($iter)
+            //        array_push($toReturn, $entity);
+            //
+            //}
         }
 
-        return $toReturn;
+        return $richiesteutente;
+        //return $toReturn;
     }
 
     /**
@@ -310,13 +336,13 @@ class RichiestaModel
             $dateTime = new \DateTime();
             $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
             $dataIter = $dateTime->format(\DateTime::ATOM);
-           // file_put_contents("datanulla","ciao");
+            // file_put_contents("datanulla","ciao");
             $dataFornita = false;
         } else {
             //TODO convertire la $data in oggetto!!!!!
             $dateTime = new \DateTime($data, new \DateTimeZone('Europe/Rome'));
             $dataFornita = true;
-           // file_put_contents("dataok","ciao");
+            // file_put_contents("dataok","ciao");
         }
 
 
