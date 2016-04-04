@@ -333,6 +333,7 @@ class RichiestaController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($id);
+        $idcategoria=$richiesta->getIdcategoria();
 
         // Get the factory
         $factory = $this->get('sm.factory');
@@ -365,7 +366,7 @@ class RichiestaController extends Controller
 
         $em->flush();
 
-        return $this->redirect($this->generateUrl("richiesta"));
+        return $this->redirect($this->generateUrl("richiesta_bycategoria", array('idCategoria' => $idcategoria)));
     }
 
 
