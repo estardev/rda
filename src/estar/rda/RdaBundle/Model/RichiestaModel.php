@@ -183,14 +183,17 @@ class RichiestaModel
     public function getRichiesteByUser($idCategoria, DirittiRichiesta $dirittiRichiesta) {
 
         //Primo passo: ci troviamo tutte le richieste della categoria.
-        $entities = $this->em->getRepository('estarRdaBundle:Richiesta')->findBy(array('idcategoria' => $idCategoria));
+        //$entities = $this->em->getRepository('estarRdaBundle:Richiesta')->findBy(array('idcategoria' => $idCategoria));
+
         $utente = $dirittiRichiesta->getUser();
         $idUtente=$utente->getId();
-        $toReturn = array();
+        $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente");
+        $query->setParameter('idutente' , $idUtente );
+        $toReturn = $query->getResult();
 
         //Se l'utente è validatore amministrativo
         if ($dirittiRichiesta->getIsVA()) {
-            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3");
+            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente!=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3");
             $query->setParameters(array(
                 'idutente'=> $idUtente,
                 'stato1'=> RichiestaModel::STATUS_ATTESA_VAL_AMM,
@@ -198,6 +201,8 @@ class RichiestaModel
                 'stato3'=> RichiestaModel::STATUS_INVIATA_ABS,
             ));
             $richiesteutente = $query->getResult();
+            $toReturn= array_merge($toReturn, $richiesteutente);
+
 
             //            foreach($entities as $entity) {
             //            //Vede tutte quelle in attesa di validazione amministrativa
@@ -211,19 +216,19 @@ class RichiestaModel
             //            if ($iter)
             //                array_push($toReturn, $entity);
             //        }
-            return $richiesteutente;
+
         }
 
         //Se l'utente è validatore tenico
-        else if ($dirittiRichiesta->getIsVT()) {
+        if ($dirittiRichiesta->getIsVT()) {
 
-            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente OR r.status=:stato");
+            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente!=:idutente OR r.status=:stato");
             $query->setParameters(array(
                 'idutente'=> $idUtente,
                 'stato'=> RichiestaModel::STATUS_ATTESA_VAL_TEC,
             ));
             $richiesteutente = $query->getResult();
-
+            $toReturn= array_merge($toReturn, $richiesteutente);
 
 
             //          foreach($entities as $entity) {
@@ -238,31 +243,10 @@ class RichiestaModel
             //              if ($iter)
             //                  array_push($toReturn, $entity);
             //          }
-            return $richiesteutente;
+
         }
 
-        //Se l'utente è utente
-        else if ($dirittiRichiesta->getIsAI()) {
-            //vede soltanto le sue
-            //ciclo su richiesta, guardo per ogni richiesta se c'è un iter con utente = utente
-
-            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente");
-            $query->setParameter('idutente', $idUtente);
-            $richiesteutente = $query->getResult();
-
-
-            //foreach($entities as $entity) {
-            //    $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
-            //        'idrichiesta'=>$entity->getId()));
-            //    if ($iter)
-            //        array_push($toReturn, $entity);
-            //
-            //}
-            return $richiesteutente;
-        }
-
-
-        //return $toReturn;
+        return $toReturn;
     }
 
     /**

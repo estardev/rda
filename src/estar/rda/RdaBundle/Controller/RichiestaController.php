@@ -53,7 +53,7 @@ class RichiestaController extends Controller
         //Sono tutti pulsanti che puntano a FormTemplateController
         return $this->render('estarRdaBundle:Richiesta:index.html.twig', array(
             'entities' => $richieste,
-            'diritti' => $diritti,
+            'diritti' => $diritti
         ));
     }
 

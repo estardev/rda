@@ -35,7 +35,7 @@ class ServerESTARController extends Controller
     {   $username1=strtolower($username);
         $em = $this->getDoctrine()->getManager();
         $postdata = file_get_contents("php://input");
-        file_put_contents(time()."_request.xml",$postdata);
+        file_put_contents("REQUESTclient/".time()."_request.xml",$postdata);
 
         //file_put_contents(time()."_user.xml",$username);
         //file_put_contents(time()."_psw.xml",$password);
