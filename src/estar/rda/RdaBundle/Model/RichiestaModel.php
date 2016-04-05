@@ -478,7 +478,7 @@ class RichiestaModel
 
             case '050':
                 //Assegnata programmazione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_DA_INVIARE_ABS) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -506,7 +506,7 @@ class RichiestaModel
                 return $risposta;
             case '060':
                 //Istruttoria
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_DA_INVIARE_ABS) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -533,7 +533,7 @@ class RichiestaModel
                 return $risposta;
             case '070':
                 //Indizione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_DA_INVIARE_ABS) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -561,7 +561,7 @@ class RichiestaModel
 
             case '080':
                 //Valutazione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_DA_INVIARE_ABS) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -589,7 +589,7 @@ class RichiestaModel
 
             case '090':
                 //Aggiudicazione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_DA_INVIARE_ABS) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
