@@ -211,7 +211,7 @@ class RichiestaModel
             //            if ($iter)
             //                array_push($toReturn, $entity);
             //        }
-
+            return $richiesteutente;
         }
 
         //Se l'utente è validatore tenico
@@ -238,6 +238,7 @@ class RichiestaModel
             //              if ($iter)
             //                  array_push($toReturn, $entity);
             //          }
+            return $richiesteutente;
         }
 
         //Se l'utente è utente
@@ -257,9 +258,10 @@ class RichiestaModel
             //        array_push($toReturn, $entity);
             //
             //}
+            return $richiesteutente;
         }
 
-        return $richiesteutente;
+
         //return $toReturn;
     }
 

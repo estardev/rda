@@ -126,7 +126,32 @@
                 <th>Azioni</th>
             </tr>
             </thead>
+            {% if diritti is defined %}
+                <tr>
+                    <td colspan="4">PIPPO</td>
+                </tr>
             <tbody>
+            {% endif %}
+            {% if diritti is defined %}
+            <tr>
+                <td>{{ diritti.isva }}</td>
+                <td>{{ diritti.isvt }}</td>
+                <td>{{ diritti.isai }}</td>
+
+            </tr>
+            <tbody>
+            {% endif %}
+            {% if diritti.isva %}
+            <tr>
+                <td> altro pippo</td>
+            </tr>
+            <tbody>
+            {% else %}
+            <tr>
+                <td> un pluto</td>
+            </tr>
+            {% endif %}
+
             {% for entity in entities %}
 
                 <tr data-state="richiesta">
