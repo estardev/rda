@@ -22,6 +22,32 @@
 {% endblock %}
 
 {% block body -%}
-    <p>Benvenuto sul portale delle Richieste d'Acquisto.</p>
+
+    <h3>Benvenuto sul portale delle Richieste d'Acquisto.</h3>
+    <h5>Le tue statistiche</h5>
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <th>#</th>
+                <th>Descrizione</th>
+            </tr>
+            <tr>
+                <td><strong>{{ nbozza }}</strong></td>
+                <td> Richieste in <strong>Stato Bozza</strong> da inviare per la validazione Tecninca</td>
+            </tr>
+            <tr>
+                <td><strong>{{ nvaltec }}</strong></td>
+                <td> Richieste in <strong>Attesa di Validazione Tecnica</strong> da inviare per la validazione Amministrativa</td>
+            </tr>
+            <tr>
+                <td><strong>{{ nvalamm }}</strong></td>
+                <td> Richieste in <strong>Attesa di Valutazione Amministrativa</strong></td>
+            </tr>
+            <tr>
+                <td><strong>{{ ndainvABS }}</strong></td>
+                <td> Richieste in <strong>Attesa di essere inoltrate in ESTAR</strong></td>
+            </tr>
+        </table>
+    </div>
     <p>Seleziona una Categoria per cominciare.</p>
 {% endblock %}
