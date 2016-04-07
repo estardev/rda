@@ -333,13 +333,14 @@ class RichiestaModel
     /**
      * Processa la chiamata ricevuta da Sistematica
      * @param Utente $utente
-     * @param DateTime $data
+     * @param string $data
      * @param string $note
      * @param string $idpratica
      * @param string $codicestato
+     * @param string $codicegara
      * @return RispostaPerSistematica
      */
-    public function getPratica($utente, $data, $note, $idpratica, $codicestato) {
+    public function getPratica($utente, $data, $note, $idpratica, $codicestato, $codicegara) {
         // Ci costruiamo l'oggetto risposta
 
         $dateRisposta = new \DateTime();

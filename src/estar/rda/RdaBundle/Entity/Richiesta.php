@@ -37,6 +37,82 @@ class Richiesta
     /**
      * @var string
      *
+     * @ORM\Column(name="codiceGara", type="string", length=100, nullable=true)
+     */
+    private $codicegara;
+
+    /**
+     * @return string
+     */
+    public function getCodicegara()
+    {
+        return $this->codicegara;
+    }
+
+    /**
+     * @param string $codicegara
+     * @return Richiesta
+     */
+    public function setCodicegara($codicegara)
+    {
+        $this->codicegara = $codicegara;
+        return $this;
+    }
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="idGestav", type="string", length=100, nullable=true)
+     */
+    private $idgestav;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="dataProtocollo", type="string", length=100, nullable=true)
+     */
+    private $dataprotocollo;
+
+    /**
+     * @return string
+     */
+    public function getIdgestav()
+    {
+        return $this->idgestav;
+    }
+
+    /**
+     * @param string $idgestav
+     * @return Richiesta
+     */
+    public function setIdgestav($idgestav)
+    {
+        $this->idgestav = $idgestav;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataprotocollo()
+    {
+        return $this->dataprotocollo;
+    }
+
+    /**
+     * @param string $dataprotocollo
+     * @return Richiesta
+     */
+    public function setDataprotocollo($dataprotocollo)
+    {
+        $this->dataprotocollo = $dataprotocollo;
+        return $this;
+    }
+
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="priorita", type="string", length=45, nullable=true)
      */
     private $priorita;
@@ -51,7 +127,7 @@ class Richiesta
     /**
      * @var string
      *
-     * @ORM\Column(name="numeroProtocollo", type="string", length=45, nullable=true)
+     * @ORM\Column(name="numeroProtocollo", type="string", length=100, nullable=true)
      */
     private $numeroprotocollo;
 

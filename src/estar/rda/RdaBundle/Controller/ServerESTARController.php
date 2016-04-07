@@ -29,9 +29,10 @@ class ServerESTARController extends Controller
      * @Soap\Param("idpratica", phpType = "int")
      * @Soap\Param("dataRequest", phpType = "string")
      * @Soap\Param("codicestato", phpType = "int")
+     * @Soap\Param("codicegara", phpType = "int")
      * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\String[]")
      */
-    public function notifyAction($username, $password, $note=null, $idpratica, $dataRequest=null, $codicestato)
+    public function notifyAction($username, $password, $note=null, $idpratica, $dataRequest=null, $codicestato, $codicegara=null)
     {   $username1=strtolower($username);
         $em = $this->getDoctrine()->getManager();
         $postdata = file_get_contents("php://input");
@@ -69,7 +70,7 @@ class ServerESTARController extends Controller
             );
 
              } else {
-                $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $idpratica, $codicestato);
+                $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $idpratica, $codicestato, $codicegara);
                 return array(
                     'CodiceRisposta' => $risposta->getCodiceRisposta(),
                     'codiceErrore' => $risposta->getCodiceErrore(),

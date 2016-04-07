@@ -58,6 +58,56 @@ class Richiestadocumento
     private $idrichiesta;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="idGestav", type="string", length=100, nullable=true)
+     */
+    private $idgestav;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="dataProtocollo", type="string", length=100, nullable=true)
+     */
+    private $dataprotocollo;
+
+    /**
+     * @return string
+     */
+    public function getIdgestav()
+    {
+        return $this->idgestav;
+    }
+
+    /**
+     * @param string $idgestav
+     * @return Richiestadocumento
+     */
+    public function setIdgestav($idgestav)
+    {
+        $this->idgestav = $idgestav;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataprotocollo()
+    {
+        return $this->dataprotocollo;
+    }
+
+    /**
+     * @param string $dataprotocollo
+     * @return Richiestadocumento
+     */
+    public function setDataprotocollo($dataprotocollo)
+    {
+        $this->dataprotocollo = $dataprotocollo;
+        return $this;
+    }
+
+    /**
      * @var \estar\rda\RdaBundle\Entity\Documento
      *
      * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Documento")

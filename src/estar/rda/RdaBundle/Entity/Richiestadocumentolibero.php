@@ -27,6 +27,56 @@ class Richiestadocumentolibero
     /**
      * @var string
      *
+     * @ORM\Column(name="idGestav", type="string", length=100, nullable=true)
+     */
+    private $idgestav;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="dataProtocollo", type="string", length=100, nullable=true)
+     */
+    private $dataprotocollo;
+
+    /**
+     * @return string
+     */
+    public function getIdgestav()
+    {
+        return $this->idgestav;
+    }
+
+    /**
+     * @param string $idgestav
+     * @return Richiestadocumentolibero
+     */
+    public function setIdgestav($idgestav)
+    {
+        $this->idgestav = $idgestav;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataprotocollo()
+    {
+        return $this->dataprotocollo;
+    }
+
+    /**
+     * @param string $dataprotocollo
+     * @return Richiestadocumentolibero
+     */
+    public function setDataprotocollo($dataprotocollo)
+    {
+        $this->dataprotocollo = $dataprotocollo;
+        return $this;
+    }
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="numeroProtocollo", type="string", length=45, nullable=true)
      */
     private $numeroprotocollo;
