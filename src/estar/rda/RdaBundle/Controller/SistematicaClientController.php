@@ -329,6 +329,7 @@ class SistematicaClientController extends Controller
             $numprotocollo = $esito['protocollo'];
             $idGestav=$esito['chiavesistematica'];
             $urlGestav=$esito['urlprotocollo'];
+            $dataprotocollo=$esito['dataprotocollo'];
 
             $factory = $this->container->get('sm.factory');
             $articleSM = $factory->get($richiesta, 'rda');

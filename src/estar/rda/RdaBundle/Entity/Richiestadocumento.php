@@ -80,6 +80,31 @@ class Richiestadocumento
     }
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="urlProtocollo", type="string", length=255, nullable=false)
+     */
+    private $urlprotocollo;
+
+    /**
+     * @return string
+     */
+    public function getUrlprotocollo()
+    {
+        return $this->urlprotocollo;
+    }
+
+    /**
+     * @param string $urlprotocollo
+     * @return Richiesta
+     */
+    public function setUrlprotocollo($urlprotocollo)
+    {
+        $this->urlprotocollo = $urlprotocollo;
+        return $this;
+    }
+
+    /**
      * @param string $idgestav
      * @return Richiestadocumento
      */
