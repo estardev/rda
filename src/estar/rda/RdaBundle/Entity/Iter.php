@@ -115,7 +115,7 @@ class Iter
     /**
      * @var string
      *
-     * @ORM\Column(name="urlProtocollo", type="string", length=255, nullable=false)
+     * @ORM\Column(name="urlProtocollo", type="string", length=255, nullable=true)
      */
     private $urlprotocollo;
 

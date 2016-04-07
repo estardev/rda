@@ -343,24 +343,32 @@ class SistematicaClientController extends Controller
                 $iter->setMotivazione("Inviato e protocollato");
                 $iter->setDataora(new \DateTime('now'));
                 $iter->setIdutente($this->getUser());
+                $iter->setIdgestav($idGestav);
+                $iter->setUrlprotocollo($urlGestav);
+                $iter->setDataprotocollo($dataprotocollo);
                 $iter->setDatafornita(false);
                 $em->persist($iter);
 
 
-                //TODO: aggiungere il protocollo in richiesta solo se tipologia è nuova
-                // scrivo il numero di protocollo sulla richiesta
+                // scrivo il numero di protocollo sulla richiesta se è nuova
                 if ($tipologia == "Nuova") {
                     $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
                     $richiesta->setNumeroprotocollo($numprotocollo);
+                    $richiesta->setDataprotocollo($dataprotocollo);
+                    $richiesta->setUrlprotocollo($urlGestav);
+                    $richiesta->setIdgestav($idGestav);
                     $em->persist($richiesta);
                 }
 
-                //TODO: aggiungere il protocollo in iter, richiestadocumenti e richiestadocumentiliberi se protocollo null
+                //aggiungere il protocollo in iter, richiestadocumenti e richiestadocumentiliberi se protocollo null
 
                 $documentiliberiscr = $em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
                 foreach ($documentiliberiscr as $documentiliberiscrittura) {
                     if (is_null($documentiliberiscrittura->getNumeroprotocollo())) {
                         $documentiliberiscrittura->setNumeroprotocollo($numprotocollo);
+                        $documentiliberiscrittura->setIdgestav($idGestav);
+                        $documentiliberiscrittura->setDataprotocollo($dataprotocollo);
+                        $documentiliberiscrittura->setUrlprotocollo($urlGestav);
                         $em->persist($documentiliberiscrittura);
                     }
                 }
@@ -368,6 +376,9 @@ class SistematicaClientController extends Controller
                 foreach ($documentiscr as $documentiscrittura) {
                     if (is_null($documentiscrittura->getNumeroprotocollo())) {
                         $documentiscrittura->setNumeroprotocollo($numprotocollo);
+                        $documentiscrittura->setIdgestav($idGestav);
+                        $documentiscrittura->setDataprotocollo($dataprotocollo);
+                        $documentiscrittura->setUrlprotocollo($urlGestav);
                         $em->persist($documentiscrittura);
                     }
                 }
@@ -411,6 +422,9 @@ class SistematicaClientController extends Controller
 
         } else if ($esito['esito'] == true and $tipologia == "Annullamento") {
             $numprotocollo = $esito['protocollo'];
+            $idGestav=$esito['chiavesistematica'];
+            $urlGestav=$esito['urlprotocollo'];
+            $dataprotocollo=$esito['dataprotocollo'];
             $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
 
             $factory = $this->container->get('sm.factory');
@@ -424,6 +438,9 @@ class SistematicaClientController extends Controller
                 $iter->setDastatogestav($entity->getStatusgestav());
                 $iter->setAstatogestav($entity->getStatusgestav());
                 $iter->setIdrichiesta($entity);
+                $iter->setIdgestav($idGestav);
+                $iter->setUrlprotocollo($urlGestav);
+                $iter->setDataprotocollo($dataprotocollo);
                 $iter->setMotivazione("richiesta Annullata dall'utente");
                 $iter->setDataora(new \DateTime('now'));
                 $iter->setIdutente($this->getUser());
