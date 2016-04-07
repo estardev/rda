@@ -29,7 +29,7 @@ class ServerESTARController extends Controller
      * @Soap\Param("idpratica", phpType = "int")
      * @Soap\Param("dataRequest", phpType = "string")
      * @Soap\Param("codicestato", phpType = "int")
-     * @Soap\Param("codicegara", phpType = "int")
+     * @Soap\Param("codicegara", phpType = "string")
      * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\String[]")
      */
     public function notifyAction($username, $password, $note=null, $idpratica, $dataRequest=null, $codicestato, $codicegara=null)

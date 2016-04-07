@@ -281,6 +281,7 @@ class SistematicaClientController extends Controller
 
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         $azienda = $richiesta->getIdazienda()->getNome();
+        $anno=date('Y');
 
 
         switch ($tipologia) {
@@ -338,7 +339,7 @@ class SistematicaClientController extends Controller
                 $iter->setDastato($articleSM->getState());
                 $articleSM->apply('inviato_ABS');
                 $iter->setAstato($articleSM->getState());
-                $iter->setNumeroprotocollo($numprotocollo);
+                $iter->setNumeroprotocollo($numprotocollo."/".$anno);
                 $iter->setIdrichiesta($richiesta);
                 $iter->setMotivazione("Inviato e protocollato");
                 $iter->setDataora(new \DateTime('now'));
@@ -353,7 +354,7 @@ class SistematicaClientController extends Controller
                 // scrivo il numero di protocollo sulla richiesta se è nuova
                 if ($tipologia == "Nuova") {
                     $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
-                    $richiesta->setNumeroprotocollo($numprotocollo);
+                    $richiesta->setNumeroprotocollo($numprotocollo."/".$anno);
                     $richiesta->setDataprotocollo($dataprotocollo);
                     $richiesta->setUrlprotocollo($urlGestav);
                     $richiesta->setIdgestav($idGestav);
@@ -365,7 +366,7 @@ class SistematicaClientController extends Controller
                 $documentiliberiscr = $em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
                 foreach ($documentiliberiscr as $documentiliberiscrittura) {
                     if (is_null($documentiliberiscrittura->getNumeroprotocollo())) {
-                        $documentiliberiscrittura->setNumeroprotocollo($numprotocollo);
+                        $documentiliberiscrittura->setNumeroprotocollo($numprotocollo."/".$anno);
                         $documentiliberiscrittura->setIdgestav($idGestav);
                         $documentiliberiscrittura->setDataprotocollo($dataprotocollo);
                         $documentiliberiscrittura->setUrlprotocollo($urlGestav);
@@ -375,7 +376,7 @@ class SistematicaClientController extends Controller
                 $documentiscr = $em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
                 foreach ($documentiscr as $documentiscrittura) {
                     if (is_null($documentiscrittura->getNumeroprotocollo())) {
-                        $documentiscrittura->setNumeroprotocollo($numprotocollo);
+                        $documentiscrittura->setNumeroprotocollo($numprotocollo."/".$anno);
                         $documentiscrittura->setIdgestav($idGestav);
                         $documentiscrittura->setDataprotocollo($dataprotocollo);
                         $documentiscrittura->setUrlprotocollo($urlGestav);
@@ -434,7 +435,7 @@ class SistematicaClientController extends Controller
                 $iter->setDastato($articleSM->getState());
                 $articleSM->apply('annullamento');
                 $iter->setAstato($articleSM->getState());
-                $iter->setNumeroprotocollo($numprotocollo);
+                $iter->setNumeroprotocollo($numprotocollo."/".$anno);
                 $iter->setDastatogestav($entity->getStatusgestav());
                 $iter->setAstatogestav($entity->getStatusgestav());
                 $iter->setIdrichiesta($entity);
