@@ -310,6 +310,9 @@ class SistematicaClientController extends Controller
                 }
                 break;
         }
+
+        $anno=date('Y');
+
         $risposta = $this->get('model.client');
         $risposta->setIdPratica($idRichiesta);
         $risposta->setNomefile($nomefile);
@@ -317,7 +320,7 @@ class SistematicaClientController extends Controller
         $risposta->setTipologia($tipologia);
         $risposta->setCategoriamerceologica($categoriamerciologica);
         $risposta->setGruppogestav($gruppogestav);
-        $risposta->setNumeroProtocollo($protocollo);
+        $risposta->setNumeroProtocollo($protocollo."/".$anno);
         $risposta->setStrutturarichiedente($azienda);
 
         $esito = $risposta->RequestWebServer();

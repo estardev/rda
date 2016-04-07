@@ -22,6 +22,31 @@ class Richiesta
     /**
      * @var string
      *
+     * @ORM\Column(name="titolo", type="string", length=255, nullable=false)
+     */
+    private $urlprotocollo;
+
+    /**
+     * @return string
+     */
+    public function getUrlprotocollo()
+    {
+        return $this->urlprotocollo;
+    }
+
+    /**
+     * @param string $urlprotocollo
+     * @return Richiesta
+     */
+    public function setUrlprotocollo($urlprotocollo)
+    {
+        $this->urlprotocollo = $urlprotocollo;
+        return $this;
+    }
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="descrizione", type="text", length=65535, nullable=false)
      */
     private $descrizione;
