@@ -23,6 +23,9 @@
         {% if is_granted("ROLE_USER") %}
 
         <form class="navbar-form navbar-left">
+
+           <!-- <button type="button" id="homepageSelectBtnCategoria" class="btn btn-default"><a href="{{ path('HomePage')}}"><span class="glyphicon glyphicon-home"></span> Home</a></button>-->
+
             <div class="form-group">
                 <select id="homepageSelectCategoria" class="form-control">
                     {% if categoriaSelezionata != '' %}
@@ -64,7 +67,7 @@
         </ul>
 
 
-            <!--<button type="button" id="homepageSelectBtnCategoria" class="btn btn-default"><a href="{{ path('HomePage')}}">Indietro</a></button>-->
+
 
 
 

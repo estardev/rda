@@ -189,8 +189,8 @@ class ClientSistematica
 
     public function RequestWebServer()
     {
-        $partitionPuId = "0109";
-        $messageBoxCode = "GBESTARAREADLCC";
+        $partitionPuId = "0109";                        //FISSO
+        $messageBoxCode = "GBESTARAREADLCC";            //FISSO
         $startWorkflow = true;
         $strutturarichiedente= $this->getStrutturarichiedente(); //"USL Sud Est Toscana"; //passare come parametro da RDA la struttura dell'utente che invia la richiesta
         $oggettomessaggio="USL SE: Farmaci (importo Gara > 40.000 EU)- Farmaci";
@@ -331,14 +331,9 @@ class ClientSistematica
                 	<valueString>'.$categoriamerceologica.'</valueString>
 			</variable>
 			<variable>
-	<key>sottoCategoriaMerceologica</key>
-               	<type>string</type>
-                	<valueString>'.$sottoCategoriaMerceologica.'</valueString>
-			</variable>
-			<variable>
 	            <key>prioritaPortale</key>
                	<type>string</type>
-                	<valueString>Alta</valueString>
+                <valueString>Alta</valueString>
 			</variable>
          </variables>
          <references>
