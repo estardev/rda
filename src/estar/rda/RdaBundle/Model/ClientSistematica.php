@@ -23,6 +23,27 @@ class ClientSistematica
     private $numeroProtocollo; // 0000088 in caso di aggiornamento
 
     /**
+     * @var string
+     */
+    private $idgestav;
+
+    /**
+     * @return string
+     */
+    public function getIdgestav()
+    {
+        return $this->idgestav;
+    }
+
+    /**
+     * @param string $idgestav
+     */
+    public function setIdgestav($idgestav)
+    {
+        $this->idgestav = $idgestav;
+    } // 0000088 in caso di aggiornamento
+
+    /**
      * @return string
      */
     public function getNumeroProtocollo()

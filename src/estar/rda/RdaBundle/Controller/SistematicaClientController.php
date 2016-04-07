@@ -288,13 +288,13 @@ class SistematicaClientController extends Controller
             case "Annullamento":
                 $pathfile = "";
                 $nomefile = "";
-                $protocollo = $richiesta->getNumeroprotocollo();
+                $idGestav = $richiesta->getIdgestav();
                 break;
 
             case "Nuova":
                 $ritorno = $this->generateZip($idCategoria, $idRichiesta);
                 if ($ritorno['esito']) {
-                    $protocollo = "xxxxx";
+                    $idGestav = "xxxxx";
                     $pathfile = "sender/" . $ritorno['path'] . "/" . $ritorno['path'] . ".zip";
                     $nomefile = $ritorno['path'] . '.zip';
 
@@ -303,7 +303,7 @@ class SistematicaClientController extends Controller
             case "Documentazione Aggiuntiva":
                 $ritorno = $this->generateZip($idCategoria, $idRichiesta);
                 if ($ritorno['esito']) {
-                    $protocollo = $richiesta->getNumeroprotocollo();
+                    $idGestav = $richiesta->getIdgestav();
                     $pathfile = "sender/" . $ritorno['path'] . "/" . $ritorno['path'] . ".zip";
                     $nomefile = $ritorno['path'] . '.zip';
 
@@ -311,7 +311,7 @@ class SistematicaClientController extends Controller
                 break;
         }
 
-        $anno=date('Y');
+
 
         $risposta = $this->get('model.client');
         $risposta->setIdPratica($idRichiesta);
@@ -320,13 +320,15 @@ class SistematicaClientController extends Controller
         $risposta->setTipologia($tipologia);
         $risposta->setCategoriamerceologica($categoriamerciologica);
         $risposta->setGruppogestav($gruppogestav);
-        $risposta->setNumeroProtocollo($protocollo."/".$anno);
+        $risposta->setIdgestav($idGestav);
         $risposta->setStrutturarichiedente($azienda);
 
         $esito = $risposta->RequestWebServer();
 
         if ($esito['esito'] == true and ($tipologia == "Nuova" or $tipologia == "Documentazione Aggiuntiva")) {
             $numprotocollo = $esito['protocollo'];
+            $idGestav=$esito['chiavesistematica'];
+            $urlGestav=$esito['urlprotocollo'];
 
             $factory = $this->container->get('sm.factory');
             $articleSM = $factory->get($richiesta, 'rda');

@@ -22,7 +22,7 @@ class Richiesta
     /**
      * @var string
      *
-     * @ORM\Column(name="titolo", type="string", length=255, nullable=false)
+     * @ORM\Column(name="urlProtocollo", type="string", length=255, nullable=false)
      */
     private $urlprotocollo;
 
