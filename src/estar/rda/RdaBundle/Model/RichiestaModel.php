@@ -34,13 +34,15 @@ class RichiestaModel
     const STATUS_ANNULLATA_ABS = "annullata_ABS";
     const STATUS_EVASA_ABS = "evasa_ABS";
 
-    const STATUSABS_CHIUSA = "Chiusa da ABS";
+    const STATUSABS_RIGETTO = "Rigettata da ABS";
     const STATUSABS_ASSEGNATAPROGRAMMAZIONE = "In Programmazione";
     const STATUSABS_VALUTAZIONE = "In valutazione";
+    const STATUSABS_AGGIUDICAZIONE = "Aggiudicazione";
     const STATUSABS_ISTRUTTORIA = "In Istruttoria";
     const STATUSABS_INDIZIONE = "Gara Indetta";
-    const STATUSABS_ANNULLATA = "Annullata da ABS";
+    const STATUSABS_ANNULLATA = "Pratica tornata in Istruttoria";
     const STATUSABS_ARCHIVIATA = "Archiviata da ABS";
+    const STATUSABS_CHIUSA = "Chiusa da ABS per termine Iter";
 
     protected $em;
 
@@ -189,7 +191,7 @@ class RichiestaModel
 
         if ($dirittiRichiesta->getIsVA() AND $dirittiRichiesta->getIsAI() AND $dirittiRichiesta->getIsVT()){
 
-            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6");
+            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6 OR r.status=:stato7 OR r.status=:stato8");
             $query->setParameters(array(
                 'idutente'=> $idUtente,
                 'stato1'=> RichiestaModel::STATUS_ATTESA_VAL_AMM,
@@ -197,7 +199,9 @@ class RichiestaModel
                 'stato3'=> RichiestaModel::STATUS_INVIATA_ABS,
                 'stato4' => RichiestaModel::STATUS_ATTESA_VAL_TEC,
                 'stato5' => RichiestaModel::STATUS_ELIMINATA,
-                'stato6' => RichiestaModel::STATUS_ANNULLATA
+                'stato6' => RichiestaModel::STATUS_ANNULLATA,
+                'stato7' => RichiestaModel::STATUS_CHIUSA_ABS,
+                'stato8' => RichiestaModel::STATUS_ANNULLATA_ABS
 
             ));
             $richiesteutente = $query->getResult();
@@ -484,13 +488,13 @@ class RichiestaModel
             case '040':
                 //rigetto pratica
                 //La richiesta passa in stato di rifiutata ABS
-                if ($articleSM->can('chiusura_ABS')) {
+                if ($articleSM->can('rigettata_ABS')) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
-                    $articleSM->apply('chiusura_ABS');
+                    $articleSM->apply('rigettata_ABS');
                     $iter->setAstato($articleSM->getState());
                     $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSABS_CHIUSA);
+                    $iter->setAstatogestav(RichiestaModel::STATUSABS_RIGETTO);
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dateTime);
@@ -520,7 +524,7 @@ class RichiestaModel
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_ASSEGNATAPROGRAMMAZIONE);
                     $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione($note);
+                    $iter->setMotivazione('La pratica è stata programmata per l\'anno '.$note);
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
@@ -568,7 +572,7 @@ class RichiestaModel
                 return $risposta;
             case '070':
                 //Indizione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS AND !empty($codicegara)) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -582,14 +586,18 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-
+                    $richiesta->setCodicegara($codicegara);
+                    $this->em->persist($richiesta);
                     $this->em->persist($iter);
                     $this->em->flush();
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
+                    if($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS and empty($codicegara))
+                        $risposta->setDescrizioneErrore("Non è stato indicato il codice Gara");
+                    else
+                        $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
@@ -629,7 +637,7 @@ class RichiestaModel
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
                     $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSABS_VALUTAZIONE);
+                    $iter->setAstatogestav(RichiestaModel::STATUSABS_AGGIUDICAZIONE);
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dateTime);
@@ -638,7 +646,6 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-
                     $this->em->persist($iter);
                     $this->em->flush();
                 } else {
@@ -655,7 +662,7 @@ class RichiestaModel
                 if ($articleSM->can('chiusura_ABS')) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
-                    $articleSM->apply('evasione_ABS');
+                    $articleSM->apply('chiusura_ABS');
                     $iter->setAstato($articleSM->getState());
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_CHIUSA);
@@ -685,10 +692,10 @@ class RichiestaModel
                 if ($articleSM->can('annullamento_ABS')) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
-                    $articleSM->apply('annullamento_ABS');
+                    //$articleSM->apply('annullamento_ABS');
                     $iter->setAstato($articleSM->getState());
                     $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSABS_ANNULLATO);
+                    $iter->setAstatogestav(RichiestaModel::STATUSABS_ANNULLATA);
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dateTime);
@@ -697,7 +704,8 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-
+                    $richiesta->setCodicegara(null);
+                    $this->em->persist($richiesta);
                     $this->em->persist($iter);
                     $this->em->flush();
                 } else {
@@ -716,7 +724,7 @@ class RichiestaModel
                 if ($articleSM->can('chiusura_ABS')) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
-                    $articleSM->apply('evasione_ABS');
+                    $articleSM->apply('chiusura_ABS');
                     $iter->setAstato($articleSM->getState());
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_ARCHIVIATA);
