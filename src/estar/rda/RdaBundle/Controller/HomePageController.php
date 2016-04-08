@@ -35,13 +35,41 @@ class HomePageController extends Controller
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->findAll();
 
-        $nValtec=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.status='attesa_val_tec' ")->getSingleScalarResult();
+        //$nValtec=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.status='attesa_val_tec' ")->getSingleScalarResult();
 
-        $nBozza=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.idutente=$utenteSessione AND r.status='bozza'")->getSingleScalarResult();
+        //$nBozza=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.idutente=$utenteSessione AND r.status='bozza'")->getSingleScalarResult();
 
-        $nValAmm=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.status='attesa_val_amm'")->getSingleScalarResult();
+        //$nValAmm=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.status='attesa_val_amm'")->getSingleScalarResult();
 
-        $nDainv=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.status='da_inviare_ABS'")->getSingleScalarResult();
+        //$nDainv=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.status='da_inviare_ABS'")->getSingleScalarResult();
+
+        $query = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+                                    WHERE  r.idutente=$utenteSessione AND r.status='bozza' AND c.id=r.idcategoria
+                                    group by c.id, c.descrizione");
+        //FG20160317 hack: non c'è verso di far capire a doctrine che voglio solo quelli di una categoria.
+        $nBozza = $query->getResult();
+
+        $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+                                    WHERE  r.status='attesa_val_tec' AND c.id=r.idcategoria
+                                    group by c.id, c.descrizione");
+        //FG20160317 hack: non c'è verso di far capire a doctrine che voglio solo quelli di una categoria.
+        $nValtec = $query1->getResult();
+
+        $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+                                    WHERE  r.status='attesa_val_amm' AND c.id=r.idcategoria
+                                    group by c.id, c.descrizione");
+        //FG20160317 hack: non c'è verso di far capire a doctrine che voglio solo quelli di una categoria.
+        $nValAmm = $query2->getResult();
+
+        $query3 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+                                    WHERE  r.status='da_inviare_ABS' AND c.id=r.idcategoria
+                                    group by c.id, c.descrizione");
+        //FG20160317 hack: non c'è verso di far capire a doctrine che voglio solo quelli di una categoria.
+        $nDainv = $query3->getResult();
 
         //David_20151029: Aggiunto il redirect sulla lista richieste per categoria impostata in sessione
         //modificato da Demetrio_20160406:

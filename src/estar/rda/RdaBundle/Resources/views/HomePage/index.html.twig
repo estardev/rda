@@ -32,26 +32,34 @@
                 <th>Descrizione</th>
                 <th>Categorie</th>
             </tr>
-            <tr>
-                <td><strong>{{ nbozza }}</strong></td>
-                <td> Richieste in <strong>Stato Bozza</strong> da inviare per la validazione Tecninca</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><strong>{{ nvaltec }}</strong></td>
-                <td> Richieste in <strong>Attesa di Validazione Tecnica</strong> da inviare per la validazione Amministrativa</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><strong>{{ nvalamm }}</strong></td>
-                <td> Richieste in <strong>Attesa di Valutazione Amministrativa</strong></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><strong>{{ ndainvABS }}</strong></td>
-                <td> Richieste in <strong>Attesa di essere inoltrate in ESTAR</strong></td>
-                <td></td>
-            </tr>
+            {% for bozza in nbozza %}
+                <tr>
+                    <td><strong>{{ bozza['numero'] }}</strong></td>
+                    <td> Richieste in <strong>Stato Bozza</strong> da inviare per la validazione Tecninca</td>
+                    <td><a href="{{ path('richiesta_bycategoria', { 'idCategoria': bozza['idcat'] }) }}"><strong>{{ bozza['descrizionecategoria'] }}</strong></a> </td>
+                </tr>
+            {% endfor %}
+            {% for veltec in nvaltec %}
+                <tr>
+                    <td><strong>{{ veltec['numero'] }}</strong></td>
+                    <td> Richieste in <strong>Attesa di Validazione Tecnica</strong> da inviare per la validazione Amministrativa</td>
+                    <td><a href="{{ path('richiesta_bycategoria', { 'idCategoria': bozza['idcat'] }) }}"><strong>{{ bozza['descrizionecategoria'] }}</strong></a> </td>
+                </tr>
+            {% endfor %}
+            {% for valamm in nvalamm %}
+                <tr>
+                    <td><strong>{{ valamm['numero'] }}</strong></td>
+                    <td> Richieste in <strong>Attesa di Valutazione Amministrativa</strong></td>
+                    <td><a href="{{ path('richiesta_bycategoria', { 'idCategoria': bozza['idcat'] }) }}"><strong>{{ bozza['descrizionecategoria'] }}</strong></a> </td>
+                </tr>
+            {% endfor %}
+            {% for dainv in ndainvABS %}
+                <tr>
+                    <td><strong>{{ dainv['numero'] }}</strong></td>
+                    <td> Richieste in <strong>Attesa di essere inoltrate in ESTAR</strong></td>
+                    <td><a href="{{ path('richiesta_bycategoria', { 'idCategoria': bozza['idcat'] }) }}"><strong>{{ bozza['descrizionecategoria'] }}</strong></a> </td>
+                </tr>
+            {% endfor %}
         </table>
     </div>
     <p>Seleziona una Categoria per cominciare.</p>
