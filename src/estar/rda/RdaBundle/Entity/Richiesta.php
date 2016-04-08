@@ -171,6 +171,32 @@ class Richiesta
 
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="Presentato", type="boolean", options={"default" = 0})
+     */
+     private $presentato = false;
+
+    /**
+     * @return string
+     */
+    public function getPresentato()
+    {
+        return $this->presentato;
+    }
+
+    /**
+     * @param string $presentato
+     * @return Richiesta
+     */
+    public function setPresentato($presentato)
+    {
+        $this->presentato = $presentato;
+        return $this;
+    }
+
+
+    /**
      * @return string
      */
     public function getAnnoprogrammazione()

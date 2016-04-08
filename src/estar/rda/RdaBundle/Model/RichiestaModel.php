@@ -410,7 +410,8 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-
+                    $richiesta->setPresentato(1);
+                    $this->em->persist($richiesta);
                     $this->em->persist($iter);
                     $this->em->flush();
 
@@ -440,7 +441,8 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-
+                    $richiesta->setPresentato(1);
+                    $this->em->persist($richiesta);
                     $this->em->persist($iter);
                     $this->em->flush();
 
@@ -472,7 +474,8 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-
+                    $richiesta->setPresentato(1);
+                    $this->em->persist($richiesta);
                     $this->em->persist($iter);
                     $this->em->flush();
                 } else {

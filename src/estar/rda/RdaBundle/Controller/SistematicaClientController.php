@@ -358,6 +358,10 @@ class SistematicaClientController extends Controller
                     $richiesta->setDataprotocollo($dataprotocollo);
                     $richiesta->setUrlprotocollo($urlGestav);
                     $richiesta->setIdgestav($idGestav);
+                    $richiesta->setPresentato(0);
+                    $em->persist($richiesta);
+                } else {
+                    $richiesta->setPresentato(0);
                     $em->persist($richiesta);
                 }
 
@@ -446,6 +450,8 @@ class SistematicaClientController extends Controller
                 $iter->setDataora(new \DateTime('now'));
                 $iter->setIdutente($this->getUser());
                 $iter->setDatafornita(false);
+                $richiesta->setPresentato(0);
+                $em->persist($richiesta);
                 $em->persist($iter);
                 $em->flush();
                 $this->get('session')->getFlashBag()->add(
