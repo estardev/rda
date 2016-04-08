@@ -14,7 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Campo
 {
 
-
+    const TIPO_SCELTA = 'choice';
+    const TIPO_NUMERICO = 'number';
+    const TIPO_TESTO = 'text';
     /**
      * @var string
      *
@@ -93,6 +95,59 @@ class Campo
     public function getFiglio()
     {
         return $this->figlio;
+    }
+
+    //FG20160317 SPERIMENTALE i campi in relazione tra loro e non più con il limite 1 padre -> 1 figlio
+
+    // ...
+    /**
+     * @ORM\OneToMany(targetEntity="Campo", mappedBy="campopadre")
+     */
+    private $campifiglio;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Campo", inversedBy="campifiglio")
+     * @ORM\JoinColumn(name="campopadre", referencedColumnName="id")
+     */
+    private $campopadre;
+
+    /**
+     * @return Campo
+     */
+    public function getCampopadre()
+    {
+        return $this->campopadre;
+    }
+
+    /**
+     * @param Campo $campopadre
+     */
+    public function setCampopadre($campopadre)
+    {
+        $this->campopadre = $campopadre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCampifiglio()
+    {
+        return $this->campifiglio;
+    }
+
+    /**
+     * @param mixed $campifiglio
+     */
+    public function setCampifiglio($campifiglio)
+    {
+        $this->campifiglio = $campifiglio;
+    }
+
+/*
+ *  FG 20160317 SPERIMENTALE i campi in relazione tra loro
+ */
+    public function __construct() {
+        $this->campifiglio = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -460,9 +515,9 @@ class Campo
     public static function getPossibleEnumValues()
     {
         $choices = array(
-            'choice' => 'Scelta',
-            'integer' => 'Numerico',
-            'text' => 'Testo');
+            Campo::TIPO_SCELTA => 'Scelta',
+            Campo::TIPO_NUMERICO => 'Numerico',
+            Campo::TIPO_TESTO => 'Testo');
         return $choices;
     }
 
@@ -501,4 +556,21 @@ class Campo
         if ($figlio->getNome()==null || $figlio->getDescrizione()==null) return true;
         return false;
     }
+
+    /**
+     * Funzioncina di comodo che ritorna id concatenato con nome. Per la view.
+     * @return string il nome di comodo
+     */
+    public function getIdNome() {
+        return $this->getId().' - '.$this->getNome();
+    }
+
+    /**
+     * Funzioncina di comodo che ritorna nome concatenato con descirione (50car). Per la view.
+     * @return string il nome di comodo
+     */
+    public function getNomeDescrizione() {
+        return $this->getNome().' - '.substr($this->getDescrizione(), 0, 50).'...';
+    }
+
 }
