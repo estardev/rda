@@ -173,9 +173,9 @@ class Richiesta
     /**
      * @var string
      *
-     * @ORM\Column(name="Presentato", type="boolean", options={"default" = 0})
+     * @ORM\Column(name="Presentato", type="integer", options={"default" = 0})
      */
-     private $presentato = false;
+     private $presentato = 0;
 
     /**
      * @return string
