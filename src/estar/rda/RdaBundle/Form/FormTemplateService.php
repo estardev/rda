@@ -23,6 +23,9 @@ class FormTemplateService
     private $em;
 
 
+    const MODE_INSERT = 0;
+    const MODE_EDIT = 1;
+
     public function __construct($user,Router $router, EntityManager $em)
     {
         $this->user = $user;
@@ -82,6 +85,7 @@ class FormTemplateService
     /**
      * @param FormBuilderInterface $builder
      * @param FormTemplate $entity
+     * @param $mode il modo di utilizzo, 0 per creazione nuovo oggetto, 1 per edit oggetto
      * @return \Symfony\Component\Form\Form
      *
      */
@@ -92,7 +96,7 @@ class FormTemplateService
 
         $diritti = $this->user->allRole($idCategoria);
 
-        if ($mode == 0) {
+        if ($mode == FormTemplateService::MODE_INSERT) {
 
             $campi = $entity->getCampi();
             //sono in modalita NEW
@@ -228,7 +232,7 @@ class FormTemplateService
                     $label = $campo->getDescrizione();
 
                     if ($campo->getPadre() != null) {
-                        $class = array('class' => 'secondLevel');
+                        $class =  array('class' => 'secondLevel');
                         $padri = $this->getFirstLevel($campo->getPadre());
                         $firstLevels[$this->getFather($campo->getPadre())] = $padri;
 

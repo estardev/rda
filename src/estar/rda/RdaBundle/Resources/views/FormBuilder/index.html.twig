@@ -1,0 +1,66 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+<div class="panel panel-default">
+    <div class="panel-heading"><h4>Elenco dei Campi della Categoria</h4></div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Valori</th>
+                <th>Descrizione</th>
+                <th>Padre</th>
+                <th>Figlio</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td>{{ entity.ordinamento }}</td>
+                <td>{{ entity.idnome }}</td>
+                <td>{{ entity.tipo }}</td>
+                <td>{{ entity.fieldset|replace({"||": " "}) }}</td>
+                <td>{{ entity.descrizione|slice( 0, 30) }}...</td>
+                <td>{{ entity.campopadre }} - {{ entity.padre }}</td>
+                <td>{% for campofiglio in entity.campifiglio %}
+                        {{ campofiglio.idnome }}
+                    {% endfor %}
+                </td>
+                <td>
+                    <li>
+                        <a href="{{ path('formbuilder_setValori', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Imposta Valori</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('formbuilder_setPadre', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Imposta Padre</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('formbuilder_setCondizioni', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Imposta Condizioni</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('formbuilder_spostaGiu', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Sposta Giu</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('formbuilder_spostaSu', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Sposta Su</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('formbuilder_elimina', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Elimina</a>
+                    </li>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="#">
+                Crea nuovo Campo
+            </a>
+        </li>
+    </ul>
+</div>
+    {% endblock %}

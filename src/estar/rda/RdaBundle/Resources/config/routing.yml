@@ -74,6 +74,10 @@ estar_rda_formtemplate:
     resource: "@estarRdaBundle/Resources/config/routing/formtemplate.yml"
     prefix:   /formtemplate
 
+estar_rda_formbuilder:
+    resource: "@estarRdaBundle/Resources/config/routing/formbuilder.yml"
+    prefix:   /formbuilder
+
 sistematica:
     resource: "@estarRdaBundle/Resources/config/routing/sistematicaclient.yml"
     prefix:   /sistematicaclient
