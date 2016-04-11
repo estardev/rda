@@ -32,6 +32,7 @@
                 <th>Descrizione</th>
                 <th>Categorie</th>
             </tr>
+
             {% for bozza in nbozza %}
                 <tr>
                     <td><strong>{{ bozza['numero'] }}</strong></td>
@@ -39,25 +40,26 @@
                     <td><a href="{{ path('richiesta_bycategoria', { 'idCategoria': bozza['idcat'] }) }}"><strong>{{ bozza['descrizionecategoria'] }}</strong></a> </td>
                 </tr>
             {% endfor %}
+
             {% for veltec in nvaltec %}
                 <tr>
                     <td><strong>{{ veltec['numero'] }}</strong></td>
                     <td> Richieste in <strong>Attesa di Validazione Tecnica</strong> da inviare per la validazione Amministrativa</td>
-                    <td><a href="{{ path('richiesta_bycategoria', { 'idCategoria': bozza['idcat'] }) }}"><strong>{{ bozza['descrizionecategoria'] }}</strong></a> </td>
+                    <td><a href="{{ path('richiesta_bycategoria', { 'idCategoria': veltec['idcat'] }) }}"><strong>{{ veltec['descrizionecategoria'] }}</strong></a> </td>
                 </tr>
             {% endfor %}
             {% for valamm in nvalamm %}
                 <tr>
                     <td><strong>{{ valamm['numero'] }}</strong></td>
                     <td> Richieste in <strong>Attesa di Valutazione Amministrativa</strong></td>
-                    <td><a href="{{ path('richiesta_bycategoria', { 'idCategoria': bozza['idcat'] }) }}"><strong>{{ bozza['descrizionecategoria'] }}</strong></a> </td>
+                    <td><a href="{{ path('richiesta_bycategoria', { 'idCategoria': valamm['idcat'] }) }}"><strong>{{ valamm['descrizionecategoria'] }}</strong></a> </td>
                 </tr>
             {% endfor %}
             {% for dainv in ndainvABS %}
                 <tr>
                     <td><strong>{{ dainv['numero'] }}</strong></td>
                     <td> Richieste in <strong>Attesa di essere inoltrate in ESTAR</strong></td>
-                    <td><a href="{{ path('richiesta_bycategoria', { 'idCategoria': bozza['idcat'] }) }}"><strong>{{ bozza['descrizionecategoria'] }}</strong></a> </td>
+                    <td><a href="{{ path('richiesta_bycategoria', { 'idCategoria': dainv['idcat'] }) }}"><strong>{{ dainv['descrizionecategoria'] }}</strong></a> </td>
                 </tr>
             {% endfor %}
         </table>
