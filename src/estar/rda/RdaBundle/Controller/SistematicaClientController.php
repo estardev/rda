@@ -281,6 +281,12 @@ class SistematicaClientController extends Controller
 
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         $azienda = $richiesta->getIdazienda()->getNome();
+        $priorita=$richiesta->getPriorita();
+        switch ($priorita){
+            case 1: $prioritastringa="Prioritaria"; break;
+            case 2: $prioritastringa="Elevata"; break;
+            case 3: $prioritastringa="Standard"; break;
+        }
         $anno=date('Y');
 
 
@@ -289,6 +295,7 @@ class SistematicaClientController extends Controller
             case "Annullamento":
                 $pathfile = "";
                 $nomefile = "";
+                $idgara="";
                 $idGestav = $richiesta->getIdgestav();
                 break;
 
@@ -296,15 +303,18 @@ class SistematicaClientController extends Controller
                 $ritorno = $this->generateZip($idCategoria, $idRichiesta);
                 if ($ritorno['esito']) {
                     $idGestav = "xxxxx";
+                    $idgara="";
                     $pathfile = "sender/" . $ritorno['path'] . "/" . $ritorno['path'] . ".zip";
                     $nomefile = $ritorno['path'] . '.zip';
 
                 }
                 break;
+
             case "Documentazione Aggiuntiva":
                 $ritorno = $this->generateZip($idCategoria, $idRichiesta);
                 if ($ritorno['esito']) {
                     $idGestav = $richiesta->getIdgestav();
+                    $idgara="";
                     $pathfile = "sender/" . $ritorno['path'] . "/" . $ritorno['path'] . ".zip";
                     $nomefile = $ritorno['path'] . '.zip';
 
@@ -329,7 +339,9 @@ class SistematicaClientController extends Controller
         $risposta->setIdPratica($idRichiesta);
         $risposta->setNomefile($nomefile);
         $risposta->setPath($pathfile);
+        $risposta->setOggettomessaggio($azienda.": ".$categoriamerciologica.", ".$richiesta->getDescrizione());
         $risposta->setTipologia($tipologia);
+        $risposta->setPriorita($prioritastringa);
         $risposta->setCategoriamerceologica($categoriamerciologica);
         $risposta->setGruppogestav($gruppogestav);
         $risposta->setIdgestav($idGestav);
@@ -378,10 +390,19 @@ class SistematicaClientController extends Controller
                     $richiesta->setDataprotocollo($dataprotocollo);
                     $richiesta->setUrlprotocollo($urlGestav);
                     $richiesta->setIdgestav($idGestav);
-                    $richiesta->setPresentato(0);
+                    $richiesta->setPresentato(6);
                     $em->persist($richiesta);
                 }
-                else {
+                elseif ($tipologia == "Documentazione Aggiuntiva"){
+
+                    $richiesta->setPresentato(14);
+                    $em->persist($richiesta);
+                }
+                elseif ($tipologia == "Documentazione Richiesta da RUP"){
+                    $richiesta->setPresentato(15);
+                    $em->persist($richiesta);
+                }
+                else{
                     $richiesta->setPresentato(99);
                     $em->persist($richiesta);
                 }
@@ -501,9 +522,9 @@ class SistematicaClientController extends Controller
         $this->get('session')->getFlashBag()->add(
             'notice',
             array(
-                'alert' => 'info',
+                'alert' => 'danger',
                 'title' => 'info!',
-                'message' => 'Contattare'
+                'message' => 'C\'è stato un errore nell\'invio della domanda verso iShareDoc, Riprovare o contattare i sistemisti'
             )
         );
 

@@ -20,6 +20,27 @@ class ClientSistematica
     /**
      * @var string
      */
+    private $oggettomessaggio;
+
+    /**
+     * @return string
+     */
+    public function getOggettomessaggio()
+    {
+        return $this->oggettomessaggio;
+    }
+
+    /**
+     * @param string $oggettomessaggio
+     */
+    public function setOggettomessaggio($oggettomessaggio)
+    {
+        $this->oggettomessaggio = $oggettomessaggio;
+    }
+
+    /**
+     * @var string
+     */
     private $numeroProtocollo; // 0000088 in caso di aggiornamento
 
     /**
@@ -184,6 +205,27 @@ class ClientSistematica
     /**
      * @var string
      */
+    private $priorita;
+
+    /**
+     * @return string
+     */
+    public function getPriorita()
+    {
+        return $this->priorita;
+    }
+
+    /**
+     * @param string $priorita
+     */
+    public function setPriorita($priorita)
+    {
+        $this->priorita = $priorita;
+    }
+
+    /**
+     * @var string
+     */
     private $gruppogestav;
 
     /**
@@ -231,18 +273,22 @@ class ClientSistematica
 
     public function RequestWebServer()
     {
-        $partitionPuId = "0109";                        //FISSO
-        $messageBoxCode = "GBESTARAREADLCC";            //FISSO
+        $partitionPuId = "109";                        //FISSO
+        $messageBoxCode = "richiesta";            //FISSO
         $startWorkflow = true;
+        $searchtype1="EXTID";
+        $searchmode1="NOTFOUNDDEF";
+        $searchvalue1="vuoto";
+        $searchtype2="CODE";
+
+
         $strutturarichiedente= $this->getStrutturarichiedente(); //"USL Sud Est Toscana"; //passare come parametro da RDA la struttura dell'utente che invia la richiesta
-        $oggettomessaggio="USL SE: Farmaci (importo Gara > 40.000 EU)- Farmaci";
-        $sottoCategoriaMerceologica= "valore due";
+        //$sottoCategoriaMerceologica= "valore due";
         $categoriamerceologica = $this->getCategoriamerceologica(); //"Farmaci (importo Gara > 40.000 EU)";
         $tipologia= $this->getTipologia(); //Nuova, Annulamento, Documentazione aggiuntiva
-        $idPratica=$this->getIdPratica(); //"21"; // da passare come parametro
+        $idPratica=$this->getIdPratica(); // passato come parametro
 
         // estrazione parametri per la richiesta
-        //$em = $this->getDoctrine()->getManager();
         $parametri = $this->em->getRepository('estarRdaBundle:Sistematica')->find(1);
         $headerusername = $parametri->getUser();
         $headerpassword = $parametri->getPsw();
@@ -269,34 +315,63 @@ class ClientSistematica
         $contact='<contact>
                <type>'.$contactsettype1.'</type>
                <referenceType>'.$contactreferencetype1.'</referenceType>
-               <searchType>EXTID</searchType>
-              	<searchMode>NOTFOUNDDEF</searchMode>
-              	<searchValue>vuoto</searchValue>
+               <searchType>'.$searchtype1.'</searchType>
+              	<searchMode>'.$searchmode1.'</searchMode>
+              	<searchValue>'.$searchvalue1.'</searchValue>
               <description>'.$strutturarichiedente.'</description>
             </contact>
              <contact>
                <type>'.$contactsettype2.'</type>
-              <referenceType>'.$contactreferencetype2.'</referenceType>
-               <searchType>CODE</searchType>
-               <searchValue>GBESTARAREADLCC</searchValue>
-             </contact>
-              <contact>
-               <type>'.$contactsettype3.'</type>
-              <referenceType>'.$contactreferencetype3.'</referenceType>
-               <searchType>CODE</searchType>
-               <searchValue>GBESTAVSEDAFSOLD</searchValue>
+               <referenceType>'.$contactreferencetype2.'</referenceType>
+               <searchType>'.$searchtype2.'</searchType>
+               <searchValue>'.$this->getGruppogestav().'</searchValue>
              </contact>';
 
 
-        $references='<references>
+        switch($this->getTipologia()){
+            case "Annullamento":
+                $references='<references>
             <reference>
-               <id>236439</id>
+               <id>'.$this->getIdgestav().'</id>
             </reference>
-             <reference>
-               <appIdentifier>0000088</appIdentifier>
-               <appIdentifierDate>2016-03-01T10:44:49.112+01:00</appIdentifierDate>
+                </references>';
+                break;
+
+            case "Nuova":
+                $references='<references></references>';
+                break;
+
+            case "Documentazione Aggiuntiva":
+                $references='<references>
+            <reference>
+               <id>'.$this->getIdgestav().'</id>
             </reference>
-         </references>';
+                </references>';
+                break;
+
+            case "Documentazione Richiesta da RUP":
+                $references='<references>
+            <reference>
+               <id>'.$this->getIdgestav().'</id>
+            </reference>
+            <reference>
+               <idgara>'.$this->getIdgara().'</idgara>
+            </reference>
+                </references>';
+                break;
+        }
+
+
+
+    //    $references='<references>
+    //        <reference>
+    //           <id>236439</id>
+    //        </reference>
+    //         <reference>
+    //           <appIdentifier>0000088</appIdentifier>
+    //           <appIdentifierDate>2016-03-01T10:44:49.112+01:00</appIdentifierDate>
+    //        </reference>
+    //     </references>';
 
 
 
@@ -307,9 +382,9 @@ class ClientSistematica
         } else {
             $attachmentfile='<attachments>
              <attachment>
-               <fileset>isharedocMailAttach</fileset>
+               <fileset>'.$attachmentSetfileset1.'</fileset>
                <filename>'.$this->getNomefile().'</filename>
-              <contentType>application/octet-stream</contentType>
+              <contentType>'.$attachmentSetcontenttype1.'</contentType>
               <data>'.base64_encode(file_get_contents($this->getPath())).'</data>
             </attachment>
          </attachments>';
@@ -353,51 +428,44 @@ class ClientSistematica
    </soapenv:Header>
       <soapenv:Body>
       <ins:InstanceMessageCreateRequest>
-         <!--You have a CHOICE of the next 2 items at this level-->
          <partitionPuid>'.$partitionPuId.'</partitionPuid>
-         <!--You have a CHOICE of the next 2 items at this level-->
          <messageBoxCode>'.$messageBoxCode.'</messageBoxCode>
          <storyboardCode>'.$storyboardcode.'</storyboardCode>
-         <!--Optional:-->
          <metaViewName>'.$setmetaviewname.'</metaViewName>
          <direction>'.$setdirection.'</direction>
-         <!--Optional:-->
          <contacts>
-            <!--Zero or more repetitions:-->
             '.$contact.'
          </contacts>
-         <!--Optional:-->
-         <subject>'.$oggettomessaggio.'</subject>
+         <subject>'.$this->getOggettomessaggio().'</subject>
          <variables>
-            <!--Zero or more repetitions:-->
             <variable>
-        <key>tipoRichiesta</key>
-               	<type>string</type>
-                	<valueString>'.$tipologia.'</valueString>
+                <key>tipoRichiesta</key>
+               	<type>'.$variableSettype1.'</type>
+                <valueString>'.$tipologia.'</valueString>
 			</variable>
 			<variable>
-	<key>idPratica</key>
-               	<type>string</type>
-                	<valueString>'.$idPratica.'</valueString>
+	            <key>idPratica</key>
+               	<type>'.$variableSettype1.'</type>
+                <valueString>'.$idPratica.'</valueString>
 			</variable>
 			<variable>
-	<key>transition</key>
-               	<type>string</type>
-                	<valueString>Protocolla</valueString>
+	            <key>'.$variableSetkey1.'</key>
+               	<type>'.$variableSettype1.'</type>
+                <valueString>'.$variableSetvaluestring1.'</valueString>
 			</variable>
 			<variable>
-	<key>categoriaMerceologica</key>
-               	<type>string</type>
-                	<valueString>'.$categoriamerceologica.'</valueString>
+	            <key>categoriaMerceologica</key>
+               	<type>'.$variableSettype1.'</type>
+                <valueString>'.$categoriamerceologica.'</valueString>
 			</variable>
 			<variable>
 	            <key>prioritaPortale</key>
                	<type>string</type>
-                <valueString>Alta</valueString>
+                <valueString>'.$this->getPriorita().'</valueString>
 			</variable>
          </variables>
         '.$references.$attachmentfile.'
-         <startWorkflow>true</startWorkflow>
+         <startWorkflow>'.$startWorkflow.'</startWorkflow>
 
       </ins:InstanceMessageCreateRequest>
    </soapenv:Body>
@@ -427,7 +495,7 @@ class ClientSistematica
             else{
                 return array('esito'=>false, 'codice'=> 1 ); //trovato un fault
             }
-             }
+        }
         else return array('esito'=>false, 'codice'=> 2); //non trovato il file dentro REQUESTserver/".$number."_rispostastaclient.xml
 
 

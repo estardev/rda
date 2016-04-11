@@ -311,14 +311,14 @@ class FormTemplateController extends Controller
 
         $pres=$richiesta->getPresentato();
 
-        if($pres==0){
-            $tipologia="Nuova";
-        } elseif($pres==14){
+        if($pres==14){
             $tipologia="Documentazione Aggiuntiva";
         } elseif ($pres==15){
             $tipologia="Documentazione Richiesta da RUP";
         }
-
+        else {
+            $tipologia = "Nuova";
+        }
 
         //FG20151028 modifica per i diritti: prendiamo i diritti
 //        $usercheck = $this->get("usercheck.notify");

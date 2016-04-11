@@ -764,14 +764,14 @@ class RichiestaModel
 
             case '130':
 
-                if($richiesta->getCodicegara()==$codicegara)
-                    $idgara=true;
-                else
-                    $idgara=false;
+                //if($richiesta->getCodicegara()==$codicegara)
+                //    $idgara=true;
+                //else
+                //    $idgara=false;
 
                 //attesa documentazione aggiuntiva RIP
                 //La richiesta passa in stato di valutazione amministrativa
-                if (($articleSM->can('rifiutata_amm_ABS')) AND $idgara AND !empty($codicegara)) {
+                if (($articleSM->can('rifiutata_amm_ABS')) AND !empty($codicegara)) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rifiutata_amm_ABS');
