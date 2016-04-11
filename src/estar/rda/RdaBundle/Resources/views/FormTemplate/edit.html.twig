@@ -22,9 +22,7 @@
         {% if (diritti.isVA) and (stato=='da_inviare_ABS') %} <div class="bottoni"> {{ form(soap_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>{% endif %}
 
         {% if (stato=='bozza') or (stato=='attesa_val_tec') or (stato=='attesa_val_amm')%} <div class="bottoni"> <button class="btn btn-primary" data-toggle="modal" data-target="#confirmModal"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Cambia Stato</button></div>{% endif %}
-        <!-- David_20151029: test per dirottare su rotte e parametri direttamente dal twig -->
-        <!-- <button class="btn btn-default"><a href="{{ absolute_url(path('richiesta_bycategoria', {'idCategoria': app.session.get('homepageSelectCategoria')})) }}">indietro</a></button>-->
-        <!-- fine:20151029 -->
+
     </div>
 
     {{ form(edit_form, {'attr': {'novalidate': 'novalidate'}}) }}

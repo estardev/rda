@@ -28,6 +28,27 @@ class ClientSistematica
     private $idgestav;
 
     /**
+     * @var string
+     */
+    private $idgara;
+
+    /**
+     * @return string
+     */
+    public function getIdgara()
+    {
+        return $this->idgara;
+    }
+
+    /**
+     * @param string $idgara
+     */
+    public function setIdgara($idgara)
+    {
+        $this->idgara = $idgara;
+    }
+
+    /**
      * @return string
      */
     public function getIdgestav()
@@ -267,6 +288,20 @@ class ClientSistematica
              </contact>';
 
 
+        $references='<references>
+            <reference>
+               <id>236439</id>
+            </reference>
+             <reference>
+               <appIdentifier>0000088</appIdentifier>
+               <appIdentifierDate>2016-03-01T10:44:49.112+01:00</appIdentifierDate>
+            </reference>
+         </references>';
+
+
+
+
+
         if($this->tipologia=="Annullamento"){
             $attachmentfile="<attachments/>";
         } else {
@@ -279,6 +314,10 @@ class ClientSistematica
             </attachment>
          </attachments>';
         }
+
+
+
+
 
         $guid = $this->getGUID();
         $guidBase64 = base64_encode($guid);
@@ -357,16 +396,7 @@ class ClientSistematica
                 <valueString>Alta</valueString>
 			</variable>
          </variables>
-         <references>
-            <reference>
-               <id>236439</id>
-            </reference>
-             <reference>
-               <appIdentifier>0000088</appIdentifier>
-               <appIdentifierDate>2016-03-01T10:44:49.112+01:00</appIdentifierDate>
-            </reference>
-         </references>
-         '.$attachmentfile.'
+        '.$references.$attachmentfile.'
          <startWorkflow>true</startWorkflow>
 
       </ins:InstanceMessageCreateRequest>

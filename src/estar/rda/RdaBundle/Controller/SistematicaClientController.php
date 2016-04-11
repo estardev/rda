@@ -238,8 +238,8 @@ class SistematicaClientController extends Controller
 
 
         $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" . $num . "_Richiesta_" . $idRichiesta . ".pdf");
-        $zip = \Comodojo\Zip\Zip::create($directory_sender . '/' . $path . '/' . $path . '.zip');
 
+        $zip = \Comodojo\Zip\Zip::create($directory_sender . '/' . $path . '/' . $path . '.zip');
         $zip->add($directory_sender . "/" . $path, true); //->add($pathdocumenti, true);
 
 
@@ -310,8 +310,19 @@ class SistematicaClientController extends Controller
 
                 }
                 break;
-        }
 
+            case "Documentazione Richiesta da RUP":
+                $ritorno = $this->generateZip($idCategoria, $idRichiesta);
+                if ($ritorno['esito']) {
+                    $idGestav = $richiesta->getIdgestav();
+                    $idgara= $richiesta->getCodicegara();
+                    $pathfile = "sender/" . $ritorno['path'] . "/" . $ritorno['path'] . ".zip";
+                    $nomefile = $ritorno['path'] . '.zip';
+
+                }
+                break;
+
+        }
 
 
         $risposta = $this->get('model.client');
@@ -322,11 +333,12 @@ class SistematicaClientController extends Controller
         $risposta->setCategoriamerceologica($categoriamerciologica);
         $risposta->setGruppogestav($gruppogestav);
         $risposta->setIdgestav($idGestav);
+        $risposta->setIdgara($idgara);
         $risposta->setStrutturarichiedente($azienda);
 
         $esito = $risposta->RequestWebServer();
 
-        if ($esito['esito'] == true and ($tipologia == "Nuova" or $tipologia == "Documentazione Aggiuntiva")) {
+        if ($esito['esito'] == true and ($tipologia == "Nuova" or $tipologia == "Documentazione Aggiuntiva" or $tipologia == "Documentazione Richiesta da RUP" )) {
             $numprotocollo = $esito['protocollo'];
             $idGestav=$esito['chiavesistematica'];
             $urlGestav=$esito['urlprotocollo'];
@@ -341,7 +353,15 @@ class SistematicaClientController extends Controller
                 $iter->setAstato($articleSM->getState());
                 $iter->setNumeroprotocollo($numprotocollo."/".$anno);
                 $iter->setIdrichiesta($richiesta);
-                $iter->setMotivazione("Inviato e protocollato");
+                if($tipologia=="Nuova"){
+                    $iter->setMotivazione("Nuova richiesta inviata e protocollata");
+                }
+                elseif ($tipologia == "Documentazione Aggiuntiva"){
+                    $iter->setMotivazione("Inviata Documentazione aggiuntiva per la pratica ".$idRichiesta);
+                }
+                elseif ($tipologia == "Documentazione Richiesta da RUP"){
+                    $iter->setMotivazione("Inviata Documentazione aggiuntiva per la gara ".$idgara);
+                }
                 $iter->setDataora(new \DateTime('now'));
                 $iter->setIdutente($this->getUser());
                 $iter->setIdgestav($idGestav);
@@ -360,8 +380,9 @@ class SistematicaClientController extends Controller
                     $richiesta->setIdgestav($idGestav);
                     $richiesta->setPresentato(0);
                     $em->persist($richiesta);
-                } else {
-                    $richiesta->setPresentato(0);
+                }
+                else {
+                    $richiesta->setPresentato(99);
                     $em->persist($richiesta);
                 }
 

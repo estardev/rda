@@ -344,7 +344,32 @@ class RichiestaController extends Controller
         $utente = $this->get('usercheck.notify')->getUtente();
         $iter= new Iter();
 
-//        TODO recupero ruolo utente
+        switch($transizione)
+        {
+            case 'presentata': $pre=1; break;
+            case 'rifiutata_tec': $pre=2; break;
+            case 'validazione_tec': $pre=3; break;
+            case 'rifiutata_amm': $pre=4; break;
+            case 'validazione_amm': $pre=5; break;
+            case 'inviato_ABS': $pre=6; break;
+            case 'cancellazione': $pre=7; break;
+            case 'annullamento': $pre=8; break;
+            case 'rifiutata_amm_ABS': $pre=9; break;
+            case 'rifiutata_tec_ABS': $pre=10; break;
+            case 'rigettata_ABS': $pre=11; break;
+            case 'chiusura_ABS': $pre=12; break;
+            case 'attesa_doc_aggiuntiva': $pre=14; break;
+            case 'attesa_doc_aggiuntiva_RUP': $pre=15; break;
+            case 'assegnata_programmazione': $pre=16; break;
+            case 'istruttoria': $pre=17; break;
+            case 'indizione': $pre=18; break;
+            case 'valutazione': $pre=19; break;
+            case 'aggiudicazione': $pre=20; break;
+            case 'annullamento_ABS': $pre=21; break;
+            default: $pre=99; break;
+        }
+
+        //        TODO recupero ruolo utente
 
 
         if ($articleSM->can($transizione)) {
@@ -356,6 +381,8 @@ class RichiestaController extends Controller
             $iter->setMotivazione($messaggio);
             $iter->setDataora(new \DateTime('now'));
             $iter->setDatafornita(true);
+            $richiesta->setPresentato($pre);
+            $em->persist($richiesta);
             $em->persist($iter);
         }
 

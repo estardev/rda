@@ -309,9 +309,16 @@ class FormTemplateController extends Controller
         $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 1);
         $editForm = $res[0];
 
-        if(is_null($richiesta->getNumeroprotocollo())){
+        $pres=$richiesta->getPresentato();
+
+        if($pres==0){
             $tipologia="Nuova";
-        } else $tipologia="Documentazione Aggiuntiva";
+        } elseif($pres==14){
+            $tipologia="Documentazione Aggiuntiva";
+        } elseif ($pres==15){
+            $tipologia="Documentazione Richiesta da RUP";
+        }
+
 
         //FG20151028 modifica per i diritti: prendiamo i diritti
 //        $usercheck = $this->get("usercheck.notify");
