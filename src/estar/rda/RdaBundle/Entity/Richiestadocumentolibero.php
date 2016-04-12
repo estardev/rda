@@ -34,7 +34,7 @@ class Richiestadocumentolibero
     /**
      * @var boolean
      *
-     * @ORM\Column(name="daInviare", type="boolean", options={"default" = 0})
+     * @ORM\Column(name="daInviare", type="boolean", nullable=true, options={"default" = 0})
      */
     private $dainviare;
 
