@@ -25,6 +25,31 @@ class Richiestadocumento
     private $datainvio;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="daInviare", type="boolean", options={"default" = 0})
+     */
+    private $dainviare = 0;
+
+    /**
+     * @return boolean
+     */
+    public function isDainviare()
+    {
+        return $this->dainviare;
+    }
+
+    /**
+     * @param boolean $dainviare
+     * @return Richiestadocumento
+     */
+    public function setDainviare($dainviare)
+    {
+        $this->dainviare = $dainviare;
+        return $this;
+    }
+
+    /**
      * @var string
      *
      * @ORM\Column(name="numeroProtocollo", type="string", length=45, nullable=true)
@@ -96,7 +121,7 @@ class Richiestadocumento
 
     /**
      * @param string $urlprotocollo
-     * @return Richiesta
+     * @return Richiestadocumento
      */
     public function setUrlprotocollo($urlprotocollo)
     {
