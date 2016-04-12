@@ -273,13 +273,15 @@ class ClientSistematica
 
     public function RequestWebServer()
     {
-        $partitionPuId = "109";                        //FISSO
-        $messageBoxCode = "richiesta";            //FISSO
-        $startWorkflow = true;
-        $searchtype1="EXTID";
-        $searchmode1="NOTFOUNDDEF";
+        //$partitionPuId = "109";                        //FISSO
+        //$messageBoxCode = "richiesta";            //FISSO
+        //$startWorkflow = "true";
+        //$searchtype1="EXTID";
+        //$searchmode1="NOTFOUNDDEF";
+        // $searchtype2="CODE";
+
         $searchvalue1="vuoto";
-        $searchtype2="CODE";
+
 
 
         $strutturarichiedente= $this->getStrutturarichiedente(); //"USL Sud Est Toscana"; //passare come parametro da RDA la struttura dell'utente che invia la richiesta
@@ -298,19 +300,19 @@ class ClientSistematica
         $setdirection = $parametri->getSetdirection();
         $contactsettype1 = $parametri->getContactSettype1();
         $contactreferencetype1 = $parametri->getContactReferencetype1();
-        $contactReferencecode1 = $parametri->getContactReferencecode1();
+        $partitionPuId  = $parametri->getContactReferencecode1();
         $contactsettype2 = $parametri->getContactSettype2();
         $contactreferencetype2 = $parametri->getContactReferencetype2();
-        $contactReferencecode2 = $parametri->getContactReferencecode2();
-        $contactsettype3 = $parametri->getContactSettype3();
-        $contactreferencetype3 = $parametri->getContactReferencetype3();
-        $contactReferencecode3 = $parametri->getContactReferencecode3();
+        $messageBoxCode = $parametri->getContactReferencecode2();
+        $startWorkflow = $parametri->getContactSettype3();
+        $searchtype1 = $parametri->getContactReferencetype3();
+        $searchmode1 = $parametri->getContactReferencecode3();
         $variableSetkey1 = $parametri->getVariableSetkey1();
         $variableSettype1 = $parametri->getVariableSettype1();
         $variableSetvaluestring1 = $parametri->getVariableSetvaluestring1();
         $attachmentSetfileset1 = $parametri->getAttachmentSetfileset1();
         $attachmentSetcontenttype1 = $parametri->getAttachmentSetcontenttype1();
-        $requestSetinstanceoperation = $parametri->getRequestSetinstanceoperation();
+        $searchtype2 = $parametri->getRequestSetinstanceoperation();
 
         $contact='<contact>
                <type>'.$contactsettype1.'</type>
@@ -324,7 +326,7 @@ class ClientSistematica
                <type>'.$contactsettype2.'</type>
                <referenceType>'.$contactreferencetype2.'</referenceType>
                <searchType>'.$searchtype2.'</searchType>
-               <searchValue>'.$this->getGruppogestav().'</searchValue>
+               <searchValue>'.trim($this->getGruppogestav()).'</searchValue>
              </contact>';
 
 
