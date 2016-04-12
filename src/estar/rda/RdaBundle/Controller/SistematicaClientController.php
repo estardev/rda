@@ -116,6 +116,166 @@ class SistematicaClientController extends Controller
         switch ($tipologia) {
 
             case "Nuova":
+                // generazione file pdf e zip
+                $em = $this->getDoctrine()->getManager();
+                $query = $em->createQuery('SELECT IDENTITY (c.iddocumento ) as iddocu
+                                   FROM estarRdaBundle:Richiestadocumento c
+                                   WHERE c.idrichiesta = :idRichiesta')->setparameter('idRichiesta', $idRichiesta);
+                $arrayiddocumento = $query->getResult();
+
+                foreach ($arrayiddocumento as $idDoc) {
+                    $idD = $idDoc;
+                    $idDoc = $idD['iddocu'];
+                    $em = $this->getDoctrine()->getManager();
+                    $query = $em->createQuery('SELECT c.id as idcampo,c.nome,c.descrizione,c.fieldset,c.tipo,vc.id,vc.valore
+                                    FROM estarRdaBundle:Campodocumento c
+                                    LEFT JOIN estarRdaBundle:Valorizzazionecampodocumento vc
+                                    WITH c.id = vc.idcampodocumento
+                                    LEFT JOIN estarRdaBundle:Richiestadocumento r
+                                    WITH r.id = vc.idrichiestadocumento
+                                    WHERE r.idrichiesta = :idRichiesta
+                                    AND r.iddocumento = :idDocumento
+                                    ')->setparameters(array('idRichiesta' => $idRichiesta, 'idDocumento' => $idDoc));
+                    $campiValorizzati = $query->getResult();
+                    $formbuilder = $this->createFormBuilder();
+                    $documento = $em->getRepository('estarRdaBundle:Documento')->find($idDoc);
+                    $nomedescrizione = $documento->getDescrizione();
+                    $formbuilder->add("nome", "text", array(
+                        'label' => "nome",
+                        'data' => $documento->getNome(),
+                        'read_only' => true
+                    ));
+                    $formbuilder->add("descrizione", "textarea", array(
+                        'label' => "descrizione",
+                        'data' => $documento->getDescrizione(),
+                        'read_only' => true
+                    ));
+                    foreach ($campiValorizzati as $campovalorizzato) {
+                        $campo = $campovalorizzato;
+
+                        $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campodocumento');
+                        $campoCheck = $repository->find($campo['idcampo']);
+
+                        if ($campo['tipo'] == 'choice') {
+                            if(!empty($this->getChoicesOptions($campoCheck->getFieldset())) AND !empty($campo['valore'])){
+                                $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                            } else continue;
+
+                            //$descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                            $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                                'label' => $campo['descrizione'],
+                                'data' => $descrizioneValore,
+                                'read_only' => true
+                            ));
+                        } else {
+
+                            $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
+                                'label' => $campo['descrizione'],
+                                'data' => $campo['valore'],
+                                'read_only' => true
+                            ));
+                        }
+                    }
+                    $form = $formbuilder->getForm();
+
+
+                    $html = $this->renderView('::printbase.html.twig', array(
+                        'form' => $form->createView()
+                    ));
+                    $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" . 'Documento_' . $idDoc . '_' . $nomedescrizione . "_Richiesta_" . $idRichiesta . ".pdf");
+                }
+
+                $usercheck = $this->get("usercheck.notify");
+                $diritti = $usercheck->allRole($idCategoria);
+                $query = $em->createQuery('SELECT c.id AS idcampo, identity (c.idcategoria) as pippocategoria, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
+                                    FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
+                                    WITH c.id = vc.idcampo
+                                    AND vc.idrichiesta = :idRichiesta')
+                    ->setparameter('idRichiesta', $idRichiesta);
+                //FG20160317 hack: non c'è verso di far capire a doctrine che voglio solo quelli di una categoria.
+                $campiValorizzatiIntermedi = $query->getResult();
+                //Itero sul risultato e sego. Mi vergogno di me stesso.
+                $campiValorizzati = array();
+                foreach ($campiValorizzatiIntermedi as $campovalorizzato) {
+                    $campoTemp = $campovalorizzato;
+                    if ($campoTemp['pippocategoria'] == $idCategoria)
+                        array_push($campiValorizzati, $campoTemp);
+                }
+
+                $formbuilder = $this->createFormBuilder();
+                $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+                $formbuilder->add("titolo", "text", array(
+                    'label' => "titolo",
+                    'data' => $richiesta->getTitolo(),
+                    'read_only' => true
+                ));
+                $formbuilder->add("descrizione", "textarea", array(
+                    'label' => "descrizione",
+                    'data' => $richiesta->getDescrizione(),
+                    'read_only' => true
+                ));
+                foreach ($campiValorizzati as $campovalorizzato) {
+                    $campo = $campovalorizzato;
+
+                    $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
+                    $campoCheck = $repository->find($campo['idcampo']);
+                    if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
+
+                    if ($campo['tipo'] == 'choice') {
+                        if(!empty($this->getChoicesOptions($campoCheck->getFieldset())) AND !empty($campo['valore'])){
+                            $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                        } else continue;
+                        //$descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                        $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                            'label' => $campo['descrizione'],
+                            'data' => $descrizioneValore,
+                            'read_only' => true
+                        ));
+                    } else {
+
+                        $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
+                            'label' => $campo['descrizione'],
+                            'data' => $campo['valore'],
+                            'read_only' => true
+                        ));
+                    }
+                }
+                $form = $formbuilder->getForm();
+
+                $html = $this->renderView('::printbase.html.twig', array(
+//            'entity' => $entity,
+                    'form' => $form->createView()
+                ));
+
+
+                $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" . $num . "_Richiesta_" . $idRichiesta . ".pdf");
+
+                //TODO: ELIMINARE ZIP
+                $zip = \Comodojo\Zip\Zip::create($directory_sender . '/' . $path . '/' . $path . '.zip');
+                $zip->add($directory_sender . "/" . $path, true); //->add($pathdocumenti, true);
+
+
+                $pathdocumenti = 'documenti/Richiesta_' . $idRichiesta;
+                if (!is_dir($pathdocumenti)) mkdir($pathdocumenti, 0777);
+                $documenti = $em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
+                foreach ($documenti as $documentidazippare) {
+                    if (is_null($documentidazippare->getNumeroprotocollo()))
+                        //TODO: CAMBIARE LO ZIP CON LO SPOSTAMENTO DEI FILE NEL PATH DELLA CARTELLA DA INVIARE
+                        $zip->setPath($pathdocumenti)->add($documentidazippare->getFilepath());
+                }
+
+                $documentiliberi = $em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
+                foreach ($documentiliberi as $documentiliberidazippare) {
+                    if (is_null($documentiliberidazippare->getNumeroprotocollo()))
+                        //TODO: CAMBIARE LO ZIP CON LO SPOSTAMENTO DEI FILE NEL PATH DELLA CARTELLA DA INVIARE
+                        $zip->setPath($pathdocumenti)->add($documentiliberidazippare->getFilepath());
+                }
+
+                //TODO: ELIMINARE ZIP
+                $zip->close();
+
+                return array('esito' => true, 'progressivo' => $num, 'path' => $path);
+                //true;
 
                 break;
 
@@ -130,161 +290,7 @@ class SistematicaClientController extends Controller
         }
 
 
-        // generazione file pdf e zip
 
-
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery('SELECT IDENTITY (c.iddocumento ) as iddocu
-                                   FROM estarRdaBundle:Richiestadocumento c
-                                   WHERE c.idrichiesta = :idRichiesta')->setparameter('idRichiesta', $idRichiesta);
-        $arrayiddocumento = $query->getResult();
-
-        foreach ($arrayiddocumento as $idDoc) {
-            $idD = $idDoc;
-            $idDoc = $idD['iddocu'];
-            $em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery('SELECT c.id as idcampo,c.nome,c.descrizione,c.fieldset,c.tipo,vc.id,vc.valore
-                                    FROM estarRdaBundle:Campodocumento c
-                                    LEFT JOIN estarRdaBundle:Valorizzazionecampodocumento vc
-                                    WITH c.id = vc.idcampodocumento
-                                    LEFT JOIN estarRdaBundle:Richiestadocumento r
-                                    WITH r.id = vc.idrichiestadocumento
-                                    WHERE r.idrichiesta = :idRichiesta
-                                    AND r.iddocumento = :idDocumento
-                                    ')->setparameters(array('idRichiesta' => $idRichiesta, 'idDocumento' => $idDoc));
-            $campiValorizzati = $query->getResult();
-            $formbuilder = $this->createFormBuilder();
-            $documento = $em->getRepository('estarRdaBundle:Documento')->find($idDoc);
-            $nomedescrizione = $documento->getDescrizione();
-            $formbuilder->add("nome", "text", array(
-                'label' => "nome",
-                'data' => $documento->getNome(),
-                'read_only' => true
-            ));
-            $formbuilder->add("descrizione", "textarea", array(
-                'label' => "descrizione",
-                'data' => $documento->getDescrizione(),
-                'read_only' => true
-            ));
-            foreach ($campiValorizzati as $campovalorizzato) {
-                $campo = $campovalorizzato;
-
-                $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campodocumento');
-                $campoCheck = $repository->find($campo['idcampo']);
-
-                if ($campo['tipo'] == 'choice') {
-                    $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                    $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
-                        'label' => $campo['descrizione'],
-                        'data' => $descrizioneValore,
-                        'read_only' => true
-                    ));
-                } else {
-
-                    $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
-                        'label' => $campo['descrizione'],
-                        'data' => $campo['valore'],
-                        'read_only' => true
-                    ));
-                }
-            }
-            $form = $formbuilder->getForm();
-
-
-            $html = $this->renderView('::printbase.html.twig', array(
-                'form' => $form->createView()
-            ));
-            $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" . 'Documento_' . $idDoc . '_' . $nomedescrizione . "_Richiesta_" . $idRichiesta . ".pdf");
-        }
-
-        $usercheck = $this->get("usercheck.notify");
-        $diritti = $usercheck->allRole($idCategoria);
-        $query = $em->createQuery('SELECT c.id AS idcampo, identity (c.idcategoria) as pippocategoria, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
-                                    FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
-                                    WITH c.id = vc.idcampo
-                                    AND vc.idrichiesta = :idRichiesta')
-            ->setparameter('idRichiesta', $idRichiesta);
-        //FG20160317 hack: non c'è verso di far capire a doctrine che voglio solo quelli di una categoria.
-        $campiValorizzatiIntermedi = $query->getResult();
-        //Itero sul risultato e sego. Mi vergogno di me stesso.
-        $campiValorizzati = array();
-        foreach ($campiValorizzatiIntermedi as $campovalorizzato) {
-            $campoTemp = $campovalorizzato;
-            if ($campoTemp['pippocategoria'] == $idCategoria)
-                array_push($campiValorizzati, $campoTemp);
-        }
-
-        $formbuilder = $this->createFormBuilder();
-        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
-        $formbuilder->add("titolo", "text", array(
-            'label' => "titolo",
-            'data' => $richiesta->getTitolo(),
-            'read_only' => true
-        ));
-        $formbuilder->add("descrizione", "textarea", array(
-            'label' => "descrizione",
-            'data' => $richiesta->getDescrizione(),
-            'read_only' => true
-        ));
-        foreach ($campiValorizzati as $campovalorizzato) {
-            $campo = $campovalorizzato;
-
-            $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
-            $campoCheck = $repository->find($campo['idcampo']);
-            if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
-
-            if ($campo['tipo'] == 'choice') {
-                $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
-                    'label' => $campo['descrizione'],
-                    'data' => $descrizioneValore,
-                    'read_only' => true
-                ));
-            } else {
-
-                $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
-                    'label' => $campo['descrizione'],
-                    'data' => $campo['valore'],
-                    'read_only' => true
-                ));
-            }
-        }
-        $form = $formbuilder->getForm();
-
-        $html = $this->renderView('::printbase.html.twig', array(
-//            'entity' => $entity,
-            'form' => $form->createView()
-        ));
-
-
-        $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" . $num . "_Richiesta_" . $idRichiesta . ".pdf");
-
-        //TODO: ELIMINARE ZIP
-        $zip = \Comodojo\Zip\Zip::create($directory_sender . '/' . $path . '/' . $path . '.zip');
-        $zip->add($directory_sender . "/" . $path, true); //->add($pathdocumenti, true);
-
-
-        $pathdocumenti = 'documenti/Richiesta_' . $idRichiesta;
-        if (!is_dir($pathdocumenti)) mkdir($pathdocumenti, 0777);
-        $documenti = $em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
-        foreach ($documenti as $documentidazippare) {
-            if (is_null($documentidazippare->getNumeroprotocollo()))
-                //TODO: CAMBIARE LO ZIP CON LO SPOSTAMENTO DEI FILE NEL PATH DELLA CARTELLA DA INVIARE
-                $zip->setPath($pathdocumenti)->add($documentidazippare->getFilepath());
-        }
-
-        $documentiliberi = $em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
-        foreach ($documentiliberi as $documentiliberidazippare) {
-            if (is_null($documentiliberidazippare->getNumeroprotocollo()))
-                //TODO: CAMBIARE LO ZIP CON LO SPOSTAMENTO DEI FILE NEL PATH DELLA CARTELLA DA INVIARE
-                $zip->setPath($pathdocumenti)->add($documentiliberidazippare->getFilepath());
-        }
-
-        //TODO: ELIMINARE ZIP
-        $zip->close();
-
-        return array('esito' => true, 'progressivo' => $num, 'path' => $path);
-        //true;
     }
 
 
