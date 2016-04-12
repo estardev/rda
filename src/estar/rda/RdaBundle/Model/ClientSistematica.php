@@ -340,7 +340,8 @@ class ClientSistematica
                 break;
 
             case "Nuova":
-                $references='<references></references>';
+                $references='<references/>
+';
                 break;
 
             case "Documentazione Aggiuntiva":
