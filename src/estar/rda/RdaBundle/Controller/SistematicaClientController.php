@@ -157,11 +157,7 @@ class SistematicaClientController extends Controller
                         $campoCheck = $repository->find($campo['idcampo']);
 
                         if ($campo['tipo'] == 'choice') {
-                            if(!empty($this->getChoicesOptions($campoCheck->getFieldset())) AND !empty($campo['valore'])){
-                                $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                            } else continue;
-
-                            //$descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                            $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
                             $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
                                 'label' => $campo['descrizione'],
                                 'data' => $descrizioneValore,
@@ -222,10 +218,7 @@ class SistematicaClientController extends Controller
                     if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
 
                     if ($campo['tipo'] == 'choice') {
-                        if(!empty($this->getChoicesOptions($campoCheck->getFieldset())) AND !empty($campo['valore'])){
-                            $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                        } else continue;
-                        //$descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                        $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
                         $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
                             'label' => $campo['descrizione'],
                             'data' => $descrizioneValore,
