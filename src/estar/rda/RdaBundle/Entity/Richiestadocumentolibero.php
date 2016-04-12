@@ -32,6 +32,31 @@ class Richiestadocumentolibero
     private $idgestav;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="daInviare", type="boolean", length=100, nullable=true)
+     */
+    private $dainviare;
+
+    /**
+     * @return boolean
+     */
+    public function isDainviare()
+    {
+        return $this->dainviare;
+    }
+
+    /**
+     * @param boolean $dainviare
+     * @return Richiestadocumentolibero
+     */
+    public function setDainviare($dainviare)
+    {
+        $this->dainviare = $dainviare;
+        return $this;
+    }
+
+    /**
      * @var string
      *
      * @ORM\Column(name="dataProtocollo", type="string", length=100, nullable=true)
@@ -63,7 +88,7 @@ class Richiestadocumentolibero
 
     /**
      * @param string $urlprotocollo
-     * @return Richiesta
+     * @return Richiestadocumentolibero
      */
     public function setUrlprotocollo($urlprotocollo)
     {
