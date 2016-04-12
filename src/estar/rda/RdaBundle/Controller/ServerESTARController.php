@@ -28,7 +28,7 @@ class ServerESTARController extends Controller
      * @Soap\Param("note", phpType = "string")
      * @Soap\Param("idpratica", phpType = "int")
      * @Soap\Param("dataRequest", phpType = "string")
-     * @Soap\Param("codicestato", phpType = "int")
+     * @Soap\Param("codicestato", phpType = "string")
      * @Soap\Param("codicegara", phpType = "string")
      * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\String[]")
      */
