@@ -414,6 +414,8 @@ class SistematicaClientController extends Controller
                     if (is_null($documentiliberiscrittura->getNumeroprotocollo())) {
                         $documentiliberiscrittura->setNumeroprotocollo($numprotocollo."/".$anno);
                         $documentiliberiscrittura->setIdgestav($idGestav);
+                        $documentiliberiscrittura->setDatainvio(new \DateTime('now'));
+                        $documentiliberiscrittura->setDainviare(true);
                         $documentiliberiscrittura->setDataprotocollo($dataprotocollo);
                         $documentiliberiscrittura->setUrlprotocollo($urlGestav);
                         $em->persist($documentiliberiscrittura);
@@ -424,6 +426,8 @@ class SistematicaClientController extends Controller
                     if (is_null($documentiscrittura->getNumeroprotocollo())) {
                         $documentiscrittura->setNumeroprotocollo($numprotocollo."/".$anno);
                         $documentiscrittura->setIdgestav($idGestav);
+                        $documentiscrittura->setDatainvio(new \DateTime('now'));
+                        $documentiscrittura->setDainviare(true);
                         $documentiscrittura->setDataprotocollo($dataprotocollo);
                         $documentiscrittura->setUrlprotocollo($urlGestav);
                         $em->persist($documentiscrittura);

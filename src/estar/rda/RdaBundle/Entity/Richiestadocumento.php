@@ -27,7 +27,7 @@ class Richiestadocumento
     /**
      * @var boolean
      *
-     * @ORM\Column(name="daInviare", type="boolean", length=100, nullable=true)
+     * @ORM\Column(name="daInviare", type="boolean", options={"default" = 0})
      */
     private $dainviare;
 
