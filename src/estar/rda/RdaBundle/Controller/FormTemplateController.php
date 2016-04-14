@@ -583,7 +583,7 @@ class FormTemplateController extends Controller
         $html,
             200,
             array(
-                'Content-Type' => 'application/pdf',
+//                'Content-Type' => 'application/pdf',
 //                'Content-Disposition'   => 'attachment; filename="pippo.pdf"'
             )
         );
