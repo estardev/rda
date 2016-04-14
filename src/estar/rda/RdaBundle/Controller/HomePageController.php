@@ -55,18 +55,18 @@ class HomePageController extends Controller
         //                             group by c.id, c.descrizione");
         // $nValtec = $query1->getResult();
 
-        $query1 = $em->createQuery("SELECT COUNT(r) as numero, r.idcategoria as idcat, estarRdaBundle:Categoria.descrizione as descrizionecategoria
+        $query1 = $em->createQuery("SELECT COUNT(r) as numero, r.idcategoria as idcat, Categoria.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r
                                     JOIN estarRdaBundle:Utentegruppoutente
                                     JOIN estarRdaBundle:Utente
                                     JOIN estarRdaBundle:Categoriagruppo
                                     JOIN estarRdaBundle:Categoria
-                                    ON estarRdaBundle:Richiesta.idcategoria=estarRdaBundle:Categoria.id
-                                    AND estarRdaBundle:Richiesta.idutente=estarRdaBundle:Utente.id
-                                    AND estarRdaBundle:Utentegruppoutente.idutente=estarRdaBundle:Utente.id
-                                    AND estarRdaBundle:Categoriagruppo.idgruppoutente=estarRdaBundle:Utentegruppoutente.id
-                                    WHERE estarRdaBundle:Richiesta.status='attesa_val_tec'
-                                    AND estarRdaBundle:Categoriagruppo.validatoretecnico=1");
+                                    ON Richiesta.idcategoria=Categoria.id
+                                    AND Richiesta.idutente=Utente.id
+                                    AND Utentegruppoutente.idutente=Utente.id
+                                    AND Categoriagruppo.idgruppoutente=Utentegruppoutente.id
+                                    WHERE Richiesta.status='attesa_val_tec'
+                                    AND Categoriagruppo.validatoretecnico=1");
         $nValtec = $query1->getResult();
 
         $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
