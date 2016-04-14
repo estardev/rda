@@ -176,22 +176,34 @@ class SistematicaClientController extends Controller
                         $campoCheck = $repository->find($campo['idcampo']);
 
                         if ($campo['tipo'] == 'choice') {
-                            if(!is_null($this->getChoicesOptions($campoCheck->getFieldset())) and !is_null($campo['valore']) ){
-                                $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                                $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
-                                    'label' => $campo['descrizione'],
-                                    'data' => $descrizioneValore,
-                                    'read_only' => true
+                            $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                            $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                                'label' => $campo['descrizione'],
+                                'data' => $descrizioneValore,
+                                'read_only' => true
+                            ));
+
+                            $formbuilder->get($campo['nome'] . '-' . $campo['id'])
+                                ->addModelTransformer(new CallbackTransformer(
+
+                                    function ($originalValue) {
+
+                                        if ("" === $originalValue) return null;
+
+                                        if (is_numeric($originalValue)) {
+                                            return intval($originalValue);
+                                        } else {
+                                            return $originalValue;
+                                        }
+
+
+                                    },
+                                    function ($submittedValue) {
+
+                                        return $submittedValue;
+
+                                    }
                                 ));
-                            } else continue;
-
-
-                           // $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                           // $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
-                           //     'label' => $campo['descrizione'],
-                           //     'data' => $descrizioneValore,
-                           //     'read_only' => true
-                           // ));
                         } else {
 
                             $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
@@ -199,6 +211,28 @@ class SistematicaClientController extends Controller
                                 'data' => $campo['valore'],
                                 'read_only' => true
                             ));
+
+                            $formbuilder->get($campo['nome'] . '-' . $campo['id'])
+                                ->addModelTransformer(new CallbackTransformer(
+
+                                    function ($originalValue) {
+
+                                        if ("" === $originalValue) return null;
+
+                                        if (is_numeric($originalValue)) {
+                                            return intval($originalValue);
+                                        } else {
+                                            return $originalValue;
+                                        }
+
+
+                                    },
+                                    function ($submittedValue) {
+
+                                        return $submittedValue;
+
+                                    }
+                                ));
                         }
                     }
                     $form = $formbuilder->getForm();
@@ -247,23 +281,34 @@ class SistematicaClientController extends Controller
                     if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
 
                     if ($campo['tipo'] == 'choice') {
+                        $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                        $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                            'label' => $campo['descrizione'],
+                            'data' => $descrizioneValore,
+                            'read_only' => true
+                        ));
 
-                        if(!is_null($this->getChoicesOptions($campoCheck->getFieldset())) and !is_null($campo['valore']) ){
-                            $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                            $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
-                                'label' => $campo['descrizione'],
-                                'data' => $descrizioneValore,
-                                'read_only' => true
+                        $formbuilder->get($campo['nome'] . '-' . $campo['id'])
+                            ->addModelTransformer(new CallbackTransformer(
+
+                                function ($originalValue) {
+
+                                    if ("" === $originalValue) return null;
+
+                                    if (is_numeric($originalValue)) {
+                                        return intval($originalValue);
+                                    } else {
+                                        return $originalValue;
+                                    }
+
+
+                                },
+                                function ($submittedValue) {
+
+                                    return $submittedValue;
+
+                                }
                             ));
-                        } else continue;
-
-
-                     //   $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                     //   $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
-                     //       'label' => $campo['descrizione'],
-                     //       'data' => $descrizioneValore,
-                     //       'read_only' => true
-                     //   ));
                     } else {
 
                         $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
@@ -271,6 +316,27 @@ class SistematicaClientController extends Controller
                             'data' => $campo['valore'],
                             'read_only' => true
                         ));
+                        $formbuilder->get($campo['nome'] . '-' . $campo['id'])
+                            ->addModelTransformer(new CallbackTransformer(
+
+                                function ($originalValue) {
+
+                                    if ("" === $originalValue) return null;
+
+                                    if (is_numeric($originalValue)) {
+                                        return intval($originalValue);
+                                    } else {
+                                        return $originalValue;
+                                    }
+
+
+                                },
+                                function ($submittedValue) {
+
+                                    return $submittedValue;
+
+                                }
+                            ));
                     }
                 }
                 $form = $formbuilder->getForm();
