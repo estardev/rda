@@ -49,21 +49,21 @@ class HomePageController extends Controller
                                     group by c.id, c.descrizione");
         $nBozza = $query->getResult();
 
-        // $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
-        //                             FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
-        //                             WHERE  r.status='attesa_val_tec' AND c.id=r.idcategoria
-        //                             group by c.id, c.descrizione");
-        // $nValtec = $query1->getResult();
+         $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+                                     WHERE  r.status='attesa_val_tec' AND c.id=r.idcategoria
+                                     group by c.id, c.descrizione");
+         $nValtec = $query1->getResult();
 
-        $query1 = $em->createQuery("SELECT COUNT(r) as numero, r.idcategoria as idcat, c.descrizione as descrizionecategoria
-                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Utentegruppoutente ug, estarRdaBundle:Utente u, estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Categoria c
-                                    WHERE r.idcategoria=c.id
-                                    AND r.idutente=u.id
-                                    AND ug.idutente=u.id
-                                    AND cg.idgruppoutente=ug.id
-                                    AND r.status='attesa_val_tec'
-                                    AND cg.validatoretecnico=1");
-        $nValtec = $query1->getResult();
+       // $query1 = $em->createQuery("SELECT COUNT(r) as numero, r.idcategoria as idcat, c.descrizione as descrizionecategoria
+       //                             FROM estarRdaBundle:Richiesta r, estarRdaBundle:Utentegruppoutente ug, estarRdaBundle:Utente u, estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Categoria c
+       //                             WHERE r.idcategoria=c.id
+       //                             AND r.idutente=u.id
+       //                             AND ug.idutente=u.id
+       //                             AND cg.idgruppoutente=ug.id
+       //                             AND r.status='attesa_val_tec'
+       //                             AND cg.validatoretecnico=1");
+       // $nValtec = $query1->getResult();
 
         $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
