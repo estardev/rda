@@ -49,10 +49,24 @@ class HomePageController extends Controller
                                     group by c.id, c.descrizione");
         $nBozza = $query->getResult();
 
-        $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
-                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
-                                    WHERE  r.status='attesa_val_tec' AND c.id=r.idcategoria
-                                    group by c.id, c.descrizione");
+        //$query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+        //                            FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+        //                            WHERE  r.status='attesa_val_tec' AND c.id=r.idcat egoria
+        //                            group by c.id, c.descrizione");
+        //$nValtec = $query1->getResult();
+
+        $query1 = $em->createQuery("SELECT COUNT(r) as numero, r.idcategoria as idcat, c.descrizione as descrizionecategoria
+                                    FROM richiesta r
+                                    INNER JOIN estarRdaBundle:utentegruppoutente ug
+                                    INNER JOIN estarRdaBundle:utente u
+                                    INNER JOIN estarRdaBundle:categoriagruppo cg
+                                    INNER JOIN estarRdaBundle:categoria c
+                                    ON r.idcategoria=c.id
+                                    AND r.idutente=utente.id
+                                    AND ug.idutente=u.id
+                                    AND cg.idgruppoutente=ug.id
+                                    WHERE r.status='attesa_val_tec'
+                                    AND cg.validatoretecnico=1");
         $nValtec = $query1->getResult();
 
         $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
