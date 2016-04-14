@@ -136,6 +136,9 @@ class FormTemplateController extends Controller
             $em->persist($richiesta);
 
             foreach ($campi['form'] as $key => $value) {
+
+                if(empty($value))$value=null;
+
                 if (!strrpos($key, "-")) {
                     //FG20151016 salto perch� i campi li ho gi� sistemati prima
                     continue;
@@ -266,7 +269,14 @@ class FormTemplateController extends Controller
             if ($campo['tipo'] == 'choice') {
 //                $fieldsetName = $campo->getFieldset();
 
-                $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                if(!is_null($this->getChoicesOptions($campoCheck->getFieldset())) and !is_null($campo['valore']) ){
+                    $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                    $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                        'label' => $campo['descrizione'],
+                        'data' => $descrizioneValore,
+                        'read_only' => true
+                    ));
+                } else continue;
                 $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
                     'label' => $campo['descrizione'],
                     'data' => $descrizioneValore,
@@ -457,6 +467,7 @@ class FormTemplateController extends Controller
             $richiesta->setDescrizione($campi['form']['descrizione']);
 
             foreach ($campi['form'] as $key => $value) {
+                if(empty($value))$value=null;
                 if (!strrpos($key, "-")) {
                     continue;
                 }
@@ -608,12 +619,15 @@ class FormTemplateController extends Controller
 //            if ($campo->getTipo() == 'choice') {
             if ($campo['tipo'] == 'choice') {
 //                $fieldsetName = $campo->getFieldset();
-                $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
-                    'label' => $campo['descrizione'],
-                    'data' => $descrizioneValore,
-                    'read_only' => true
-                ));
+                if(!is_null($this->getChoicesOptions($campoCheck->getFieldset())) and !is_null($campo['valore']) ){
+                    $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                    $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                        'label' => $campo['descrizione'],
+                        'data' => $descrizioneValore,
+                        'read_only' => true
+                    ));
+                } else continue;
+
             } else {
 
                 $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
