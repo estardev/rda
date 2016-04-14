@@ -56,12 +56,14 @@ class HomePageController extends Controller
         //$nValtec = $query1->getResult();
 
         $query1 = $em->createQuery("SELECT COUNT(r) as numero, r.idcategoria as idcat, c.descrizione as descrizionecategoria
-                                    FROM estarRdaBundle:Richiesta r
-                                    JOIN estarRdaBundle:Utentegruppoutente ug
-                                    JOIN estarRdaBundle:Categoriagruppo cg
-                                    JOIN estarRdaBundle:Categoria c
+                                    FROM estarRdaBundle:Richiesta as r
+                                    JOIN estarRdaBundle:Utentegruppoutente as ug
+                                    JOIN estarRdaBundle:Utente as u
+                                    JOIN estarRdaBundle:Categoriagruppo as cg
+                                    JOIN estarRdaBundle:Categoria as c
                                     ON r.idcategoria=c.id
                                     AND r.idutente=utente.id
+                                    AND ug.idutente=u.id
                                     AND cg.idgruppoutente=ug.id
                                     WHERE r.status='attesa_val_tec'
                                     AND cg.validatoretecnico=1");
