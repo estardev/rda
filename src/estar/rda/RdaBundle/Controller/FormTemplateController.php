@@ -579,11 +579,10 @@ class FormTemplateController extends Controller
 
 
         return new Response(
-//            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
-            $html,
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
             200,
             array(
-//                'Content-Type' => 'application/pdf',
+                'Content-Type' => 'application/pdf',
 //                'Content-Disposition'   => 'attachment; filename="pippo.pdf"'
             )
         );
