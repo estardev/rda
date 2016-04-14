@@ -56,7 +56,7 @@ class HomePageController extends Controller
         // $nValtec = $query1->getResult();
 
         $query1 = $em->createQuery("SELECT COUNT(r) as numero, r.idcategoria as idcat, c.descrizione as descrizionecategoria
-                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Utentegruppoutente ug, estarRdaBundle:Utente u, estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Categoria cg
+                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Utentegruppoutente ug, estarRdaBundle:Utente u, estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Categoria c
                                     WHERE r.idcategoria=c.id
                                     AND r.idutente=u.id
                                     AND ug.idutente=u.id
