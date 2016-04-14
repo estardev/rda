@@ -503,7 +503,7 @@ class RichiestaModel
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $richiesta->setPresentato(11);
