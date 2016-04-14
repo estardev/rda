@@ -393,7 +393,10 @@ class SistematicaClientController extends Controller
                         //$filearray=self::arrayFile($pathdocumenti, $directory_sender . "/" . $path,$documentidazippare->getFilepath());
                         //array_push($filearray,$documentidazippare->getFilepath());
                     //TODO: CAMBIARE LO ZIP CON LO SPOSTAMENTO DEI FILE NEL PATH DELLA CARTELLA DA INVIARE
-                    $zip->setPath($pathdocumenti)->add($documentidazippare->getFilepath());
+                        if(!is_null($documentidazippare->getFilepath())){
+                            $zip->setPath($pathdocumenti)->add($documentidazippare->getFilepath());
+                        } else continue;
+
                 }
 
                 $documentiliberi = $em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
@@ -402,7 +405,9 @@ class SistematicaClientController extends Controller
                         //$filearray=self::arrayFile($pathdocumenti, $directory_sender . "/" . $path,$documentiliberidazippare->getFilepath());
                     //array_push($filearray,$documentidazippare->getFilepath());
                     //TODO: CAMBIARE LO ZIP CON LO SPOSTAMENTO DEI FILE NEL PATH DELLA CARTELLA DA INVIARE
-                    $zip->setPath($pathdocumenti)->add($documentiliberidazippare->getFilepath());
+                        if(!is_null($documentiliberidazippare->getFilepath())){
+                            $zip->setPath($pathdocumenti)->add($documentiliberidazippare->getFilepath());
+                        } else continue;
                 }
 
                 //TODO: ELIMINARE ZIP
