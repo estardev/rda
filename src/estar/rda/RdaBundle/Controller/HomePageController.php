@@ -67,6 +67,7 @@ class HomePageController extends Controller
                                     AND estarRdaBundle:Categoriagruppo.idgruppoutente=estarRdaBundle:Utentegruppoutente.id
                                     WHERE estarRdaBundle:Richiesta.status='attesa_val_tec'
                                     AND estarRdaBundle:Categoriagruppo.validatoretecnico=1");
+        $nValtec = $query1->getResult();
 
         $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
