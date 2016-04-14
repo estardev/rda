@@ -579,7 +579,8 @@ class FormTemplateController extends Controller
 
 
         return new Response(
-            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+//            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+        $html,
             200,
             array(
                 'Content-Type' => 'application/pdf',
