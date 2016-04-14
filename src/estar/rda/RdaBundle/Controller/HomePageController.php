@@ -56,11 +56,11 @@ class HomePageController extends Controller
         //$nValtec = $query1->getResult();
 
         $query1 = $em->createQuery("SELECT COUNT(r) as numero, r.idcategoria as idcat, c.descrizione as descrizionecategoria
-                                    FROM richiesta r
-                                    INNER JOIN estarRdaBundle:utentegruppoutente ug
-                                    INNER JOIN estarRdaBundle:utente u
-                                    INNER JOIN estarRdaBundle:categoriagruppo cg
-                                    INNER JOIN estarRdaBundle:categoria c
+                                    FROM estarRdaBundle:Richiesta r
+                                    INNER JOIN estarRdaBundle:Utentegruppoutente ug
+                                    INNER JOIN estarRdaBundle:Utente u
+                                    INNER JOIN estarRdaBundle:Categoriagruppo cg
+                                    INNER JOIN estarRdaBundle:Categoria c
                                     ON r.idcategoria=c.id
                                     AND r.idutente=utente.id
                                     AND ug.idutente=u.id
