@@ -25,6 +25,7 @@ class FormTemplateService
 
     const MODE_INSERT = 0;
     const MODE_EDIT = 1;
+    const MODE_PRINT = 2;
 
     public function __construct($user, Router $router, EntityManager $em)
     {
@@ -61,13 +62,13 @@ class FormTemplateService
         return $options[$key];
     }
 
-    function getFirstLevel($string,$id)
+    function getFirstLevel($string, $id)
     {
         $options = explode(FormTemplateService::SEPARATORE_CAMPI, $string);
         $returnOptions = array();
         foreach ($options as $option) {
             $subOption = explode(FormTemplateService::SEPARATORE_VALORI, $option);
-            array_push($returnOptions, $subOption[1].FormTemplateService::SEPARATORE_VALORI.$id);
+            array_push($returnOptions, $subOption[1] . FormTemplateService::SEPARATORE_VALORI . $id);
         }
 
         return $returnOptions;
@@ -166,7 +167,7 @@ class FormTemplateService
 
                     if ($campo->getPadre() != null) {
                         $class = array('class' => 'secondLevel');
-                        $padri = $this->getFirstLevel($campo->getPadre(),$campo->getId());
+                        $padri = $this->getFirstLevel($campo->getPadre(), $campo->getId());
 
                         if (array_key_exists($this->getFather($campo->getPadre()), $firstLevels)) {
                             array_push($firstLevels[$this->getFather($campo->getPadre())], $padri);
@@ -245,7 +246,7 @@ class FormTemplateService
 
                     if ($campo->getPadre() != null) {
                         $class = array('class' => 'secondLevel');
-                        $padri = $this->getFirstLevel($campo->getPadre(),$campo->getId());
+                        $padri = $this->getFirstLevel($campo->getPadre(), $campo->getId());
 
                         if (array_key_exists($this->getFather($campo->getPadre()), $firstLevels)) {
                             array_push($firstLevels[$this->getFather($campo->getPadre())], $padri[0]);
@@ -405,17 +406,32 @@ class FormTemplateService
                 if ($campo['tipo'] == 'choice') {
                     $class = array('class' => 'firstLevel');
 
-                    $options = $this->getChoicesOptions($campo['fieldset']);
-                    $builder->add($campo['nome'] . '-' . $campo['id'], 'choice', array(
-                        'choices' => $options,
-                        'expanded' => true,
-                        'multiple' => false,
-                        'label' => $campo['descrizione'],
-                        'data' => $campo['valore'],
-                        'attr' => $class
-                    ));
+                    //discrimino il caso della stampa
+                    if ($mode == FormTemplateService::MODE_PRINT) {
+                        //$descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                        $options = $this->getChoicesOptions($campo['fieldset']);
+                        $builder->add($campo['nome'] . '-' . $campo['idcampo'], 'text', array(
+                            'label' => $campo['descrizione'],
+                            'data' => $campo['valore'],
+                            'read_only' => true
+                        ));
 
-                    $builder->get($campo['nome'] . '-' . $campo['id'])
+
+                    } else {
+
+
+                        $options = $this->getChoicesOptions($campo['fieldset']);
+                        $builder->add($campo['nome'] . '-' . $campo['idcampo'], 'choice', array(
+                            'choices' => $options,
+                            'expanded' => true,
+                            'multiple' => false,
+                            'label' => $campo['descrizione'],
+                            'data' => $campo['valore'],
+                            'attr' => $class
+                        ));
+                    }
+
+                    $builder->get($campo['nome'] . '-' . $campo['idcampo'])
                         ->addModelTransformer(new CallbackTransformer(
 
                             function ($originalValue) {
@@ -438,27 +454,36 @@ class FormTemplateService
                         ));
 
                 } else {
-                    $class = array();
-                    $label = $campo['descrizione'];
-                    if ($campo['padre'] != null) {
-                        $class = array('class' => 'secondLevel');
-                        $padri = $this->getFirstLevel($campo['padre']);
+                    //discrimino il caso della stampa
+                    if ($mode == FormTemplateService::MODE_PRINT) {
+                        $builder->add($campo['nome'] . '-' . $campo['idcampo'], $campo['tipo'], array(
+                            'label' => $campo['descrizione'],
+                            'data' => $campo['valore'],
+                            'read_only' => true
+                        ));
+                    } else {
 
-                        if (array_key_exists($this->getFather($campo->getPadre()), $firstLevels)) {
-                            array_push($firstLevels[$this->getFather($campo->getPadre())], $padri);
-                        } else {
-                            $firstLevels[$this->getFather($campo->getPadre())] = $padri;
+                        $class = array();
+                        $label = $campo['descrizione'];
+                        if ($campo['padre'] != null) {
+                            $class = array('class' => 'secondLevel');
+                            $padri = $this->getFirstLevel($campo['padre'], $campo['idcampo']);
+
+                            if (array_key_exists($this->getFather($campo['padre']), $firstLevels)) {
+                                array_push($firstLevels[$this->getFather($campo['padre'])], $padri);
+                            } else {
+                                $firstLevels[$this->getFather($campo['padre'])] = $padri;
+                            }
+
+
                         }
-
-
+                        $builder->add($campo['nome'] . '-' . $campo['idcampo'], $campo['tipo'], array(
+                            'label' => $campo['descrizione'],
+                            'data' => $campo['valore'],
+                            'attr' => $class
+                        ));
                     }
-                    $builder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
-                        'label' => $campo['descrizione'],
-                        'data' => $campo['valore'],
-                        'attr' => $class
-                    ));
-
-                    $builder->get($campo['nome'] . '-' . $campo['id'])
+                    $builder->get($campo['nome'] . '-' . $campo['idcampo'])
                         ->addModelTransformer(new CallbackTransformer(
 
                             function ($originalValue) {
@@ -479,6 +504,7 @@ class FormTemplateService
 
                             }
                         ));
+
                 }
             }
 
@@ -489,18 +515,20 @@ class FormTemplateService
 //        if (!$entity) {
 //            throw $this->createNotFoundException('Unable to find FormTemplate entity.');
 //        }
-            if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
-                $builder->setAction($this->router->generate('formtemplate_update', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
-            } else {
-                $builder->setAction($this->router->generate('categoria_update', array('id' => $idCategoria)));
-            }
-            $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
-            //TODO non riesco a tirare su la statemachine e quindi ho preso l'ultimo stato dalla richiesta
-            $stato = $richiesta->getStatus();
-            if ($stato == 'inviata_ABS') {
-                $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'disabled' => 'disabled', 'icon' => 'glyphicon glyphicon-ok')));
-            } else {
-                $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'icon' => 'glyphicon glyphicon-ok')));
+            if ($mode != FormTemplateService::MODE_PRINT) {
+                if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
+                    $builder->setAction($this->router->generate('formtemplate_update', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
+                } else {
+                    $builder->setAction($this->router->generate('categoria_update', array('id' => $idCategoria)));
+                }
+                $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+                //TODO non riesco a tirare su la statemachine e quindi ho preso l'ultimo stato dalla richiesta
+                $stato = $richiesta->getStatus();
+                if ($stato == 'inviata_ABS') {
+                    $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'disabled' => 'disabled', 'icon' => 'glyphicon glyphicon-ok')));
+                } else {
+                    $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'icon' => 'glyphicon glyphicon-ok')));
+                }
             }
             return array(0 => $builder->getForm(), 1 => $firstLevels);
         }

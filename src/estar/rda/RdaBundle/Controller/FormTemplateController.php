@@ -136,9 +136,6 @@ class FormTemplateController extends Controller
             $em->persist($richiesta);
 
             foreach ($campi['form'] as $key => $value) {
-
-                if(empty($value))$value=null;
-
                 if (!strrpos($key, "-")) {
                     //FG20151016 salto perch� i campi li ho gi� sistemati prima
                     continue;
@@ -269,14 +266,7 @@ class FormTemplateController extends Controller
             if ($campo['tipo'] == 'choice') {
 //                $fieldsetName = $campo->getFieldset();
 
-                if(!is_null($this->getChoicesOptions($campoCheck->getFieldset())) and !is_null($campo['valore']) ){
-                    $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                    $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
-                        'label' => $campo['descrizione'],
-                        'data' => $descrizioneValore,
-                        'read_only' => true
-                    ));
-                } else continue;
+                $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
                 $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
                     'label' => $campo['descrizione'],
                     'data' => $descrizioneValore,
@@ -467,7 +457,6 @@ class FormTemplateController extends Controller
             $richiesta->setDescrizione($campi['form']['descrizione']);
 
             foreach ($campi['form'] as $key => $value) {
-                if(empty($value))$value=null;
                 if (!strrpos($key, "-")) {
                     continue;
                 }
@@ -576,71 +565,12 @@ class FormTemplateController extends Controller
 
 
         $em = $this->getDoctrine()->getManager();
-        $usercheck = $this->get("usercheck.notify");
-        $diritti = $usercheck->allRole($idCategoria);
-        //FG il controllo dei campi è intenzionalmente tenuto fuori da ACL
-        $query = $em->createQuery('SELECT c.id AS idcampo, identity (c.idcategoria) as pippocategoria, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
-                                    FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
-                                    WITH c.id = vc.idcampo
-                                    AND vc.idrichiesta = :idRichiesta')
-            ->setparameter('idRichiesta', $idRichiesta);
-        //FG20160317 hack: non c'è verso di far capire a doctrine che voglio solo quelli di una categoria.
-        $campiValorizzatiIntermedi = $query->getResult();
-        //Itero sul risultato e sego. Mi vergogno di me stesso.
-        $campiValorizzati = array();
-        foreach ($campiValorizzatiIntermedi as $campovalorizzato) {
-            $campoTemp = $campovalorizzato;
-            if ($campoTemp['pippocategoria'] == $idCategoria)
-                array_push($campiValorizzati, $campoTemp);
-        }
 
-
-        $formbuilder = $this->createFormBuilder();
-//        $fieldsetVisitati = array();
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
-        $formbuilder->add("titolo", "text", array(
-            'label' => "titolo",
-            'data' => $richiesta->getTitolo(),
-            'read_only' => true
-        ));
-        $formbuilder->add("descrizione", "textarea", array(
-            'label' => "descrizione",
-            'data' => $richiesta->getDescrizione(),
-            'read_only' => true
-        ));
-        foreach ($campiValorizzati as $campovalorizzato) {
-//            $campo = $campovalorizzato->getIdcampo();
-            $campo = $campovalorizzato;
+        $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 2);
+        $form = $res[0];
 
-            $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
-            $campoCheck = $repository->find($campo['idcampo']);
-            if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
 
-//            if ($campo->getTipo() == 'choice') {
-            if ($campo['tipo'] == 'choice') {
-//                $fieldsetName = $campo->getFieldset();
-                if(!is_null($this->getChoicesOptions($campoCheck->getFieldset())) and !is_null($campo['valore']) ){
-                    $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                    $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
-                        'label' => $campo['descrizione'],
-                        'data' => $descrizioneValore,
-                        'read_only' => true
-                    ));
-                } else continue;
-
-            } else {
-
-                $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
-                    'label' => $campo['descrizione'],
-                    'data' => $campo['valore'],
-                    'read_only' => true
-                ));
-            }
-        }
-        $form = $formbuilder->getForm();
-//        if (!$entity) {
-//            throw $this->createNotFoundException('Unable to find FormTemplate entity.');
-//        }
 
         $html = $this->renderView('::printbase.html.twig', array(
 //            'entity' => $entity,
