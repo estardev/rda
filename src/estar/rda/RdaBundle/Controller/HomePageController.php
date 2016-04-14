@@ -49,25 +49,24 @@ class HomePageController extends Controller
                                     group by c.id, c.descrizione");
         $nBozza = $query->getResult();
 
-         $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
-                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
-                                     WHERE  r.status='attesa_val_tec' AND c.id=r.idcategoria
-                                     group by c.id, c.descrizione");
-         $nValtec = $query1->getResult();
+        // $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+        //                             FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+        //                             WHERE  r.status='attesa_val_tec' AND c.id=r.idcategoria
+        //                             group by c.id, c.descrizione");
+        // $nValtec = $query1->getResult();
 
-        //$query1 = $em->createQuery("SELECT COUNT(r) as numero, r.idcategoria as idcat, Categoria.descrizione as descrizionecategoria
-        //                            FROM estarRdaBundle:Richiesta r
-        //                            JOIN estarRdaBundle:Utentegruppoutente
-        //                            JOIN estarRdaBundle:Utente
-        //                            JOIN estarRdaBundle:Categoriagruppo
-        //                            JOIN estarRdaBundle:Categoria
-        //                            WITH Richiesta.idcategoria=Categoria.id
-        //                            AND Richiesta.idutente=Utente.id
-        //                            AND Utentegruppoutente.idutente=Utente.id
-        //                            AND Categoriagruppo.idgruppoutente=Utentegruppoutente.id
-        //                            WHERE Richiesta.status='attesa_val_tec'
-        //                            AND Categoriagruppo.validatoretecnico=1");
-        //$nValtec = $query1->getResult();
+        $query1 = $em->createQuery("SELECT COUNT(r) as numero, r.idcategoria as idcat, estarRdaBundle:Categoria.descrizione as descrizionecategoria
+                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Utentegruppoutente,
+                                    , estarRdaBundle:Utente
+                                    , estarRdaBundle:Categoriagruppo
+                                    , estarRdaBundle:Categoria
+                                    where estarRdaBundle:Richiesta.idcategoria=estarRdaBundle:Categoria.id
+                                    AND estarRdaBundle:Richiesta.idutente=estarRdaBundle:Utente.id
+                                    AND estarRdaBundle:Utentegruppoutente.idutente=estarRdaBundle:Utente.id
+                                    AND estarRdaBundle:Categoriagruppo.idgruppoutente=estarRdaBundle:Utentegruppoutente.id
+                                    and estarRdaBundle:Richiesta.status='attesa_val_tec'
+                                    AND estarRdaBundle:Categoriagruppo.validatoretecnico=1");
+        $nValtec = $query1->getResult();
 
         $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
