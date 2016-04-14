@@ -49,25 +49,24 @@ class HomePageController extends Controller
                                     group by c.id, c.descrizione");
         $nBozza = $query->getResult();
 
-        //$query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
-        //                            FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
-        //                            WHERE  r.status='attesa_val_tec' AND c.id=r.idcat egoria
-        //                            group by c.id, c.descrizione");
-        //$nValtec = $query1->getResult();
-
-        $query1 = $em->createQuery("SELECT COUNT(r) as numero, r.idcategoria as idcat, c.descrizione as descrizionecategoria
-                                    FROM estarRdaBundle:Richiesta as r
-                                    JOIN estarRdaBundle:Utentegruppoutente as ug
-                                    JOIN estarRdaBundle:Utente as u
-                                    JOIN estarRdaBundle:Categoriagruppo as cg
-                                    JOIN estarRdaBundle:Categoria as c
-                                    ON r.idcategoria=c.id
-                                    AND r.idutente=utente.id
-                                    AND ug.idutente=u.id
-                                    AND cg.idgruppoutente=ug.id
-                                    WHERE r.status='attesa_val_tec'
-                                    AND cg.validatoretecnico=1");
+        $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+                                    WHERE  r.status='attesa_val_tec' AND c.id=r.idcat egoria
+                                    group by c.id, c.descrizione");
         $nValtec = $query1->getResult();
+
+        $query1 = $em->createQuery("SELECT COUNT(r) as numero, richiesta.idcategoria as idcat, categoria.descrizione as descrizionecategoria
+                                    FROM estarRdaBundle:Richiesta r
+                                    INNER JOIN estarRdaBundle:Utentegruppoutente
+                                    INNER JOIN estarRdaBundle:Utente
+                                    INNER JOIN estarRdaBundle:Categoriagruppo
+                                    INNER JOIN estarRdaBundle:Categoria
+                                    ON richiesta.idcategoria=categoria.id
+                                    AND richiesta.idutente=utente.id
+                                    AND utentegruppoutente.idutente=utente.id
+                                    AND categoriagruppo.idgruppoutente=utentegruppoutente.id
+                                    WHERE richiesta.status='attesa_val_tec'
+                                    AND categoriagruppo.validatoretecnico=1");
 
         $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
