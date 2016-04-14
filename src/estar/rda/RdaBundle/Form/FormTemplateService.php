@@ -26,7 +26,7 @@ class FormTemplateService
     const MODE_INSERT = 0;
     const MODE_EDIT = 1;
 
-    public function __construct($user,Router $router, EntityManager $em)
+    public function __construct($user, Router $router, EntityManager $em)
     {
         $this->user = $user;
         $this->router = $router;
@@ -61,13 +61,13 @@ class FormTemplateService
         return $options[$key];
     }
 
-    function getFirstLevel($string)
+    function getFirstLevel($string,$id)
     {
         $options = explode(FormTemplateService::SEPARATORE_CAMPI, $string);
         $returnOptions = array();
         foreach ($options as $option) {
             $subOption = explode(FormTemplateService::SEPARATORE_VALORI, $option);
-            array_push($returnOptions, $subOption[1]);
+            array_push($returnOptions, $subOption[1].FormTemplateService::SEPARATORE_VALORI.$id);
         }
 
         return $returnOptions;
@@ -163,8 +163,20 @@ class FormTemplateService
 
                 $obbligatorio = $campo->getObbligatorioinserzione();
                 if ($campo->getTipo() == 'choice') {
-                    $class = array('class' => 'firstLevel');
 
+                    if ($campo->getPadre() != null) {
+                        $class = array('class' => 'secondLevel');
+                        $padri = $this->getFirstLevel($campo->getPadre(),$campo->getId());
+
+                        if (array_key_exists($this->getFather($campo->getPadre()), $firstLevels)) {
+                            array_push($firstLevels[$this->getFather($campo->getPadre())], $padri);
+                        } else {
+                            $firstLevels[$this->getFather($campo->getPadre())] = $padri;
+                        }
+
+                    } else {
+                        $class = array('class' => 'firstLevel');
+                    }
                     $options = $this->getChoicesOptions($campo->getFieldset());
 
                     if ($obbligatorio) {
@@ -232,9 +244,14 @@ class FormTemplateService
                     $label = $campo->getDescrizione();
 
                     if ($campo->getPadre() != null) {
-                        $class =  array('class' => 'secondLevel');
-                        $padri = $this->getFirstLevel($campo->getPadre());
-                        $firstLevels[$this->getFather($campo->getPadre())] = $padri;
+                        $class = array('class' => 'secondLevel');
+                        $padri = $this->getFirstLevel($campo->getPadre(),$campo->getId());
+
+                        if (array_key_exists($this->getFather($campo->getPadre()), $firstLevels)) {
+                            array_push($firstLevels[$this->getFather($campo->getPadre())], $padri[0]);
+                        } else {
+                            $firstLevels[$this->getFather($campo->getPadre())] = $padri;
+                        }
 
                     }
 
@@ -426,7 +443,13 @@ class FormTemplateService
                     if ($campo['padre'] != null) {
                         $class = array('class' => 'secondLevel');
                         $padri = $this->getFirstLevel($campo['padre']);
-                        $firstLevels[$this->getFather($campo['padre'])] = $padri;
+
+                        if (array_key_exists($this->getFather($campo->getPadre()), $firstLevels)) {
+                            array_push($firstLevels[$this->getFather($campo->getPadre())], $padri);
+                        } else {
+                            $firstLevels[$this->getFather($campo->getPadre())] = $padri;
+                        }
+
 
                     }
                     $builder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
@@ -468,28 +491,27 @@ class FormTemplateService
 //        }
             if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
                 $builder->setAction($this->router->generate('formtemplate_update', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta)));
-            }
-            else{
+            } else {
                 $builder->setAction($this->router->generate('categoria_update', array('id' => $idCategoria)));
             }
-                $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
-                //TODO non riesco a tirare su la statemachine e quindi ho preso l'ultimo stato dalla richiesta
-                $stato=$richiesta->getStatus();
-                if($stato=='inviata_ABS'){
-                $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'disabled'=>'disabled', 'icon' => 'glyphicon glyphicon-ok')));
-                }else{
+            $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+            //TODO non riesco a tirare su la statemachine e quindi ho preso l'ultimo stato dalla richiesta
+            $stato = $richiesta->getStatus();
+            if ($stato == 'inviata_ABS') {
+                $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'disabled' => 'disabled', 'icon' => 'glyphicon glyphicon-ok')));
+            } else {
                 $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'icon' => 'glyphicon glyphicon-ok')));
-                }
-                return array(0 => $builder->getForm(), 1 => $firstLevels);
             }
-
-
+            return array(0 => $builder->getForm(), 1 => $firstLevels);
         }
 
 
-        /**
-         * @param OptionsResolverInterface $resolver
-         */
+    }
+
+
+    /**
+     * @param OptionsResolverInterface $resolver
+     */
 //    public function setDefaultOptions(OptionsResolverInterface $resolver)
 //    {
 //        $resolver->setDefaults(array(
@@ -497,12 +519,12 @@ class FormTemplateService
 //        ));
 //    }
 
-        /**
-         * @return string
-         */
-        public
-        function getName()
-        {
-            return 'estar_rda_rdabundle_FormTemplate';
-        }
+    /**
+     * @return string
+     */
+    public
+    function getName()
+    {
+        return 'estar_rda_rdabundle_FormTemplate';
     }
+}
