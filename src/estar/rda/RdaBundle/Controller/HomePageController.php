@@ -49,11 +49,11 @@ class HomePageController extends Controller
                                     group by c.id, c.descrizione");
         $nBozza = $query->getResult();
 
-        $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
-                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
-                                    WHERE  r.status='attesa_val_tec' AND c.id=r.idcat egoria
-                                    group by c.id, c.descrizione");
-        $nValtec = $query1->getResult();
+        // $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+        //                             FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+        //                             WHERE  r.status='attesa_val_tec' AND c.id=r.idcategoria
+        //                             group by c.id, c.descrizione");
+        // $nValtec = $query1->getResult();
 
         $query1 = $em->createQuery("SELECT COUNT(r) as numero, r.idcategoria as idcat, estarRdaBundle:Categoria.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r
