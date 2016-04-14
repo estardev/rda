@@ -23,6 +23,7 @@ framework:
         enabled : true
     templating:
         engines: ['twig']
+        assets_base_url: "http://rda.estar.toscana.it/"
         #assets_version: SomeVersionScheme
     default_locale:  "%locale%"
     trusted_hosts:   ~
