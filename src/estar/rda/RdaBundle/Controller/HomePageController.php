@@ -57,10 +57,10 @@ class HomePageController extends Controller
 
         $query1 = $em->createQuery("SELECT COUNT(r) as numero, r.idcategoria as idcat, estarRdaBundle:Categoria.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r
-                                    INNER JOIN estarRdaBundle:Utentegruppoutente
-                                    INNER JOIN estarRdaBundle:Utente
-                                    INNER JOIN estarRdaBundle:Categoriagruppo
-                                    INNER JOIN estarRdaBundle:Categoria
+                                    JOIN estarRdaBundle:Utentegruppoutente
+                                    JOIN estarRdaBundle:Utente
+                                    JOIN estarRdaBundle:Categoriagruppo
+                                    JOIN estarRdaBundle:Categoria
                                     ON estarRdaBundle:Richiesta.idcategoria=estarRdaBundle:Categoria.id
                                     AND estarRdaBundle:Richiesta.idutente=estarRdaBundle:Utente.id
                                     AND estarRdaBundle:Utentegruppoutente.idutente=estarRdaBundle:Utente.id
