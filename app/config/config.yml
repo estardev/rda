@@ -23,7 +23,6 @@ framework:
         enabled : true
     templating:
         engines: ['twig']
-        assets_base_url: "http://rda.estar.toscana.it/rda/web"
         #assets_version: SomeVersionScheme
     default_locale:  "%locale%"
     trusted_hosts:   ~
@@ -123,7 +122,7 @@ knp_snappy:
     pdf:
         enabled:    true
   #      binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
-        binary:     /usr/bin/wkhtmltopdf.sh
+        binary:     /usr/local/bin/wkhtmltopdf
         options:    []
 
 winzou_state_machine:
