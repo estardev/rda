@@ -34,6 +34,8 @@ class SistematicaClientController extends Controller
     /** FG messa costante per poterla più facilmente editare in futuro */
     const SEPARATORE_CAMPI = '||';
 
+    public $toReturn=array();
+
     // cancellazione di cartella non vuota
     public static function delTree($dir)
     {
@@ -44,6 +46,26 @@ class SistematicaClientController extends Controller
         return rmdir($dir);
     }
 
+    //copia i file necessari nella cartella e genera l'array necessario per l'attachment
+    public static function arrayFile($src,$dest, $filepath=null)
+    {   global $toReturn;
+        $files = array_diff(scandir($src), array('.', '..'));
+        foreach ($files as $file) {
+            if(is_dir("$src/$file"))
+                arrayFile("$src/$file");
+            else{
+                if($filepath==null){
+                    array_push($toReturn,"$file");
+                }
+                else
+                    array_push($toReturn,"$filepath");
+
+                if($src.'/'.$file != $dest.'/'.$file)
+                    copy($src.'/'.$file, $dest.'/'.$file);
+            }
+        }
+        return true;
+    }
 
     public function getChoicesOptions($string)
     {
@@ -105,19 +127,16 @@ class SistematicaClientController extends Controller
         return $num = $max + 1;
     }
 
-    public function generateZip($idCategoria, $idRichiesta, $tipologia)
+    public function generateZip($idCategoria, $idRichiesta )
     {
         $directory_sender = "sender";
         $num = $this->num();
         $path = $num . "_Richiesta_" . $idRichiesta . "_categoria_" . $idCategoria;
         if (!is_dir($directory_sender . "/" . $path)) mkdir($directory_sender . "/" . $path, 0777);
+        $em = $this->getDoctrine()->getManager();
 
-
-        switch ($tipologia) {
-
-            case "Nuova":
                 // generazione file pdf e zip
-                $em = $this->getDoctrine()->getManager();
+
                 $query = $em->createQuery('SELECT IDENTITY (c.iddocumento ) as iddocu
                                    FROM estarRdaBundle:Richiestadocumento c
                                    WHERE c.idrichiesta = :idRichiesta')->setparameter('idRichiesta', $idRichiesta);
@@ -157,12 +176,22 @@ class SistematicaClientController extends Controller
                         $campoCheck = $repository->find($campo['idcampo']);
 
                         if ($campo['tipo'] == 'choice') {
-                            $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                            $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
-                                'label' => $campo['descrizione'],
-                                'data' => $descrizioneValore,
-                                'read_only' => true
-                            ));
+                            if(!is_null($this->getChoicesOptions($campoCheck->getFieldset())) and !is_null($campo['valore']) ){
+                                $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                                $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                                    'label' => $campo['descrizione'],
+                                    'data' => $descrizioneValore,
+                                    'read_only' => true
+                                ));
+                            } else continue;
+
+
+                           // $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                           // $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                           //     'label' => $campo['descrizione'],
+                           //     'data' => $descrizioneValore,
+                           //     'read_only' => true
+                           // ));
                         } else {
 
                             $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
@@ -218,12 +247,23 @@ class SistematicaClientController extends Controller
                     if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
 
                     if ($campo['tipo'] == 'choice') {
-                        $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                        $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
-                            'label' => $campo['descrizione'],
-                            'data' => $descrizioneValore,
-                            'read_only' => true
-                        ));
+
+                        if(!is_null($this->getChoicesOptions($campoCheck->getFieldset())) and !is_null($campo['valore']) ){
+                            $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                            $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                                'label' => $campo['descrizione'],
+                                'data' => $descrizioneValore,
+                                'read_only' => true
+                            ));
+                        } else continue;
+
+
+                     //   $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
+                     //   $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                     //       'label' => $campo['descrizione'],
+                     //       'data' => $descrizioneValore,
+                     //       'read_only' => true
+                     //   ));
                     } else {
 
                         $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
@@ -243,6 +283,8 @@ class SistematicaClientController extends Controller
 
                 $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" . $num . "_Richiesta_" . $idRichiesta . ".pdf");
 
+                //$filearray=self::arrayFile($directory_sender . "/" . $path, $directory_sender . "/" . $path,null);
+
                 //TODO: ELIMINARE ZIP
                 $zip = \Comodojo\Zip\Zip::create($directory_sender . '/' . $path . '/' . $path . '.zip');
                 $zip->add($directory_sender . "/" . $path, true); //->add($pathdocumenti, true);
@@ -253,34 +295,25 @@ class SistematicaClientController extends Controller
                 $documenti = $em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
                 foreach ($documenti as $documentidazippare) {
                     if (is_null($documentidazippare->getNumeroprotocollo()))
-                        //TODO: CAMBIARE LO ZIP CON LO SPOSTAMENTO DEI FILE NEL PATH DELLA CARTELLA DA INVIARE
-                        $zip->setPath($pathdocumenti)->add($documentidazippare->getFilepath());
+                        //$filearray=self::arrayFile($pathdocumenti, $directory_sender . "/" . $path,$documentidazippare->getFilepath());
+                        //array_push($filearray,$documentidazippare->getFilepath());
+                    //TODO: CAMBIARE LO ZIP CON LO SPOSTAMENTO DEI FILE NEL PATH DELLA CARTELLA DA INVIARE
+                    $zip->setPath($pathdocumenti)->add($documentidazippare->getFilepath());
                 }
 
                 $documentiliberi = $em->getRepository('estarRdaBundle:Richiestadocumentolibero')->findBy(array('idrichiesta' => $idRichiesta));
                 foreach ($documentiliberi as $documentiliberidazippare) {
                     if (is_null($documentiliberidazippare->getNumeroprotocollo()))
-                        //TODO: CAMBIARE LO ZIP CON LO SPOSTAMENTO DEI FILE NEL PATH DELLA CARTELLA DA INVIARE
-                        $zip->setPath($pathdocumenti)->add($documentiliberidazippare->getFilepath());
+                        //$filearray=self::arrayFile($pathdocumenti, $directory_sender . "/" . $path,$documentiliberidazippare->getFilepath());
+                    //array_push($filearray,$documentidazippare->getFilepath());
+                    //TODO: CAMBIARE LO ZIP CON LO SPOSTAMENTO DEI FILE NEL PATH DELLA CARTELLA DA INVIARE
+                    $zip->setPath($pathdocumenti)->add($documentiliberidazippare->getFilepath());
                 }
 
                 //TODO: ELIMINARE ZIP
                 $zip->close();
 
                 return array('esito' => true, 'progressivo' => $num, 'path' => $path);
-                //true;
-
-                break;
-
-            case "Documentazione Aggiuntiva":
-
-                break;
-
-            case "Documentazione Richiesta da RUP":
-
-                break;
-
-        }
 
 
 
@@ -322,7 +355,7 @@ class SistematicaClientController extends Controller
                 break;
 
             case "Nuova":
-                $ritorno = $this->generateZip($idCategoria, $idRichiesta, $tipologia);
+                $ritorno = $this->generateZip($idCategoria, $idRichiesta);
                 if ($ritorno['esito']) {
                     $idGestav = "xxxxx";
                     $idgara="";
@@ -333,7 +366,7 @@ class SistematicaClientController extends Controller
                 break;
 
             case "Documentazione Aggiuntiva":
-                $ritorno = $this->generateZip($idCategoria, $idRichiesta, $tipologia);
+                $ritorno = $this->generateZip($idCategoria, $idRichiesta);
                 if ($ritorno['esito']) {
                     $idGestav = $richiesta->getIdgestav();
                     $idgara="";
