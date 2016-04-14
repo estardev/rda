@@ -55,18 +55,18 @@ class HomePageController extends Controller
                                     group by c.id, c.descrizione");
         $nValtec = $query1->getResult();
 
-        $query1 = $em->createQuery("SELECT COUNT(r) as numero, richiesta.idcategoria as idcat, categoria.descrizione as descrizionecategoria
+        $query1 = $em->createQuery("SELECT COUNT(r) as numero, r.idcategoria as idcat, estarRdaBundle:Categoria.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r
                                     INNER JOIN estarRdaBundle:Utentegruppoutente
                                     INNER JOIN estarRdaBundle:Utente
                                     INNER JOIN estarRdaBundle:Categoriagruppo
                                     INNER JOIN estarRdaBundle:Categoria
-                                    ON richiesta.idcategoria=categoria.id
-                                    AND richiesta.idutente=utente.id
-                                    AND utentegruppoutente.idutente=utente.id
-                                    AND categoriagruppo.idgruppoutente=utentegruppoutente.id
-                                    WHERE richiesta.status='attesa_val_tec'
-                                    AND categoriagruppo.validatoretecnico=1");
+                                    ON estarRdaBundle:Richiesta.idcategoria=estarRdaBundle:Categoria.id
+                                    AND estarRdaBundle:Richiesta.idutente=estarRdaBundle:Utente.id
+                                    AND estarRdaBundle:Utentegruppoutente.idutente=estarRdaBundle:Utente.id
+                                    AND estarRdaBundle:Categoriagruppo.idgruppoutente=estarRdaBundle:Utentegruppoutente.id
+                                    WHERE estarRdaBundle:Richiesta.status='attesa_val_tec'
+                                    AND estarRdaBundle:Categoriagruppo.validatoretecnico=1");
 
         $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
