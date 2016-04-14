@@ -61,7 +61,7 @@ class HomePageController extends Controller
                                     JOIN estarRdaBundle:Utente
                                     JOIN estarRdaBundle:Categoriagruppo
                                     JOIN estarRdaBundle:Categoria
-                                    ON Richiesta.idcategoria=Categoria.id
+                                    WITH Richiesta.idcategoria=Categoria.id
                                     AND Richiesta.idutente=Utente.id
                                     AND Utentegruppoutente.idutente=Utente.id
                                     AND Categoriagruppo.idgruppoutente=Utentegruppoutente.id
