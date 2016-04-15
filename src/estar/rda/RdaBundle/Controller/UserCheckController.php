@@ -57,7 +57,7 @@ class UserCheckController extends Controller
         $idUtente =  $utente->getId();
 
         $query = $this->em->createQuery('SELECT max(cg.abilitatoinserimentorichieste) as inserimento,
-                                    max(cg.validatoretecnico) as valtec, max(cg.validatoreamministrativo) as valamm, cg.idcategoria as idcategoria
+                                    max(cg.validatoretecnico) as valtec, max(cg.validatoreamministrativo) as valamm, cg.idcategoria as idcatego
                                     FROM estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Gruppoutente gu, estarRdaBundle:Utentegruppoutente ugu
                                     WHERE ugu.idgruppoutente = gu.id
                                     AND cg.idgruppoutente = gu.id
