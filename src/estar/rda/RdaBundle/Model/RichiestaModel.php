@@ -374,7 +374,7 @@ class RichiestaModel
         } else {
             //TODO convertire la $data in oggetto!!!!!
             $dateTime = new \DateTime($data, new \DateTimeZone('Europe/Rome'));
-            //$dateTime->add(new \DateInterval('P2H'));
+            $dateTime->modify('+ 2 hours');
             $dataFornita = true;
             // file_put_contents("dataok","ciao");
         }
