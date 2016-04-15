@@ -465,7 +465,7 @@ class SistematicaClientController extends Controller
                 }
                 break;
 
-            case "Documentazione Aggiuntiva":
+            case "Documentazione aggiuntiva":
                 $ritorno = $this->generateZip($idCategoria, $idRichiesta);
                 if ($ritorno['esito']) {
                     $idGestav = $richiesta->getIdgestav();
@@ -476,7 +476,7 @@ class SistematicaClientController extends Controller
                 }
                 break;
 
-            case "Documentazione Richiesta da RUP":
+            case "Documentazione richiesta da RUP":
                 $ritorno = $this->generateZip($idCategoria, $idRichiesta, $tipologia);
                 if ($ritorno['esito']) {
                     $idGestav = $richiesta->getIdgestav();
@@ -505,7 +505,7 @@ class SistematicaClientController extends Controller
 
         $esito = $risposta->RequestWebServer();
 
-        if ($esito['esito'] == true and ($tipologia == "Nuova" or $tipologia == "Documentazione Aggiuntiva" or $tipologia == "Documentazione Richiesta da RUP" )) {
+        if ($esito['esito'] == true and ($tipologia == "Nuova" or $tipologia == "Documentazione aggiuntiva" or $tipologia == "Documentazione richiesta da RUP" )) {
             $numprotocollo = $esito['protocollo'];
             $idGestav=$esito['chiavesistematica'];
             $urlGestav=$esito['urlprotocollo'];
@@ -523,10 +523,10 @@ class SistematicaClientController extends Controller
                 if($tipologia=="Nuova"){
                     $iter->setMotivazione("Nuova richiesta inviata e protocollata");
                 }
-                elseif ($tipologia == "Documentazione Aggiuntiva"){
+                elseif ($tipologia == "Documentazione aggiuntiva"){
                     $iter->setMotivazione("Inviata Documentazione aggiuntiva per la pratica ".$idRichiesta);
                 }
-                elseif ($tipologia == "Documentazione Richiesta da RUP"){
+                elseif ($tipologia == "Documentazione richiesta da RUP"){
                     $iter->setMotivazione("Inviata Documentazione aggiuntiva per la gara ".$idgara);
                 }
                 $iter->setDataora(new \DateTime('now'));
@@ -548,12 +548,12 @@ class SistematicaClientController extends Controller
                     $richiesta->setPresentato(6);
                     $em->persist($richiesta);
                 }
-                elseif ($tipologia == "Documentazione Aggiuntiva"){
+                elseif ($tipologia == "Documentazione aggiuntiva"){
 
                     $richiesta->setPresentato(14);
                     $em->persist($richiesta);
                 }
-                elseif ($tipologia == "Documentazione Richiesta da RUP"){
+                elseif ($tipologia == "Documentazione richiesta da RUP"){
                     $richiesta->setPresentato(15);
                     $em->persist($richiesta);
                 }

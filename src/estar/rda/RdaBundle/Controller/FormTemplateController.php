@@ -312,9 +312,9 @@ class FormTemplateController extends Controller
         $pres=$richiesta->getPresentato();
 
         if($pres==14){
-            $tipologia="Documentazione Aggiuntiva";
+            $tipologia="Documentazione aggiuntiva";
         } elseif ($pres==15){
-            $tipologia="Documentazione Richiesta da RUP";
+            $tipologia="Documentazione richiesta da RUP";
         }
         else {
             $tipologia = "Nuova";
@@ -443,7 +443,7 @@ class FormTemplateController extends Controller
 
         if(is_null($richiesta->getNumeroprotocollo())){
             $tipologia="Nuova";
-        } else $tipologia="Documentazione Aggiuntiva";
+        } else $tipologia="Documentazione aggiuntiva";
 
 
         $editForm->handleRequest($request);

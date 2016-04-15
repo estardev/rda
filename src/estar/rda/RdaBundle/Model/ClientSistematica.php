@@ -344,7 +344,7 @@ class ClientSistematica
 ';
                 break;
 
-            case "Documentazione Aggiuntiva":
+            case "Documentazione aggiuntiva":
                 $references='<references>
             <reference>
                <id>'.$this->getIdgestav().'</id>
@@ -352,7 +352,7 @@ class ClientSistematica
                 </references>';
                 break;
 
-            case "Documentazione Richiesta da RUP":
+            case "Documentazione richiesta da RUP":
                 $references='<references>
             <reference>
                <id>'.$this->getIdgestav().'</id>
