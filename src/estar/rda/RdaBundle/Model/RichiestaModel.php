@@ -192,8 +192,9 @@ class RichiestaModel
 
         if ($dirittiRichiesta->getIsVA() AND $dirittiRichiesta->getIsAI() AND $dirittiRichiesta->getIsVT()){
 
-            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6 OR r.status=:stato7 OR r.status=:stato8");
+            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6 OR r.status=:stato7 OR r.status=:stato8)");
             $query->setParameters(array(
+                'idcategoria'=> $idCategoria,
                 'idutente'=> $idUtente,
                 'stato1'=> RichiestaModel::STATUS_ATTESA_VAL_AMM,
                 'stato2'=> RichiestaModel::STATUS_DA_INVIARE_ABS,
@@ -213,8 +214,9 @@ class RichiestaModel
 
         //Se l'utente è validatore amministrativo
         if ($dirittiRichiesta->getIsVA()) {
-            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3");
+            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3)");
             $query->setParameters(array(
+                'idcategoria'=>$idCategoria,
                 'idutente'=> $idUtente,
                 'stato1'=> RichiestaModel::STATUS_ATTESA_VAL_AMM,
                 'stato2'=> RichiestaModel::STATUS_DA_INVIARE_ABS,
@@ -240,8 +242,9 @@ class RichiestaModel
         //Se l'utente è validatore tenico
         if ($dirittiRichiesta->getIsVT()) {
 
-            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente OR r.status=:stato");
+            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato)");
             $query->setParameters(array(
+                'idcategoria'=>$idCategoria,
                 'idutente'=> $idUtente,
                 'stato'=> RichiestaModel::STATUS_ATTESA_VAL_TEC,
             ));
