@@ -65,22 +65,6 @@ class HomePageController extends Controller
        //                             AND cg.validatoretecnico=1");
        // $nValtec = $query1->getResult();
 
-        $query = $em->
-        createQuery('select  c.id ,c.descrizione, a.nome as area
-                      from estarRdaBundle:Categoria c, estarRdaBundle:Area a
-                      where c.idarea = a.id
-                      and c.id in (select IDENTITY(cg.idcategoria) from estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Utentegruppoutente ugu
-                        where cg.idgruppoutente = ugu.idgruppoutente
-                        and ugu.idutente = :idutente)')
-            ->setParameter('idutente', $utenteSessione);
-//                $query = $this->em->
-//                        createQuery('select v.idcategoria as id, v.descrizionecategoria as descrizione, v.nomearea as area from
-//                          estarRdaBundle:Vcategoriadirittiutente v where v.idutente= :utente')
-//                    ->setParameter('utente', $utenteSessione);
-        $categoria=$query->getResult();
-
-        dump($categoria);
-
         $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.status='attesa_val_amm' AND c.id=r.idcategoria
@@ -98,12 +82,17 @@ class HomePageController extends Controller
         // se ci sono operazioni da fare torna alla homepage di riepilogo,
         // se non ci sono operazioni da fare ed è settata la categoria torna nella categoria
 
+        $usercheck = $this->get("usercheck.notify");
+        $categoriaabilitato = $usercheck->dirittiUtente();
+        dump($categoriaabilitato);
+
         $idCategoria = $this->get('session')->get('homepageSelectCategoria');
 
         if(!empty($nValAmm) or !empty($nDainv) or !empty($nBozza) or !empty($nValtec)){
             return $this->render('estarRdaBundle:HomePage:index.html.twig', array(
                 'richiesta' => $richiesta,
                 'categoria'=> $categoria,
+                'categoriaabilitato' => $categoriaabilitato,
                 'utente' => ucfirst($utenteSessione),
                 'nbozza' => $nBozza,
                 'nvaltec' => $nValtec,

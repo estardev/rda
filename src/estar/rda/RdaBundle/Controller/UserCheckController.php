@@ -50,6 +50,24 @@ class UserCheckController extends Controller
 
     }
 
+
+    public function dirittiUtente()
+    {
+        $utente = $this->getUtente();
+        $idUtente =  $utente->getId();
+
+        $query = $this->em->createQuery('SELECT max(cg.abilitatoinserimentorichieste) as inserimento,
+                                    max(cg.validatoretecnico) as valtec, max(cg.validatoreamministrativo) as valamm, cg.idcategoria as idcategoria
+                                    FROM estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Gruppoutente gu, estarRdaBundle:Utentegruppoutente ugu
+                                    WHERE ugu.idgruppoutente = gu.id
+                                    AND cg.idgruppoutente = gu.id
+                                    AND ugu.idutente = :idUtente')
+            ->setparameter('idUtente', $idUtente);
+
+        $dirittiutenti = $query->getResult();
+    }
+
+
     public function getUtente()
     {
 //        $idutenteSessione = $this->user->getToken()->getUser();
