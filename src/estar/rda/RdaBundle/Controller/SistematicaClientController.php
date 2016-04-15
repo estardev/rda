@@ -537,6 +537,8 @@ class SistematicaClientController extends Controller
                 $iter->setDatafornita(false);
                 $em->persist($iter);
 
+                //todo in base alla $categoriamerciologica predisporre un nuovo iter con da stato gestav a stato gestav.
+
 
                 // scrivo il numero di protocollo sulla richiesta se è nuova
                 if ($tipologia == "Nuova") {

@@ -309,16 +309,25 @@ class FormTemplateController extends Controller
         $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 1);
         $editForm = $res[0];
 
-        $pres=$richiesta->getPresentato();
 
-        if($pres==14){
+
+        if(is_null($richiesta->getNumeroprotocollo())){
+            $tipologia="Nuova";
+        } elseif($richiesta->getPresentato()==14){
             $tipologia="Documentazione aggiuntiva";
-        } elseif ($pres==15){
+        } elseif ($richiesta->getPresentato()==15){
             $tipologia="Documentazione richiesta da RUP";
         }
-        else {
-            $tipologia = "Nuova";
-        }
+
+    //      $pres=$richiesta->getPresentato();
+    //    if($pres==14){
+    //        $tipologia="Documentazione aggiuntiva";
+    //    } elseif ($pres==15){
+    //        $tipologia="Documentazione richiesta da RUP";
+    //    }
+    //    else {
+    //        $tipologia = "Nuova";
+    //    }
 
         //FG20151028 modifica per i diritti: prendiamo i diritti
 //        $usercheck = $this->get("usercheck.notify");
@@ -443,7 +452,13 @@ class FormTemplateController extends Controller
 
         if(is_null($richiesta->getNumeroprotocollo())){
             $tipologia="Nuova";
-        } else $tipologia="Documentazione aggiuntiva";
+        } elseif($richiesta->getPresentato()==14){
+            $tipologia="Documentazione aggiuntiva";
+        } elseif ($richiesta->getPresentato()==15){
+            $tipologia="Documentazione richiesta da RUP";
+        }
+
+
 
 
         $editForm->handleRequest($request);
