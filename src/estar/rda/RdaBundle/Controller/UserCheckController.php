@@ -184,6 +184,9 @@ class UserCheckController extends Controller
             if ($diritto['valtec'] >0 ) $dirittiRichiesta->setIsVT(true);
         }
         $dirittiRichiesta->setUser($utente);
+        //FG20160415 mettiamo anche la categoria
+        $categoriaDB = $this->em->getRepository('estarRdaBundle:Categoria')->find($categoria);
+        $dirittiRichiesta->setCategoria($categoriaDB);
         return $dirittiRichiesta;
         //vecchio codice di Demetrio
         //$idgruppoutente = $this->getIdUtenteGruppoUtente();
@@ -199,5 +202,33 @@ class UserCheckController extends Controller
 
     }
 
+
+    /**
+     * Ritorna tutti i diritti di tutte le categorie per ogni utente
+     * @return array(DirittiRichiesta)
+     */
+    public function dirittiByUtente() {
+
+        $utente = $this->getUtente();
+        $idUtente =  $utente->getId();
+
+        $query = $this->em->createQuery('SELECT cd.idcategoria
+                                    FROM estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Gruppoutente gu, estarRdaBundle:Utentegruppoutente ugu
+                                    WHERE ugu.idgruppoutente = gu.id
+                                    AND cg.idgruppoutente = gu.id
+                                    AND ugu.idutente = :idUtente
+                                    ')
+
+            ->setparameter('idUtente', $idUtente);
+
+        $toReturn = array();
+        $categorie = $query->getResult();
+
+        foreach($categorie as $categoria) {
+            array_push($toReturn, $this->allRole($categoria));
+        }
+
+
+    }
 
 }
