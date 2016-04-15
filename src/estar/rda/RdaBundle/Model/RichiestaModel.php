@@ -34,7 +34,8 @@ class RichiestaModel
     const STATUS_ANNULLATA_ABS = "annullata_ABS";
     const STATUS_EVASA_ABS = "evasa_ABS";
 
-    const STATUSABS_RIGETTO = "Rigettata da ABS";
+    const STATUSABS_RIGETTO = "Rigettata dal controllo Tecnico ABS";
+    const STATUSABS_RIGETTO_AMM = "Rigettata dal controllo Amministrativo ABS";
     const STATUSABS_ASSEGNATAPROGRAMMAZIONE = "In Programmazione";
     const STATUSABS_VALUTAZIONE = "In valutazione";
     const STATUSABS_AGGIUDICAZIONE = "Aggiudicazione";
@@ -491,8 +492,9 @@ class RichiestaModel
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
+
             case '040':
-                //rigetto pratica
+                //rigetto pratica controllo tecnico
                 //La richiesta passa in stato di rifiutata ABS
                 if ($articleSM->can('rigettata_ABS')) {
                     $iter= new Iter();
@@ -501,6 +503,37 @@ class RichiestaModel
                     $iter->setAstato($articleSM->getState());
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSABS_RIGETTO);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dateTime);
+                    $iter->setIdutente($utente);
+                    $iter->setDatafornita($dataFornita);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $richiesta->setPresentato(11);
+                    $this->em->persist($richiesta);
+                    $this->em->persist($iter);
+                    $this->em->flush();
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
+                }
+                $risposta->setDataRisposta($dataRisposta);
+                return $risposta;
+
+            case '041':
+                //rigetto pratica controllo amministrativo
+                //La richiesta passa in stato di rifiutata ABS
+                if ($articleSM->can('rigettata_ABS')) {
+                    $iter= new Iter();
+                    $iter->setDastato($articleSM->getState());
+                    $articleSM->apply('rigettata_ABS');
+                    $iter->setAstato($articleSM->getState());
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSABS_RIGETTO_AMM);
                     $iter->setIdrichiesta($richiesta);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dateTime);
