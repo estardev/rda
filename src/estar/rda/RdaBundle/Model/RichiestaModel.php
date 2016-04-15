@@ -465,7 +465,7 @@ class RichiestaModel
             case '030':
                 //attesa documentazione aggiuntiva
                 //La richiesta passa in stato di valutazione amministrativa
-                if ($articleSM->can('rifiutata_amm_ABS')) {
+                if ($articleSM->can('rifiutata_amm_ABS') or $richiesta->getStatus()=='da_inviata_ABS') {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rifiutata_amm_ABS');
