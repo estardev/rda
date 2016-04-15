@@ -82,17 +82,16 @@ class HomePageController extends Controller
         // se ci sono operazioni da fare torna alla homepage di riepilogo,
         // se non ci sono operazioni da fare ed è settata la categoria torna nella categoria
 
-        $usercheck = $this->get("usercheck.notify");
-        $categoriaabilitato = $usercheck->dirittiUtente();
-        dump($categoriaabilitato);
-
+       // $usercheck = $this->get("usercheck.notify");
+       // $categoriaabilitato = $usercheck->dirittiUtente();
+       // dump($categoriaabilitato);
+//
         $idCategoria = $this->get('session')->get('homepageSelectCategoria');
 
         if(!empty($nValAmm) or !empty($nDainv) or !empty($nBozza) or !empty($nValtec)){
             return $this->render('estarRdaBundle:HomePage:index.html.twig', array(
                 'richiesta' => $richiesta,
                 'categoria'=> $categoria,
-                'categoriaabilitato' => $categoriaabilitato,
                 'utente' => ucfirst($utenteSessione),
                 'nbozza' => $nBozza,
                 'nvaltec' => $nValtec,
