@@ -524,7 +524,7 @@ class FormTemplateService
                 $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
                 //TODO non riesco a tirare su la statemachine e quindi ho preso l'ultimo stato dalla richiesta
                 $stato = $richiesta->getStatus();
-                if ($stato == 'inviata_ABS') {
+                if ($stato == 'inviata_ABS' or $stato =='rigetto_ABS') {
                     $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'disabled' => 'disabled', 'icon' => 'glyphicon glyphicon-ok')));
                 } else {
                     $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'icon' => 'glyphicon glyphicon-ok')));
