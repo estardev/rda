@@ -64,7 +64,7 @@ class UserCheckController extends Controller
                                     AND ugu.idutente = :idUtente')
             ->setparameter('idUtente', $idUtente);
 
-        $dirittiutenti = $query->getResult();
+        return $query->getResult();
     }
 
 
