@@ -65,6 +65,22 @@ class HomePageController extends Controller
        //                             AND cg.validatoretecnico=1");
        // $nValtec = $query1->getResult();
 
+        $query = $em->
+        createQuery('select  c.id ,c.descrizione, a.nome as area
+                      from estarRdaBundle:Categoria c, estarRdaBundle:Area a
+                      where c.idarea = a.id
+                      and c.id in (select IDENTITY(cg.idcategoria) from estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Utentegruppoutente ugu
+                        where cg.idgruppoutente = ugu.idgruppoutente
+                        and ugu.idutente = :idutente)')
+            ->setParameter('idutente', $utenteSessione);
+//                $query = $this->em->
+//                        createQuery('select v.idcategoria as id, v.descrizionecategoria as descrizione, v.nomearea as area from
+//                          estarRdaBundle:Vcategoriadirittiutente v where v.idutente= :utente')
+//                    ->setParameter('utente', $utenteSessione);
+        $categoria=$query->getResult();
+
+        dump($categoria);
+
         $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.status='attesa_val_amm' AND c.id=r.idcategoria
