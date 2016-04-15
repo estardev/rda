@@ -9,6 +9,7 @@
 namespace estar\rda\RdaBundle\Model;
 
 use estar\rda\RdaBundle\Entity\Campo;
+use estar\rda\RdaBundle\Entity\Categoria;
 use estar\rda\RdaBundle\Entity\Utente;
 
 /** Classe che rappresenta i diritti di una richiesta
@@ -17,17 +18,29 @@ use estar\rda\RdaBundle\Entity\Utente;
 class DirittiRichiesta
 {
 
+    /**
+     * @var bool
+     */
     private $isAI;
 
-
+    /**
+     * @var bool
+     */
     private $isVA;
 
-
+    /**
+     * @var bool
+     */
     private $isVT;
     /**
      * @var Utente
      */
     private $user;
+
+    /**
+     * @var Categoria
+     */
+    private $categoria;
 
     /**
      * @return Utente
@@ -98,6 +111,23 @@ class DirittiRichiesta
         $this->isVT = $isVT;
         return $this;
     }
+
+    /**
+     * @return Categoria
+     */
+    public function getCategoria()
+    {
+        return $this->categoria;
+    }
+
+    /**
+     * @param Categoria $categoria
+     */
+    public function setCategoria($categoria)
+    {
+        $this->categoria = $categoria;
+    }
+
 
     /**
      * DirittiRichiesta constructor.
