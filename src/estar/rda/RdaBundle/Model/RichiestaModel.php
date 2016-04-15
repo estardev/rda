@@ -396,6 +396,8 @@ class RichiestaModel
         $factory = $this->container->get('sm.factory');
         $articleSM = $factory->get($richiesta, 'rda');
 
+        $iter= new Iter();
+
         switch($codicestato){
         //    case '010':
         //        //valutazione tecnica
@@ -496,7 +498,7 @@ class RichiestaModel
             case '040':
                 //rigetto pratica controllo tecnico
                 //La richiesta passa in stato di rifiutata ABS
-                if ($articleSM->can('rigettata_ABS')) {
+                if ($articleSM->can('rigettata_ABS') or $richiesta->getStatus()=='rigetto_ABS') {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rigettata_ABS');
@@ -527,7 +529,7 @@ class RichiestaModel
             case '041':
                 //rigetto pratica controllo amministrativo
                 //La richiesta passa in stato di rifiutata ABS
-                if ($articleSM->can('rigettata_ABS')) {
+                if ($articleSM->can('rigettata_ABS') or $richiesta->getStatus()=='rigetto_ABS') {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rigettata_ABS');
@@ -557,7 +559,7 @@ class RichiestaModel
 
             case '050':
                 //Assegnata programmazione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS or $iter->getAstatogestav()==RichiestaModel::STATUSABS_ASSEGNATAPROGRAMMAZIONE) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -586,7 +588,7 @@ class RichiestaModel
                 return $risposta;
             case '060':
                 //Istruttoria
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS or $iter->getAstatogestav()==RichiestaModel::STATUSABS_ISTRUTTORIA) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -615,7 +617,7 @@ class RichiestaModel
                 return $risposta;
             case '070':
                 //Indizione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS AND !empty($codicegara)) {
+                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS AND !empty($codicegara)) or $iter->getAstatogestav()==RichiestaModel::STATUSABS_INDIZIONE) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -648,7 +650,7 @@ class RichiestaModel
 
             case '080':
                 //Valutazione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS or $iter->getAstatogestav()==RichiestaModel::STATUSABS_VALUTAZIONE) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -677,7 +679,7 @@ class RichiestaModel
 
             case '090':
                 //Aggiudicazione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS or $iter->getAstatogestav()==RichiestaModel::STATUSABS_AGGIUDICAZIONE) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -706,7 +708,7 @@ class RichiestaModel
 
             case '100':
                 //Chiusura (iter terminato)
-                if ($articleSM->can('chiusura_ABS')) {
+                if ($articleSM->can('chiusura_ABS') or $iter->getAstatogestav()==RichiestaModel::STATUSABS_CHIUSA) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('chiusura_ABS');
@@ -737,7 +739,7 @@ class RichiestaModel
 
             case '110':
                 //Annullato ABS
-                if ($articleSM->can('annullamento_ABS')) {
+                if ($articleSM->can('annullamento_ABS') or $iter->getAstatogestav()==RichiestaModel::STATUSABS_ANNULLATA) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
                     //$articleSM->apply('annullamento_ABS');
@@ -769,7 +771,7 @@ class RichiestaModel
 
             case '120':
                 //Archiviato ABS
-                if ($articleSM->can('chiusura_ABS')) {
+                if ($articleSM->can('chiusura_ABS') or $iter->getAstatogestav()==RichiestaModel::STATUSABS_ARCHIVIATA) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('chiusura_ABS');
@@ -808,7 +810,7 @@ class RichiestaModel
 
                 //attesa documentazione aggiuntiva RIP
                 //La richiesta passa in stato di valutazione amministrativa
-                if (($articleSM->can('rifiutata_amm_ABS')) AND !empty($codicegara)) {
+                if ((($articleSM->can('rifiutata_amm_ABS')) AND !empty($codicegara)) or $iter->getAstatogestav()==RichiestaModel::STATUSABS_RICHIESTADOCUMENTAZIONE_RUP) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rifiutata_amm_ABS');
