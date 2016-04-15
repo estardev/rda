@@ -38,6 +38,7 @@ class RichiestaModel
     const STATUSABS_RIGETTO_AMM = "Rigettata dal controllo Amministrativo ABS";
     const STATUSABS_ASSEGNATAPROGRAMMAZIONE = "In Programmazione";
     const STATUSABS_VALUTAZIONE = "In valutazione";
+    const STATUSABS_VALUTAZIONE_AMM = "In valutazione amministrativa";
     const STATUSABS_AGGIUDICAZIONE = "Aggiudicazione";
     const STATUSABS_ISTRUTTORIA = "In Istruttoria";
     const STATUSABS_INDIZIONE = "Gara Indetta";
@@ -430,37 +431,52 @@ class RichiestaModel
         //        }
         //        $risposta->setDataRisposta($dataRisposta);
         //        return $risposta;
-        //    case '020':
-        //        //valutazione amministrativa
-        //        //La richiesta passa in stato di valutazione amministrativa
-        //        if ($articleSM->can('rifiutata_amm_ABS')) {
-        //            $iter= new Iter();
-        //            $iter->setDastato($articleSM->getState());
-        //            $articleSM->apply('rifiutata_amm_ABS');
-        //            $iter->setAstato($articleSM->getState());
-        //            $iter->setDastatogestav($richiesta->getStatusgestav());
-        //            $iter->setAstatogestav($richiesta->getStatusgestav());
-        //            $iter->setIdrichiesta($richiesta);
-        //            $iter->setMotivazione($note);
-        //            $iter->setDataora($dateTime);
-        //            $iter->setIdutente($utente);
-        //            $iter->setDatafornita($dataFornita);
-        //            $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-        //            $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-        //            $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-        //            $richiesta->setPresentato(9);
-        //            $this->em->persist($richiesta);
-        //            $this->em->persist($iter);
-        //            $this->em->flush();
-        //
-        //        } else {
-        //            //Non posso transire in quello stato
-        //            $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
-        //            $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-        //            $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
-        //        }
-        //        $risposta->setDataRisposta($dataRisposta);
-        //        return $risposta;
+               case '020':
+                //valutazione amministrativa
+                //La richiesta passa in stato di valutazione amministrativa
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS) {
+                    $iter= new Iter();
+                    $iter->setDastato($richiesta->getStatus());
+                    $iter->setAstato($richiesta->getStatus());
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSABS_VALUTAZIONE_AMM);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dateTime);
+                    $iter->setIdutente($utente);
+                    $iter->setDatafornita($dataFornita);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $this->em->persist($iter);
+                    $this->em->flush();
+                    //$iter= new Iter();
+                    //$iter->setDastato($articleSM->getState());
+                    //$articleSM->apply('rifiutata_amm_ABS');
+                    //$iter->setAstato($articleSM->getState());
+                    //$iter->setDastatogestav($richiesta->getStatusgestav());
+                    //$iter->setAstatogestav($richiesta->getStatusgestav());
+                    //$iter->setIdrichiesta($richiesta);
+                    //$iter->setMotivazione($note);
+                    //$iter->setDataora($dateTime);
+                    //$iter->setIdutente($utente);
+                    //$iter->setDatafornita($dataFornita);
+                    //$risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    //$risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    //$risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    //$richiesta->setPresentato(9);
+                    //$this->em->persist($richiesta);
+                    //$this->em->persist($iter);
+                    //$this->em->flush();
+
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica non può transire nello stato richiesto");
+                }
+                $risposta->setDataRisposta($dataRisposta);
+                return $risposta;
 
             case '030':
                 //attesa documentazione aggiuntiva
