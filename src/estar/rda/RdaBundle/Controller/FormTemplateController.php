@@ -511,7 +511,7 @@ class FormTemplateController extends Controller
 
         $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => "Annullamento")));
         $AnnullaSoapForm = $formbuilder->getForm();
-        $AnnullaSoapForm->add('submit', 'submit', array('label' => ' Annulla', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));
+        $AnnullaSoapForm->add('submit', 'submit', array('label' => 'Distruggi Pratica ', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));
 
 
 

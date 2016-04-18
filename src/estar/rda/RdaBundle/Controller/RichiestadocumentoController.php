@@ -176,8 +176,15 @@ class RichiestadocumentoController extends Controller
             throw $this->createNotFoundException('Unable to find FormTemplate entity.');
         }
 
+        $formbuilder = $this->createFormBuilder();
+        $formbuilder->setAction($this->generateUrl('documento_byCategoria', array('idRichiesta' => $idRichiesta, 'idCategoria' => $idCategoria)));
+        $backForm = $formbuilder->getForm();
+        $backForm->add('back', 'submit', array('label' => ' Indietro', 'attr' => array('icon' => 'glyphicon glyphicon-arrow-left')));
+
+
         return $this->render('estarRdaBundle:FormTemplate:new.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'back_form' => $backForm->createView(),
 
         ));
     }
@@ -267,7 +274,9 @@ class RichiestadocumentoController extends Controller
 
 
         return $this->render('estarRdaBundle:Richiestadocumento:edit.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'idRichiesta' => $idRichiesta,
+            'idCategoria' => $idCategoria,
         ));
     }
 

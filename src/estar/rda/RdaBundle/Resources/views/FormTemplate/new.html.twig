@@ -3,6 +3,12 @@
 
 {% block body -%}
     {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
-    {{ form(back_form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+    {% if back_form is defined %}
+        {{ form(back_form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {% endif %}
+
+
+
 {% endblock %}
 
