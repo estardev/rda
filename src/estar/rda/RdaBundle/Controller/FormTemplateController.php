@@ -306,7 +306,13 @@ class FormTemplateController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
-        $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 1);
+        $stato = $richiesta->getStatus();
+        if ($stato == 'inviata_ABS' or $stato =='rigetto_ABS') {
+            $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 2);
+
+        } else{
+            $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 1);
+        }
         $editForm = $res[0];
 
 
