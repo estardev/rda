@@ -2,12 +2,15 @@
 
 {% block body -%}
     <div class="panel panel-default" xmlns="http://www.w3.org/1999/html">
+
+
         <div class="panel-heading"><h4>Allegati Liberi</h4></div>
 
         <table class="table">
             <thead>
             <tr>
                 <th>Descrizione</th>
+                <th>Percorso</th>
                 <th>Azioni</th>
             </tr>
             </thead>
@@ -17,29 +20,27 @@
                     <td>{{ entity.descrizione }}</td>
                     <td>
                         <div class="btn-group" role="group">
-
-
                             <form class="form" method="post" enctype="multipart/form-data">
 
-                            <input onclick="$('#docfile').click();" type="text" name="subfile" id="subfile"
-                                   class="form-control" style="display: inline;width:50%"
-                                   value="{{ (vich_uploader_asset(entity, 'docFile')) }}"/>
-                            <input type="file" name="docfile" class="form-control "
-                                   style="visibility:hidden;" id="docfile"/>
-                            <script>
-                                $('#docfile').change(function () {
-                                    var path = $(this).val();
-                                    var file = path.replace("C:\\fakepath\\", "");
-                                    $subfile = $('#subfile');
-                                    $subfile.val(file)
-                                            .html(file)
-                                            .text(file);
-                                });
+                                <input onclick="$('#docfile').click();" type="text" name="subfile" id="subfile"
+                                       class="form-control" style="display: inline;width:99%"
+                                       value="{{ (vich_uploader_asset(entity, 'docFile')) }}"/>
+                                <input type="file" name="docfile" class="form-control "
+                                       style="display: inline;width:1%; visibility:hidden;" id="docfile"/>
+                                <script>
+                                    $('#docfile').change(function () {
+                                        var path = $(this).val();
+                                        var file = path.replace("C:\\fakepath\\", "");
+                                        $subfile = $('#subfile');
+                                        $subfile.val(file)
+                                                .html(file)
+                                                .text(file);
+                                    });
 
-                            </script>
+                                </script>
 
 
-                            {# in caso di documento gi� presente deve essere presente l'upload con il pulsante "sostituisci"#}
+                                {# in caso di documento gi� presente deve essere presente l'upload con il pulsante "sostituisci"#}
 
                             </form>
                         </div>
@@ -47,12 +48,12 @@
                     <td>
                         <form method="get">
                             <button type="submit" class="btn btn-default"
-                                    ><span
+                            ><span
                                         class="glyphicon glyphicon-download"
                                         aria-hidden="true"></span><a
                                         href="{{ app.request.basePath }}/{{ (vich_uploader_asset(entity, 'docFile')) }}"
                                         download
-                                        > Scarica</a>
+                                > Scarica</a>
                             </button>
 
                         </form>
@@ -63,10 +64,13 @@
             {% endfor %}
             </tbody>
         </table>
-        <h1>Aggiunta nuovo allegato</h1>
     </div>
     <div class="panel-heading"><h4>Aggiunta nuovo Allegato</h4>
         {{ form(create_form, {'attr': {'novalidate': 'novalidate'}}) }}
     </div>
-    <a href="{{ path('richiesta_bycategoria', { 'idCategoria': idCategoria}) }}"> Indietro alla Lista</a></button>
+   <div class="bottoniera">
+       <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-arrow-left"
+                                                           aria-hidden="true"></span><a href="{{ path('richiesta_bycategoria', { 'idCategoria': idCategoria}) }}"> Indietro</a></button>
+   </div>
+
 {% endblock %}
