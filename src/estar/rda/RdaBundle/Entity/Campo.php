@@ -537,8 +537,8 @@ class Campo
     public static function getPossibleEnumValuesFiglio()
     {
         $choices = array(
-            'integer' => 'Numerico',
-            'text' => 'Testo');
+            Campo::TIPO_NUMERICO => 'Numerico',
+            Campo::TIPO_TESTO => 'Testo');
         return $choices;
     }
 
