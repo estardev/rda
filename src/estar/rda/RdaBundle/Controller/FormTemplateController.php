@@ -306,28 +306,34 @@ class FormTemplateController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
-        $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 1);
+        $stato = $richiesta->getStatus();
+        if ($stato == 'inviata_ABS' or $stato =='rigetto_ABS') {
+            $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 2);
+
+        } else{
+            $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 1);
+        }
         $editForm = $res[0];
 
 
 
-        if(is_null($richiesta->getNumeroprotocollo())){
-            $tipologia="Nuova";
-        } elseif($richiesta->getPresentato()==14){
-            $tipologia="Documentazione aggiuntiva";
-        } elseif ($richiesta->getPresentato()==15){
-            $tipologia="Documentazione richiesta da RUP";
-        }
-
-    //      $pres=$richiesta->getPresentato();
-    //    if($pres==14){
+    //    if(is_null($richiesta->getNumeroprotocollo())){
+    //        $tipologia="Nuova";
+    //    } elseif($richiesta->getPresentato()==14){
     //        $tipologia="Documentazione aggiuntiva";
-    //    } elseif ($pres==15){
+    //    } elseif ($richiesta->getPresentato()==15){
     //        $tipologia="Documentazione richiesta da RUP";
     //    }
-    //    else {
-    //        $tipologia = "Nuova";
-    //    }
+
+          $pres=$richiesta->getPresentato();
+        if($pres==14){
+            $tipologia="Documentazione aggiuntiva";
+        } elseif ($pres==15){
+            $tipologia="Documentazione richiesta da RUP";
+        }
+        else {
+            $tipologia = "Nuova";
+        }
 
         //FG20151028 modifica per i diritti: prendiamo i diritti
 //        $usercheck = $this->get("usercheck.notify");
@@ -450,12 +456,14 @@ class FormTemplateController extends Controller
         $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 1);
         $editForm = $res[0];
 
-        if(is_null($richiesta->getNumeroprotocollo())){
-            $tipologia="Nuova";
-        } elseif($richiesta->getPresentato()==14){
+        $pres=$richiesta->getPresentato();
+        if($pres==14){
             $tipologia="Documentazione aggiuntiva";
-        } elseif ($richiesta->getPresentato()==15){
+        } elseif ($pres==15){
             $tipologia="Documentazione richiesta da RUP";
+        }
+        else {
+            $tipologia = "Nuova";
         }
 
 
@@ -509,7 +517,7 @@ class FormTemplateController extends Controller
 
         $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => "Annullamento")));
         $AnnullaSoapForm = $formbuilder->getForm();
-        $AnnullaSoapForm->add('submit', 'submit', array('label' => ' Annulla', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));
+        $AnnullaSoapForm->add('submit', 'submit', array('label' => 'Distruggi Pratica ', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));
 
 
 

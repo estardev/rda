@@ -338,10 +338,20 @@ class FormTemplateService
             //FG 20151016 gestione dei campi della richiesta
 
             if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
-                $builder->add("titolo", "text", array(
-                    'label' => "Titolo",
-                    'data' => $entity->getTitolo()
-                ));
+                if ($mode == FormTemplateService::MODE_PRINT) {
+                    $builder->add("titolo", "text", array(
+                        'label' => "Titolo",
+                        'data' => $entity->getTitolo(),
+                        'read_only' => true,
+                        'disabled' => "disabled"
+                    ));
+                }
+                else{
+                    $builder->add("titolo", "text", array(
+                        'label' => "Titolo",
+                        'data' => $entity->getTitolo()
+                    ));
+                }
                 $builder->get('titolo')
                     ->addModelTransformer(new CallbackTransformer(
 
@@ -362,10 +372,20 @@ class FormTemplateService
 
                         }
                     ));
-                $builder->add("descrizione", "textarea", array(
-                    'label' => "Descrizione",
-                    'data' => $entity->getDescrizione()
-                ));
+                if ($mode == FormTemplateService::MODE_PRINT) {
+                    $builder->add("descrizione", "textarea", array(
+                        'label' => "Descrizione",
+                        'data' => $entity->getDescrizione(),
+                        'read_only' => true,
+                        'disabled' => "disabled"
+                    ));
+                }
+                else{
+                    $builder->add("descrizione", "textarea", array(
+                        'label' => "Descrizione",
+                        'data' => $entity->getDescrizione()
+                    ));
+                }
                 $builder->get('descrizione')
                     ->addModelTransformer(new CallbackTransformer(
 
@@ -413,7 +433,8 @@ class FormTemplateService
                         $builder->add($campo['nome'] . '-' . $campo['idcampo'], 'text', array(
                             'label' => $campo['descrizione'],
                             'data' => $campo['valore'],
-                            'read_only' => true
+                            'read_only' => true,
+                            'disabled' => "disabled"
                         ));
 
 
@@ -459,7 +480,8 @@ class FormTemplateService
                         $builder->add($campo['nome'] . '-' . $campo['idcampo'], $campo['tipo'], array(
                             'label' => $campo['descrizione'],
                             'data' => $campo['valore'],
-                            'read_only' => true
+                            'read_only' => true,
+                            'disabled' => "disabled"
                         ));
                     } else {
 
@@ -524,7 +546,7 @@ class FormTemplateService
                 $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
                 //TODO non riesco a tirare su la statemachine e quindi ho preso l'ultimo stato dalla richiesta
                 $stato = $richiesta->getStatus();
-                if ($stato == 'inviata_ABS') {
+                if ($stato == 'inviata_ABS' or $stato =='rigetto_ABS') {
                     $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'disabled' => 'disabled', 'icon' => 'glyphicon glyphicon-ok')));
                 } else {
                     $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'icon' => 'glyphicon glyphicon-ok')));

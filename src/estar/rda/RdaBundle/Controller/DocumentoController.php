@@ -120,7 +120,9 @@ class DocumentoController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Aggiungi nuovo Allegato'));
+        $form->add('submit', 'submit', array(
+            'label' => ' Aggiungi nuovo Allegato',
+            'attr' => array('icon' => 'glyphicon glyphicon-open')));
 
         return $form;
     }

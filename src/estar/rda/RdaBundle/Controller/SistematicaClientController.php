@@ -511,6 +511,23 @@ class SistematicaClientController extends Controller
             $urlGestav=$esito['urlprotocollo'];
             $dataprotocollo=$esito['dataprotocollo'];
 
+            /*
+             * Valutazione amministrativa:
+                    15 Beni economali,
+                    16 Arredi,
+                    8  Servizi Tecnico Amministrativi e Sanitari,
+                    19 Servizi Socio Sanitari
+               Valutazione tecnica:
+                    Farmaci (importo Gara > 40.000 EU),
+                    Dispositivi Medici (importo Gara > 40.000 EU),
+                    Diagnostici (importo Gara > 40.000 EU),
+                    Attrezzature sanitarie,
+                    Servizi manutenzione Attrezzature Sanitarie,
+                    Acquisto Software, Manutenzione Software,
+                    Attrezzature informatiche,
+                    Servizi manutenzione Attrezzature Informatiche
+             */
+
             $factory = $this->container->get('sm.factory');
             $articleSM = $factory->get($richiesta, 'rda');
             if ($articleSM->can('inviato_ABS')) {
@@ -522,6 +539,13 @@ class SistematicaClientController extends Controller
                 $iter->setIdrichiesta($richiesta);
                 if($tipologia=="Nuova"){
                     $iter->setMotivazione("Nuova richiesta inviata e protocollata");
+                    if ($categoria->getId()==15 or $categoria->getId()==16 or $categoria->getId()==8 or $categoria->getId()==19){
+                        $iter->setAstatogestav('Validazione Amministrativa in ABS');
+                    }
+                    else{
+                        $iter->setAstatogestav('Validazione Tecnica in ABS');
+                    }
+
                 }
                 elseif ($tipologia == "Documentazione aggiuntiva"){
                     $iter->setMotivazione("Inviata Documentazione aggiuntiva per la pratica ".$idRichiesta);
@@ -536,9 +560,6 @@ class SistematicaClientController extends Controller
                 $iter->setDataprotocollo($dataprotocollo);
                 $iter->setDatafornita(false);
                 $em->persist($iter);
-
-                //todo in base alla $categoriamerciologica predisporre un nuovo iter con da stato gestav a stato gestav.
-
 
                 // scrivo il numero di protocollo sulla richiesta se è nuova
                 if ($tipologia == "Nuova") {
