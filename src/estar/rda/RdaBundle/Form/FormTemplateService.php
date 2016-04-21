@@ -104,7 +104,9 @@ class FormTemplateService
 
             $builder->add("titolo", "text", array(
                 'label' => "Titolo",
-                'data' => "Specificare un oggetto per la propria richiesta"
+                'attr' => array(
+                    'placeholder'=> "Specificare un oggetto per la propria richiesta"),
+                'constraints' => new NotNull()
             ));
             $builder->get('titolo')
                 ->addModelTransformer(new CallbackTransformer(
@@ -128,8 +130,10 @@ class FormTemplateService
                 ));
             $builder->add("descrizione", "textarea", array(
                 'label' => "Descrizione",
-                'data' => "indicare descrizione, azienda sanitaria e UOC destinataria"
-            ));
+                'attr' => array(
+                    'placeholder'=> "indicare descrizione, azienda sanitaria e UOC destinataria"),
+                'constraints' => new NotNull()
+                     ));
             $builder->get('descrizione')
                 ->addModelTransformer(new CallbackTransformer(
 
