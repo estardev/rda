@@ -488,10 +488,16 @@ class ClientSistematica
                 $responseXML=str_replace('</SOAP-ENV:Body></SOAP-ENV:Envelope>','',$responseXML);
 
                 $xml=simplexml_load_string($responseXML);
-                $idChiaveUnivoca= $xml->id;
-                $numProt = $xml->identifier;
-                $identifierDate=$xml->identifierDate;
-                $viewUrl=$xml->viewUrl;
+                if($xml->id or $xml->identifier or $xml->identifierDate or $xml->viewUrl){
+                    $idChiaveUnivoca= $xml->id;
+                    $numProt = $xml->identifier;
+                    $identifierDate=$xml->identifierDate;
+                    $viewUrl=$xml->viewUrl;
+                }
+                else{
+                    return array('esito'=>false, 'codice'=> 1 ); //trovato un fault
+                }
+
 
                 return array('esito'=>true ,'codice'=> 0 ,'protocollo'=> $numProt, 'dataprotocollo'=> $identifierDate, 'chiavesistematica'=>$idChiaveUnivoca, 'urlprotocollo'=>$viewUrl);
             }
