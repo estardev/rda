@@ -807,7 +807,7 @@ class RichiestaModel
 
             case '110':
                 //Annullato ABS
-                if ($articleSM->can('annullamento_ABS') or $iter->getAstatogestav()==RichiestaModel::STATUSABS_ANNULLATA) {
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS or $articleSM->can('annullamento_ABS') or $iter->getAstatogestav()==RichiestaModel::STATUSABS_ANNULLATA) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
                     //$articleSM->apply('annullamento_ABS');
