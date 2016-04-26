@@ -358,7 +358,7 @@ class ClientSistematica
                <id>'.$this->getIdgestav().'</id>
             </reference>
             <reference>
-               <idgara>'.$this->getIdgara().'</idgara>
+               <id>'.$this->getIdgara().'</id>
             </reference>
                 </references>';
                 break;
