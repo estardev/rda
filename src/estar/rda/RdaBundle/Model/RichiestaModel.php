@@ -761,6 +761,7 @@ class RichiestaModel
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $richiesta->setPresentato(20);
+                    $richiesta->setStatusgestav(RichiestaModel::STATUSABS_AGGIUDICAZIONE);
                     $this->em->persist($richiesta);
                     $this->em->persist($iter);
                     $this->em->flush();
