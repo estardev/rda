@@ -36,16 +36,16 @@ class RichiestaModel
 
     const STATUSABS_RIGETTO = "Rigettata dal controllo Tecnico ABS";
     const STATUSABS_RIGETTO_AMM = "Rigettata dal controllo Amministrativo ABS";
-    const STATUSABS_ASSEGNATAPROGRAMMAZIONE = "In Programmazione";
-    const STATUSABS_VALUTAZIONE = "In valutazione";
-    const STATUSABS_VALUTAZIONE_AMM = "In valutazione amministrativa";
-    const STATUSABS_VALUTAZIONE_TEC = "In valutazione tecnica";
-    const STATUSABS_AGGIUDICAZIONE = "Aggiudicazione";
+    const STATUSABS_ASSEGNATAPROGRAMMAZIONE = "In Programmazione ABS";
+    const STATUSABS_VALUTAZIONE = "In valutazione ABS";
+    const STATUSABS_VALUTAZIONE_AMM = "In valutazione amministrativa ABS";
+    const STATUSABS_VALUTAZIONE_TEC = "In valutazione tecnica ABS";
+    const STATUSABS_AGGIUDICAZIONE = "Aggiudicazione ABS";
     const STATUSABS_ATTESA_TEC = "Attesa documentazione aggiuntiva Tecnica";
     const STATUSABS_ATTESA_AMM = "Attesa documentazione aggiuntiva Amministrativa";
-    const STATUSABS_ISTRUTTORIA = "In Istruttoria";
+    const STATUSABS_ISTRUTTORIA = "In Istruttoria ABS";
     const STATUSABS_INDIZIONE = "Gara Indetta";
-    const STATUSABS_ANNULLATA = "Conferma pratica annullata.";
+    const STATUSABS_ANNULLATA = "Conferma pratica annullata ABS";
     const STATUSABS_ARCHIVIATA = "Archiviata da ABS";
     const STATUSABS_CHIUSA = "Chiusa da ABS per termine Iter";
     const STATUSABS_RICHIESTADOCUMENTAZIONE_RUP = "Richiesta documentazione aggiuntiva da parte del RUP all'avvio della gara";
