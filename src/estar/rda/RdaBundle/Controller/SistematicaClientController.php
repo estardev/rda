@@ -541,9 +541,11 @@ class SistematicaClientController extends Controller
                     $iter->setMotivazione("Nuova richiesta inviata e protocollata");
                     if ($categoria->getId()==15 or $categoria->getId()==16 or $categoria->getId()==8 or $categoria->getId()==19){
                         $iter->setAstatogestav('Validazione Amministrativa in ABS');
+                        $richiesta->setStatusgestav('Validazione Amministrativa in ABS');
                     }
                     else{
                         $iter->setAstatogestav('Validazione Tecnica in ABS');
+                        $richiesta->setStatusgestav('Validazione Tecnica in ABS');
                     }
 
                 }
@@ -560,6 +562,7 @@ class SistematicaClientController extends Controller
                 $iter->setDataprotocollo($dataprotocollo);
                 $iter->setDatafornita(false);
                 $em->persist($iter);
+                $em->persist($richiesta);
 
                 // scrivo il numero di protocollo sulla richiesta se è nuova
                 if ($tipologia == "Nuova") {
