@@ -45,7 +45,7 @@ class RichiestaModel
     const STATUSABS_ATTESA_AMM = "Attesa documentazione aggiuntiva Amministrativa";
     const STATUSABS_ISTRUTTORIA = "In Istruttoria";
     const STATUSABS_INDIZIONE = "Gara Indetta";
-    const STATUSABS_ANNULLATA = "Pratica tornata in Istruttoria";
+    const STATUSABS_ANNULLATA = "Conferma pratica annullata.";
     const STATUSABS_ARCHIVIATA = "Archiviata da ABS";
     const STATUSABS_CHIUSA = "Chiusa da ABS per termine Iter";
     const STATUSABS_RICHIESTADOCUMENTAZIONE_RUP = "Richiesta documentazione aggiuntiva da parte del RUP all'avvio della gara";
