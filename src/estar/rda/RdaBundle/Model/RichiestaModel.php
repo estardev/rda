@@ -774,7 +774,7 @@ class RichiestaModel
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
-            case '100':
+            case '1000':
                 //Chiusura (iter terminato)
                 if ($articleSM->can('chiusura_ABS') or $iter->getAstatogestav()==RichiestaModel::STATUSABS_CHIUSA or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS ) {
                     $iter= new Iter();
