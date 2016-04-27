@@ -141,6 +141,7 @@ winzou_state_machine:
             - inviata_ABS
             - evasa_ABS
             - rigetto_ABS
+            - chiusa_ABS
             - annullata_ABS
         # list of all possible transitions:
         transitions:

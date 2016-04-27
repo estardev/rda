@@ -880,7 +880,7 @@ class RichiestaModel
 
                 //attesa documentazione aggiuntiva RIP
                 //La richiesta passa in stato di valutazione amministrativa
-                if ((($articleSM->can('rifiutata_amm_ABS')) AND !empty($codicegara)) or $iter->getAstatogestav()==RichiestaModel::STATUSABS_RICHIESTADOCUMENTAZIONE_RUP) {
+                if ((($articleSM->can('rifiutata_amm_ABS')) AND !empty($codicegara)) or $iter->getAstatogestav()==RichiestaModel::STATUSABS_RICHIESTADOCUMENTAZIONE_RUP or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS ) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rifiutata_amm_ABS');
