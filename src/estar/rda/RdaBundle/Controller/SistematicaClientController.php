@@ -551,9 +551,13 @@ class SistematicaClientController extends Controller
                 }
                 elseif ($tipologia == "Documentazione aggiuntiva"){
                     $iter->setMotivazione("Inviata Documentazione aggiuntiva per la pratica ".$idRichiesta);
+                    $iter->setAstatogestav("Inviata Documentazione Aggiuntiva");
+                    $iter->setDastatogestav($richiesta->getStatus());
                 }
                 elseif ($tipologia == "Documentazione richiesta da RUP"){
                     $iter->setMotivazione("Inviata Documentazione aggiuntiva per la gara ".$idgara);
+                    $iter->setAstatogestav("Inviata Documentazione Aggiuntiva");
+                    $iter->setDastatogestav($richiesta->getStatus());
                 }
                 $iter->setDataora(new \DateTime('now'));
                 $iter->setIdutente($this->getUser());
