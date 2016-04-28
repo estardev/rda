@@ -97,7 +97,7 @@ class Campo
         return $this->figlio;
     }
 
-    //FG20160317 SPERIMENTALE i campi in relazione tra loro e non più con il limite 1 padre -> 1 figlio
+    //FG20160317 SPERIMENTALE i campi in relazione tra loro e non piï¿½ con il limite 1 padre -> 1 figlio
 
     // ...
     /**
