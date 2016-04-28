@@ -445,13 +445,13 @@ class FormBuilderController extends Controller
             ->add("nome", "text", array(
                 'label' => "Nome",
                 'attr' => array(
-                    'placeholder'=> "Specificare il Nome del Campo"),
+                'placeholder'=> "Specificare il Nome del Campo"),
                 'constraints' => new NotNull()
             ))
             ->add("descrizione", "text", array(
                 'label' => "Descrizione",
                 'attr' => array(
-                    'placeholder'=> "Specificare la descrizione del campo"),
+                'placeholder'=> "Specificare la descrizione del campo"),
                 'constraints' => new NotNull()
             ))
             ->add("tipologia", "choice", array(
@@ -462,27 +462,18 @@ class FormBuilderController extends Controller
             ->add("obbligatorioInserzione", "choice", array(
                 'choices' => Campo::getPossibleEnumObblighi(),
                 'label' => "Obbligatorio Inserzione",
-                'data' => "3",
                 'expanded' => true
             ))
             ->add("obbligatorioValidazioneTecnica", "choice", array(
                 'choices' => Campo::getPossibleEnumObblighi(),
                 'label' => "Obbligatorio Validazione Tecnica",
-                'data' => "3",
                 'expanded' => true
             ))
             ->add("obbligatorioValidazioneAmministrativa", "choice", array(
                 'choices' => Campo::getPossibleEnumObblighi(),
                 'label' => "Obbligatorio Validazione Amministrativa",
-                'data' => "3",
                 'expanded' => true
             ))
-
-            //->add('padre', 'entity', array(
-            //    'class' => 'estarRdaBundle:Campo',
-            //    'label' => 'Padre',
-            //    'choice_label' => 'nomedescrizione',
-            //))
             ->add('submit', 'submit', array('label' => 'Crea Campo'))
             ->getForm();
 
@@ -498,7 +489,7 @@ class FormBuilderController extends Controller
 
     /**
      * Inserisce un nuovo campo
-     * @Route("/nuovo/{idCategoria}")
+     * @Route("/nuovoDB/{idCategoria}")
      * @Security("has_role('ROLE_ADMIN')")
      * @param string $idCategoria la categoria
      * @return Response A Response instance
@@ -513,12 +504,22 @@ class FormBuilderController extends Controller
         //Dopodichè ci andiamo a pescare i valori.
         $campi = $request->request->all();
         $nome = $campi['form']['nome'];
+        $descrizione = $campi['form']['descrizione'];
+        $tipologia = $campi['form']['tipologia'];
+        $inserzione =$campi['form']['obbligatorioInserzione'];
+        $valtec = $campi['form']['obbligatorioValidazioneTecnica'];
+        $valamm = $campi['form']['obbligatorioValidazioneAmministrativa'];
 
         //Settiamo e salviamo
+        $campo->setDescrizione($descrizione);
+        $campo->setIdcategoria($categoria);
+        $campo->setTipo($tipologia);
+        $campo->setObbligatorioinserzione($inserzione);
+        $campo->setObbligatoriovalidazionetecnica($valtec);
+        $campo->setObbligatoriovalidazioneamministrativa($valamm);
         $campo->setNome($nome);
+        $em->persist($campo);
         $em->flush();
-
-
 
         return $this->redirect($this->generateUrl('formbuilder_showByCategoria', array('idCategoria' => $idCategoria)));
     }

@@ -43,5 +43,5 @@ formbuilder_nuovo:
     defaults: { _controller: "estarRdaBundle:FormBuilder:crea" }
 
 formbuilder_nuovoDB:
-    path:     /nuovo/{idCategoria}
+    path:     /nuovoDB/{idCategoria}
     defaults: { _controller: "estarRdaBundle:FormBuilder:creaDB" }
