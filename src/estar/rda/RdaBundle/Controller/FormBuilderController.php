@@ -500,6 +500,13 @@ class FormBuilderController extends Controller
         $em = $this->getDoctrine()->getManager();
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
 
+        $query = $em->createQuery('SELECT MAX(c.ordinamento)
+                                    FROM estarRdaBundle:Campo c
+                                    WHERE c.idcategoria = :idcategoria')
+            ->setparameter('idcategoria', $idCategoria);
+        $ordine = $query->getSingleScalarResult();
+        $ordine +=1;
+
         $campo = new Campo();
         //Dopodichè ci andiamo a pescare i valori.
         $campi = $request->request->all();
@@ -510,6 +517,9 @@ class FormBuilderController extends Controller
         $valtec = $campi['form']['obbligatorioValidazioneTecnica'];
         $valamm = $campi['form']['obbligatorioValidazioneAmministrativa'];
 
+        $dateTime = new \DateTime();
+        $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
+
         //Settiamo e salviamo
         $campo->setDescrizione($descrizione);
         $campo->setIdcategoria($categoria);
@@ -517,7 +527,9 @@ class FormBuilderController extends Controller
         $campo->setObbligatorioinserzione($inserzione);
         $campo->setObbligatoriovalidazionetecnica($valtec);
         $campo->setObbligatoriovalidazioneamministrativa($valamm);
+        $campo->setOrdinamento($ordine);
         $campo->setNome($nome);
+        $campo->setDataattivazione($dateTime);
         $em->persist($campo);
         $em->flush();
 
@@ -535,6 +547,18 @@ class FormBuilderController extends Controller
      */
     public function eliminaAction($idCategoria, $idCampo)
     {
+        $em = $this->getDoctrine()->getManager();
+        $campo = $em->getRepository('estarRdaBundle:Campo')->find($idCampo);
+
+        $dateTime = new \DateTime();
+        $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
+
+        //Settiamo e salviamo
+        $campo->setDatadismissione($dateTime);
+        $em->flush();
+
+        //e ciao
+        return $this->redirect($this->generateUrl('formbuilder_showByCategoria', array('idCategoria' => $idCategoria)));
 
     }
 
