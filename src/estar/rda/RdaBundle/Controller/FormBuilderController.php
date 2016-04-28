@@ -400,7 +400,36 @@ class FormBuilderController extends Controller
     }
 
     //TODO: FARE DA QUI ALLA FINE!!!!!
+
     /**
+     * Modifica campo
+     * @Route("/edit/{idCategoria}/{idCampo}")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @param string $idCategoria la categoria
+     * @return Response A Response instance
+     *
+     */
+    public function editAction($idCategoria, $idCampo)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
+        $campo = $em->getRepository('estarRdaBundle:Campo')->find($idCampo);
+
+
+        $vcr = $em->getRepository('estarRdaBundle:Valorizzazionecamporichiesta')->findByCampo($campo);
+        if (is_null($vcr)) {
+            //se non esiste alcuna valorizzazionecamporichiesta che punta a quel campo
+            //edito quello che voglio
+
+        } else {
+            //Se esiste almeno una valorizzazionecamporichiesta che punta a quel campo
+            //mostro solo la descrizione
+
+        }
+
+    }
+
+        /**
      * Inserisce un nuovo campo
      * @Route("/nuovo/{idCategoria}")
      * @Security("has_role('ROLE_ADMIN')")
@@ -477,6 +506,19 @@ class FormBuilderController extends Controller
      */
     public function creaDBAction($idCategoria, Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+        $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
+
+        $campo = new Campo();
+        //Dopodichè ci andiamo a pescare i valori.
+        $campi = $request->request->all();
+        $nome = $campi['form']['nome'];
+
+        //Settiamo e salviamo
+        $campo->setNome($nome);
+        $em->flush();
+
+
 
         return $this->redirect($this->generateUrl('formbuilder_showByCategoria', array('idCategoria' => $idCategoria)));
     }
