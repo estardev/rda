@@ -11,8 +11,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\FormTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Routing\Router as Router;
+use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 /**
  * Nuovo controller di backoffice che gestisce la creazione di form con la relazione 1 padre -> molti figli
  * @author FrancescoGalliEstar
@@ -70,6 +80,19 @@ class FormBuilderController extends Controller
     }
 
     /**
+     * Ritorna i valori possibili per la priorit�
+     * @return array
+     */
+    public static function getPossibleEnumPriorita()
+    {
+        $choices = array(
+            '1' => '',
+            '2' => 'Elevata',
+            '3' => 'Standard');
+        return $choices;
+    }
+
+    /**
      * Mostra tutti i campi di un controller
      * @Route("/showByCategoria/{idCategoria}")
      * @Security("has_role('ROLE_ADMIN')")
@@ -88,6 +111,7 @@ class FormBuilderController extends Controller
 
         return $this->render('estarRdaBundle:FormBuilder:index.html.twig', array(
             'entities' => $entities,
+            'idcategoria' => $idCategoria
         ));
 
     }
@@ -169,7 +193,6 @@ class FormBuilderController extends Controller
 
 
     }
-
 
     /**
      * Fa scegliere le condizioni
@@ -375,4 +398,131 @@ class FormBuilderController extends Controller
 
 
     }
+
+    //TODO: FARE DA QUI ALLA FINE!!!!!
+    /**
+     * Inserisce un nuovo campo
+     * @Route("/nuovo/{idCategoria}")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @param string $idCategoria la categoria
+     * @return Response A Response instance
+     *
+     */
+    public function creaAction($idCategoria)
+    {
+
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('formbuilder_nuovoDB', array('idCategoria' => $idCategoria)))
+            ->add("nome", "text", array(
+                'label' => "Nome",
+                'attr' => array(
+                    'placeholder'=> "Specificare il Nome del Campo"),
+                'constraints' => new NotNull()
+            ))
+            ->add("descrizione", "text", array(
+                'label' => "Descrizione",
+                'attr' => array(
+                    'placeholder'=> "Specificare la descrizione del campo"),
+                'constraints' => new NotNull()
+            ))
+            ->add("tipologia", "choice", array(
+                'choices' => Campo::getPossibleEnumValues(),
+                'label' => "Tipologia",
+                'data' => "3"
+            ))
+            ->add("obbligatorioInserzione", "choice", array(
+                'choices' => Campo::getPossibleEnumObblighi(),
+                'label' => "Obbligatorio Inserzione",
+                'data' => "3",
+                'expanded' => true
+            ))
+            ->add("obbligatorioValidazioneTecnica", "choice", array(
+                'choices' => Campo::getPossibleEnumObblighi(),
+                'label' => "Obbligatorio Validazione Tecnica",
+                'data' => "3",
+                'expanded' => true
+            ))
+            ->add("obbligatorioValidazioneAmministrativa", "choice", array(
+                'choices' => Campo::getPossibleEnumObblighi(),
+                'label' => "Obbligatorio Validazione Amministrativa",
+                'data' => "3",
+                'expanded' => true
+            ))
+
+            //->add('padre', 'entity', array(
+            //    'class' => 'estarRdaBundle:Campo',
+            //    'label' => 'Padre',
+            //    'choice_label' => 'nomedescrizione',
+            //))
+            ->add('submit', 'submit', array('label' => 'Crea Campo'))
+            ->getForm();
+
+        $backForm = $this->createFormBuilder()
+            ->setAction($this->generateUrl('formbuilder_showByCategoria', array('idCategoria' => $idCategoria)))
+            ->add('submit', 'submit', array('label' => 'Indietro'))
+            ->getForm();
+
+        return $this->render('estarRdaBundle:FormBuilder:crea.html.twig', array(
+            'form' => $form->createView(),
+            'backForm' => $backForm->createView()));
+    }
+
+    /**
+     * Inserisce un nuovo campo
+     * @Route("/nuovo/{idCategoria}")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @param string $idCategoria la categoria
+     * @return Response A Response instance
+     *
+     */
+    public function creaDBAction($idCategoria, Request $request)
+    {
+
+        return $this->redirect($this->generateUrl('formbuilder_showByCategoria', array('idCategoria' => $idCategoria)));
+    }
+
+    /**
+     * Elimina un campo
+     * @Route("/elimina/{idCategoria}/{idCampo}")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @param string $idCategoria la categoria
+     * @param string $idCampo il campo
+     * @return Response A Response instance
+     *
+     */
+    public function eliminaAction($idCategoria, $idCampo)
+    {
+
+    }
+
+    /**
+     * Elimina un campo
+     * @Route("/spostaSu/{idCategoria}/{idCampo}")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @param string $idCategoria la categoria
+     * @param string $idCampo il campo
+     * @return Response A Response instance
+     *
+     */
+    public function spostaSuAction($idCategoria, $idCampo)
+    {
+
+    }
+
+    /**
+     * Elimina un campo
+     * @Route("/spostaGiu/{idCategoria}/{idCampo}")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @param string $idCategoria la categoria
+     * @param string $idCampo il campo
+     * @return Response A Response instance
+     *
+     */
+    public function spostaGiuAction($idCategoria, $idCampo)
+    {
+
+    }
+
+
+
 }
