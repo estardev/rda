@@ -20,11 +20,11 @@ formbuilder_setCondizioniDB:
 
 formbuilder_setValori:
     path:     /setValori/{idCategoria}/{idCampo}
-    defaults: { _controller: "estarRdaBundle:FormBuilder:setPadre" }
+    defaults: { _controller: "estarRdaBundle:FormBuilder:setValori" }
 
 formbuilder_setValoriDB:
     path:     /setValoriDB/{idCategoria}/{idCampo}
-    defaults: { _controller: "estarRdaBundle:FormBuilder:setPadreDB" }
+    defaults: { _controller: "estarRdaBundle:FormBuilder:setValoriDB" }
 
 formbuilder_spostaSu:
     path:     /spostaSu/{idCategoria}/{idCampo}

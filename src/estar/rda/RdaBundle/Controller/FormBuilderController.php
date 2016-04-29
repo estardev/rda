@@ -7,6 +7,7 @@ use estar\rda\RdaBundle\Entity\Campo;
 use estar\rda\RdaBundle\Entity\Utente;
 use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Entity\Valorizzazionecamporichiesta;
+use estar\rda\RdaBundle\Model\CampoModel;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\FormTemplate;
 use Symfony\Component\HttpFoundation\Request;
@@ -349,7 +350,7 @@ class FormBuilderController extends Controller
 
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('formbuilder_setValoriDB', array('idCategoria' => $idCategoria, 'idCampo' => $idCampo)))
-            ->add('fieldset', null, array(
+            ->add('fieldset', "text", array(
                 'label' => 'Valori Possibili',
                 'data' => $fieldset
             ))
@@ -361,7 +362,7 @@ class FormBuilderController extends Controller
             ->add('submit', 'submit', array('label' => 'Indietro alla lista'))
             ->getForm();
 
-        return $this->render('estarRdaBundle:FormBuilder:setPadre.html.twig', array(
+        return $this->render('estarRdaBundle:FormBuilder:setValori.html.twig', array(
             'form' => $form->createView(),
             'backForm' => $backForm->createView()));
 
@@ -383,7 +384,7 @@ class FormBuilderController extends Controller
 
         //Dopodichè ci andiamo a pescare i valori.
         $campi = $request->request->all();
-        $valori = $campi['form']['valori'];
+        $valori = $campi['form']['fieldset'];
 
         //Settiamo e salviamo
         $campo->setFieldset($valori);
@@ -496,6 +497,8 @@ class FormBuilderController extends Controller
         $em = $this->getDoctrine()->getManager();
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
 
+        //$ordine = $this->get("model.campo");
+        //$ordine->getMaxOrdinamento($idCategoria);
         $query = $em->createQuery('SELECT MAX(c.ordinamento)
                                     FROM estarRdaBundle:Campo c
                                     WHERE c.idcategoria = :idcategoria')
@@ -506,7 +509,7 @@ class FormBuilderController extends Controller
         $campo = new Campo();
         //Dopodichè ci andiamo a pescare i valori.
         $campi = $request->request->all();
-        $nome = $campi['form']['nome'];
+        $nome = trim($campi['form']['nome']," ");
         $descrizione = $campi['form']['descrizione'];
         $tipologia = $campi['form']['tipologia'];
         $inserzione =$campi['form']['obbligatorioInserzione'];
