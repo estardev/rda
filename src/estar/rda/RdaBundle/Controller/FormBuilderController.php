@@ -349,12 +349,8 @@ class FormBuilderController extends Controller
 
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('formbuilder_setValoriDB', array('idCategoria' => $idCategoria, 'idCampo' => $idCampo)))
-            ->add('nomepadre', null, array(
-                'label' => 'Nome del campo da usare nei fieldset',
-                'data' => $campo->getNome()
-            ))
-            ->add('valori', null, array(
-                'label' => 'Opzioni Disponibili',
+            ->add('fieldset', null, array(
+                'label' => 'Valori Possibili',
                 'data' => $fieldset
             ))
             ->add('submit', 'submit', array('label' => 'Imposta Valori'))
