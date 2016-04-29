@@ -509,7 +509,7 @@ class FormBuilderController extends Controller
         $campo = new Campo();
         //Dopodichè ci andiamo a pescare i valori.
         $campi = $request->request->all();
-        $nome = trim($campi['form']['nome']," ");
+        $nome = str_replace(" ","",$campi['form']['nome']);
         $descrizione = $campi['form']['descrizione'];
         $tipologia = $campi['form']['tipologia'];
         $inserzione =$campi['form']['obbligatorioInserzione'];
