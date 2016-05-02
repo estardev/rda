@@ -3,6 +3,7 @@
 namespace estar\rda\RdaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Campo
@@ -128,7 +129,7 @@ class Campo
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getCampifiglio()
     {

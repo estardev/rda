@@ -3,6 +3,7 @@
 namespace estar\rda\RdaBundle\Controller;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use estar\rda\RdaBundle\Entity\Campo;
 use estar\rda\RdaBundle\Entity\Utente;
 use estar\rda\RdaBundle\Entity\Richiesta;
@@ -187,7 +188,17 @@ class FormBuilderController extends Controller
 
         //Settiamo e salviamo
         $campoFiglio->setCampopadre($campoPadre);
+
         $em->flush();
+
+        $pippo = new ArrayCollection();
+        $pippo = $campoPadre->getCampifiglio();
+
+        $pippi = $pippo->toArray();
+        foreach ($pippi as $minipippo) {
+            $idpippo = $minipippo->getId();
+        }
+
 
         //e ciao
         return $this->redirect($this->generateUrl('formbuilder_showByCategoria', array('idCategoria' => $idCategoria)));
