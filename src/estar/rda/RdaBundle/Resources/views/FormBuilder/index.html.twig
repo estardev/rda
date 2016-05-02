@@ -31,25 +31,43 @@
                     {% endfor %}
                 </td>
                 <td>
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Seleziona Azione
+                            <span class="caret"></span>
+                        </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    {% if (entity.tipo=='choice')  %}
                     <li>
                         <a href="{{ path('formbuilder_setValori', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Imposta Valori</a>
                     </li>
+                    {% endif %}
+
+                    {% if not(entity.tipo=='choice')  %}
                     <li>
                         <a href="{{ path('formbuilder_setPadre', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Imposta Padre</a>
                     </li>
+                    {% endif %}
+
+                    {% if not(entity.tipo=='choice')  %}
                     <li>
                         <a href="{{ path('formbuilder_setCondizioni', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Imposta Condizioni</a>
                     </li>
+                    {% endif %}
+
                     <li>
                         <a href="{{ path('formbuilder_spostaGiu', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Sposta Giu</a>
                     </li>
                     <li>
                         <a href="{{ path('formbuilder_spostaSu', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Sposta Su</a>
                     </li>
+
+
                     <li>
                         <a href="{{ path('formbuilder_elimina', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Elimina</a>
                     </li>
-                </td>
+                        </ul>
+                    </div>
             </tr>
         {% endfor %}
         </tbody>

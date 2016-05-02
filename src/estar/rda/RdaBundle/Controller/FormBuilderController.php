@@ -137,7 +137,18 @@ class FormBuilderController extends Controller
         $campoFiglio = $em->getRepository('estarRdaBundle:Campo')->find($idCampo);
 
         //I campi possibili padre sono tutti..
-        $campiCategoria = $em->getRepository('estarRdaBundle:Campo')->findByIdcategoria($categoria);
+        // $campiCategoria = $em->getRepository('estarRdaBundle:Campo')->findByIdcategoria($categoria);
+
+        $query = $em->createQuery('SELECT c
+                                    FROM estarRdaBundle:Campo c
+                                    WHERE c.tipo=:tipo
+                                    AND c.idcategoria = :idcategoria')
+            ->setparameters(array(
+                'idcategoria'=> $idCategoria,
+                'tipo' => "choice"
+            ));
+        $campiCategoria = $query->getResult();
+
         //..meno quelli che hanno già un padre o che sono lo stesso campo.
         $campiPossibili = array();
         foreach ($campiCategoria as $campoPossibile) {
@@ -151,8 +162,9 @@ class FormBuilderController extends Controller
             ->add('padre', 'entity', array(
                 'choices' => $campiPossibili,
                 'class' => 'estarRdaBundle:Campo',
-                'label' => 'Padre',
+                'label' => 'Padre (di seguito solo i campi "choice" che possono essere selezionati)',
                 'choice_label' => 'nomedescrizione',
+                'expanded' => true
             ))
             ->add('submit', 'submit', array('label' => 'Imposta Padre'))
             ->getForm();
@@ -191,13 +203,13 @@ class FormBuilderController extends Controller
 
         $em->flush();
 
-        $pippo = new ArrayCollection();
-        $pippo = $campoPadre->getCampifiglio();
-
-        $pippi = $pippo->toArray();
-        foreach ($pippi as $minipippo) {
-            $idpippo = $minipippo->getId();
-        }
+        //$pippo = new ArrayCollection();
+        //$pippo = $campoPadre->getCampifiglio();
+        //
+        //$pippi = $pippo->toArray();
+        //foreach ($pippi as $minipippo) {
+        //    $idpippo = $minipippo->getId();
+        //}
 
 
         //e ciao
