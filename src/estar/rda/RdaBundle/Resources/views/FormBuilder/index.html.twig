@@ -2,9 +2,14 @@
 
 {% block body -%}
 <div class="panel panel-default">
-    <div class="panel-heading"><h4>Elenco dei Campi della Categoria</h4></div>
-
-    <table class="table">
+    <div class="panel-heading">
+        <h4 class="panel-title pull-left">
+            Elenco dei Campi della Categoria
+        </h4>
+        <div class="clearfix"></div>
+    </div>
+    <div style="overflow:hidden;display:table;">
+    <table class="table table-responsive">
         <thead>
             <tr>
                 <th>#</th>
@@ -19,13 +24,13 @@
         </thead>
         <tbody>
         {% for entity in entities %}
-            <tr>
+            <tr data-state="campo">
                 <td>{{ entity.ordinamento }}</td>
                 <td>{{ entity.idnome }}</td>
                 <td>{{ entity.tipo }}</td>
                 <td>{{ entity.fieldset|replace({"||": " "}) }}</td>
                 <td>{{ entity.descrizione|slice( 0, 30) }}...</td>
-                <td>{{ entity.campopadre }} - {{ entity.padre }}</td>
+                <td>{{ entity.campopadre }} - {{ entity.padre|replace({"||": " "}) }}</td>
                 <td>{% for campofiglio in entity.campifiglio %}
                         {{ campofiglio.idnome }}
                     {% endfor %}
@@ -68,17 +73,18 @@
                     </li>
                         </ul>
                     </div>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-        <ul>
+</div>
+    </div>
+    <ul>
         <li>
             <a href="{{ path('formbuilder_nuovo', { 'idCategoria': idcategoria})}}">
                 Crea nuovo Campo
             </a>
         </li>
     </ul>
-</div>
     {% endblock %}
