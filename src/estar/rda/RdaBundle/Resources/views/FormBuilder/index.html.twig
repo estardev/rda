@@ -6,6 +6,13 @@
         <h4 class="panel-title pull-left">
             Elenco dei Campi della Categoria
         </h4>
+        <div class="bottoniera">
+            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus"
+                                                                aria-hidden="true"></span> <a href="{{ path('formbuilder_nuovo', { 'idCategoria': idcategoria})}}">
+                    Crea nuovo Campo
+                </a></button>
+
+        </div>
         <div class="clearfix"></div>
     </div>
     <table class="table table-responsive">
@@ -35,58 +42,62 @@
                     {% endfor %}
                 </td>
                 <td>
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            Seleziona Azione
-                            <span class="caret"></span>
-                        </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    {% if (entity.tipo=='choice')  %}
-                    <li>
-                        <a href="{{ path('formbuilder_setValori', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Imposta Valori</a>
-                    </li>
+                    {% if entity.datadismissione  %}
+                        il campo è stato cancellato in data {{ entity.datadismissione|date('d-m-Y') }}
+                    {% else %}
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                Seleziona Azione
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                {% if (entity.tipo=='choice')  %}
+                                    <li>
+                                        <a href="{{ path('formbuilder_setValori', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Imposta Valori</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if not(entity.tipo=='choice')  %}
+                                    <li>
+                                        <a href="{{ path('formbuilder_setPadre', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Imposta Padre</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if entity.campopadre  %}
+                                    <li>
+                                        <a href="{{ path('formbuilder_setCondizioni', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Imposta Condizioni</a>
+                                    </li>
+                                {% elseif not(entity.tipo=='choice') %}
+                                    <li class="disabled">
+                                        <a href="#" disabled="true">Cond..(Settare Padre)</a>
+                                    </li>
+                                {% endif %}
+
+                                <li>
+                                    <a href="{{ path('formbuilder_spostaGiu', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Sposta Giu</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('formbuilder_spostaSu', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Sposta Su</a>
+                                </li>
+
+                                {% if entity.campopadre %}
+                                    <li class="disabled"><a href="{{ path('formbuilder_elimina', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Elimina</a>
+                                    </li>
+                                {% else %}
+                                <li>
+                                    <a href="{{ path('formbuilder_elimina', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Elimina</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
                     {% endif %}
-
-                    {% if not(entity.tipo=='choice')  %}
-                    <li>
-                        <a href="{{ path('formbuilder_setPadre', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Imposta Padre</a>
-                    </li>
-                    {% endif %}
-
-                    {% if entity.campopadre  %}
-                    <li>
-                        <a href="{{ path('formbuilder_setCondizioni', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Imposta Condizioni</a>
-                    </li>
-                        {% elseif not(entity.tipo=='choice') %}
-                    <li class="disabled">
-                        <a href="#" disabled="true">Cond..(Settare Padre)</a>
-                    </li>
-                    {% endif %}
-
-                    <li>
-                        <a href="{{ path('formbuilder_spostaGiu', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Sposta Giu</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('formbuilder_spostaSu', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Sposta Su</a>
-                    </li>
-
-
-                    <li>
-                        <a href="{{ path('formbuilder_elimina', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Elimina</a>
-                    </li>
-                        </ul>
-                    </div>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
-    <ul>
-        <li>
-            <a href="{{ path('formbuilder_nuovo', { 'idCategoria': idcategoria})}}">
-                Crea nuovo Campo
-            </a>
-        </li>
-    </ul>
-    {% endblock %}
+
+
+
+       {% endblock %}
