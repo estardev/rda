@@ -48,7 +48,7 @@ class RichiestaModel
     const STATUSABS_ANNULLATA = "Conferma pratica annullata ABS";
     const STATUSABS_ARCHIVIATA = "Archiviata da ABS";
     const STATUSABS_CHIUSA = "Chiusa da ABS per termine Iter";
-    const STATUSABS_RICHIESTADOCUMENTAZIONE_RUP = "Richiesta documentazione aggiuntiva da parte del RUP all'avvio della gara";
+    const STATUSABS_RICHIESTADOCUMENTAZIONE_RUP = "Richiesta documentazione (RUP)";
 
     protected $em;
 
