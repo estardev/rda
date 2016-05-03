@@ -145,7 +145,7 @@ class FormBuilderController extends Controller
                                     AND c.idcategoria = :idcategoria')
             ->setparameters(array(
                 'idcategoria'=> $idCategoria,
-                'tipo' => "choice"
+                'tipo' => Campo::TIPO_SCELTA,
             ));
         $campiCategoria = $query->getResult();
 
@@ -595,6 +595,22 @@ class FormBuilderController extends Controller
      */
     public function spostaSuAction($idCategoria, $idCampo)
     {
+        $em = $this->getDoctrine()->getManager();
+        $campo = $em->getRepository('estarRdaBundle:Campo')->find($idCampo);
+        $descrizioneCampo= $campo->getDescrizione();
+        $ordine = $this->get("model.campo");
+        $result = $ordine->spostaSu($idCampo);
+        if($result){
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                array(
+                    'alert' => 'success',
+                    'title' => 'Success!',
+                    'message' => "Campo $descrizioneCampo spostato correttamente!"
+                )
+            );
+        }
+        return $this->redirect($this->generateUrl('formbuilder_showByCategoria', array('idCategoria' => $idCategoria)));
 
     }
 
@@ -609,6 +625,22 @@ class FormBuilderController extends Controller
      */
     public function spostaGiuAction($idCategoria, $idCampo)
     {
+        $em = $this->getDoctrine()->getManager();
+        $campo = $em->getRepository('estarRdaBundle:Campo')->find($idCampo);
+        $descrizioneCampo= $campo->getDescrizione();
+        $ordine = $this->get("model.campo");
+        $result = $ordine->spostaGiu($idCampo);
+        if($result){
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                array(
+                    'alert' => 'success',
+                    'title' => 'Success!',
+                    'message' => "Campo $descrizioneCampo spostato correttamente!"
+                )
+            );
+        }
+        return $this->redirect($this->generateUrl('formbuilder_showByCategoria', array('idCategoria' => $idCategoria)));
 
     }
 
