@@ -35,6 +35,22 @@ class HomePageController extends Controller
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->findAll();
 
+        //fg 20160503 bozza di codice "nuovo"
+        $userCheck = $this->get("usercheck.notify");
+        $dirittiTotaliRadicaliGlobbali = $userCheck->dirittiByUtente(); //array di oggetti DirittiRichiesta
+
+        foreach ($dirittiTotaliRadicaliGlobbali as $dirittoSingolo) {
+            $idCategoria = $dirittoSingolo->getCategoria()->getId();
+            if ($dirittoSingolo->getIsAI()) {
+                //Abilitato all'inserimento
+            }
+            if ($dirittoSingolo->getIsVt()) {
+
+            }
+            if ($dirittoSingolo->getIsVa()) {
+
+            }
+        }
         //$nValtec=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.status='attesa_val_tec' ")->getSingleScalarResult();
 
         //$nBozza=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.idutente=$utenteSessione AND r.status='bozza'")->getSingleScalarResult();
