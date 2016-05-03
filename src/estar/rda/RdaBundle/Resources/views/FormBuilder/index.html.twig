@@ -1,14 +1,13 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-<div class="panel panel-default">
+<div class="panel panel-default" >
     <div class="panel-heading">
         <h4 class="panel-title pull-left">
             Elenco dei Campi della Categoria
         </h4>
         <div class="clearfix"></div>
     </div>
-    <div style="overflow:hidden;display:table;">
     <table class="table table-responsive">
         <thead>
             <tr>
@@ -54,9 +53,13 @@
                     </li>
                     {% endif %}
 
-                    {% if not(entity.tipo=='choice')  %}
+                    {% if entity.campopadre  %}
                     <li>
                         <a href="{{ path('formbuilder_setCondizioni', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Imposta Condizioni</a>
+                    </li>
+                        {% elseif not(entity.tipo=='choice') %}
+                    <li class="disabled">
+                        <a href="#" disabled="true">Cond..(Settare Padre)</a>
                     </li>
                     {% endif %}
 
@@ -79,7 +82,6 @@
         </tbody>
     </table>
 </div>
-    </div>
     <ul>
         <li>
             <a href="{{ path('formbuilder_nuovo', { 'idCategoria': idcategoria})}}">
