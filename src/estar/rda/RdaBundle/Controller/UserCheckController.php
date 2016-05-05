@@ -2,6 +2,7 @@
 
 namespace estar\rda\RdaBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use estar\rda\RdaBundle\Entity\Utentegruppoutente;
 use estar\rda\RdaBundle\Model\DirittiRichiesta;
 use Symfony\Component\HttpFoundation\Request;
@@ -212,22 +213,24 @@ class UserCheckController extends Controller
         $utente = $this->getUtente();
         $idUtente =  $utente->getId();
 
-        $query = $this->em->createQuery('SELECT cd.idcategoria
-                                    FROM estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Gruppoutente gu, estarRdaBundle:Utentegruppoutente ugu
-                                    WHERE ugu.idgruppoutente = gu.id
-                                    AND cg.idgruppoutente = gu.id
+        $query = $this->em->createQuery('SELECT DISTINCT identity(cg.idcategoria)
+                                    FROM estarRdaBundle:Categoriagruppo cg
+                                    JOIN estarRdaBundle:Gruppoutente gu
+                                    WITH cg.idgruppoutente = gu.id
+                                    JOIN estarRdaBundle:Utentegruppoutente ugu
+                                    WITH ugu.idgruppoutente = gu.id
                                     AND ugu.idutente = :idUtente
                                     ')
-
             ->setparameter('idUtente', $idUtente);
 
-        $toReturn = array();
+        $toReturn = new ArrayCollection();
         $categorie = $query->getResult();
 
-        foreach($categorie as $categoria) {
-            array_push($toReturn, $this->allRole($categoria));
+        foreach($categorie as $idcategoria1 ) {
+            $prova = $this->allRole($idcategoria1);
+            $toReturn->add($prova);
         }
-
+        return $toReturn;
 
     }
 
