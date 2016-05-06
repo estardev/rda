@@ -149,7 +149,7 @@ class UserCheckController extends Controller
     /** ritorna tutti i ruoli per una categoria dato l'utente loggato
      *
      * @author Francesco Galli
-     * @param $categoria la categoria su cui si lavora
+     * @param $categoria id della categoria su cui si lavora
      * @return DirittiRichiesta i diritti della richiesta
      */
     public function allRole($categoria)
@@ -186,7 +186,7 @@ class UserCheckController extends Controller
         }
         $dirittiRichiesta->setUser($utente);
         //FG20160415 mettiamo anche la categoria
-        $categoriaDB = $this->em->getRepository('estarRdaBundle:Categoria')->find($categoria);
+        $categoriaDB = $this->em->getRepository('estarRdaBundle:Categoria')->findOneById($categoria);
         $dirittiRichiesta->setCategoria($categoriaDB);
         return $dirittiRichiesta;
         //vecchio codice di Demetrio
@@ -223,10 +223,10 @@ class UserCheckController extends Controller
                                     ')
             ->setparameter('idUtente', $idUtente);
 
-        $toReturn = new ArrayCollection();
-        $categorie = $query->getResult();
 
-        foreach($categorie as $idcategoria1 ) {
+        $cat = $query->getResult();
+        $toReturn = new ArrayCollection();
+        foreach($cat as $idcategoria1 ) {
             $prova = $this->allRole($idcategoria1);
             $toReturn->add($prova);
         }

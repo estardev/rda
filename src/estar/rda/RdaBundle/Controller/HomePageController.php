@@ -9,6 +9,10 @@ class HomePageController extends Controller
 {
     public function indexAction()
     {
+        $nBozza="";
+        $nDainv= "";
+        $nValAmm="";
+        $nValtec=   "";
         $utenteSessione= $this->getUser();
        //$idutenteSessione = $utenteSessione->getId();
        //
@@ -38,20 +42,40 @@ class HomePageController extends Controller
         //fg 20160503 bozza di codice "nuovo"
         $userCheck = $this->get("usercheck.notify");
         $dirittiTotaliRadicaliGlobbali = $userCheck->dirittiByUtente(); //array di oggetti DirittiRichiesta
-//
-    //    foreach ($dirittiTotaliRadicaliGlobbali as $dirittoSingolo) {
-    //        $idCategoria = $dirittoSingolo->getCategoria()->getId();
-    //        if ($dirittoSingolo->getIsAI()) {
-    //            //Abilitato all'inserimento
-//
-    //        }
-    //        if ($dirittoSingolo->getIsVt()) {
-//
-    //        }
-    //        if ($dirittoSingolo->getIsVa()) {
-//
-    //        }
-    //    }
+
+      foreach ($dirittiTotaliRadicaliGlobbali as $dirittoSingolo) {
+          $idCategoria = $dirittoSingolo->getCategoria()->getId();
+          if ($dirittoSingolo->getIsAI()) {
+              //Abilitato all'inserimento
+              $query = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+                                    WHERE  r.idutente=$utenteSessione AND r.status='bozza' AND c.id=r.idcategoria
+                                    ");
+              $nBozza = $query->getResult();
+
+          }
+          if ($dirittoSingolo->getIsVt()) {
+              $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+                                     WHERE  r.status='attesa_val_tec' AND c.id=r.idcategoria AND c.id=r.idcategoria
+                                     ");
+              $nValtec = $query1->getResult();
+
+          }
+          if ($dirittoSingolo->getIsVa()) {
+              $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+                                    WHERE  r.status='attesa_val_amm' AND c.id=r.idcategoria AND c.id=r.idcategoria
+                                    ");
+              $nValAmm = $query2->getResult();
+
+              $query3 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+                                    WHERE  r.status='da_inviare_ABS' AND c.id=r.idcategoria AND c.id=r.idcategoria
+                                    ");
+              $nDainv = $query3->getResult();
+            }
+        }
         //$nValtec=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.status='attesa_val_tec' ")->getSingleScalarResult();
 
         //$nBozza=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.idutente=$utenteSessione AND r.status='bozza'")->getSingleScalarResult();
@@ -60,17 +84,9 @@ class HomePageController extends Controller
 
         //$nDainv=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.status='da_inviare_ABS'")->getSingleScalarResult();
 
-        $query = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
-                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
-                                    WHERE  r.idutente=$utenteSessione AND r.status='bozza' AND c.id=r.idcategoria
-                                    group by c.id, c.descrizione");
-        $nBozza = $query->getResult();
 
-         $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
-                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
-                                     WHERE  r.status='attesa_val_tec' AND c.id=r.idcategoria
-                                     group by c.id, c.descrizione");
-         $nValtec = $query1->getResult();
+
+
 
        // $query1 = $em->createQuery("SELECT COUNT(r) as numero, r.idcategoria as idcat, c.descrizione as descrizionecategoria
        //                             FROM estarRdaBundle:Richiesta r, estarRdaBundle:Utentegruppoutente ug, estarRdaBundle:Utente u, estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Categoria c
@@ -82,17 +98,7 @@ class HomePageController extends Controller
        //                             AND cg.validatoretecnico=1");
        // $nValtec = $query1->getResult();
 
-        $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
-                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
-                                    WHERE  r.status='attesa_val_amm' AND c.id=r.idcategoria
-                                    group by c.id, c.descrizione");
-        $nValAmm = $query2->getResult();
 
-        $query3 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
-                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
-                                    WHERE  r.status='da_inviare_ABS' AND c.id=r.idcategoria
-                                    group by c.id, c.descrizione");
-        $nDainv = $query3->getResult();
 
         //David_20151029: Aggiunto il redirect sulla lista richieste per categoria impostata in sessione
         //modificato da Demetrio_20160406:
