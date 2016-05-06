@@ -25,20 +25,24 @@
         {% if (is_granted("ROLE_ADMIN") or is_granted("ROLE_SUPER_ADMIN"))%}
             <li>
                 <a href="#" data-toggle="collapse" aria-expanded="false" class="mydropdown" data-target="#subUtenti"><b>UTENTI</b></a>
-            </li>
-            <ul class="nav collapse in" id="subUtenti">
+                <li><ul class="nav collapse in" id="subUtenti">
                     <li class="scelteSidebar"><a href="{{ path('utente') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Gestione Utenti</a></li>
-                    <li class="scelteSidebar"><a href="{{ path('fos_user_registration_register') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Nuovo Utente</a></li>
-                    <li class="scelteSidebar"><a href="{{ path('gruppoutente') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Gestione Gruppi</a></li>
-                    <li class="scelteSidebar"><a href="{{ path('gruppoutente_new') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Nuovo Gruppo</a></li>
-            </ul>
+                    <ul class="nav collapse in" id="subUtentiRegister">
+                        <li class="scelteSidebar"><a href="{{ path('fos_user_registration_register') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Nuovo Utente</a></li>
+                    </ul>
+                    <ul class="nav collapse in" id="subUtentiGruppi">
+                        <li class="scelteSidebar"><a href="{{ path('gruppoutente') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Gestione Gruppi</a></li>
+                    </ul>
+                    <ul class="nav collapse in" id="subUtentiGruppiNew">
+                        <li class="scelteSidebar"><a href="{{ path('gruppoutente_new') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Nuovo Gruppo</a></li>
+                    </ul>
 
+                </ul></li>
 
-
+            </li>
 
             <li>
                 <a href="#" data-toggle="collapse" aria-expanded="false" class="mydropdown" data-target="#subConf"><b>CONFIGURAZIONE</b></a>
-            </li>
                 <ul class="nav collapse in" id="subConf">
                     <li class="scelteSidebar"><a href="{{ path('categoria') }}"><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;Gestione Categorie</a></li>
                     <li class="scelteSidebar"><a href="{{ path('categoria_newtestata') }}"><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;Nuova Categoria</a></li>
@@ -48,7 +52,7 @@
                     <li class="scelteSidebar"><a href="{{ path('categoriagruppo_new') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Nuovo Permesso</a></li>
                     <li class="scelteSidebar"><a href="{{ path('area') }}"><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Aree</a></li>
                 </ul>
-
+            </li>
         {% endif %}
 
     </ul>
