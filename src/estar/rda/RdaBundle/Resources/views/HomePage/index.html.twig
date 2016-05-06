@@ -38,7 +38,7 @@
                 <th>Categorie</th>
             </tr>
 
-            {% foreach bozza in nbozza %}
+            {% for bozza in nbozza %}
                 <tr>
                     <td><strong>{{ bozza['numero'] }}</strong></td>
                     <td> Richieste in <strong>Stato Bozza</strong> da inviare per la validazione Tecninca</td>
@@ -46,21 +46,21 @@
                 </tr>
             {% endfor %}
 
-            {% foreach veltec in nvaltec %}
+            {% for veltec in nvaltec %}
                 <tr>
                     <td><strong>{{ veltec['numero'] }}</strong></td>
                     <td> Richieste in <strong>Attesa di Validazione Tecnica</strong> da inviare per la validazione Amministrativa</td>
                     <td><a href="#"  onclick="ChangeSelect({{ veltec['idcat'] }})" ><strong>{{veltec['descrizionecategoria'] }}</strong></a> </td>
                 </tr>
             {% endfor %}
-            {% foreach valamm in nvalamm %}
+            {% for valamm in nvalamm %}
                 <tr>
                     <td><strong>{{ valamm['numero'] }}</strong></td>
                     <td> Richieste in <strong>Attesa di Valutazione Amministrativa</strong></td>
                     <td><a href="#"  onclick="ChangeSelect({{ valamm['idcat'] }})" ><strong>{{valamm['descrizionecategoria'] }}</strong></a> </td>
                 </tr>
             {% endfor %}
-            {% foreach dainv in ndainvABS %}
+            {% for dainv in ndainvABS %}
                 <tr>
                     <td><strong>{{ dainv['numero'] }}</strong></td>
                     <td> Richieste in <strong>Attesa di essere inoltrate in ESTAR</strong></td>
