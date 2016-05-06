@@ -25,7 +25,7 @@
         {% if (is_granted("ROLE_ADMIN") or is_granted("ROLE_SUPER_ADMIN"))%}
             <li>
                 <a href="#" data-toggle="collapse" aria-expanded="false" class="mydropdown" data-target="#subUtenti"><b>UTENTI</b></a>
-                <ul class="nav collapse in" id="subUtenti">
+                <ul class="nav collapse" id="subUtenti">
                     <li class="scelteSidebar"><a href="{{ path('utente') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Gestione Utenti</a></li>
                     <li class="scelteSidebar"><a href="{{ path('fos_user_registration_register') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Nuovo Utente</a></li>
                     <li class="scelteSidebar"><a href="{{ path('gruppoutente') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Gestione Gruppi</a></li>
@@ -36,7 +36,7 @@
 
             <li>
                 <a href="#" data-toggle="collapse" aria-expanded="false" class="mydropdown" data-target="#subConf"><b>CONFIGURAZIONE</b></a>
-                <ul class="nav collapse in" id="subConf">
+                <ul class="nav collapse" id="subConf">
                     <li class="scelteSidebar"><a href="{{ path('categoria') }}"><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;Gestione Categorie</a></li>
                     <li class="scelteSidebar"><a href="{{ path('categoria_newtestata') }}"><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;Nuova Categoria</a></li>
                     <li class="scelteSidebar"><a href="{{ path('documento') }}"><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Gestione Documenti</a></li>
