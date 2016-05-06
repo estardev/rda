@@ -51,6 +51,7 @@ class HomePageController extends Controller
               $query = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.idutente=$utenteSessione AND r.status='bozza' AND c.id=r.idcategoria
+                                    AND c.id=$idCategoria
                                     ");
               $nBozza->add($query->getResult());
 
