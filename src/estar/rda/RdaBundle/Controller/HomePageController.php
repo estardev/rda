@@ -60,6 +60,7 @@ class HomePageController extends Controller
               $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                      FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                      WHERE  r.status='attesa_val_tec' AND c.id=r.idcategoria AND c.id=r.idcategoria
+                                     AND c.id=$idCategoria
                                      ");
               $nValtec->add($query1->getResult());
 
@@ -68,12 +69,14 @@ class HomePageController extends Controller
               $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.status='attesa_val_amm' AND c.id=r.idcategoria AND c.id=r.idcategoria
+                                    AND c.id=$idCategoria
                                     ");
               $nValAmm->add($query2->getResult());
 
               $query3 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.status='da_inviare_ABS' AND c.id=r.idcategoria AND c.id=r.idcategoria
+                                    AND c.id=$idCategoria
                                     ");
               $nDainv->add($query3->getResult());
             }
