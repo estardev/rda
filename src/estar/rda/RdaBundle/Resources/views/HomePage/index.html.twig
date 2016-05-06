@@ -40,42 +40,50 @@
 
             {% for bozza1 in nbozza %}
             {% for bozza in bozza1 %}
+                {% if not (bozza['numero']) %}
                 <tr>
                     <td><strong>{{ bozza['numero'] }}</strong></td>
                     <td> Richieste in <strong>Stato Bozza</strong> da inviare per la validazione Tecninca</td>
                     <td><a href="#"  onclick="ChangeSelect({{ bozza['idcat'] }})" ><strong>{{bozza['descrizionecategoria'] }}</strong></a> </td>
                 </tr>
+                    {% endif %}
             {% endfor %}
             {% endfor %}
 
             {% for valtec1 in nvaltec %}
             {% for veltec in valtec1 %}
-                <tr>
+                {% if not (veltec['numero']) %}
+                    <tr>
                     <td><strong>{{ veltec['numero'] }}</strong></td>
                     <td> Richieste in <strong>Attesa di Validazione Tecnica</strong> da inviare per la validazione Amministrativa</td>
                     <td><a href="#"  onclick="ChangeSelect({{ veltec['idcat'] }})" ><strong>{{veltec['descrizionecategoria'] }}</strong></a> </td>
                 </tr>
+                {% endif %}
             {% endfor %}
             {% endfor %}
 
             {% for valamm1 in nvalamm %}
             {% for valamm in valamm1 %}
-                <tr>
+                {% if not (valamm['numero']) %}
+                    <tr>
                     <td><strong>{{ valamm['numero'] }}</strong></td>
                     <td> Richieste in <strong>Attesa di Valutazione Amministrativa</strong></td>
                     <td><a href="#"  onclick="ChangeSelect({{ valamm['idcat'] }})" ><strong>{{valamm['descrizionecategoria'] }}</strong></a> </td>
                 </tr>
+                {% endif %}
             {% endfor %}
             {% endfor %}
 
             {% for dainv1 in ndainvABS %}
             {% for dainv in dainv1 %}
-                <tr>
+                {% if not (valinv['numero']) %}
+                    <tr>
                     <td><strong>{{ dainv['numero'] }}</strong></td>
                     <td> Richieste in <strong>Attesa di essere inoltrate in ESTAR</strong></td>
                     <td><a href="#"  onclick="ChangeSelect({{ dainv['idcat'] }})" ><strong>{{dainv['descrizionecategoria'] }}</strong></a> </td>
 
                 </tr>
+                {% endif %}
             {% endfor %}
             {% endfor %}
 
