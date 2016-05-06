@@ -2,6 +2,7 @@
 
 namespace estar\rda\RdaBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
@@ -9,10 +10,10 @@ class HomePageController extends Controller
 {
     public function indexAction()
     {
-        $nBozza="";
-        $nDainv= "";
-        $nValAmm="";
-        $nValtec=   "";
+        $nBozza=new ArrayCollection();
+        $nDainv= new ArrayCollection();
+        $nValAmm=new ArrayCollection();
+        $nValtec= new ArrayCollection();
         $utenteSessione= $this->getUser();
        //$idutenteSessione = $utenteSessione->getId();
        //
@@ -51,7 +52,7 @@ class HomePageController extends Controller
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.idutente=$utenteSessione AND r.status='bozza' AND c.id=r.idcategoria
                                     ");
-              $nBozza = $query->getResult();
+              $nBozza->add($query->getResult());
 
           }
           if ($dirittoSingolo->getIsVt()) {
@@ -59,7 +60,7 @@ class HomePageController extends Controller
                                      FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                      WHERE  r.status='attesa_val_tec' AND c.id=r.idcategoria AND c.id=r.idcategoria
                                      ");
-              $nValtec = $query1->getResult();
+              $nValtec->add($query1->getResult());
 
           }
           if ($dirittoSingolo->getIsVa()) {
@@ -67,13 +68,13 @@ class HomePageController extends Controller
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.status='attesa_val_amm' AND c.id=r.idcategoria AND c.id=r.idcategoria
                                     ");
-              $nValAmm = $query2->getResult();
+              $nValAmm->add($query2->getResult());
 
               $query3 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.status='da_inviare_ABS' AND c.id=r.idcategoria AND c.id=r.idcategoria
                                     ");
-              $nDainv = $query3->getResult();
+              $nDainv->add($query3->getResult());
             }
         }
         //$nValtec=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.status='attesa_val_tec' ")->getSingleScalarResult();
