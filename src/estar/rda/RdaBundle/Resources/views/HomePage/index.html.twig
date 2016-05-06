@@ -40,7 +40,7 @@
 
             {% for bozza1 in nbozza %}
             {% for bozza in bozza1 %}
-                {% if not (bozza['numero']) %}
+                {% if (bozza['numero']) %}
                 <tr>
                     <td><strong>{{ bozza['numero'] }}</strong></td>
                     <td> Richieste in <strong>Stato Bozza</strong> da inviare per la validazione Tecninca</td>
@@ -52,7 +52,7 @@
 
             {% for valtec1 in nvaltec %}
             {% for veltec in valtec1 %}
-                {% if not (veltec['numero']) %}
+                {% if (veltec['numero']) %}
                     <tr>
                     <td><strong>{{ veltec['numero'] }}</strong></td>
                     <td> Richieste in <strong>Attesa di Validazione Tecnica</strong> da inviare per la validazione Amministrativa</td>
@@ -64,7 +64,7 @@
 
             {% for valamm1 in nvalamm %}
             {% for valamm in valamm1 %}
-                {% if not (valamm['numero']) %}
+                {% if (valamm['numero']) %}
                     <tr>
                     <td><strong>{{ valamm['numero'] }}</strong></td>
                     <td> Richieste in <strong>Attesa di Valutazione Amministrativa</strong></td>
@@ -76,7 +76,7 @@
 
             {% for dainv1 in ndainvABS %}
             {% for dainv in dainv1 %}
-                {% if not (dainv['numero']) %}
+                {% if (dainv['numero']) %}
                     <tr>
                     <td><strong>{{ dainv['numero'] }}</strong></td>
                     <td> Richieste in <strong>Attesa di essere inoltrate in ESTAR</strong></td>
