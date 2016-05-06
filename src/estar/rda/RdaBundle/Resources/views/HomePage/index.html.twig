@@ -38,29 +38,38 @@
                 <th>Categorie</th>
             </tr>
 
-            {% for bozza in nbozza %}
+            {% for bozza1 in nbozza %}
+            {% for bozza in bozza1 %}
                 <tr>
                     <td><strong>{{ bozza['numero'] }}</strong></td>
                     <td> Richieste in <strong>Stato Bozza</strong> da inviare per la validazione Tecninca</td>
                     <td><a href="#"  onclick="ChangeSelect({{ bozza['idcat'] }})" ><strong>{{bozza['descrizionecategoria'] }}</strong></a> </td>
                 </tr>
             {% endfor %}
+            {% endfor %}
 
-            {% for veltec in nvaltec %}
+            {% for veltec1 in nvaltec %}
+            {% for veltec in valtec1 %}
                 <tr>
                     <td><strong>{{ veltec['numero'] }}</strong></td>
                     <td> Richieste in <strong>Attesa di Validazione Tecnica</strong> da inviare per la validazione Amministrativa</td>
                     <td><a href="#"  onclick="ChangeSelect({{ veltec['idcat'] }})" ><strong>{{veltec['descrizionecategoria'] }}</strong></a> </td>
                 </tr>
             {% endfor %}
-            {% for valamm in nvalamm %}
+            {% endfor %}
+
+            {% for valamm1 in nvalamm %}
+            {% for valamm in valamm1 %}
                 <tr>
                     <td><strong>{{ valamm['numero'] }}</strong></td>
                     <td> Richieste in <strong>Attesa di Valutazione Amministrativa</strong></td>
                     <td><a href="#"  onclick="ChangeSelect({{ valamm['idcat'] }})" ><strong>{{valamm['descrizionecategoria'] }}</strong></a> </td>
                 </tr>
             {% endfor %}
-            {% for dainv in ndainvABS %}
+            {% endfor %}
+
+            {% for dainv1 in ndainvABS %}
+            {% for dainv in dainv1 %}
                 <tr>
                     <td><strong>{{ dainv['numero'] }}</strong></td>
                     <td> Richieste in <strong>Attesa di essere inoltrate in ESTAR</strong></td>
@@ -68,6 +77,8 @@
 
                 </tr>
             {% endfor %}
+            {% endfor %}
+
         </table>
     </div>
     <p>Seleziona una Categoria per cominciare.</p>
