@@ -9,6 +9,7 @@
 namespace estar\rda\RdaBundle\Model;
 
 use estar\rda\RdaBundle\Entity\Campo;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 class CampoModel extends Controller
@@ -32,34 +33,52 @@ class CampoModel extends Controller
      * Sposta un campo sotto
      *
      * @param $idcampo
-     * @return un beneamato cazzo. Fa tutto per effetto laterale (brrr...)
+     * @return boolean
      */
     public function spostaSu($idCampo) {
+
+        //prendo il campo da spostare e controllo se ha figli
         $campo = CampoModel::cast($this->em->getRepository('estarRdaBundle:Campo')
             ->find($idCampo));
-        //Error check: se non è un oggetto, ritorno.
+
+        //Error check: se non ï¿½ un oggetto, ritorno.
         if (!is_object($campo)) return;
 
         //Vediamo su cosa stiamo lavorando
         $ordinamentoDaSpostare = $campo->getOrdinamento();
 
-        //Se è il primo, non faccio niente.
+        //Se ï¿½ il primo, non faccio niente.
         if ($ordinamentoDaSpostare == 1) return;
 
-        //Se è il secondo ma è figlio di qualcuno, non faccio niente
+        //Se ï¿½ il secondo ma ï¿½ figlio di qualcuno, non faccio niente
         if ($ordinamentoDaSpostare == 2 && $this->isFiglio($campo)) return;
 
         //A voler essere fiscali un figlio NON lo posso spostare direttamente, quindi...
         if ($this->isFiglio($campo)) return;
 
-        //Ok, c'è da lavorare.
+        $ordinamentoCampoSopra = $campo->getOrdinamento();
+        //Prendiamo quello immediatamente sopra
+        $ordinamentoCampoSopra = $ordinamentoCampoSopra - 1;
+        $campoDaSpostare=$this->getCampoByOrdinamento($campo->getIdcategoria(), $ordinamentoCampoSopra);
+        //se il campo sopra Ã¨ un padre (il campo padre Ã¨ nullo) inverto i due ordinamenti
+        if(is_null($campoDaSpostare->getCampopadre())){
+            $swap = $campo->getOrdinamento();
+            $campo->setOrdinamento($campoDaSpostare->getOrdinamento());
+            $campoDaSpostare->setOrdinamento($swap);
+        }
+        else{
+            //caso in cui $campoDaSpostare non ha figli mentre
+        }
+
+
+        //Ok, c'ï¿½ da lavorare.
         //Andiamoci a prendere il campo immediatamente sopra a questo.
         //partiamo da questo
         $ordinamentoCampoSopra = $campo->getOrdinamento();
         //Prendiamo quello immediatamente sopra
         $ordinamentoCampoSopra = $ordinamentoCampoSopra - 1;
         $campoDaSpostare=$this->getCampoByOrdinamento($campo->getIdcategoria(), $ordinamentoCampoSopra);
-        //Se il campo sopra è un figlio, dobbiamo spostare suo padre
+        //Se il campo sopra ï¿½ un figlio, dobbiamo spostare suo padre
         $campoDaSpostareFiglio =null;
         if ($this->isFiglio($campoDaSpostare)) {
             $campoDaSpostareFiglio = $campoDaSpostare;
@@ -78,7 +97,7 @@ class CampoModel extends Controller
             $campo->setOrdinamento($campoDaSpostare->getOrdinamento());
             $campoDaSpostare->setOrdinamento($swap);
         } elseif (!$campoFiglio && $campoDaSpostareFiglio) {
-            //Caso più complesso: il campo non ha figli ma il campo sopra in realtà si
+            //Caso piï¿½ complesso: il campo non ha figli ma il campo sopra in realtï¿½ si
             $ordinamentoCampo = $campo->getOrdinamento();
             $ordinamentoCampoDaSpostare = $campoDaSpostare->getOrdinamento();
             $ordinamentoCampoDaSpostareFiglio = $campoDaSpostareFiglio->getOrdinamento();
@@ -107,6 +126,7 @@ class CampoModel extends Controller
      * Sposta un campo sotto
      *
      * @param $idcampo
+     * @return boolean
      */
     public function spostaGiu($idCampo) {
         $campo = CampoModel::cast($this->em->getRepository('estarRdaBundle:Campo')
@@ -115,14 +135,14 @@ class CampoModel extends Controller
         $ordinamento = $campo->getOrdinamento();
         $maxOrdinamentoCategoria = $this->getMaxOrdinamento($campo->getIdcategoria()->getId());
 
-        //Gestione dei casi particolari: se è già l'ultimo campo o se è il penultimo ma ha un figlio, non faccio nulla.
+        //Gestione dei casi particolari: se ï¿½ giï¿½ l'ultimo campo o se ï¿½ il penultimo ma ha un figlio, non faccio nulla.
         if ($ordinamento == $maxOrdinamentoCategoria) return;
         if ($this->isPadre($campo) && $ordinamento == $maxOrdinamentoCategoria-1) return;
 
-        //Non dovrei mai entrare in questo if ma lo metto per sicurezza. Un figlio non si sposta da sè.
+        //Non dovrei mai entrare in questo if ma lo metto per sicurezza. Un figlio non si sposta da sï¿½.
         if ($this->isFiglio($campo)) return;
 
-        //Il campo da spostare è...
+        //Il campo da spostare ï¿½...
         $ordinamentoCampoSotto = $campo->getOrdinamento();
         $ordinamentoCampoSotto = $ordinamentoCampoSotto + 1;
         $campoDaSpostare = $this->getCampoByOrdinamento($campo->getIdcategoria(), $ordinamentoCampoSotto);
@@ -171,6 +191,7 @@ class CampoModel extends Controller
 
         //Finito. Sia lode ai cavalieri Jedi.
         $this->em->flush();
+        return true;
     }
 
     /** Libera lo spazio per inserire un campo sopra
@@ -218,20 +239,20 @@ class CampoModel extends Controller
         return $ordinamentoPartenza;
     }
 
-    /** Ritorna TRUE se il campo è figlio di qualcuno
+    /** Ritorna TRUE se il campo ï¿½ figlio di qualcuno
      *
-     * @return bool se è figlio o no
+     * @return bool se ï¿½ figlio o no
      */
     public function isFiglio(Campo $campo) {
-        //Un campo è figlio di qualcuno se  esiste un padre che ha lui come id figlio
+        //Un campo ï¿½ figlio di qualcuno se  esiste un padre che ha lui come id figlio
         $probabilePadre = $this->em->getRepository('estarRdaBundle:Campo')->findOneByFiglio($campo);
         if($probabilePadre) return true;
         return false;
     }
 
-    /** Ritorna TRUE se il campo è padre di qualcuno
+    /** Ritorna TRUE se il campo ï¿½ padre di qualcuno
      *
-     * @return bool se è padre o no
+     * @return bool se ï¿½ padre o no
      */
     public function isPadre(Campo $campo) {
         if (!is_null($campo->getFiglio())) return true;
@@ -268,5 +289,24 @@ class CampoModel extends Controller
             ->getQuery()
             ->getSingleScalarResult();
         return $max;
+    }
+
+    /**
+     * @param $idcampo
+     * @return array id dei figli
+     */
+    public function prendiFigli($idCampo){
+        $campo = CampoModel::cast($this->em->getRepository('estarRdaBundle:Campo')
+            ->find($idCampo));
+        $campopadre = new ArrayCollection();
+        $campopadre = $campo->getCampifiglio();
+
+        $figlio = $campopadre->toArray();
+        $idFigli = array();
+        foreach ($figlio as $fig) {
+            $idfiglio = $fig->getId();
+            array_push($idFigli,$idfiglio);
+        }
+        return $idFigli;
     }
 }
