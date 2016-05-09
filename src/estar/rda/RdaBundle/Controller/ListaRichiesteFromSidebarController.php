@@ -16,6 +16,8 @@ class ListaRichiesteFromSidebarController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         switch ($selectedSidebarLavorazione){
+
+            //TODO: VANNO PASSATE GLI idCategoria PER SISTEMARE LE QUERY
             case 'lavorate_0':
                 $query = $em->createQuery(
                     'SELECT r
@@ -36,6 +38,9 @@ class ListaRichiesteFromSidebarController extends Controller
 
                 $entities = $query->getResult();
 
+                break;
+            case 'lavorate_2':
+                $entities = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
                 break;
         }
 
