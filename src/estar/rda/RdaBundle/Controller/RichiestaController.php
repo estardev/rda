@@ -223,6 +223,7 @@ class RichiestaController extends Controller
 //        if ($form->isValid()) {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($id);
+        $idCategoria=$entity->getIdcategoria();
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Richiesta entity.');
@@ -251,7 +252,7 @@ class RichiestaController extends Controller
         $em->flush();
 //        }
 
-        return $this->redirect($this->generateUrl('richiesta'));
+        return $this->redirect($this->generateUrl('richiesta_bycategoria',array('idCategoria' => $idCategoria)));
     }
 
 
