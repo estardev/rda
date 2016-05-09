@@ -17,7 +17,7 @@ class ListaRichiesteFromSidebarController extends Controller
 
         switch ($selectedSidebarLavorazione){
 
-            //TODO: VANNO PASSATE GLI idCategoria PER SISTEMARE LE QUERY
+            //TODO: VANNO PASSATE GLI idCategoria PER SISTEMARE LE QUERY??
             case 'lavorate_0':
                 $query = $em->createQuery(
                     'SELECT r
