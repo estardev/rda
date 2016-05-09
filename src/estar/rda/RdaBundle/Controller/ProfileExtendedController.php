@@ -253,7 +253,14 @@ class ProfileExtendedController extends ProfileController
 
         $userManager->updateUser($user, true);
 
-
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            array(
+                'alert' => 'success',
+                'title' => 'Success!',
+                'message' => 'Password Reimpostata da 1 a 8!'
+            )
+        );
 
         $url = $this->generateUrl('utente');
         return $this->redirect($url);

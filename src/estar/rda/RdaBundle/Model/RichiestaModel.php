@@ -487,7 +487,7 @@ class RichiestaModel
                 return $risposta;
 
             case '030':
-                //attesa documentazione aggiuntiva
+                //attesa documentazione aggiuntiva tecnica
                 //La richiesta passa in stato di valutazione tecnica
                 if ($articleSM->can('rifiutata_tec_ABS')) {
                     $iter= new Iter();
@@ -520,7 +520,7 @@ class RichiestaModel
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
             case '031':
-                    //attesa documentazione aggiuntiva
+                    //attesa documentazione aggiuntiva amministrativa
                     //La richiesta passa in stato di valutazione amministrativa
                     if ($articleSM->can('rifiutata_amm_ABS')) {
                         $iter= new Iter();

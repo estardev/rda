@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use estar\rda\RdaBundle\Entity\Utente;
 use estar\rda\RdaBundle\Form\UtenteType;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Utente controller.
@@ -20,11 +21,15 @@ class UtenteController extends Controller
      *
      */
     public function indexAction()
-    {
+    {   $entities= new ArrayCollection();
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('estarRdaBundle:Utente')->findAll();
-
+        $ent = $em->getRepository('estarRdaBundle:Utente')->findAll();
+        //var_dump($entities);
+        foreach($ent as $entity){
+            if($entity->getNomecognome()=='Sistematica') continue;
+            else $entities->add($entity);
+        }
         return $this->render('estarRdaBundle:Utente:index.html.twig', array(
             'entities' => $entities,
         ));
