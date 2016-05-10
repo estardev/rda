@@ -249,8 +249,8 @@ class ProfileExtendedController extends ProfileController
 
         $user= $userManager->findUserBy(array('id'=>$idUtente));
 
-        $user->setPlainPassword('12354678');
-
+        $user->setPlainPassword('12345678');
+        $user->setEnabled(true);
         $userManager->updateUser($user, true);
 
         $this->get('session')->getFlashBag()->add(
