@@ -57,7 +57,8 @@ class ListaRichiesteFromSidebarController extends Controller
                        foreach($ent as $entity){
                            $idc=$entity->getIdcategoria()->getId();
                            $idU = $entity->getIdutente()->getId();
-                           if($idc == $idCategoria AND $idU == $idUtente) $entities->add($entity);
+                           $bozza = $entity->getStatus();
+                           if($idc == $idCategoria AND $idU == $idUtente or($bozza=='bozza' AND $idU == $idUtente)) $entities->add($entity);
                            else continue;
                        }
 
@@ -137,7 +138,7 @@ class ListaRichiesteFromSidebarController extends Controller
                             $idc=$entity->getIdcategoria()->getId();
                             $idU = $entity->getIdutente()->getId();
                             $bozza = $entity->getStatus();
-                            if(($idc == $idCategoria AND $idU == $idUtente) or($bozza=='bozza' AND $idU == $idUtente)) $entities->add($entity);
+                            if(($idc == $idCategoria) or ($bozza=='bozza')) $entities->add($entity);
                             else continue;
                         }
 
