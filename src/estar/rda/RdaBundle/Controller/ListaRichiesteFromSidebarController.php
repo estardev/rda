@@ -69,13 +69,13 @@ class ListaRichiesteFromSidebarController extends Controller
             if ($dirittoSingolo->getIsVt()) {
                 switch ($selectedSidebarLavorazione){
 
-                    //TODO: VANNO PASSATE GLI idCategoria PER SISTEMARE LE QUERY??
-                    case 'lavorate_0':
+                    //TODO: VANNO sistemate le query controllando gli iter in base al tipo di utente!!
+                    case 'lavorate_0'://in lavorazione
                         $query = $em->createQuery(
                             'SELECT r
                         FROM estarRdaBundle:Richiesta r
-                        WHERE (r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6'
-                        )->setParameters(array(2 => 'attesa_val_tec', 3 => 'attesa_val_amm', 4 => 'attesa_val_amm', 5 => 'da_inviare_ABS', 6 => $idCategoria));
+                        WHERE (r.status LIKE ?2 AND r.idcategoria=?6) OR (r.idutente=?3)'
+                        )->setParameters(array(2 => 'attesa_val_tec', 3 => 'bozza', 6 => $idCategoria, 3 => $idUtente));
 
                         $entities= $query->getResult();
                         break;
