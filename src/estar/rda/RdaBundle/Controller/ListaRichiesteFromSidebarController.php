@@ -15,7 +15,7 @@ class ListaRichiesteFromSidebarController extends Controller
         $selectedSidebarLavorazione = $request->request->get('selectedSidebarLavorazione');
         $idCategoria = $request->request->get('idCategoria');
         $em = $this->getDoctrine()->getManager();
-        var_dump($idCategoria);
+        //var_dump($idCategoria);
         switch ($selectedSidebarLavorazione){
 
             //TODO: VANNO PASSATE GLI idCategoria PER SISTEMARE LE QUERY??
