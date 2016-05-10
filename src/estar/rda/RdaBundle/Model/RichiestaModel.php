@@ -33,6 +33,8 @@ class RichiestaModel
     const STATUS_CHIUSA_ABS = "chiusa_ABS";
     const STATUS_ANNULLATA_ABS = "annullata_ABS";
     const STATUS_EVASA_ABS = "evasa_ABS";
+    const STATUS_RIGETTO_ABS = "rigetto_ABS";
+
 
     const STATUSABS_RIGETTO = "Rigettata dal controllo Tecnico ABS";
     const STATUSABS_RIGETTO_AMM = "Rigettata dal controllo Amministrativo ABS";
@@ -197,7 +199,7 @@ class RichiestaModel
 
         if ($dirittiRichiesta->getIsVA() AND $dirittiRichiesta->getIsAI() AND $dirittiRichiesta->getIsVT()){
 
-            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6 OR r.status=:stato7 OR r.status=:stato8 OR r.status=:stato9 OR r.status=:stato10)");
+            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6 OR r.status=:stato7 OR r.status=:stato8 OR r.status=:stato9)");
             $query->setParameters(array(
                 'idcategoria'=> $idCategoria,
                 'idutente'=> $idUtente,
@@ -209,8 +211,8 @@ class RichiestaModel
                 'stato6' => RichiestaModel::STATUS_ANNULLATA,
                 'stato7' => RichiestaModel::STATUS_CHIUSA_ABS,
                 'stato8' => RichiestaModel::STATUS_ANNULLATA_ABS,
-                'stato9' => RichiestaModel::STATUSABS_RIGETTO,
-                'stato10' => RichiestaModel::STATUSABS_RIGETTO_AMM,
+                'stato9' => RichiestaModel::STATUS_RIGETTO_ABS,
+
 
             ));
             $richiesteutente = $query->getResult();

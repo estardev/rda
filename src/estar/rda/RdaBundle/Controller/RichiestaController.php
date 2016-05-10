@@ -252,7 +252,7 @@ class RichiestaController extends Controller
         $em->flush();
 //        }
 
-        return $this->redirect($this->generateUrl('richiesta_bycategoria',array('idCategoria' => $idCategoria)));
+        return $this->redirect($this->generateUrl('richiesta_bycategoria'));
     }
 
 
