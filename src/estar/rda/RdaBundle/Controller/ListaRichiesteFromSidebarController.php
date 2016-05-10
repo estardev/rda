@@ -83,8 +83,8 @@ class ListaRichiesteFromSidebarController extends Controller
                 $query = $em->createQuery(
                     'SELECT r
                         FROM estarRdaBundle:Richiesta r
-                        WHERE (r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6 AND r.idutente=?7'
-                )->setParameters(array(1 => 'bozza', 2 => 'attesa_val_tec', 3 => 'attesa_val_amm', 4 => 'attesa_val_amm', 5 => 'da_inviare_ABS', 6 => $idCategoria, 7 => $idUtente));
+                        WHERE (r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6'
+                )->setParameters(array(2 => 'attesa_val_tec', 3 => 'attesa_val_amm', 4 => 'attesa_val_amm', 5 => 'da_inviare_ABS', 6 => $idCategoria));
 
                 return $query->getResult();
                 break;
