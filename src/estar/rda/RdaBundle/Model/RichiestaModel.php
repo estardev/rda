@@ -35,7 +35,6 @@ class RichiestaModel
     const STATUS_EVASA_ABS = "evasa_ABS";
     const STATUS_RIGETTO_ABS = "rigetto_ABS";
 
-
     const STATUSABS_RIGETTO = "Rigettata dal controllo Tecnico ABS";
     const STATUSABS_RIGETTO_AMM = "Rigettata dal controllo Amministrativo ABS";
     const STATUSABS_ASSEGNATAPROGRAMMAZIONE = "In Programmazione ABS";
@@ -45,7 +44,8 @@ class RichiestaModel
     const STATUSABS_AGGIUDICAZIONE = "Aggiudicazione ABS";
     const STATUSABS_ATTESA_TEC = "Attesa documentazione aggiuntiva Tecnica";
     const STATUSABS_ATTESA_AMM = "Attesa documentazione aggiuntiva Amministrativa";
-    const STATUSABS_ISTRUTTORIA = "In Istruttoria ABS";
+    const STATUSABS_ISTRUTTORIA = "In Istruttoria ABS tecnica";
+    const STATUSABS_ISTRUTTORIA_AMM = "In Istruttoria ABS Amministrativa";
     const STATUSABS_INDIZIONE = "Gara Indetta";
     const STATUSABS_ANNULLATA = "Conferma pratica annullata ABS";
     const STATUSABS_ARCHIVIATA = "Archiviata da ABS";
@@ -655,7 +655,7 @@ class RichiestaModel
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
             case '060':
-                //Istruttoria
+                //Istruttoria tecnica
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS or $iter->getAstatogestav()==RichiestaModel::STATUSABS_ISTRUTTORIA) {
                     $iter= new Iter();
                     $iter->setDastato($richiesta->getStatus());
@@ -671,6 +671,36 @@ class RichiestaModel
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $richiesta->setStatusgestav(RichiestaModel::STATUSABS_ISTRUTTORIA);
+                    $richiesta->setPresentato(17);
+                    $richiesta->setCodicegara($codicegara);
+                    $this->em->persist($richiesta);
+                    $this->em->persist($iter);
+                    $this->em->flush();
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+                }
+                $risposta->setDataRisposta($dataRisposta);
+                return $risposta;
+            case '061':
+                //Istruttoria amministrativa
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS or $iter->getAstatogestav()==RichiestaModel::STATUSABS_ISTRUTTORIA_AMM) {
+                    $iter= new Iter();
+                    $iter->setDastato($richiesta->getStatus());
+                    $iter->setAstato($richiesta->getStatus());
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSABS_ISTRUTTORIA_AMM);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dateTime);
+                    $iter->setIdutente($utente);
+                    $iter->setDatafornita($dataFornita);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $richiesta->setStatusgestav(RichiestaModel::STATUSABS_ISTRUTTORIA_AMM);
                     $richiesta->setPresentato(17);
                     $richiesta->setCodicegara($codicegara);
                     $this->em->persist($richiesta);
