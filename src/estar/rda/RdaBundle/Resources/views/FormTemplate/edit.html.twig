@@ -24,7 +24,7 @@
         {% if not((diritti.isAI) and (stato=='attesa_val_tec') or (stato=='attesa_val_amm'))
             or (stato=='bozza')
             or (diritti.isVT and stato=='attesa_val_tec')
-            or (diritti.isVA AND (stato=='attesa_val_amm'))%} <div class="bottoni"> <button class="btn btn-primary" data-toggle="modal" data-target="#confirmModal"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Cambia Stato</button></div>{% endif %}
+            or (diritti.isVA and (stato=='attesa_val_amm'))%} <div class="bottoni"> <button class="btn btn-primary" data-toggle="modal" data-target="#confirmModal"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Cambia Stato</button></div>{% endif %}
 
     </div>
 
