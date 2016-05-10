@@ -22,12 +22,13 @@
 
             $(document).on("change", "#selectRichiestaLavorazione", function () {
                 var selectedSidebarLavorazione = $(this).val();
+                var idCategoria =$('#homepageSelectCategoria').val();
                 $('#tableListaRichieste').html('<br><p>&nbsp;&nbsp;&nbsp;In Caricamento...</p><br>');
 
                 $.ajax({
                     type: "POST",
                     url: Routing.generate('setListaRichiesteFromSidebar'),
-                    data: {selectedSidebarLavorazione: selectedSidebarLavorazione},
+                    data: {selectedSidebarLavorazione: selectedSidebarLavorazione, idCategoria:idCategoria},
                     success: function (data) {
                         $('#tableListaRichieste').html(data);
                     }
