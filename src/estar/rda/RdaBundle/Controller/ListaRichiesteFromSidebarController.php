@@ -23,7 +23,7 @@ class ListaRichiesteFromSidebarController extends Controller
                 $query = $em->createQuery(
                     'SELECT r
                         FROM estarRdaBundle:Richiesta r
-                        WHERE r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5 AND r.idcategoria=:6'
+                        WHERE (r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6'
                     )->setParameters(array(1 => 'bozza', 2 => 'attesa_val_tec', 3 => 'attesa_val_amm', 4 => 'attesa_val_amm', 5 => 'da_inviare_ABS', 6 => $idCategoria));
 
                 $entities = $query->getResult();
@@ -34,7 +34,7 @@ class ListaRichiesteFromSidebarController extends Controller
                 $query = $em->createQuery(
                     'SELECT r
                         FROM estarRdaBundle:Richiesta r
-                        WHERE r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5 AND r.idcategoria=:6'
+                        WHERE (r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6'
                 )->setParameters(array(1 => 'inviata_ABS', 2 => 'evasa_ABS', 3 => 'rigetto_ABS', 4 => 'chiusa_ABS', 5 => 'annullata_ABS', 6=> $idCategoria));
 
                 $entities = $query->getResult();
