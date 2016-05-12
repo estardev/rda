@@ -466,6 +466,11 @@ class ClientSistematica
                	<type>string</type>
                 <valueString>'.$this->getPriorita().'</valueString>
 			</variable>
+			<variable>
+	            <key>aziendaRichiedente</key>
+               	<type>string</type>
+                <valueString>'.$this->getStrutturarichiedente().'</valueString>
+			</variable>
          </variables>
         '.$references.$attachmentfile.'
          <startWorkflow>'.$startWorkflow.'</startWorkflow>
