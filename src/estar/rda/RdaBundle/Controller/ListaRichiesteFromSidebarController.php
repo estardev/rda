@@ -104,7 +104,8 @@ class ListaRichiesteFromSidebarController extends Controller
                             foreach($ent as $entity){
                                 $idc=$entity->getIdcategoria()->getId();
                                 $idU = $entity->getIdutente()->getId();
-                                if($idc == $idCategoria AND $idU == $idUtente) $entities->add($entity);
+                                $stato = $entity->getStatus();
+                                if(($idc == $idCategoria AND $idU == $idUtente) or $stato=='attesa_val_tec') $entities->add($entity);
                                 else continue;
                             }
 
@@ -124,15 +125,20 @@ class ListaRichiesteFromSidebarController extends Controller
                             $entities= $query->getResult();
                             break;
                         case 'lavorate_1': //lavorate
+                            $query = $em->createQuery(
+                                "SELECT r
+                        FROM estarRdaBundle:Richiesta r, estarRdaBundle:Iter t
+                        WHERE t.idutente=$idUtente AND t.idrichiesta=r.id");
+                            $entities= $query->getResult();
                             //$criteria = array('status' => 'da_inviare_ABS');
                             //$entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy($criteria);
-                            $query = $em->createQuery(
-                                'SELECT r
-                        FROM estarRdaBundle:Richiesta r
-                        WHERE (r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6 AND r.idutente=?7'
-                            )->setParameters(array(1 => 'inviata_ABS', 2 => 'evasa_ABS', 3 => 'rigetto_ABS', 4 => 'chiusa_ABS', 5 => 'annullata_ABS', 6=> $idCategoria, 7 => $idUtente));
-
-                            $entities= $query->getResult();
+                 //           $query = $em->createQuery(
+                 //               'SELECT r
+                 //       FROM estarRdaBundle:Richiesta r
+                 //       WHERE (r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6 AND r.idutente=?7'
+                 //           )->setParameters(array(1 => 'inviata_ABS', 2 => 'evasa_ABS', 3 => 'rigetto_ABS', 4 => 'chiusa_ABS', 5 => 'annullata_ABS', 6=> $idCategoria, 7 => $idUtente));
+//
+                 //           $entities= $query->getResult();
 
                             break;
                         case 'lavorate_2': //tutte
@@ -141,7 +147,8 @@ class ListaRichiesteFromSidebarController extends Controller
                             foreach($ent as $entity){
                                 $idc=$entity->getIdcategoria()->getId();
                                 $idU = $entity->getIdutente()->getId();
-                                if($idc == $idCategoria AND $idU == $idUtente) $entities->add($entity);
+                                $stato = $entity->getStatus();
+                                if(($idc == $idCategoria AND $idU == $idUtente) or $stato=='attesa_val_amm' or $stato=='da_inviare_ABS') $entities->add($entity);
                                 else continue;
                             }
 
