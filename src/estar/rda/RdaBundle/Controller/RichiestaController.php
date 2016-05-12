@@ -382,8 +382,6 @@ class RichiestaController extends Controller
             $iter->setMotivazione($messaggio);
             $iter->setDataora(new \DateTime('now'));
             $iter->setDatafornita(true);
-            $richiesta->setPresentato($pre);
-            $em->persist($richiesta);
             $em->persist($iter);
         }
 
