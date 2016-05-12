@@ -469,7 +469,7 @@ class ClientSistematica
 			<variable>
 	            <key>aziendaRichiedente</key>
                	<type>string</type>
-                <valueString>'.$this->getStrutturarichiedente().'</valueString>
+                <valueString>'.$strutturarichiedente.'</valueString>
 			</variable>
          </variables>
         '.$references.$attachmentfile.'
