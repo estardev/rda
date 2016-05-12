@@ -345,7 +345,7 @@ class RichiestaController extends Controller
         $utente = $this->get('usercheck.notify')->getUtente();
         $iter= new Iter();
 
-        switch($transizione)
+    /**    switch($transizione)
         {
             case 'presentata': $pre=1; break;
             case 'rifiutata_tec': $pre=2; break;
@@ -369,7 +369,7 @@ class RichiestaController extends Controller
             case 'annullamento_ABS': $pre=21; break;
             default: $pre=99; break;
         }
-
+**/
         //        TODO recupero ruolo utente
 
 

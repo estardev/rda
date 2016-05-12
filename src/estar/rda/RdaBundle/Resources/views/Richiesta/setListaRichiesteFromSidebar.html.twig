@@ -138,7 +138,7 @@
                     <td>{{ entity.id }}</td>
                     <td>{{ entity.titolo }}</td>
                     <td>
-                        <button {% if entity.presentato==2 or entity.presentato==4 or entity.presentato==3 or entity.presentato==5  or entity.presentato==7 or entity.presentato==14 or entity.presentato==15 or entity.presentato==21 or entity.presentato==9 or entity.presentato==10 or entity.presentato==11   %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                        <button {% ifentity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
                                     class="glyphicon glyphicon-list"
                                     aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
                         </button>

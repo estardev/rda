@@ -575,7 +575,7 @@ class SistematicaClientController extends Controller
                     $richiesta->setDataprotocollo($dataprotocollo);
                     $richiesta->setUrlprotocollo($urlGestav);
                     $richiesta->setIdgestav($idGestav);
-                    $richiesta->setPresentato(6);
+                    $richiesta->setPresentato(0);
                     $em->persist($richiesta);
                 }
                 elseif ($tipologia == "Documentazione aggiuntiva"){
@@ -587,10 +587,7 @@ class SistematicaClientController extends Controller
                     $richiesta->setPresentato(15);
                     $em->persist($richiesta);
                 }
-                else{
-                    $richiesta->setPresentato(99);
-                    $em->persist($richiesta);
-                }
+
 
                 //aggiungere il protocollo in iter, richiestadocumenti e richiestadocumentiliberi se protocollo null
 
@@ -681,8 +678,6 @@ class SistematicaClientController extends Controller
                 $iter->setDataora(new \DateTime('now'));
                 $iter->setIdutente($this->getUser());
                 $iter->setDatafornita(false);
-                $richiesta->setPresentato(0);
-                $em->persist($richiesta);
                 $em->persist($iter);
                 $em->flush();
                 $this->get('session')->getFlashBag()->add(
