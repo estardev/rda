@@ -582,10 +582,12 @@ class SistematicaClientController extends Controller
                 elseif ($tipologia == "Documentazione aggiuntiva"){
 
                     $richiesta->setPresentato(0);
+                    $richiesta->setStatusgestav(RichiestaModel::STATUSABS_ATTESA_INV);
                     $em->persist($richiesta);
                 }
                 elseif ($tipologia == "Documentazione richiesta da RUP"){
                     $richiesta->setPresentato(0);
+                    $richiesta->setStatusgestav(RichiestaModel::STATUSABS_ATTESA_INV);
                     $em->persist($richiesta);
                 }
 

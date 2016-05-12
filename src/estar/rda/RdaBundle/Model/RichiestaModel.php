@@ -42,8 +42,9 @@ class RichiestaModel
     const STATUSABS_VALUTAZIONE_AMM = "In valutazione amministrativa ABS";
     const STATUSABS_VALUTAZIONE_TEC = "In valutazione tecnica ABS";
     const STATUSABS_AGGIUDICAZIONE = "Aggiudicazione ABS";
-    const STATUSABS_ATTESA = "Attesa documentazione aggiuntiva";
-
+    const STATUSABS_ATTESA_TEC = "Attesa documentazione aggiuntiva Tecnica";
+    const STATUSABS_ATTESA_AMM = "Attesa documentazione aggiuntiva Amministrativa";
+    const STATUSABS_ATTESA_INV = "Inviata documentazione aggiuntiva";
     const STATUSABS_ISTRUTTORIA = "In Istruttoria ABS tecnica";
     const STATUSABS_ISTRUTTORIA_AMM = "In Istruttoria ABS Amministrativa";
     const STATUSABS_INDIZIONE = "Gara Indetta";
@@ -507,7 +508,7 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSABS_ATTESA);
+                    $richiesta->setStatusgestav(RichiestaModel::STATUSABS_ATTESA_TEC);
                     $richiesta->setPresentato(14);
                     $richiesta->setCodicegara(null);
                     $this->em->persist($richiesta);
@@ -540,7 +541,7 @@ class RichiestaModel
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $richiesta->setStatusgestav(RichiestaModel::STATUSABS_VALUTAZIONE_AMM);
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSABS_ATTESA_AMM);
                         $richiesta->setPresentato(14);
                         $richiesta->setCodicegara(null);
                         $this->em->persist($richiesta);
