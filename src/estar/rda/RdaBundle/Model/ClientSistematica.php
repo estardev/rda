@@ -482,8 +482,8 @@ class ClientSistematica
 
         $response = $client->send($request_xml, $soapaction, '');
         $res=$client->responseData;
-        file_put_contents("REQUESTserver/".$number."_richiestaclient.xml",$client->request );
-        file_put_contents("REQUESTserver/".$number."_rispostastaclient.xml",$client->response );
+        file_put_contents("REQUESTserver/".$number.rand()."_richiestaclient.xml",$client->request );
+        file_put_contents("REQUESTserver/".$number.rand()."_rispostastaclient.xml",$client->response );
         if($rispostaSistematica= file_get_contents("REQUESTserver/".$number."_rispostastaclient.xml")){
             if(!strstr($rispostaSistematica,"<SOAP-ENV:Fault>")){
                 $responseXML=strstr($res,"<SOAP-ENV:Body>");

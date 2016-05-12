@@ -45,7 +45,7 @@ class RichiestaModel
     const STATUSABS_ATTESA_TEC = "Attesa documentazione aggiuntiva Tecnica";
     const STATUSABS_ATTESA_AMM = "Attesa documentazione aggiuntiva Amministrativa";
     const STATUSABS_ATTESA_INV = "Inviata documentazione aggiuntiva";
-    const STATUSABS_ISTRUTTORIA = "In Istruttoria ABS tecnica";
+    const STATUSABS_ISTRUTTORIA = "In Istruttoria ABS";
     const STATUSABS_ISTRUTTORIA_AMM = "In Istruttoria ABS Amministrativa";
     const STATUSABS_INDIZIONE = "Gara Indetta";
     const STATUSABS_ANNULLATA = "Conferma pratica annullata ABS";
