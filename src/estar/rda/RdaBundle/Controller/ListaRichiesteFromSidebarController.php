@@ -28,30 +28,38 @@ class ListaRichiesteFromSidebarController extends Controller
                     //Abilitato all'inserimento
 
                     switch ($selectedSidebarLavorazione){
-
-                        //TODO: VANNO PASSATE GLI idCategoria PER SISTEMARE LE QUERY??
-                        case 'lavorate_0':
+                        case 'lavorate_0': //in lavorazione
                             $query = $em->createQuery(
                                 'SELECT r
                         FROM estarRdaBundle:Richiesta r
-                        WHERE (r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6 AND r.idutente=?7'
-                            )->setParameters(array(1 => 'bozza', 2 => 'attesa_val_tec', 3 => 'attesa_val_amm', 4 => 'attesa_val_amm', 5 => 'da_inviare_ABS', 6 => $idCategoria, 7 => $idUtente));
+                        WHERE r.status LIKE ?1  AND r.idcategoria=?6 AND r.idutente=?7'
+                            )->setParameters(array(1 => 'bozza', 6 => $idCategoria, 7 => $idUtente));
 
                             $entities= $query->getResult();
                             break;
-                        case 'lavorate_1':
+                        case 'lavorate_1': //lavorate
+
+                            $entities= new ArrayCollection();
+                            $ent = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
+                            foreach($ent as $entity){
+                                $idc=$entity->getIdcategoria()->getId();
+                                $idU = $entity->getIdutente()->getId();
+                                $stato= $entity->getStatus();
+                                if($idc == $idCategoria AND $idU == $idUtente AND $stato!='bozza') $entities->add($entity);
+                                else continue;
+                            }
                             //$criteria = array('status' => 'da_inviare_ABS');
                             //$entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy($criteria);
-                            $query = $em->createQuery(
-                                'SELECT r
-                        FROM estarRdaBundle:Richiesta r
-                        WHERE (r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6 AND r.idutente=?7'
-                            )->setParameters(array(1 => 'inviata_ABS', 2 => 'evasa_ABS', 3 => 'rigetto_ABS', 4 => 'chiusa_ABS', 5 => 'annullata_ABS', 6=> $idCategoria, 7 => $idUtente));
-
-                            $entities= $query->getResult();
+                       //     $query = $em->createQuery(
+                       //         'SELECT r
+                       // FROM estarRdaBundle:Richiesta r
+                       // WHERE (r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6 AND r.idutente=?7'
+                       //     )->setParameters(array(1 => 'inviata_ABS', 2 => 'evasa_ABS', 3 => 'rigetto_ABS', 4 => 'chiusa_ABS', 5 => 'annullata_ABS', 6=> $idCategoria, 7 => $idUtente));
+//
+                       //     $entities= $query->getResult();
 
                             break;
-                        case 'lavorate_2':
+                        case 'lavorate_2': //tutte
                             $entities= new ArrayCollection();
                             $ent = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
                             foreach($ent as $entity){
@@ -69,16 +77,16 @@ class ListaRichiesteFromSidebarController extends Controller
                     switch ($selectedSidebarLavorazione){
 
                         //TODO: VANNO PASSATE GLI idCategoria PER SISTEMARE LE QUERY??
-                        case 'lavorate_0':
+                        case 'lavorate_0': //in lavorazione
                             $query = $em->createQuery(
                                 'SELECT r
                         FROM estarRdaBundle:Richiesta r
-                        WHERE (r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6 AND r.idutente=?7'
-                            )->setParameters(array(1 => 'bozza', 2 => 'attesa_val_tec', 3 => 'attesa_val_amm', 4 => 'attesa_val_amm', 5 => 'da_inviare_ABS', 6 => $idCategoria, 7 => $idUtente));
+                        WHERE r.status LIKE ?2 AND r.idcategoria=?6'
+                            )->setParameters(array(2 => 'attesa_val_tec', 6 => $idCategoria));
 
                             $entities= $query->getResult();
                             break;
-                        case 'lavorate_1':
+                        case 'lavorate_1': //lavorate
                             //$criteria = array('status' => 'da_inviare_ABS');
                             //$entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy($criteria);
                             $query = $em->createQuery(
@@ -90,7 +98,7 @@ class ListaRichiesteFromSidebarController extends Controller
                             $entities= $query->getResult();
 
                             break;
-                        case 'lavorate_2':
+                        case 'lavorate_2': //tutte
                             $entities= new ArrayCollection();
                             $ent = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
                             foreach($ent as $entity){
@@ -106,18 +114,16 @@ class ListaRichiesteFromSidebarController extends Controller
                 }
                 if ($dirittoSingolo->getIsVa()) {
                     switch ($selectedSidebarLavorazione){
-
-                        //TODO: VANNO PASSATE GLI idCategoria PER SISTEMARE LE QUERY??
-                        case 'lavorate_0':
+                        case 'lavorate_0': //in lavorazione
                             $query = $em->createQuery(
                                 'SELECT r
                         FROM estarRdaBundle:Richiesta r
-                        WHERE (r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6 AND r.idutente=?7'
-                            )->setParameters(array(1 => 'bozza', 2 => 'attesa_val_tec', 3 => 'attesa_val_amm', 4 => 'attesa_val_amm', 5 => 'da_inviare_ABS', 6 => $idCategoria, 7 => $idUtente));
+                        WHERE r.status LIKE ?4 AND r.idcategoria=?6'
+                            )->setParameters(array(4 => 'attesa_val_amm', 5 => 'da_inviare_ABS', 6 => $idCategoria));
 
                             $entities= $query->getResult();
                             break;
-                        case 'lavorate_1':
+                        case 'lavorate_1': //lavorate
                             //$criteria = array('status' => 'da_inviare_ABS');
                             //$entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy($criteria);
                             $query = $em->createQuery(
@@ -129,7 +135,7 @@ class ListaRichiesteFromSidebarController extends Controller
                             $entities= $query->getResult();
 
                             break;
-                        case 'lavorate_2':
+                        case 'lavorate_2': //tutte
                             $entities= new ArrayCollection();
                             $ent = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
                             foreach($ent as $entity){

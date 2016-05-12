@@ -654,6 +654,7 @@ class RichiestaModel
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
+
             case '060':
                 //Istruttoria tecnica
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS or $iter->getAstatogestav()==RichiestaModel::STATUSABS_ISTRUTTORIA) {
@@ -684,6 +685,7 @@ class RichiestaModel
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
+
             case '061':
                 //Istruttoria amministrativa
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS or $iter->getAstatogestav()==RichiestaModel::STATUSABS_ISTRUTTORIA_AMM) {
@@ -714,6 +716,7 @@ class RichiestaModel
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
+
             case '070':
                 //Indizione
                 if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ABS AND !empty($codicegara)) or $iter->getAstatogestav()==RichiestaModel::STATUSABS_INDIZIONE) {
