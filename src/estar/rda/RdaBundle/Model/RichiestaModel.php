@@ -509,7 +509,7 @@ class RichiestaModel
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $richiesta->setStatusgestav(RichiestaModel::STATUSABS_ATTESA_TEC);
-                    $richiesta->setPresentato(10);
+                    $richiesta->setPresentato(14);
                     $richiesta->setCodicegara(null);
                     $this->em->persist($richiesta);
                     $this->em->persist($iter);
