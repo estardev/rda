@@ -2,6 +2,7 @@
 
 namespace estar\rda\RdaBundle\Controller;
 
+use estar\rda\RdaBundle\Model\RichiestaModel;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use BeSimple\SoapBundle\ServiceDefinition\Annotation as Soap;
 use BeSimple\SoapCommon\Helper as BeSimpleSoapHelper;
@@ -580,11 +581,11 @@ class SistematicaClientController extends Controller
                 }
                 elseif ($tipologia == "Documentazione aggiuntiva"){
 
-                    $richiesta->setPresentato(14);
+                    $richiesta->setPresentato(0);
                     $em->persist($richiesta);
                 }
                 elseif ($tipologia == "Documentazione richiesta da RUP"){
-                    $richiesta->setPresentato(15);
+                    $richiesta->setPresentato(0);
                     $em->persist($richiesta);
                 }
 
