@@ -20,6 +20,8 @@ class ListaRichiesteFromSidebarController extends Controller
         $userCheck = $this->get("usercheck.notify");
         $dirittiTotaliRadicaliGlobbali = $userCheck->dirittiByUtente(); //array di oggetti DirittiRichiesta
 
+        $diritti = $userCheck->allRole($idCategoria);
+
         foreach ($dirittiTotaliRadicaliGlobbali as $dirittoSingolo) {
             $idC = $dirittoSingolo->getCategoria()->getId();
             if($idCategoria!=$idC) continue;
@@ -158,7 +160,8 @@ class ListaRichiesteFromSidebarController extends Controller
 
         //return new Response($entities);
         return $this->render('estarRdaBundle:Richiesta:table.html.twig', array(
-            'entities' => $entities
+            'entities' => $entities,
+            'diritti' => $diritti
         ));
 
     }

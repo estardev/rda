@@ -22,12 +22,13 @@
 
             $(document).on("change", "#selectRichiestaLavorazione", function () {
                 var selectedSidebarLavorazione = $(this).val();
+                var idCategoria =$('#homepageSelectCategoria').val();
                 $('#tableListaRichieste').html('<br><p>&nbsp;&nbsp;&nbsp;In Caricamento...</p><br>');
 
                 $.ajax({
                     type: "POST",
                     url: Routing.generate('setListaRichiesteFromSidebar'),
-                    data: {selectedSidebarLavorazione: selectedSidebarLavorazione},
+                    data: {selectedSidebarLavorazione: selectedSidebarLavorazione, idCategoria:idCategoria},
                     success: function (data) {
                         $('#tableListaRichieste').html(data);
                     }
@@ -106,6 +107,7 @@
 
             <div class="form-group pull-right">
                 <input id="searchRichiesta" class="form-control" placeholder="Cerca..."/>
+                <!--TODO: PASSARE ANCHE L' idCategoria PER MOSTRARE SEMPRE QUELLE DELLA STESSA CATEGORIA -->
                 <select id="selectRichiestaLavorazione" class="form-control">
                     <option disabled selected>Filtra Richieste:</option>
                     <option value="lavorate_2" type="text">Tutte</option>

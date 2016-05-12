@@ -1,4 +1,4 @@
-
+<!--
         <thead>
             <tr>
                 <th>Id Pratica</th>
@@ -30,3 +30,62 @@
             </tr>
         {% endfor %}
         </tbody>
+       -->
+<thead>
+<tr>
+    <th>Id Pratica</th>
+    <th>Titolo</th>
+    <th>Status</th>
+    <th>Anno programmazione</th>
+    <th>Numero protocollo</th>
+    <th>Azioni</th>
+</tr>
+</thead>
+
+{% for entity in entities %}
+
+
+    <tr data-state="richiesta">
+
+        <td>{{ entity.id }}</td>
+        <td>{{ entity.titolo }}</td>
+        <td>
+            <button {% if entity.presentato==2 or entity.presentato==4 or entity.presentato==3 or entity.presentato==5  or entity.presentato==7 or entity.presentato==14 or entity.presentato==15 or entity.presentato==21 or entity.presentato==9 or entity.presentato==10 or entity.presentato==11   %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                        class="glyphicon glyphicon-list"
+                        aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+            </button>
+        </td>
+        <td>{{ entity.annoprogrammazione }}</td>
+        <td>{{ entity.numeroprotocollo }}</td>
+        <td>
+
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-file"
+                                                                    aria-hidden="true"></span><a
+                            target="_blank"
+                            href="{{ path('formtemplate_print', { 'idRichiesta': entity.id, 'idCategoria': entity.idcategoria }) }}">
+                        Genera PDF</a></button>
+                {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ABS' or entity.status == 'chiusa_ABS' or entity.status == 'annullata_ABS') %}
+                    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-pencil"
+                                                                        aria-hidden="true"></span><a
+                                href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
+                            Modifica</a></button>
+                {% endif %}
+                {% if (diritti.isai and entity.status=='bozza') or (diritti.isvt and entity.status=='attesa_val_tec') or (diritti.isva and entity.status=='attesa_val_amm') or (diritti.isva and entity.status=='da_inviare_ABS') %}
+
+                    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-book"
+                                                                        aria-hidden="true"></span><a
+                                href="{{ path('documento_byCategoria', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
+                            Documenti</a></button>
+
+                    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-book"
+                                                                        aria-hidden="true"></span><a
+                                href="{{ path('documento_liberoByRichiesta', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
+                            Allegati</a></button>
+                {% endif %}
+            </div>
+
+        </td>
+    </tr>
+{% endfor %}
+</tbody>
