@@ -96,6 +96,25 @@ class FormTemplateService
         $idCategoria = (get_class($entity) == 'estar\rda\RdaBundle\Entity\Categoria') ? $entity : $entity->getIdCategoria();
 
         $diritti = $this->user->allRole($idCategoria);
+        $utentesessione = $this->user->getIdUtente();
+// //       $statusrichiesta = $entity->getStatus();
+//
+ //       if($diritti->getIsVA() and ($statusrichiesta=='attesa_val_amm' or $statusrichiesta=='da_inviare_ABS')){
+ //           $prova='a';
+ //       }
+ //       elseif($diritti->getIsVT() and $statusrichiesta=='attesa_val_tec'){
+ //           $prova='b';
+//
+ //       }
+ //       elseif($diritti->getIsAI() and $statusrichiesta=='bozza'){
+ //           $prova='c';
+//
+ //       }
+ //       else{
+ //           $prova='d';
+//
+ //       }
+
 
         if ($mode == FormTemplateService::MODE_INSERT) {
 
@@ -105,7 +124,7 @@ class FormTemplateService
             $builder->add("titolo", "text", array(
                 'label' => "Titolo",
                 'attr' => array(
-                    'placeholder'=> "Specificare un oggetto per la propria richiesta"),
+                'placeholder'=> "Specificare un oggetto per la propria richiesta"),
                 'constraints' => new NotNull()
             ));
             $builder->get('titolo')
@@ -301,6 +320,7 @@ class FormTemplateService
             return array(0 => $builder->getForm(), 1 => $firstLevels);
         } else {
             //sono in modalita EDITedit/1/28
+
             $em = $this->em;
             if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
                 $idRichiesta = $entity->getId();
@@ -341,8 +361,14 @@ class FormTemplateService
 
             //FG 20151016 gestione dei campi della richiesta
 
+            //todo  qui devo mettere il controllo sul tipo di utente!!
+                    $statusrichiesta = $entity->getStatus();
+                    $permessoscrittura=0;
+                   if($statusrichiesta=='bozza'or ($diritti->getIsVT() and $statusrichiesta=='attesa_val_tec') or ($diritti->getIsVA() and ($statusrichiesta=='attesa_val_amm' or $statusrichiesta=='da_inviare_ABS')))
+                       {    $permessoscrittura = 1;
+                   }
             if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
-                if ($mode == FormTemplateService::MODE_PRINT) {
+                if ($mode == FormTemplateService::MODE_PRINT  or !$permessoscrittura ) {
                     $builder->add("titolo", "text", array(
                         'label' => "Titolo",
                         'data' => $entity->getTitolo(),
@@ -351,6 +377,7 @@ class FormTemplateService
                     ));
                 }
                 else{
+                    //TODO controllo del tipo di utente!!!!
                     $builder->add("titolo", "text", array(
                         'label' => "Titolo",
                         'data' => $entity->getTitolo()
@@ -376,7 +403,7 @@ class FormTemplateService
 
                         }
                     ));
-                if ($mode == FormTemplateService::MODE_PRINT) {
+                if ($mode == FormTemplateService::MODE_PRINT or !$permessoscrittura) {
                     $builder->add("descrizione", "textarea", array(
                         'label' => "Descrizione",
                         'data' => $entity->getDescrizione(),
@@ -385,6 +412,7 @@ class FormTemplateService
                     ));
                 }
                 else{
+                    //TODO controllo del tipo di utente!!!!
                     $builder->add("descrizione", "textarea", array(
                         'label' => "Descrizione",
                         'data' => $entity->getDescrizione()
@@ -431,7 +459,7 @@ class FormTemplateService
                     $class = array('class' => 'firstLevel');
 
                     //discrimino il caso della stampa
-                    if ($mode == FormTemplateService::MODE_PRINT) {
+                    if ($mode == FormTemplateService::MODE_PRINT or !$permessoscrittura) {
                         //$descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
                         $options = $this->getChoicesOptions($campo['fieldset']);
                         $builder->add($campo['nome'] . '-' . $campo['idcampo'], 'text', array(
@@ -443,7 +471,7 @@ class FormTemplateService
 
 
                     } else {
-
+                        //TODO controllo del tipo di utente!!!!
 
                         $options = $this->getChoicesOptions($campo['fieldset']);
                         $builder->add($campo['nome'] . '-' . $campo['idcampo'], 'choice', array(
@@ -480,7 +508,7 @@ class FormTemplateService
 
                 } else {
                     //discrimino il caso della stampa
-                    if ($mode == FormTemplateService::MODE_PRINT) {
+                    if ($mode == FormTemplateService::MODE_PRINT or !$permessoscrittura) {
                         $builder->add($campo['nome'] . '-' . $campo['idcampo'], $campo['tipo'], array(
                             'label' => $campo['descrizione'],
                             'data' => $campo['valore'],
@@ -488,7 +516,7 @@ class FormTemplateService
                             'disabled' => "disabled"
                         ));
                     } else {
-
+                        //TODO controllo del tipo di utente!!!!
                         $class = array();
                         $label = $campo['descrizione'];
                         if ($campo['padre'] != null) {
@@ -550,7 +578,7 @@ class FormTemplateService
                 $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
                 //TODO non riesco a tirare su la statemachine e quindi ho preso l'ultimo stato dalla richiesta
                 $stato = $richiesta->getStatus();
-                if ($stato == 'inviata_ABS' or $stato =='rigetto_ABS') {
+                if ( !$permessoscrittura or $stato =='rigetto_ABS') {
                     $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'disabled' => 'disabled', 'icon' => 'glyphicon glyphicon-ok')));
                 } else {
                     $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'icon' => 'glyphicon glyphicon-ok')));
