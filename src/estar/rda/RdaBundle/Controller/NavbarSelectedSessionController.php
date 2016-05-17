@@ -16,15 +16,6 @@ class NavbarSelectedSessionController extends Controller
         $response = array();
         $response['homepageSelectCategoria'] = "";
 
-        if (   $homepageSelectCategoria==22
-            or $homepageSelectCategoria==23
-            or $homepageSelectCategoria==24
-            or $homepageSelectCategoria==25
-            or $homepageSelectCategoria==26
-        ){
-
-        }
-
         if (isset($homepageSelectCategoria)){
             $this->get('session')->set('homepageSelectCategoria', $homepageSelectCategoria);
             $response['homepageSelectCategoria'] = $this->get('session')->get('homepageSelectCategoria');

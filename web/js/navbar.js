@@ -23,7 +23,35 @@ $(document).ready(function()
     $(document).on("change", "#homepageSelectCategoria", function () {
         var homepageSelectCategoria = $('#homepageSelectCategoria').val();
         $('#homepageSelectBtnCategoria').attr('disabled',false);
+        //alert("selezionato: " + homepageSelectCategoria);
+        if (  homepageSelectCategoria==22
+            || homepageSelectCategoria==23
+            || homepageSelectCategoria==24
+            || homepageSelectCategoria==25
+            || homepageSelectCategoria==26
+        ){
+            //alert("sonoentrato: " + homepageSelectCategoria);
+            $.ajax({
+                success: function(dataset)
+                {   //alert("qui: " + homepageSelectCategoria);
+                    window.location.replace("http://portale-mav.estav-centro.toscana.it/RNP_index.php?dbForm_RNP_Form1_startInsert=Nuova+richiesta");
+                }
+            });
 
+        }else{
+            //alert("else: " + homepageSelectCategoria);
+            $.ajax({
+                type: "POST",
+                url: Routing.generate('navbarSelectedSessionSet'),
+                async: false,
+                data: {homepageSelectCategoria: homepageSelectCategoria},
+                success: function(dataset)
+                {
+                    var myjson = $.parseJSON(dataset);
+                    window.location.replace(Routing.generate('richiesta_bycategoria', {'idCategoria': homepageSelectCategoria}));
+                }
+            });
+        }
         $.ajax({
             type: "POST",
             url: Routing.generate('navbarSelectedSessionSet'),

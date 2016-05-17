@@ -7,8 +7,10 @@
  */
 namespace estar\rda\RdaBundle\Twig;
 
-use estar\rda\RdaBundle\Entity\GenericDoctrine;
+use estar\rda\RdaBundle\estarRdaBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use Symfony\Component\Routing\RouterInterface;
 
 class NavbarExtension extends \Twig_Extension
 {
@@ -96,8 +98,6 @@ class NavbarExtension extends \Twig_Extension
 
 
         $categoriaSelezionata = $this->session->get('homepageSelectCategoria');
-
-
 
         return $twig->render('estarRdaBundle::navbar.html.twig', array(
             'richiesta' => $richiesta,
