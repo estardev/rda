@@ -361,10 +361,12 @@ class FormTemplateService
 
             //FG 20151016 gestione dei campi della richiesta
 
-            //todo  qui devo mettere il controllo sul tipo di utente!!
+            //controllo sul tipo di utente!!
                     $statusrichiesta = $entity->getStatus();
                     $permessoscrittura=0;
-                   if($statusrichiesta=='bozza'or ($diritti->getIsVT() and $statusrichiesta=='attesa_val_tec') or ($diritti->getIsVA() and ($statusrichiesta=='attesa_val_amm' or $statusrichiesta=='da_inviare_ABS')))
+                   if($statusrichiesta=='bozza'
+                       or ($diritti->getIsVT() and $statusrichiesta=='attesa_val_tec')
+                       or ($diritti->getIsVA() and ($statusrichiesta=='attesa_val_amm' or $statusrichiesta=='da_inviare_ABS')))
                        {    $permessoscrittura = 1;
                    }
             if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {

@@ -97,6 +97,8 @@ class NavbarExtension extends \Twig_Extension
 
         $categoriaSelezionata = $this->session->get('homepageSelectCategoria');
 
+
+
         return $twig->render('estarRdaBundle::navbar.html.twig', array(
             'richiesta' => $richiesta,
             'categoria'=> $categoria,
