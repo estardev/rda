@@ -420,7 +420,7 @@ class FormBuilderController extends Controller
     }
 
 
-
+    //DEM 20160518 edit del campo solo se non è mai stato utilizzato
     /**
      * Modifica campo
      * @Route("/edit/{idCategoria}/{idCampo}")
@@ -651,6 +651,7 @@ class FormBuilderController extends Controller
         return $this->redirect($this->generateUrl('formbuilder_showByCategoria', array('idCategoria' => $idCategoria)));
     }
 
+    //DEM 20160518 elimina un campo in maniera logica
     /**
      * Elimina un campo
      * @Route("/elimina/{idCategoria}/{idCampo}")
