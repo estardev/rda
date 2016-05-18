@@ -419,13 +419,14 @@ class FormBuilderController extends Controller
 
     }
 
-    //TODO: FARE DA QUI ALLA FINE!!!!!
+
 
     /**
      * Modifica campo
      * @Route("/edit/{idCategoria}/{idCampo}")
      * @Security("has_role('ROLE_ADMIN')")
      * @param string $idCategoria la categoria
+     * @param string $idCampo il campo
      * @return Response A Response instance
      *
      */
@@ -436,19 +437,111 @@ class FormBuilderController extends Controller
         $campo = $em->getRepository('estarRdaBundle:Campo')->find($idCampo);
 
 
-        $vcr = $em->getRepository('estarRdaBundle:Valorizzazionecamporichiesta')->findByCampo($campo);
-        if (is_null($vcr)) {
-            //se non esiste alcuna valorizzazionecamporichiesta che punta a quel campo
-            //edito quello che voglio
+      $vcr = $em->getRepository('estarRdaBundle:Valorizzazionecamporichiesta')->findBy(array("idcampo" => $idCampo));
+       if (empty($vcr)) {
+
+            $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl('formbuilder_editDB', array('idCampo' => $idCampo, 'idCategoria' => $idCategoria)))
+                ->add("nome", "text", array(
+                    'label' => "Nome",
+                    'data' => $campo->getNome(),
+                    'constraints' => new NotNull()
+                ))
+                ->add("descrizione", "text", array(
+                    'label' => "Descrizione",
+                    'data' => $campo->getDescrizione(),
+                    'constraints' => new NotNull()
+                ))
+                ->add("tipologia", "choice", array(
+                    'choices' => Campo::getPossibleEnumValues(),
+                    'label' => "Tipologia",
+                    'data' => $campo->getTipo()
+                ))
+                ->add("obbligatorioInserzione", "choice", array(
+                    'choices' => Campo::getPossibleEnumObblighi(),
+                    'label' => "Obbligatorio Inserzione",
+                    'expanded' => true,
+                    'data' => $campo->getObbligatorioinserzione()
+                ))
+                ->add("obbligatorioValidazioneTecnica", "choice", array(
+                    'choices' => Campo::getPossibleEnumObblighi(),
+                    'label' => "Obbligatorio Validazione Tecnica",
+                    'expanded' => true,
+                    'data' => $campo->getObbligatoriovalidazionetecnica()
+                ))
+                ->add("obbligatorioValidazioneAmministrativa", "choice", array(
+                    'choices' => Campo::getPossibleEnumObblighi(),
+                    'label' => "Obbligatorio Validazione Amministrativa",
+                    'expanded' => true,
+                    'data' => $campo->getObbligatoriovalidazioneamministrativa()
+                ))
+                ->add('submit', 'submit', array('label' => 'Modifica Campo'))
+                ->getForm();
+
+            $backForm = $this->createFormBuilder()
+                ->setAction($this->generateUrl('formbuilder_showByCategoria', array('idCategoria' => $idCategoria)))
+                ->add('submit', 'submit', array('label' => 'Indietro'))
+                ->getForm();
+
+            return $this->render('estarRdaBundle:FormBuilder:crea.html.twig', array(
+                'form' => $form->createView(),
+                'backForm' => $backForm->createView()));
 
         } else {
             //Se esiste almeno una valorizzazionecamporichiesta che punta a quel campo
             //mostro solo la descrizione
+           $backForm = $this->createFormBuilder()
+               ->setAction($this->generateUrl('formbuilder_showByCategoria', array('idCategoria' => $idCategoria)))
+               ->add('submit', 'submit', array('label' => 'Il campo è stato utilizzato almeno una volta e non può più essere modificato'))
+               ->getForm();
+
+           return $this->render('estarRdaBundle:FormBuilder:crea.html.twig', array(
+               'backForm' => $backForm->createView()));
 
         }
 
     }
 
+    /**
+     * Inserisce un nuovo campo
+     * @Route("/editDB/{idCategoria}/{idCampo}")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @param string $idCategoria la categoria
+     * @param string $idCampo il campo
+     * @return Response A Response instance
+     *
+     */
+    public function editDBAction($idCategoria, $idCampo,  Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $campo = $em->getRepository('estarRdaBundle:Campo')->find($idCampo);
+
+
+        //Dopodichè ci andiamo a pescare i valori.
+        $campi = $request->request->all();
+        $nome = str_replace(" ","",$campi['form']['nome']);
+        $descrizione = $campi['form']['descrizione'];
+        $tipologia = $campi['form']['tipologia'];
+        $inserzione =$campi['form']['obbligatorioInserzione'];
+        $valtec = $campi['form']['obbligatorioValidazioneTecnica'];
+        $valamm = $campi['form']['obbligatorioValidazioneAmministrativa'];
+
+        $dateTime = new \DateTime();
+        $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
+
+        //Settiamo e salviamo
+        $campo->setDescrizione($descrizione);
+        $campo->setTipo($tipologia);
+        $campo->setObbligatorioinserzione($inserzione);
+        $campo->setObbligatoriovalidazionetecnica($valtec);
+        $campo->setObbligatoriovalidazioneamministrativa($valamm);
+        $campo->setNome($nome);
+        $campo->setDataattivazione($dateTime);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('formbuilder_showByCategoria', array('idCategoria' => $idCategoria)));
+
+    }
         /**
      * Inserisce un nuovo campo
      * @Route("/nuovo/{idCategoria}")
@@ -584,6 +677,7 @@ class FormBuilderController extends Controller
 
     }
 
+    //TODO: FARE DA QUI ALLA FINE!!!!!
     /**
      * Elimina un campo
      * @Route("/spostaSu/{idCategoria}/{idCampo}")

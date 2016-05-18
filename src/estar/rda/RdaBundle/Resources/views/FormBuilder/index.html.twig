@@ -79,6 +79,9 @@
                                 <li>
                                     <a href="{{ path('formbuilder_spostaSu', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Sposta Su</a>
                                 </li>
+                                <li>
+                                    <a href="{{ path('formbuilder_edit', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Modifica Campo</a>
+                                </li>
 
                                 {% if entity.campopadre %}
                                     <li class="disabled"><a href="{{ path('formbuilder_elimina', { 'idCategoria': entity.idcategoria.id, 'idCampo': entity.id }) }}">Elimina</a>

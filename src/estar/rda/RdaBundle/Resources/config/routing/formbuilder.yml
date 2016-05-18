@@ -38,6 +38,14 @@ formbuilder_elimina:
     path:     /elimina/{idCategoria}/{idCampo}
     defaults: { _controller: "estarRdaBundle:FormBuilder:elimina" }
 
+formbuilder_edit:
+    path:     /edit/{idCategoria}/{idCampo}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:edit" }
+
+formbuilder_editDB:
+    path:     /editDB/{idCategoria}/{idCampo}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:editDB" }
+
 formbuilder_nuovo:
     path:     /nuovo/{idCategoria}
     defaults: { _controller: "estarRdaBundle:FormBuilder:crea" }
