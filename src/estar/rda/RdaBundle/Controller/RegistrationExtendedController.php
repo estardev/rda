@@ -69,14 +69,14 @@ class RegistrationExtendedController extends RegistrationParentController
             $campiRequest = $request->request->all();
             if (array_key_exists('gruppiutente', $campiRequest['fos_user_registration_form'])) {
                 $gruppiutenteRequest = $campiRequest['fos_user_registration_form']['gruppiutente'];
-                if (array_key_exists('amministratoriCheckboxInput', $campiRequest)) {
-                    $amministratoriRequest = $campiRequest['amministratoriCheckboxInput'];
-
-                    foreach ($gruppiutenteRequest as $gruppoutenteRequest) {
+                //DEM 20160218 Risolto bug per registrazione utente
+                foreach ($gruppiutenteRequest as $gruppoutenteRequest) {
                         $utentegruppoutente = new Utentegruppoutente();
                         $utentegruppoutente->setIdutente($user); //FG 20160202 modificato causa refactoring
                         $utentegruppoutenteEntity = $em->getRepository('estarRdaBundle:Gruppoutente')->find($gruppoutenteRequest);
                         $utentegruppoutente->setIdgruppoutente($utentegruppoutenteEntity);
+            if (array_key_exists('amministratoriCheckboxInput', $campiRequest)) {
+                        $amministratoriRequest = $campiRequest['amministratoriCheckboxInput'];
                         if ($amministratoriRequest) {
                             foreach ($amministratoriRequest as $amministratoreRequest) {
                                 if ($amministratoreRequest == $gruppoutenteRequest) {
@@ -84,8 +84,9 @@ class RegistrationExtendedController extends RegistrationParentController
                                 }
                             }
                         }
-                        $em->persist($utentegruppoutente);
+
                     }
+                    $em->persist($utentegruppoutente);
                 }
 
             }
