@@ -104,7 +104,9 @@ class FormTemplateController extends Controller
 
     public function createAction(Request $request, $idCategoria)
     {
-
+        $dateTime = new \DateTime();
+        $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
+        $dataFornita = false;
 
         $em = $this->getDoctrine()->getManager();
 
@@ -129,6 +131,7 @@ class FormTemplateController extends Controller
             $richiesta->setIdutente($utente);
             $richiesta->setIdcategoria($categoria);
             $richiesta->setIdazienda($idazienda);
+            $richiesta->setDataora($dateTime);
             $richiesta->setStatus('bozza');
             $richiesta->setTitolo($campi['form']['titolo']);
             $richiesta->setDescrizione($campi['form']['descrizione']);
@@ -154,9 +157,6 @@ class FormTemplateController extends Controller
             }
 
             $em->flush();
-            $dateTime = new \DateTime();
-            $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
-            $dataFornita = false;
             $iter= new Iter();
             $iter->setIdutente($utente);
             $iter->setIdrichiesta($richiesta);

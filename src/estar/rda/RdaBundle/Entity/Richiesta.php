@@ -13,6 +13,30 @@ use Doctrine\ORM\Mapping as ORM;
 class Richiesta
 {
     /**
+     * @var \DateTime
+     * @ORM\Column(name="dataora", type="datetime", nullable=true)
+     */
+    private $dataora;
+
+    /**
+     * @return \DateTime
+     */
+    public function getDataora()
+    {
+        return $this->dataora;
+    }
+
+    /**
+     * @param \DateTime $dataora
+     * @return Richiesta
+     */
+    public function setDataora($dataora)
+    {
+        $this->dataora = $dataora;
+        return $this;
+    }
+
+    /**
      * @var string
      *
      * @ORM\Column(name="titolo", type="string", length=255, nullable=false)
