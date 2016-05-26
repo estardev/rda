@@ -200,6 +200,11 @@ class FormBuilderController extends Controller
 
         //Settiamo e salviamo
         $campoFiglio->setCampopadre($campoPadre);
+        //se è figlio non viene validato MAI
+        $campoFiglio->setObbligatorioinserzione(0);
+        $campoFiglio->setObbligatoriovalidazionetecnica(0);
+        $campoFiglio->setObbligatoriovalidazioneamministrativa(0);
+        
 
         $em->flush();
 

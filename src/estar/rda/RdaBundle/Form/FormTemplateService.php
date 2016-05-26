@@ -99,21 +99,21 @@ class FormTemplateService
         $utentesessione = $this->user->getIdUtente();
 // //       $statusrichiesta = $entity->getStatus();
 //
- //       if($diritti->getIsVA() and ($statusrichiesta=='attesa_val_amm' or $statusrichiesta=='da_inviare_ABS')){
- //           $prova='a';
- //       }
- //       elseif($diritti->getIsVT() and $statusrichiesta=='attesa_val_tec'){
- //           $prova='b';
+        //       if($diritti->getIsVA() and ($statusrichiesta=='attesa_val_amm' or $statusrichiesta=='da_inviare_ABS')){
+        //           $prova='a';
+        //       }
+        //       elseif($diritti->getIsVT() and $statusrichiesta=='attesa_val_tec'){
+        //           $prova='b';
 //
- //       }
- //       elseif($diritti->getIsAI() and $statusrichiesta=='bozza'){
- //           $prova='c';
+        //       }
+        //       elseif($diritti->getIsAI() and $statusrichiesta=='bozza'){
+        //           $prova='c';
 //
- //       }
- //       else{
- //           $prova='d';
+        //       }
+        //       else{
+        //           $prova='d';
 //
- //       }
+        //       }
 
 
         if ($mode == FormTemplateService::MODE_INSERT) {
@@ -124,7 +124,7 @@ class FormTemplateService
             $builder->add("titolo", "text", array(
                 'label' => "Titolo",
                 'attr' => array(
-                'placeholder'=> "Specificare un oggetto per la propria richiesta"),
+                    'placeholder'=> "Specificare un oggetto per la propria richiesta"),
                 'constraints' => new NotNull()
             ));
             $builder->get('titolo')
@@ -152,7 +152,7 @@ class FormTemplateService
                 'attr' => array(
                     'placeholder'=> "indicare descrizione, azienda sanitaria e UOC destinataria"),
                 'constraints' => new NotNull()
-                     ));
+            ));
             $builder->get('descrizione')
                 ->addModelTransformer(new CallbackTransformer(
 
@@ -279,6 +279,8 @@ class FormTemplateService
 
                     }
 
+                    //var_dump(is_null($campo->getCampopadre()));
+
                     if ($obbligatorio) {
                         $builder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
                             'label' => $label,
@@ -362,13 +364,13 @@ class FormTemplateService
             //FG 20151016 gestione dei campi della richiesta
 
             //controllo sul tipo di utente!!
-                    $statusrichiesta = $entity->getStatus();
-                    $permessoscrittura=0;
-                   if($statusrichiesta=='bozza'
-                       or ($diritti->getIsVT() and $statusrichiesta=='attesa_val_tec')
-                       or ($diritti->getIsVA() and ($statusrichiesta=='attesa_val_amm' or $statusrichiesta=='da_inviare_ABS')))
-                       {    $permessoscrittura = 1;
-                   }
+            $statusrichiesta = $entity->getStatus();
+            $permessoscrittura=0;
+            if($statusrichiesta=='bozza'
+                or ($diritti->getIsVT() and $statusrichiesta=='attesa_val_tec')
+                or ($diritti->getIsVA() and ($statusrichiesta=='attesa_val_amm' or $statusrichiesta=='da_inviare_ABS')))
+            {    $permessoscrittura = 1;
+            }
             if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
                 if ($mode == FormTemplateService::MODE_PRINT  or !$permessoscrittura ) {
                     $builder->add("titolo", "text", array(
@@ -442,6 +444,10 @@ class FormTemplateService
                     ));
             }
             //        $fieldsetVisitati = array();
+
+            $richiesta1 = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+            $datarichiesta= $richiesta1->getDataora();
+
             $firstLevels = array();
             foreach ($campiValorizzati as $campovalorizzato) {
 //            $campo = $campovalorizzato->getIdcampo();
@@ -451,6 +457,14 @@ class FormTemplateService
                 if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
 
                     $campoCheck = $repository->find($campo['idcampo']);
+
+                    //DEM 20160520 I campi che hanno una data dismissione precedenti ad oggi non si vedono!
+                    if (!is_null($campoCheck->getDatadismissione())) {
+
+                        if($datarichiesta < $campoCheck->getDataattivazione() && $datarichiesta > $campoCheck->getDatadismissione()) continue;
+                    }
+
+
                     if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
                 } else {
 

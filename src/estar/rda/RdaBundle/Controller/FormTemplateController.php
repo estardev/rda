@@ -3,6 +3,7 @@
 namespace estar\rda\RdaBundle\Controller;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use estar\rda\RdaBundle\Entity\Campo;
 use estar\rda\RdaBundle\Entity\Iter;
 use estar\rda\RdaBundle\Entity\Utente;
@@ -72,13 +73,30 @@ class FormTemplateController extends Controller
      */
     public function newAction($idCategoria)
     {
+        $dateTime = new \DateTime();
+        $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
+        //var_dump(($dateTime));
 
         $repository = $this->getDoctrine()->getRepository(Campo::class);
 
-        $campi = $repository->findBy(
+        $campi1 = $repository->findBy(
             array('idcategoria' => $idCategoria),
             array('ordinamento' => 'ASC')
         );
+
+        //DEM 20160520 I campi che hanno una data dismissione precedenti ad oggi non si vedono!
+        $campi = new ArrayCollection();
+        foreach($campi1 as $campo1){
+            if (is_null($campo1->getDatadismissione())) {
+                $campi->add($campo1);
+                continue;
+            }
+
+            if($dateTime > $campo1->getDataattivazione() && $dateTime < $campo1->getDatadismissione()){
+                $campi->add($campo1);
+            }
+        }
+
 
         $entity = new FormTemplate($idCategoria, $campi);
 
@@ -114,10 +132,24 @@ class FormTemplateController extends Controller
         $idazienda= $utente->getIdazienda();
         $campi = $request->request->all();
 
-        $campiStruttura = $em->getRepository('estarRdaBundle:Campo')->findBy(
+        $campiStruttura1 = $em->getRepository('estarRdaBundle:Campo')->findBy(
             array('idcategoria' => $idCategoria),
             array('ordinamento' => 'ASC')
         );
+
+        //DEM 20160520 I campi che hanno una data dismissione precedenti ad oggi non si vedono!
+        $campiStruttura = new ArrayCollection();
+        foreach($campiStruttura1 as $campo1){
+            if (is_null($campo1->getDatadismissione())) {
+                $campiStruttura->add($campo1);
+                continue;
+            }
+            if($dateTime > $campo1->getDataattivazione() && $dateTime < $campo1->getDatadismissione()){
+                $campiStruttura->add($campo1);
+            }
+        }
+
+
 
         $entity = new FormTemplate($idCategoria, $campiStruttura);
         $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $entity, 0);
@@ -143,6 +175,7 @@ class FormTemplateController extends Controller
                     //FG20151016 salto perch� i campi li ho gi� sistemati prima
                     continue;
                 }
+                if(empty($value))continue;
                 $a = explode('-', $key);
                 $idCampo = $a[1];
 
