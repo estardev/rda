@@ -125,6 +125,105 @@ class ProfileExtendedController extends ProfileController
         ));
     }
 
+//    public function editUserAction(Request $request, $idUtente)
+//    {
+//        /** @var $formFactory \FOS\UserBundle\Form\Factory\FactoryInterface */
+//        $formFactory = $this->get('fos_user.registration.form.factory');
+//        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+//        $userManager = $this->get('fos_user.user_manager');
+//        /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
+//        $dispatcher = $this->get('event_dispatcher');
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $user = $em->getRepository('estar\rda\RdaBundle\Entity\Utente')->find($idUtente);
+//        $gruppoutente = $em->getRepository('estar\rda\RdaBundle\Entity\Utentegruppoutente')->findBy(array('idutente' => $idUtente));
+//        //$user = $userManager->createUser()
+//        $user->setEnabled(true);
+//
+//        $event = new GetResponseUserEvent($user, $request);
+//        $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_INITIALIZE, $event);
+//
+//        if (null !== $event->getResponse()) {
+//            return $event->getResponse();
+//        }
+//        // 1) build the form
+//        $form = $formFactory->createForm();
+//        $form->setData($user);
+//        //$form->add('submit', 'submit', array('label' => 'Aggiorna'));
+//
+//        // 2) handle the submit (will only happen on POST)
+//        $form->handleRequest($request);
+//
+//        if ($form->isValid()) {
+//            $event = new FormEvent($form, $request);
+//            $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_SUCCESS, $event);
+//
+//            $userManager->updateUser($user);
+//
+//            //** Parte aggiunta INIT */
+//
+//            $em = $this->getDoctrine()->getManager();
+//
+//            // FG 20160202 commentata grazie al refactoring
+//            /*
+//            $fosuserid = $user->getId();
+//            $fosuser = $em->getRepository('estarRdaBundle:FosUser')->find($fosuserid);
+//
+//            $utente = new Utente();
+//            $utente->setIdazienda($user->getIdazienda());
+//            $utente->setIdfosuser($fosuser);
+//            $utente->setNomecognome($user->getNomecognome());
+//            $utente->setUtentecartaoperatore($user->getCodicefiscale());
+//            $em->persist($utente);
+//*/
+//            $campiRequest = $request->request->all();
+//            if (array_key_exists('gruppiutente', $campiRequest['fos_user_registration_form'])) {
+//                $gruppiutenteRequest = $campiRequest['fos_user_registration_form']['gruppiutente'];
+//                //DEM 20160218 Risolto bug per registrazione utente
+//                foreach ($gruppiutenteRequest as $gruppoutenteRequest) {
+//                    $utentegruppoutente = new Utentegruppoutente();
+//                    $utentegruppoutente->setIdutente($user); //FG 20160202 modificato causa refactoring
+//                    $utentegruppoutenteEntity = $em->getRepository('estarRdaBundle:Gruppoutente')->find($gruppoutenteRequest);
+//                    $utentegruppoutente->setIdgruppoutente($utentegruppoutenteEntity);
+//                    if (array_key_exists('amministratoriCheckboxInput', $campiRequest)) {
+//                        $amministratoriRequest = $campiRequest['amministratoriCheckboxInput'];
+//                        if ($amministratoriRequest) {
+//                            foreach ($amministratoriRequest as $amministratoreRequest) {
+//                                if ($amministratoreRequest == $gruppoutenteRequest) {
+//                                    $utentegruppoutente->setAmministratore(true);
+//                                }
+//                            }
+//                        }
+//
+//                    }
+//                    $em->persist($utentegruppoutente);
+//                }
+//
+//            }
+//
+//
+//            //** Parte aggiunta END */
+//
+//            if (null === $response = $event->getResponse()) {
+//                //** Parte aggiunta INIT */
+//                $em->flush();
+//                //** Parte aggiunta END */
+//                $url = $this->generateUrl('utente');
+//                $response = new RedirectResponse($url);
+//            }
+//
+//            //$dispatcher->dispatch(FOSUserEvents::REGISTRATION_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
+//
+//            return $response;
+//        }
+//
+//        return $this->render('FOSUserBundle:Profile:editother.html.twig', array(
+//            'editform' => $form->createView(),
+//            'idUtente' => $idUtente
+//        ));
+//    }
+
+
     /**
      * Sovrascrittura della edit action del controller
      * @param Request $request
@@ -144,10 +243,11 @@ class ProfileExtendedController extends ProfileController
         //FG mi pesco l'utente vero e proprio
         $em = $this->getDoctrine()->getManager();
         $utente = $em->getRepository('estar\rda\RdaBundle\Entity\Utente')->find($idUtente);
+        //var_dump($utente);
         $user->setEnabled(true);
 
         $event = new GetResponseUserEvent($user, $request);
-        $dispatcher->dispatch(FOSUserEvents::REGISTRATION_INITIALIZE, $event);
+        $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_INITIALIZE, $event);
 
         if (null !== $event->getResponse()) {
             return $event->getResponse();
@@ -160,6 +260,14 @@ class ProfileExtendedController extends ProfileController
         //di base per cui riscrivo tutto.
 
         $formBuilder = $this->createFormBuilder();
+        $formBuilder->add("email", "text", array(
+            'label' => "Indirizzo Email",
+            'data' => $utente->getEmail()
+        ));
+        $formBuilder->add("username", "text", array(
+            'label' => "Username",
+            'data' => $utente->getUsername()
+        ));
         $formBuilder->add("nomecognome", "text", array(
             'label' => "Nome e Cognome",
             'data' => $utente->getNomecognome()
@@ -180,7 +288,12 @@ class ProfileExtendedController extends ProfileController
         // Creiamo l'array di gruppi a cui � collegato l'utente
         $gruppi = $em->getRepository('estar\rda\RdaBundle\Entity\Utentegruppoutente')->findBy(array('idutente' => $utente->getId()));
         $dati = array();
-        foreach ($gruppi as $gruppo) array_push($dati, $gruppo->getIdgruppoutente());
+        $amm = array();
+
+        foreach ($gruppi as $gruppo) {
+            array_push($dati, $gruppo->getIdgruppoutente());
+            array_push($dati, $gruppo->getAmministratore());
+        }
         $formBuilder->add('gruppiutente', 'entity', array(
             'class' => 'estar\rda\RdaBundle\Entity\Gruppoutente',
             'property' => 'nome',
@@ -190,6 +303,17 @@ class ProfileExtendedController extends ProfileController
             'label' => 'Gruppi Utente',
             'data' => $dati
         ));
+//        var_dump($amm);
+//        var_dump($dati);
+//       $formBuilder->add('amministratoriCheckboxInput', 'entity', array(
+//           'class' => 'estar\rda\RdaBundle\Entity\Gruppoutente',
+//           'property' => 'nome',
+//           'multiple' => true,
+//           'expanded' => true,
+//           'attr' => array('class'=>'amministratoriCheckbox'),
+//           'label' => 'Gruppi Utente',
+//           'data' => $amm
+//       ));
         $formBuilder->setAction($this->generateUrl('updateUser', array('idUtente' => $idUtente)));
         $formBuilder->add('submit', 'submit', array('label' => 'Aggiorna'));
         $edit_form = $formBuilder->getForm();
@@ -200,7 +324,8 @@ class ProfileExtendedController extends ProfileController
         //FG ho dovuto commentare
         //$form->handleRequest($request);
         return $this->render('FOSUserBundle:Profile:editother.html.twig', array(
-            'editform' => $edit_form->createView()
+            'editform' => $edit_form->createView(),
+            'idUtente' => $idUtente
         ));
 
    }
@@ -219,6 +344,7 @@ class ProfileExtendedController extends ProfileController
         $utente->setIdazienda($em->getRepository('estarRdaBundle:Azienda')->find($campiRequest['form']['idazienda']));
         if (array_key_exists('gruppiutente', $campiRequest['form'])) {
             $gruppiutenteRequest = $campiRequest['form']['gruppiutente'];
+            dump($gruppiutenteRequest);
             foreach ($gruppiutenteRequest as $gruppoutenteRequest) {
                 $utentegruppoutente = new Utentegruppoutente();
                 $utentegruppoutente->setIdutente($utente);
