@@ -13,6 +13,7 @@ use estar\rda\RdaBundle\Entity\Utentegruppoutente;
 use estar\rda\RdaBundle\Form\UtenteType;
 use FOS\UserBundle\Tests\Form\Type\ProfileFormTypeTest;
 use Proxies\__CG__\estar\rda\RdaBundle\Entity\Gruppoutente;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\Utente;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +25,8 @@ use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\Controller\ProfileController;
+use estar\rda\RdaBundle\Form\ProfileType;
+
 
 class ProfileExtendedController extends ProfileController
 {
@@ -223,7 +226,6 @@ class ProfileExtendedController extends ProfileController
 //        ));
 //    }
 
-
     /**
      * Sovrascrittura della edit action del controller
      * @param Request $request
@@ -254,8 +256,9 @@ class ProfileExtendedController extends ProfileController
         }
 
         // 1) build the form
-        //$form = $formFactory->createForm();
-        //FG non c'� verso di farlo funzionare con la form estesa per un motivo: non abbiamo esteso la classe
+        $form = $formFactory->createForm();
+//        $form->setData($utente);
+        //FG non c'? verso di farlo funzionare con la form estesa per un motivo: non abbiamo esteso la classe
         //di fos user con la nostra ma siamo andati in affiancamento. Questo mi rende impossibile usare il meccanismo
         //di base per cui riscrivo tutto.
 
@@ -285,24 +288,44 @@ class ProfileExtendedController extends ProfileController
             'data' => $utente->getIdazienda()
         ));
 
-        // Creiamo l'array di gruppi a cui � collegato l'utente
+        // Creiamo l'array di gruppi a cui ? collegato l'utente
         $gruppi = $em->getRepository('estar\rda\RdaBundle\Entity\Utentegruppoutente')->findBy(array('idutente' => $utente->getId()));
-        $dati = array();
-        $amm = array();
+        //FG ci peschiamo i gruppi
+        $gruppi = $em->getRepository('estar\rda\RdaBundle\Entity\Utentegruppoutente')->findBy(array('idutente' => $idUtente, 'amministratore' => '1'));
+        $stringaGruppo = "";
 
         foreach ($gruppi as $gruppo) {
-            array_push($dati, $gruppo->getIdgruppoutente());
-            array_push($dati, $gruppo->getAmministratore());
+            $stringaGruppo.=$gruppo->getIdgruppoutente()->getId();
+            $stringaGruppo.="-";
         }
+        $stringaGruppo=substr($stringaGruppo, 0, strlen($stringaGruppo)-1);
+
+        $hiddenFormBuilder = $this->createFormBuilder();
+
+        $hiddenFormBuilder->add('gruppiAmministrati', 'hidden', array(
+            'data' => $stringaGruppo
+        ));
+//        $formBuilder->add('gruppiutente', 'entity', array(
+//            'class' => 'estar\rda\RdaBundle\Entity\Utentegruppoutente',
+//            'label' => 'Gestione Gruppi di Appartenenza',
+//            'choice_label' => 'idgruppoutente.getDescrizione',
+//            'multiple' => 'true',
+//            'expanded' => 'true',
+//            'data' => $gruppi
+//        ));
+
         $formBuilder->add('gruppiutente', 'entity', array(
             'class' => 'estar\rda\RdaBundle\Entity\Gruppoutente',
             'property' => 'nome',
-            'multiple' => true,
-            'expanded' => true,
+            'multiple' => 'true',
+            'expanded' => 'true',
             'attr' => array('class'=>'gruppiutenteCheckbox'),
             'label' => 'Gruppi Utente',
-            'data' => $dati
+            'data' => $utente->getGruppiutente()
         ));
+//        $formBuilder->add('gruppiutente', 'collection', array(
+//           'entry_type', 'estar\rda\RdaBundle\Form\UtentegruppoutenteType'
+//        ));
 //        var_dump($amm);
 //        var_dump($dati);
 //       $formBuilder->add('amministratoriCheckboxInput', 'entity', array(
@@ -316,7 +339,7 @@ class ProfileExtendedController extends ProfileController
 //       ));
         $formBuilder->setAction($this->generateUrl('updateUser', array('idUtente' => $idUtente)));
         $formBuilder->add('submit', 'submit', array('label' => 'Aggiorna'));
-        $edit_form = $formBuilder->getForm();
+        //$edit_form = $formBuilder->getForm();
 
         //$form->setData($utente);
 
@@ -324,12 +347,12 @@ class ProfileExtendedController extends ProfileController
         //FG ho dovuto commentare
         //$form->handleRequest($request);
         return $this->render('FOSUserBundle:Profile:editother.html.twig', array(
-            'editform' => $edit_form->createView(),
+            'editform' => $formBuilder->getForm()->createView(),
+            'hiddenform' => $hiddenFormBuilder->getForm()->createView(),
             'idUtente' => $idUtente
         ));
 
-   }
-
+    }
 
     public function updateUserAction(Request $request, $idUtente) {
 
@@ -337,32 +360,95 @@ class ProfileExtendedController extends ProfileController
         $em = $this->getDoctrine()->getManager();
         $utente = $em->getRepository('estar\rda\RdaBundle\Entity\Utente')->find($idUtente);
 
-        //Vediamo che c'� arrivato
+        //Cancelliamo i gruppi utenti esistenti
+        $uguEsistenti = $em->createQuery('delete from estarRdaBundle:Utentegruppoutente ugu where ugu.idutente = '.$utente->getId());
+        $cancellati = $uguEsistenti->execute();
+        $em->flush();
+
+
+
+        //Vediamo che c'? arrivato
         $campiRequest = $request->request->all();
         $utente->setNomecognome($campiRequest['form']['nomecognome']);
         $utente->setUtentecartaoperatore($campiRequest['form']['utentecartaoperatore']);
         $utente->setIdazienda($em->getRepository('estarRdaBundle:Azienda')->find($campiRequest['form']['idazienda']));
         if (array_key_exists('gruppiutente', $campiRequest['form'])) {
+            //Gruppi utente a cui l'utente è collegato detti dalla form
             $gruppiutenteRequest = $campiRequest['form']['gruppiutente'];
+            //Gruppi di cui l'utente è amministratore detti dalla form
+            $amministratoriRequest = $campiRequest['amministratoriCheckboxInput'];
             dump($gruppiutenteRequest);
             foreach ($gruppiutenteRequest as $gruppoutenteRequest) {
                 $utentegruppoutente = new Utentegruppoutente();
                 $utentegruppoutente->setIdutente($utente);
                 $utentegruppoutenteEntity = $em->getRepository('estarRdaBundle:Gruppoutente')->find($gruppoutenteRequest);
                 $utentegruppoutente->setIdgruppoutente($utentegruppoutenteEntity);
+                if (in_array($utentegruppoutenteEntity->getId(), $amministratoriRequest))
+                    $utentegruppoutente->setAmministratore(true);
                 $em->persist($utentegruppoutente);
             }
         }
 
 
-            //** Parte aggiunta END */
-            $em->flush();
-            $url = $this->generateUrl('utente');
-            return $this->redirect($url);
+        //** Parte aggiunta END */
+        $em->flush();
+        $url = $this->generateUrl('utente');
+        return $this->redirect($url);
 
 
 
     }
+
+
+    public function editUserActionNew(Request $request, $idUtente)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('estarRdaBundle:Utente')->find($idUtente);
+
+        if (!is_object($user)) {
+            throw new AccessDeniedException('This user does not have access to this section.');
+        }
+
+        /** @var $formFactory \FOS\UserBundle\Form\Factory\FactoryInterface */
+        $formFactory = $this->get('fos_user.profile.form.factory');
+        //FG ci peschiamo i gruppi
+        $gruppi = $em->getRepository('estar\rda\RdaBundle\Entity\Utentegruppoutente')->findBy(array('idutente' => $idUtente, 'amministratore' => '1'));
+        $stringaGruppo = "";
+
+        foreach ($gruppi as $gruppo) {
+            $stringaGruppo.=$gruppo->getIdgruppoutente()->getId();
+            $stringaGruppo.="-";
+        }
+        $stringaGruppo=substr($stringaGruppo, 0, strlen($stringaGruppo)-1);
+
+        $hiddenFormBuilder = $this->createFormBuilder();
+
+        $hiddenFormBuilder->add('gruppiAmministrati', 'hidden', array(
+            'data' => $stringaGruppo
+        ));
+        $form = $formFactory->createForm();
+        //$form = $this->createForm(new ProfileType($user), $gruppi);
+        $form->setData($user);
+
+        $form->handleRequest($request);
+        $form->add('submit', 'submit', array('label' => 'Aggiorna'));
+
+        if ($form->isValid()) {
+            /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+            $userManager = $this->get('fos_user.user_manager');
+            $userManager->updateUser($user);
+            //FG intervenire qui per settare i gruppi
+            $url = $this->generateUrl('utente');
+            $response = new RedirectResponse($url);
+
+        }
+
+        return $this->render('FOSUserBundle:Profile:editother.html.twig', array(
+            'editform' => $form->createView(),
+            'hiddenform' => $hiddenFormBuilder->getForm()->createView()
+        ));
+    }
+
 
     public function changePasswordFixedAction (Request $request, $idUtente) {
         //Ci peschiamo l'utente
@@ -393,23 +479,5 @@ class ProfileExtendedController extends ProfileController
 
     }
 
-    /**
-     * Creates a form to edit a Area entity.
-     *
-     * @param Area $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createEditForm(Utente $entity)
-    {
-        $form = $this->createForm(new UtenteType(), $entity, array(
-            'action' => $this->generateUrl('updateUser', array('idUtente' => $entity->getId())),
-            'method' => 'PUT',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Aggiorna'));
-
-        return $form;
-    }
 
 }

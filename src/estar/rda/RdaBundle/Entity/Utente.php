@@ -2,6 +2,7 @@
 
 namespace estar\rda\RdaBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User as BaseUser;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -63,9 +64,22 @@ class Utente extends BaseUser
 
 
     protected $idgruppoutente;
-
+    /**
+    * @ORM\ManyToMany(targetEntity="estar\rda\RdaBundle\Entity\Gruppoutente")
+    * @ORM\JoinTable(name="utentegruppoutente",
+    *      joinColumns={@ORM\JoinColumn(name="idutente", referencedColumnName="id")},
+    *      inverseJoinColumns={@ORM\JoinColumn(name="idgruppoutente", referencedColumnName="id")}
+     * )
+     */
     protected $gruppiutente;
 
+
+    /**
+     * @var \estar\rda\RdaBundle\Entity\Utentegruppoutente
+     *
+     * @ORM\OneToMany(targetEntity="estar\rda\RdaBundle\Entity\Utentegruppoutente", mappedBy="idutente")
+     */
+    protected $utentegruppoutente;
 
     /**
      * Set utenteldap
@@ -226,5 +240,32 @@ class Utente extends BaseUser
     public function __toString()
     {
         return strval($this->getId());
+    }
+
+    /**
+     * @return Utentegruppoutente
+     */
+    public function getUtentegruppoutente()
+    {
+        return $this->utentegruppoutente;
+    }
+
+
+    public function addUtentegruppoutente(Utentegruppoutente $ugu)
+    {
+        $ugu->setIdutente($this);
+        foreach ($this->utentegruppoutente as $item) {
+            $item->setIdutente($this);
+        }
+        $this->utentegruppoutente->add($ugu);
+    }
+
+//    public function removeAnPatRemoton(CicotAnPatRemota $anamnesiPatologicaGenerale)
+//    {
+//        $this->anPatRemota->removeElement($anamnesiPatologicaGenerale);
+//    }
+    public function __construct()
+    {
+        $this->utentegruppoutente = new ArrayCollection();
     }
 }

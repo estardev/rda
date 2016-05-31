@@ -3,6 +3,7 @@
 namespace estar\rda\RdaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use FOS\UserBundle\Model\Group as BaseGroup;
 
 /**
  * Gruppoutente
