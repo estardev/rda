@@ -367,28 +367,57 @@ class ProfileExtendedController extends ProfileController
 
 
 
-        //Vediamo che c'? arrivato
+//        //Vediamo che c'? arrivato
+//        $campiRequest = $request->request->all();
+//        $utente->setNomecognome($campiRequest['form']['nomecognome']);
+//        $utente->setUtentecartaoperatore($campiRequest['form']['utentecartaoperatore']);
+//        $utente->setIdazienda($em->getRepository('estarRdaBundle:Azienda')->find($campiRequest['form']['idazienda']));
+//        if (array_key_exists('gruppiutente', $campiRequest['form'])) {
+//            //Gruppi utente a cui l'utente è collegato detti dalla form
+//            $gruppiutenteRequest = $campiRequest['form']['gruppiutente'];
+//            //Gruppi di cui l'utente è amministratore detti dalla form
+//            if (array_key_exists('amministratoriCheckboxInput', $campiRequest)) {
+//            $amministratoriRequest = $campiRequest['amministratoriCheckboxInput'];
+//           // dump($gruppiutenteRequest);
+//            foreach ($gruppiutenteRequest as $gruppoutenteRequest) {
+//                $utentegruppoutente = new Utentegruppoutente();
+//                $utentegruppoutente->setIdutente($utente);
+//                $utentegruppoutenteEntity = $em->getRepository('estarRdaBundle:Gruppoutente')->find($gruppoutenteRequest);
+//                $utentegruppoutente->setIdgruppoutente($utentegruppoutenteEntity);
+//                if (in_array($utentegruppoutenteEntity->getId(), $amministratoriRequest))
+//                    $utentegruppoutente->setAmministratore(true);
+//                $em->persist($utentegruppoutente);
+//            }
+//        }
+//        }
+
         $campiRequest = $request->request->all();
         $utente->setNomecognome($campiRequest['form']['nomecognome']);
         $utente->setUtentecartaoperatore($campiRequest['form']['utentecartaoperatore']);
         $utente->setIdazienda($em->getRepository('estarRdaBundle:Azienda')->find($campiRequest['form']['idazienda']));
         if (array_key_exists('gruppiutente', $campiRequest['form'])) {
-            //Gruppi utente a cui l'utente è collegato detti dalla form
             $gruppiutenteRequest = $campiRequest['form']['gruppiutente'];
-            //Gruppi di cui l'utente è amministratore detti dalla form
-            $amministratoriRequest = $campiRequest['amministratoriCheckboxInput'];
-            dump($gruppiutenteRequest);
+            //DEM 20160218 Risolto bug per registrazione utente
             foreach ($gruppiutenteRequest as $gruppoutenteRequest) {
                 $utentegruppoutente = new Utentegruppoutente();
-                $utentegruppoutente->setIdutente($utente);
+                $utentegruppoutente->setIdutente($utente); //FG 20160202 modificato causa refactoring
                 $utentegruppoutenteEntity = $em->getRepository('estarRdaBundle:Gruppoutente')->find($gruppoutenteRequest);
                 $utentegruppoutente->setIdgruppoutente($utentegruppoutenteEntity);
-                if (in_array($utentegruppoutenteEntity->getId(), $amministratoriRequest))
-                    $utentegruppoutente->setAmministratore(true);
+                if (array_key_exists('amministratoriCheckboxInput', $campiRequest)) {
+                    $amministratoriRequest = $campiRequest['amministratoriCheckboxInput'];
+                    if ($amministratoriRequest) {
+                        foreach ($amministratoriRequest as $amministratoreRequest) {
+                            if ($amministratoreRequest == $gruppoutenteRequest) {
+                                $utentegruppoutente->setAmministratore(true);
+                            }
+                        }
+                    }
+
+                }
                 $em->persist($utentegruppoutente);
             }
-        }
 
+        }
 
         //** Parte aggiunta END */
         $em->flush();
