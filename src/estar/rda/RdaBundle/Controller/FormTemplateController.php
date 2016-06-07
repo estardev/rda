@@ -75,7 +75,7 @@ class FormTemplateController extends Controller
     {
         $dateTime = new \DateTime();
         $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
-        var_dump(($dateTime));
+        //var_dump(($dateTime));
 
         $repository = $this->getDoctrine()->getRepository(Campo::class);
 
@@ -85,20 +85,20 @@ class FormTemplateController extends Controller
         );
 
         //DEM 20160520 I campi che hanno una data dismissione precedenti ad oggi non si vedono!
-        $campi = new ArrayCollection();
-        foreach($campi1 as $campo1){
-            if (is_null($campo1->getDatadismissione())) {
-                $campi->add($campo1);
-                continue;
-            }
+        //$campi = new ArrayCollection();
+        //foreach($campi1 as $campo1){
+        //    if (is_null($campo1->getDatadismissione())) {
+        //        $campi->add($campo1);
+        //        continue;
+        //    }
+//
+        //    if($dateTime > $campo1->getDataattivazione() && $dateTime < $campo1->getDatadismissione()){
+        //        $campi->add($campo1);
+        //    }
+        //}
 
-            //if($dateTime > $campo1->getDataattivazione() && $dateTime < $campo1->getDatadismissione()){
-            //    $campi->add($campo1);
-            //}
-        }
 
-
-        $entity = new FormTemplate($idCategoria, $campi);
+        $entity = new FormTemplate($idCategoria, $campi1);
 
 
         $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $entity, 0);
