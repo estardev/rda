@@ -91,10 +91,10 @@ class FormTemplateController extends Controller
                 $campi->add($campo1);
                 continue;
             }
-
-            if($dateTime > $campo1->getDataattivazione() && $dateTime < $campo1->getDatadismissione()){
-                $campi->add($campo1);
-            }
+            dump($dateTime);
+            //if($dateTime > $campo1->getDataattivazione() && $dateTime < $campo1->getDatadismissione()){
+            //    $campi->add($campo1);
+            //}
         }
 
 
