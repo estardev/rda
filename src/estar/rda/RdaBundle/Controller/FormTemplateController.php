@@ -75,7 +75,7 @@ class FormTemplateController extends Controller
     {
         $dateTime = new \DateTime();
         $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
-        //var_dump(($dateTime));
+        var_dump(($dateTime));
 
         $repository = $this->getDoctrine()->getRepository(Campo::class);
 
@@ -91,7 +91,7 @@ class FormTemplateController extends Controller
                 $campi->add($campo1);
                 continue;
             }
-            dump($dateTime);
+
             //if($dateTime > $campo1->getDataattivazione() && $dateTime < $campo1->getDatadismissione()){
             //    $campi->add($campo1);
             //}
