@@ -27,10 +27,10 @@
         </a>
     </li>
     <li>
-        <a href="{{ path('categoria_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('formbuilder_showByCategoria', { 'idCategoria': entity.id }) }}">
             Edit
         </a>
     </li>
-    <li>{{ form(delete_form) }}</li>
+   <!-- <li>{{ form(delete_form) }}</li> -->
 </ul>
 {% endblock %}
