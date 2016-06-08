@@ -4,7 +4,6 @@ namespace estar\rda\RdaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * Utentegruppoutente
  *
@@ -32,8 +31,7 @@ class Utentegruppoutente
     /**
      * @var \estar\rda\RdaBundle\Entity\Utente
      *
-     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Utente", inversedBy="utentegruppoutente")
-     *
+     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Utente")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="idUtente", referencedColumnName="id")
      * })
@@ -135,7 +133,4 @@ class Utentegruppoutente
     }
 
     public function __toString(){return strval($this->getId());}
-
-
-
 }
