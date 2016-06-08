@@ -21,7 +21,22 @@
     <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 
     {% block header %}
+        <div class="row">
+            <div class="col-lg-12"> </div>
+        </div>
+            <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-3">
+        <img src="{{ asset('images/logoestar.png') }}" alt="estar" />
+            </div>
 
+        <div class="col-md-6">
+        <H1>Portale Richieste di Acquisto</H1>
+        </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12"> </div>
+        </div>
     {% endblock %}
 
     {% trans_default_domain 'FOSUserBundle' %}
@@ -48,6 +63,7 @@
     {% if error %}
         <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
+
 
     <div class="row">
 
