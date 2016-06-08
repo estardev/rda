@@ -74,12 +74,6 @@ class Utente extends BaseUser
     protected $gruppiutente;
 
 
-    /**
-     * @var \estar\rda\RdaBundle\Entity\Utentegruppoutente
-     *
-     * @ORM\OneToMany(targetEntity="estar\rda\RdaBundle\Entity\Utentegruppoutente", mappedBy="idutente")
-     */
-    protected $utentegruppoutente;
 
     /**
      * Set utenteldap
@@ -242,23 +236,6 @@ class Utente extends BaseUser
         return strval($this->getId());
     }
 
-    /**
-     * @return Utentegruppoutente
-     */
-    public function getUtentegruppoutente()
-    {
-        return $this->utentegruppoutente;
-    }
-
-
-    public function addUtentegruppoutente(Utentegruppoutente $ugu)
-    {
-        $ugu->setIdutente($this);
-        foreach ($this->utentegruppoutente as $item) {
-            $item->setIdutente($this);
-        }
-        $this->utentegruppoutente->add($ugu);
-    }
 
 //    public function removeAnPatRemoton(CicotAnPatRemota $anamnesiPatologicaGenerale)
 //    {
@@ -266,6 +243,7 @@ class Utente extends BaseUser
 //    }
     public function __construct()
     {
+        parent::__construct();
         $this->utentegruppoutente = new ArrayCollection();
     }
 }
