@@ -393,6 +393,8 @@ class ProfileExtendedController extends ProfileController
 
         $campiRequest = $request->request->all();
         $utente->setNomecognome($campiRequest['form']['nomecognome']);
+        $utente->setNomecognome($campiRequest['form']['email']);
+        $utente->setNomecognome($campiRequest['form']['username']);
         $utente->setUtentecartaoperatore($campiRequest['form']['utentecartaoperatore']);
         $utente->setIdazienda($em->getRepository('estarRdaBundle:Azienda')->find($campiRequest['form']['idazienda']));
         if (array_key_exists('gruppiutente', $campiRequest['form'])) {
