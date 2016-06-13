@@ -12,6 +12,7 @@ use estar\rda\RdaBundle\Entity\Valorizzazionecamporichiesta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\FormTemplate;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -447,7 +448,8 @@ class FormTemplateController extends Controller
             //$formbuilder = $this->createFormBuilder();
             $validaForm->add("messaggio", "textarea", array(
                 'label' => "Messaggio",
-                'data' => "indicare motivazione di rigetto o validazione"
+                'attr' => array('placeholder'=> "indicare motivazione di rigetto o validazione"),
+                'constraints' => new NotNull()
             ));
             $validaForm->add('submit', 'submit', array('label' => $value));
             //$MessaggioForm = $formbuilder->getForm();
