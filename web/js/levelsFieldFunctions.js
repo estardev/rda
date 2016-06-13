@@ -20,7 +20,7 @@ function firstLevel(options) {
 
             var name = patt.exec(this.id)[1];
 
-            $(this).find('input[type="radio"]').on('click', function () {
+            $(this).find('input[type="radio"]').on('click checked', function () {
 
                 var index = 0;
                 for (var i = 0; i < o[name].length; i++) {
@@ -66,8 +66,16 @@ function firstLevel(options) {
                 //    //}
                 //
             })
-
+        $('input[type="radio"]').filter(' :checked').each(function(){
+           
+            index = option.indexOf($('input[name="' + this.name + '"]:checked').val());
+            if (index != -1) {
+                $('[id^="form_"][id$=-' + id + ']').closest('.form-group').show("slow");
+            } else {
+                $('[id^="form_"][id$=-' + id + ']').closest('.form-group').hide("slow");
+            }   })
         }
+
     );
 }
 
