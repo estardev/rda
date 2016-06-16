@@ -115,7 +115,7 @@ class FormTemplateService
 //
         //       }
 
-
+        $firstLevels = array();
         if ($mode == FormTemplateService::MODE_INSERT) {
 
             $campi = $entity->getCampi();
@@ -180,7 +180,7 @@ class FormTemplateService
                 'data' => "3"
             ));
 
-            $firstLevels = array();
+
             foreach ($campi as $campo) {
                 //FG 20151027 modifica per campi visualizzabili a seconda dei diritti
                 if (!($diritti->campoVisualizzabile($diritti, $campo))) continue;
@@ -472,6 +472,22 @@ class FormTemplateService
                 }
 //            if ($campo->getTipo() == 'choice') {
                 if ($campo['tipo'] == 'choice') {
+                    /**
+                     * if ($campo->getPadre() != null) {
+                    $class = array('class' => 'secondLevel');
+                    $padri = $this->getFirstLevel($campo->getPadre(), $campo->getId());
+
+                    if (array_key_exists($this->getFather($campo->getPadre()), $firstLevels)) {
+                    array_push($firstLevels[$this->getFather($campo->getPadre())], $padri);
+                    } else {
+                    $firstLevels[$this->getFather($campo->getPadre())] = $padri;
+                    }
+
+                    } else {
+                    $class = array('class' => 'firstLevel');
+                    }
+                     */
+
                     $class = array('class' => 'firstLevel');
 
                     //discrimino il caso della stampa
@@ -536,7 +552,17 @@ class FormTemplateService
                         $class = array();
                         $label = $campo['descrizione'];
                         if ($campo['padre'] != null) {
-                            $class = array('class' => 'secondLevel');
+                            
+                            /**verifico che il campo abbia un valore settato e setto la classe appropriata per permettere
+                             * al jquery di visualizzarlo in edit
+                             * */
+                            if(isset($campo['valore'])){
+                                $class = array('class' => 'secondLevel valorizzato');
+
+                            } else{
+                                $class = array('class' => 'secondLevel ');
+                            }
+                            //fine modifica per jquery
                             $padri = $this->getFirstLevel($campo['padre'], $campo['idcampo']);
 
                             if (array_key_exists($this->getFather($campo['padre']), $firstLevels)) {

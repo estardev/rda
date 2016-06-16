@@ -2,7 +2,8 @@
  * Created by gianlu on 10/29/15.
  */
 function secondLevel() {
-    $('.secondLevel').each(function () {
+   //aggiunto :not(.valorizzato) in modo tale che in edit vengano visualizzati i campi valorizzati
+    $('.secondLevel:not(.valorizzato) ').each(function () {
 
             $(this).closest('.form-group').hide();
 
