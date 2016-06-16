@@ -66,14 +66,6 @@ function firstLevel(options) {
                 //    //}
                 //
             })
-        $('input[type="radio"]').filter(' :checked').each(function(){
-           
-            index = option.indexOf($('input[name="' + this.name + '"]:checked').val());
-            if (index != -1) {
-                $('[id^="form_"][id$=-' + id + ']').closest('.form-group').show("slow");
-            } else {
-                $('[id^="form_"][id$=-' + id + ']').closest('.form-group').hide("slow");
-            }   })
         }
 
     );

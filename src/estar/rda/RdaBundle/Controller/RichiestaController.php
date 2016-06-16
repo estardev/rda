@@ -26,7 +26,7 @@ class RichiestaController extends Controller
         $entities = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
         //TODO: creare pulsanti per l'edit, la gestione dei documenti e la stampa in PDF
         //Sono tutti pulsanti che puntano a FormTemplateController
-        return $this->render('estarRdaBundle:Richiesta:index.html.twig', array(
+        return $this->render('estarRdaBundle:Richiesta:indexAll.html.twig', array(
             'entities' => $entities,
         ));
     }
