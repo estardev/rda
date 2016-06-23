@@ -12,6 +12,10 @@
     {% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
     <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
     <script src="{{ asset('js/jquery.js', absolute=true) }}"></script>
+    <script src="{{ asset('js/jquery-ui.min.js', absolute=true) }}"></script>
+    <script src="{{ asset('js/jackmoore-autosize/jquery.autosize.min.js', absolute=true) }}"></script>
+
+
     <!-- Include all JavaScripts, compiled by Assetic -->
     <script src="{{ asset('js/bootstrap.js', absolute=true) }}"></script>
     <!-- Include FOSJsRoutingBundle, compiled by Assetic -->
@@ -26,6 +30,14 @@
 
     {% block javascripts %}
         <script type="text/javascript" src="{{ asset('js/navbar.js', absolute=true) }}"></script>
+        <script>
+            $(document).ready(function () {
+
+                        $("textarea").autosize();
+
+                    }
+            )
+        </script>
     {% endblock %}
 
 </head>
