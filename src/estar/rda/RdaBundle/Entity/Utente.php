@@ -64,13 +64,7 @@ class Utente extends BaseUser
 
 
     protected $idgruppoutente;
-    /**
-    * @ORM\ManyToMany(targetEntity="estar\rda\RdaBundle\Entity\Gruppoutente")
-    * @ORM\JoinTable(name="utentegruppoutente",
-    *      joinColumns={@ORM\JoinColumn(name="idutente", referencedColumnName="id")},
-    *      inverseJoinColumns={@ORM\JoinColumn(name="idgruppoutente", referencedColumnName="id")}
-     * )
-     */
+
     protected $gruppiutente;
 
 
