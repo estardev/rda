@@ -16,14 +16,14 @@ class Gruppoutente
     /**
      * @var string
      *
-     * @ORM\Column(name="nome", type="string", length=45, nullable=false)
+     * @ORM\Column(name="nome", type="string", length=255, nullable=false)
      */
     private $nome;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="descrizione", type="string", length=100, nullable=true)
+     * @ORM\Column(name="descrizione", type="string", length=255, nullable=true)
      */
     private $descrizione;
 

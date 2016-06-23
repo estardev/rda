@@ -79,14 +79,14 @@ class Richiesta
     /**
      * @var string
      *
-     * @ORM\Column(name="numeroPratica", type="string", length=45, nullable=true)
+     * @ORM\Column(name="numeroPratica", type="string", length=255, nullable=true)
      */
     private $numeropratica;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="codiceGara", type="string", length=100, nullable=true)
+     * @ORM\Column(name="codiceGara", type="string", length=255, nullable=true)
      */
     private $codicegara;
 

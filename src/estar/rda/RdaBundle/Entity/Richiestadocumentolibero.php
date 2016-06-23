@@ -27,7 +27,7 @@ class Richiestadocumentolibero
     /**
      * @var string
      *
-     * @ORM\Column(name="idGestav", type="string", length=100, nullable=true)
+     * @ORM\Column(name="idGestav", type="string", length=255, nullable=true)
      */
     private $idgestav;
 

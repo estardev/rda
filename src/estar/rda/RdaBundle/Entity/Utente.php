@@ -18,14 +18,14 @@ class Utente extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="utenteLdap", type="string", length=45, nullable=true)
+     * @ORM\Column(name="utenteLdap", type="string", length=255, nullable=true)
      */
     private $utenteldap;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="utenteCartaOperatore", type="string", length=45, nullable=true)
+     * @ORM\Column(name="utenteCartaOperatore", type="string", length=255, nullable=true)
      */
     private $utentecartaoperatore;
 

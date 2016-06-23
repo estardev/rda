@@ -29,14 +29,14 @@ class Richiestautente
     /**
      * @var string
      *
-     * @ORM\Column(name="validatoreAmministrativo", type="string", length=45, nullable=true)
+     * @ORM\Column(name="validatoreAmministrativo", type="string", length=255, nullable=true)
      */
     private $validatoreamministrativo;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="referenteAbs", type="string", length=45, nullable=true)
+     * @ORM\Column(name="referenteAbs", type="string", length=255, nullable=true)
      */
     private $referenteabs;
 

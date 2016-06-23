@@ -15,7 +15,7 @@ class Azienda
     /**
      * @var string
      *
-     * @ORM\Column(name="nome", type="string", length=45, nullable=false)
+     * @ORM\Column(name="nome", type="string", length=255, nullable=false)
      */
     private $nome;
 
