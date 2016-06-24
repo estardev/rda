@@ -35,6 +35,20 @@
         <script type="text/javascript" src="{{ asset('js/levelsFieldFunctions.js', absolute=true) }}"></script>
         {% if firstLevels is defined %}
         <script>
+
+            var decodeHtmlEntity = function (str) {
+                return str.replace(/&#(\d+);/g, function (match, dec) {
+                    return String.fromCharCode(dec);
+                });
+            };
+
+            var encodeHtmlEntity = function (str) {
+                var buf = [];
+                for (var i = str.length - 1; i >= 0; i--) {
+                    buf.unshift(['&#', str[i].charCodeAt(), ';'].join(''));
+                }
+                return buf.join('');
+            };
             $(document).ready(function () {
                         var options = {{ firstLevels| json_encode |raw }};
                         firstLevel(options);
@@ -42,14 +56,6 @@
                         secondLevel();
                         $("textarea").autosize();
 
-//                        var enteredText =$('textarea').val();
-//                        var numberOfLineBreaks = (enteredText.match(/\n/g)||[]).length;
-//                        var characterCount = enteredText.length + numberOfLineBreaks;
-//
-//
-////                        var scrollHeight = $('textarea').prop('scrollHeight');
-////                    document.getElementById("form_descrizione").style.height = scrollHeight; // this is just for showing purposes
-//                        $('textarea').val(parseInt(numberOfLineBreaks));
 
                     }
             )

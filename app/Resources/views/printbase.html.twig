@@ -31,17 +31,51 @@
     {% block javascripts %}
         <script type="text/javascript" src="{{ asset('js/navbar.js', absolute=true) }}"></script>
         <script>
+
+
+            var decodeHtmlEntity = function (str) {
+                return str.replace(/&#(\d+);/g, function (match, dec) {
+                    return String.fromCharCode(dec);
+                });
+            };
+
+            var encodeHtmlEntity = function (str) {
+                var buf = [];
+                for (var i = str.length - 1; i >= 0; i--) {
+                    buf.unshift(['&#', str[i].charCodeAt(), ';'].join(''));
+                }
+                return buf.join('');
+            };
+
+
             $(document).ready(function () {
 
-                        $("textarea").autosize();
-//                        var lineHeight = document.getElementById("form_descrizione").style.lineHeight;
-//                        var scrollHeight = document.getElementById("form_descrizione").scrollHeight;
-////                        document.getElementById("form_descrizione").style.height = scrollHeight; // this is just for showing purposes
-//                        var numLines = Math.floor(scrollHeight / lineHeight);
-//                        $('#form_descrizione').height(numLines);
-//                $('#form_descrizione').val()
-                    }
-            )
+
+                var $textarea = $('textarea');
+                $textarea.each(function () {
+
+                            var fontSize = $(this).css('font-size').replace('px', '');
+                            var lineHeight = Math.floor(parseInt(fontSize) * 1.5);
+
+                            var lines = encodeHtmlEntity($(this).val()).split('&#10;');
+                            var lineCount = 0;
+                            for (var i = 0; i < lines.length; i++) {
+
+                                if (decodeHtmlEntity(lines[i]).length > 71) {
+
+                                    lineCount +=Math.floor(decodeHtmlEntity(lines[i]).length/70)+1;
+                                } else {
+                                    lineCount++;
+                                }
+                            }
+
+                            $(this).height(lineCount * lineHeight);
+//                            $(this).val();
+
+
+                        }
+                );
+            });
         </script>
     {% endblock %}
 

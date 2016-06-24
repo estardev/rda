@@ -122,7 +122,7 @@ knp_snappy:
     pdf:
         enabled:    true
   #      binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
-        binary:     /usr/bin/wkhtmltopdf.sh
+        binary:     /usr/local/bin/wkhtmltopdf
         options:    []
 
 winzou_state_machine:
