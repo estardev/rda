@@ -59,11 +59,19 @@
 
                             var lines = encodeHtmlEntity($(this).val()).split('&#10;');
                             var lineCount = 0;
+                    /**
+                     ATTENZIONE!!! il valore della variabile "numcols" rappresenta il numero di caratteri contenuti in una riga
+                     di una textarea così come viene renderizzata allo stato attuale all'interno delle stampe.
+                     Qualsiasi cambiamento alla grandezza di queste componenti comporterà un adeguamento di questa misura
+                     per mantenere il corretto funzionamento del meccanismo di "autosizing" delle textarea all'interno dei file Pdf.
+                     */
+                    var numcols = 71;
+
                             for (var i = 0; i < lines.length; i++) {
 
-                                if (decodeHtmlEntity(lines[i]).length > 71) {
+                                if (decodeHtmlEntity(lines[i]).length > numcols) {
 
-                                    lineCount +=Math.floor(decodeHtmlEntity(lines[i]).length/70)+1;
+                                    lineCount +=Math.floor(decodeHtmlEntity(lines[i]).length/numcols)+1;
                                 } else {
                                     lineCount++;
                                 }
