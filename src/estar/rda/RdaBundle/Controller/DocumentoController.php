@@ -331,14 +331,16 @@ class DocumentoController extends Controller
             $qb->setParameter('idDocumento', $entity->getIddocumento()->getId());
             $qb->setParameter('idRichiesta', $idRichiesta);
             $count = $qb->getQuery()->getSingleScalarResult();
-            $rd = $repo->findOneBy(array('iddocumento' => $entity->getIddocumento()->getId(),'idrichiesta'=>$idRichiesta));
-//            $helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
-            //$path = $helper->asset($rd, 'docFile');
-
+            $rd = $repo->findOneBy(array('iddocumento' => $entity->getIddocumento()->getId(), 'idrichiesta' => $idRichiesta));
+            if($rd) {
+                $helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
+                $path = $helper->asset($rd, 'docFile');
+                $documenti[$documento->getId()]['rd'] = ($count != 0) ? $rd : '';
+            }
             // - se il documento NON ha righe di richiestadocumento un alert che il documento è mancante
             $alert = ($count != 0) ? false : true;
             $documenti[$documento->getId()]['alert'] = $alert;
-            //$documenti[$documento->getId()]['path'] = $path;
+
         }
         foreach ($documenti as $documento) {
             //if (primocaso) metti pulsante upload che transiziona verso richiestadocumentocontroller.uploadform
@@ -350,7 +352,7 @@ class DocumentoController extends Controller
             'entities' => $documenti,
             'idRichiesta' => $idRichiesta,
             'idCategoria' => $idCategoria,
-            'rd' => $rd
+//            'rd' => $rd
         ));
     }
 

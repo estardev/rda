@@ -3,7 +3,7 @@
 <head>
 
     <title>RDA</title>
-    <meta charset="UTF-8"  name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="{{ asset('css/bootstrap.css', absolute=true) }}" rel="stylesheet" media="screen">
     {#<link href="http://symfony/rda/web/css/bootstrap.css" rel="stylesheet" media="screen">#}
@@ -34,7 +34,12 @@
             $(document).ready(function () {
 
                         $("textarea").autosize();
-
+//                        var lineHeight = document.getElementById("form_descrizione").style.lineHeight;
+//                        var scrollHeight = document.getElementById("form_descrizione").scrollHeight;
+////                        document.getElementById("form_descrizione").style.height = scrollHeight; // this is just for showing purposes
+//                        var numLines = Math.floor(scrollHeight / lineHeight);
+//                        $('#form_descrizione').height(numLines);
+//                $('#form_descrizione').val()
                     }
             )
         </script>
@@ -44,13 +49,13 @@
 
 <body>
 {#{% block navbar %}#}
-    {#{{ navbar() }}#}
+{#{{ navbar() }}#}
 {#{% endblock %}#}
 <div class="left_block block_1">
     {% block sidebar %}{% endblock %}
 </div>
 <div class="header-logo"><img src="{{ asset('images/logoestar.png', absolute=true) }}"></div>
-<div class="container" >
+<div class="container">
 
     {% block body %}
         {{ form(form) }}
