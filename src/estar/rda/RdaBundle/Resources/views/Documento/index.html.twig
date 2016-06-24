@@ -74,7 +74,8 @@
                                         ><span
                                                     class="glyphicon glyphicon-download"
                                                     aria-hidden="true"></span><a
-                                                    href="{{ app.request.basePath }}/{{ (vich_uploader_asset(documento.rd, 'docFile')) }}"
+                                                    {#href="{{ app.request.basePath }}/{{ (vich_uploader_asset(documento.rd, 'docFile')) }}"#}
+                                                    href="{{ (vich_uploader_asset(documento.rd, 'docFile')) }}"
                                                     download
                                             > Scarica</a>
                                         </button>
