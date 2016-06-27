@@ -38,14 +38,8 @@
                                            name="subfile{{ entity.id }}" id="subfile{{ entity.id }}"
                                            class="form-control" style="display: inline;width:50%"
                                            {% if alert==false %}value="{{ (vich_uploader_asset(documento.rd, 'docFile')) }}"{% endif %}/>
-                                    <button disabled type="submit" id="subfilebutton{{ entity.id }}"
-                                            class="btn btn-default"><span
-                                                class="glyphicon glyphicon-pencil"
-                                                aria-hidden="true"></span><a
-                                        > {% if alert==true %}Upload{% else %}
-                                                Sostituisci{% endif %}
-                                        </a>
-                                    </button>
+                                    <input disabled type="submit" id="subfilebutton{{ entity.id }}" class="btn btn-default">
+                                         </input>
                                     <input type="file" name="docfile" class="form-control "
                                            style="visibility:hidden;" id="docfile{{ entity.id }}"/>
                                     <script>
@@ -70,16 +64,15 @@
                                 </form>
                                 {% if alert==false %}
                                     <form method="get">
-                                        <button type="submit" class="btn btn-default"
-                                        ><span
-                                                    class="glyphicon glyphicon-download"
-                                                    aria-hidden="true"></span><a
+                                       <a class="btn btn-default"
                                                     {#questa istruzione in produzione va commentata e va usata la successiva "questione di path"#}
                                                     {#href="{{ app.request.basePath }}/{{ (vich_uploader_asset(documento.rd, 'docFile')) }}"#}
                                                     href="{{ (vich_uploader_asset(documento.rd, 'docFile')) }}"
                                                     download
-                                            > Scarica</a>
-                                        </button>
+                                            > <span
+                                                   class="glyphicon glyphicon-download"
+                                                   aria-hidden="true"></span> Scarica</a>
+
 
                                     </form>
 
@@ -88,25 +81,22 @@
                                 {% endif %}
                             {% else %}
                                 {% if alert==false %}
-                                    <button type="button" class="btn btn-default"><span
-                                                class="glyphicon glyphicon-eye-open"
-                                                aria-hidden="true"></span><a
+                                  <a class="btn btn-default"
                                                 href="{{ path('richiestadocumento_show', { 'idCategoria': idCategoria, 'idRichiesta': idRichiesta ,'idDocumento': entity.id}) }}">
-                                            Visualizza</a>
+                                            <span
+                                                    class="glyphicon glyphicon-eye-open"
+                                                    aria-hidden="true"></span> Visualizza</a>
                                         {#  sistemare questa documento_show in richiestadocumento_show (idcategoria, idrichiesta, iddocumento#}
-                                    </button>
                                 {% endif %}
-                                <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-pencil"
-                                                                                    aria-hidden="true"></span><a
-                                            href="{{ path('richiestadocumento_edit', { 'idCategoria': idCategoria, 'idRichiesta': idRichiesta ,'idDocumento': entity.id}) }}">
-                                        Modifica/Crea</a>
-                                </button>
+                                <a
+                                    class="btn btn-default" href="{{ path('richiestadocumento_edit', { 'idCategoria': idCategoria, 'idRichiesta': idRichiesta ,'idDocumento': entity.id}) }}">
+                                        <span class="glyphicon glyphicon-pencil"
+                                              aria-hidden="true"></span> Modifica/Crea</a>
                                 {% if alert==false %}
-                                    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-file"
-                                                                                        aria-hidden="true"></span><a
-                                                target="_blank"
-                                                href="{{ path('richiestadocumento_print', { 'idCategoria': idCategoria, 'idRichiesta': idRichiesta ,'idDocumento': entity.id  }) }}">
-                                            Genera PDF</a></button>
+                                    <a target="_blank"
+                                                class="btn btn-default" href="{{ path('richiestadocumento_print', { 'idCategoria': idCategoria, 'idRichiesta': idRichiesta ,'idDocumento': entity.id  }) }}">
+                                            <span class="glyphicon glyphicon-file"
+                                                  aria-hidden="true"></span> Genera PDF</a>
                                 {% endif %}
 
                             {% endif %}
