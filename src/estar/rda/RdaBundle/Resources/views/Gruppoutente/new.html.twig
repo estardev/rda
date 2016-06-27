@@ -3,13 +3,16 @@
 {% block body -%}
     <h1>Creazione di un nuovo Gruppo Utente</h1>
 
+    <div class="bottoniera">
+            <a class="btn btn-default" href="{{ path('gruppoutente') }}">
+                Indietro alla Lista
+            </a>
+    </div>
+    &nbsp;
     {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
         <ul class="record_actions">
-    <li>
-        <a href="{{ path('gruppoutente') }}">
-            Indietro alla Lista
-        </a>
-    </li>
+
+
 </ul>
 {% endblock %}

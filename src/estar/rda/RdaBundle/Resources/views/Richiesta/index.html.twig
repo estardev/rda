@@ -208,11 +208,11 @@
                                <span class="glyphicon glyphicon-book"
                                      aria-hidden="true"></span> Allegati</a></li>
                         {% else %}
-                            <li class="disabled"><a disabled="true"
+                            <li class="disabled"><a onclick="return false;" disabled="true"
                                         href="{{ path('documento_byCategoria', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
                                 <span class="glyphicon glyphicon-book"
                                       aria-hidden="true"></span> Documenti</a></li>
-                            <li class="disabled"><a disabled="true"
+                            <li class="disabled"><a onclick="return false;" disabled="true"
                                         href="{{ path('documento_liberoByRichiesta', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
                                <span class="glyphicon glyphicon-book"
                                      aria-hidden="true"></span> Allegati</a></li>

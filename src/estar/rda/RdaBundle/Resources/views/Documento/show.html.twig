@@ -20,17 +20,14 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('documento') }}">
+<div class="bottoniera">
+        <a class="btn btn-default" href="{{ path('documento') }}">
             Indietro alla lista
         </a>
-    </li>
-    <li>
-        <a href="{{ path('documento_edit', { 'id': entity.id }) }}">
+
+        <a class="btn btn-default" href="{{ path('documento_edit', { 'id': entity.id }) }}">
             Modifica
         </a>
-    </li>
+
     <!-- <li>{{ form(delete_form) }}</li> -->
-</ul>
-{% endblock %}
+    </div>{% endblock %}

@@ -5,11 +5,9 @@
 
     {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('valorizzazionecamporichiesta') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+<div class="bottoniera">
+        <a class="btn btn-default" href="{{ path('valorizzazionecamporichiesta') }}">
+            Torna indietro
+        </a></div>
+
 {% endblock %}

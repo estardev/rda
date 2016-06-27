@@ -28,17 +28,14 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('iter') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('iter_edit', { 'id': entity.id }) }}">
+<div class="bottoniera">
+        <a class="btn btn-default" href="{{ path('iter') }}">
+Indietro        </a>
+
+        <a class="btn btn-default" href="{{ path('iter_edit', { 'id': entity.id }) }}">
             Edit
         </a>
-    </li>
+
     <!-- <li>{{ form(delete_form) }}</li> -->
-</ul>
+</div>
 {% endblock %}

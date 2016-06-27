@@ -5,12 +5,11 @@
 
     {{ form(edit_form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('categoriadocumento') }}">
-            Back to the list
+<div class="bottoniera">
+        <a class="btn btn-default" href="{{ path('categoriadocumento') }}">
+            Torna indietro
         </a>
-    </li>
+
     <!-- <li>{{ form(delete_form) }}</li> -->
-</ul>
+</div>
 {% endblock %}

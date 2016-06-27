@@ -69,8 +69,7 @@
         {{ form(create_form, {'attr': {'novalidate': 'novalidate'}}) }}
     </div>
    <div class="bottoniera">
-       <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-arrow-left"
-                                                           aria-hidden="true"></span><a href="{{ path('richiesta_bycategoria', { 'idCategoria': idCategoria}) }}"> Indietro</a></button>
+      <a class="btn btn-default" href="{{ path('richiesta_bycategoria', { 'idCategoria': idCategoria}) }}"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Indietro</a></button>
    </div>
 
 {% endblock %}

@@ -76,17 +76,15 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('fosuser') }}">
-            Back to the list
+<div class="bottoniera">
+        <a class="btn btn-default" href="{{ path('fosuser') }}">
+            Torna indietro
         </a>
-    </li>
-    <li>
-        <a href="{{ path('fosuser_edit', { 'id': entity.id }) }}">
+
+        <a class="btn btn-default" href="{{ path('fosuser_edit', { 'id': entity.id }) }}">
             Edit
         </a>
-    </li>
+
     <!-- <li>{{ form(delete_form) }}</li> -->
-</ul>
+    </div>
 {% endblock %}

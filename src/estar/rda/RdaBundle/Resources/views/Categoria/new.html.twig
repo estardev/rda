@@ -5,8 +5,9 @@
 
     {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-<button type="button" class="btn btn-default"><a href="{{ path('categoria') }}">
+    <div class="bottoniera">
+<a class="btn btn-default" href="{{ path('categoria') }}">
             <span class="glyphicon glyphicon-chevron-left"></span> Ritorna alla lista categorie
-        </a></button>
-
+        </a>
+    </div>
 {% endblock %}
