@@ -145,7 +145,7 @@
                                 aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
                     </button>
                 {% elseif entity.status=='attesa_val_tec'  %}
-                    <button style="background-color:#a4b4df" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                    <button style="background-color:#6f8edf" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %}id="statoiter" data-id="{{ entity.id }}"><span
                                 class="glyphicon glyphicon-list"
                                 aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
                     </button>
