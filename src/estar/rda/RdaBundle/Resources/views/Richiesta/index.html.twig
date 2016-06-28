@@ -138,10 +138,35 @@
                     <td>{{ entity.id }}</td>
                     <td>{{ entity.titolo }}</td>
                     <td>
-                        <button {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
-                                    class="glyphicon glyphicon-list"
-                                    aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
-                        </button>
+
+                {% if entity.status=='bozza' %}
+                    <button style="background-color:#d7dcdc" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                class="glyphicon glyphicon-list"
+                                aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                    </button>
+                {% elseif entity.status=='attesa_val_tec'  %}
+                    <button style="background-color:#a4b4df" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                class="glyphicon glyphicon-list"
+                                aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                    </button>
+                {% elseif entity.status=='attesa_val_amm'  %}
+                    <button style="background-color:#4dbf49" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                class="glyphicon glyphicon-list"
+                                aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                    </button>
+                {% elseif entity.status=='da_inviare_ABS'  %}
+                    <button style="background-color:#e0d713" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                class="glyphicon glyphicon-list"
+                                aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                    </button>
+                {% elseif entity.status=='inviata_ABS'  %}
+                    <button {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                class="glyphicon glyphicon-list"
+                                aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                    </button>
+                {% endif %}
+
+
                     </td>
                     <td>{{ entity.annoprogrammazione }}</td>
                     <td>{{ entity.numeroprotocollo }}</td>
@@ -219,7 +244,7 @@
                                      aria-hidden="true"></span> Allegati</a></li>
                     {% endif %}
                 {% endif %}
-#}
+
                             </ul>
                         </div>
 
@@ -254,6 +279,8 @@
                             {% endif %}
                         </div>
 #}
+                                </ul>
+                            </div>
                     </td>
                 </tr>
             {% endfor %}

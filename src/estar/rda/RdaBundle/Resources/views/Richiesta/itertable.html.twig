@@ -1,6 +1,10 @@
 <thead>
+
+<tr class="alert-info">
+</tr>
 <tr class="alert-info">
     <th>Data</th>
+    <th>Utente</th>
     <th>Da Stato</th>
     <th>A Stato</th>
     <th>Protocollo</th>
@@ -17,6 +21,7 @@
 <tr>
 
     <td>{{ entity.dataora|date('d-m-Y H:i:s') }}</td>
+    <td>{{ entity.idutente.nomecognome }}</td>
     <td>{{ entity.dastato }}</td>
     <td>{{ entity.astato }}</td>
     <td>{{ entity.numeroprotocollo }}</td>
