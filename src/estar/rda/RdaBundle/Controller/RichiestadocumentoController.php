@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use estar\rda\RdaBundle\Entity\Richiestadocumento;
+use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Form\RichiestadocumentoType;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -145,12 +146,14 @@ class RichiestadocumentoController extends Controller
         $formbuilder->add("titolo", "text", array(
             'label' => "titolo",
             'data' => $richiesta->getTitolo(),
-            'read_only' => true
+            'read_only' => true,
+            'disabled' => "disabled"
         ));
         $formbuilder->add("descrizione", "textarea", array(
             'label' => "descrizione",
             'data' => $richiesta->getDescrizione(),
-            'read_only' => true
+            'read_only' => true,
+            'disabled' => "disabled"
         ));
         foreach ($campiValorizzati as $campovalorizzato) {
             $campo = $campovalorizzato->getIdcampodocumento();
@@ -160,14 +163,16 @@ class RichiestadocumentoController extends Controller
                 $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
                     'label' => $fieldsetName,
                     'data' => $campo->getDescrizione(),
-                    'read_only' => true
+                    'read_only' => true,
+                    'disabled' => "disabled"
                 ));
             } else {
 
                 $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
                     'label' => $campo->getDescrizione(),
                     'data' => $campovalorizzato->getValore(),
-                    'read_only' => true
+                    'read_only' => true,
+                    'disabled' => "disabled"
                 ));
             }
         }
@@ -230,6 +235,27 @@ class RichiestadocumentoController extends Controller
 
         $formbuilder = $this->createFormBuilder();
 
+        //modifiche DEM
+        // per visualizzare sempre le pagine ma disattivare l'inserimento in caso di richiesta avanzata
+
+        $userCheck = $this->get("usercheck.notify");
+        $dirittiTotaliRadicaliGlobbali = $userCheck->dirittiByUtente(); //array di oggetti DirittiRichiesta
+
+        $richiestaRep = $em->getRepository('estarRdaBundle:Richiesta');
+        $richiesta = $richiestaRep->find($idRichiesta);
+        $statorichiesta = $richiesta->getStatus();
+        $valida= false;
+        foreach ($dirittiTotaliRadicaliGlobbali as $dirittoSingolo) {
+            if ($dirittoSingolo->getIsAI() AND $statorichiesta=='bozza') {
+                $valida = true;
+            }
+            if ($dirittoSingolo->getIsVt() AND $statorichiesta == 'attesa_val_tec') {
+                $valida = true;
+            }
+            if ($dirittoSingolo->getIsVa() AND ($statorichiesta=='attesa_val_amm' or $statorichiesta=='da_inviare_ABS')) {
+                $valida = true;
+            }
+        }
 
         foreach ($campiValorizzati as $campovalorizzato) {
             if ($mode == 'modifica') {
@@ -241,10 +267,22 @@ class RichiestadocumentoController extends Controller
             if ($campo->getTipo() == 'radio') {
                 $fieldsetName = $campo->getFieldset();
                 if ($mode == 'modifica') {
-                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
-                        'label' => $fieldsetName,
-                        'data' => $campo->getDescrizione(),
-                    ));
+                    if($valida){
+                        $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
+                            'label' => $fieldsetName,
+                            'data' => $campo->getDescrizione(),
+
+                        ));
+                    } else{
+                        $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
+                            'label' => $fieldsetName,
+                            'data' => $campo->getDescrizione(),
+                            'read_only' => true,
+                            'disabled' => "disabled"
+
+                        ));
+                    }
+
                 } else {
                     $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
                         'label' => $fieldsetName,
@@ -252,11 +290,23 @@ class RichiestadocumentoController extends Controller
                 }
             } else {
                 if ($mode == 'modifica') {
-                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
-                        'label' => $campo->getDescrizione(),
-                        'data' => $campovalorizzato->getValore(),
+                    if($valida){
+                        $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
+                            'label' => $campo->getDescrizione(),
+                            'data' => $campovalorizzato->getValore(),
 
-                    ));
+                        ));
+                    } else{
+                        $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
+                            'label' => $campo->getDescrizione(),
+                            'data' => $campovalorizzato->getValore(),
+                            'read_only' => true,
+                            'disabled' => "disabled"
+
+                        ));
+                    }
+
+
                 } else {
                     $formbuilder->add($campo->getNome() . '-' . $campo->getId(), $campo->getTipo(), array(
                         'label' => $campo->getDescrizione(),
@@ -270,13 +320,20 @@ class RichiestadocumentoController extends Controller
 
 
         $form = $formbuilder->getForm();
-        $form->add('submit', 'submit', array('label' => 'Salva'));
+        if($valida){
+            $form->add('submit', 'submit', array('label' => 'Salva'));
+
+        }else{
+            $form->add('submit', 'submit', array('label' => 'Salva', 'attr' => array('disabled' => 'disabled')));
+
+        }
 
 
         return $this->render('estarRdaBundle:Richiestadocumento:edit.html.twig', array(
             'form' => $form->createView(),
             'idRichiesta' => $idRichiesta,
             'idCategoria' => $idCategoria,
+            'valida'    => $valida,
         ));
     }
 

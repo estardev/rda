@@ -6,7 +6,7 @@ use estar\rda\RdaBundle\Entity\Richiestadocumentolibero;
 use estar\rda\RdaBundle\Form\DocumentoliberoType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use Symfony\Component\Validator\Constraints\NotNull;
 use estar\rda\RdaBundle\Entity\Documento;
 use estar\rda\RdaBundle\Form\DocumentoType;
 
@@ -288,6 +288,24 @@ class DocumentoController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $repository = $em->getRepository('estarRdaBundle:Categoriadocumento');
+        $userCheck = $this->get("usercheck.notify");
+        $dirittiTotaliRadicaliGlobbali = $userCheck->dirittiByUtente(); //array di oggetti DirittiRichiesta
+
+        $richiestaRep = $em->getRepository('estarRdaBundle:Richiesta');
+        $richiesta = $richiestaRep->find($idRichiesta);
+        $statorichiesta = $richiesta->getStatus();
+        $valida= false;
+        foreach ($dirittiTotaliRadicaliGlobbali as $dirittoSingolo) {
+            if ($dirittoSingolo->getIsAI() AND $statorichiesta=='bozza') {
+                $valida = true;
+            }
+            if ($dirittoSingolo->getIsVt() AND $statorichiesta == 'attesa_val_tec') {
+                $valida = true;
+            }
+            if ($dirittoSingolo->getIsVa() AND ($statorichiesta=='attesa_val_amm' or $statorichiesta=='da_inviare_ABS')) {
+                $valida = true;
+            }
+        }
 
         $entities = $repository->findBy(
             array('idcategoria' => $idCategoria)
@@ -348,10 +366,13 @@ class DocumentoController extends Controller
             //if (terzocaso) c'è da studiare qualcosa
         }
         //$file = $rd->getdocFile();
+       
+
         return $this->render('estarRdaBundle:Documento:index.html.twig', array(
             'entities' => $documenti,
             'idRichiesta' => $idRichiesta,
             'idCategoria' => $idCategoria,
+            'valida' => $valida
 //            'rd' => $rd
         ));
     }
@@ -372,6 +393,23 @@ class DocumentoController extends Controller
         $richiesta = $repository->find($idRichiesta);
 
         $repository = $em->getRepository('estarRdaBundle:Richiestadocumentolibero');
+
+        $userCheck = $this->get("usercheck.notify");
+        $dirittiTotaliRadicaliGlobbali = $userCheck->dirittiByUtente(); //array di oggetti DirittiRichiesta
+
+        $statorichiesta = $richiesta->getStatus();
+        $valida= false;
+        foreach ($dirittiTotaliRadicaliGlobbali as $dirittoSingolo) {
+            if ($dirittoSingolo->getIsAI() AND $statorichiesta=='bozza') {
+                $valida = true;
+            }
+            if ($dirittoSingolo->getIsVt() AND $statorichiesta == 'attesa_val_tec') {
+                $valida = true;
+            }
+            if ($dirittoSingolo->getIsVa() AND ($statorichiesta=='attesa_val_amm' or $statorichiesta=='da_inviare_ABS')) {
+                $valida = true;
+            }
+        }
 
         $entities = $repository->findBy(
             array('idrichiesta' => $idRichiesta)
@@ -411,6 +449,7 @@ class DocumentoController extends Controller
             'idRichiesta' => $idRichiesta,
             'idCategoria' => $idCategoria,
             'create_form' => $form->createView(),
+            'valida' =>$valida,
             'rdl' => $rdl
         ));
     }

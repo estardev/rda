@@ -4,6 +4,7 @@ namespace estar\rda\RdaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DocumentoliberoType extends AbstractType
@@ -15,8 +16,8 @@ class DocumentoliberoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('descrizione',null, array('label' => 'Descrizione'))
-            ->add('image_file','file', array('label' => 'File'))
+            ->add('descrizione',null, array('label' => 'Descrizione', 'constraints' => new NotNull()))
+            ->add('image_file','file', array('label' => 'File', 'constraints' => new NotNull()))
 
         ;
     }
