@@ -409,14 +409,21 @@ class ClientSistematica
         $client = new \nusoap_client($wsdl);
 
 
+        //attivo precedentemente
+        //$client->endpoint = 'http://devbss3.grupposistematica.it/isharedoc/webservices/instanceService3';
+        //$soapaction = "http://devbss3.grupposistematica.it/isharedoc/webservices/instanceService3/";
 
-        $client->endpoint = 'http://devbss3.grupposistematica.it/isharedoc/webservices/instanceService3';
+        //todo in https
+        $client->endpoint = 'https://democorepa3.grupposistematica.it/isharedoc/webservices/webserviceInstance3';
+        $soapaction = 'https://democorepa3.grupposistematica.it/isharedoc/webservices/webserviceInstance3';
+
+
         $client->operation = "InstanceMessageCreate";
         $client->soap_defencoding = 'utf-8';
         $client->username='$headerusername';
         $client->password='$headerpassword';
         $client->useHTTPPersistentConnection(); // Uses http 1.1 instead of 1.0
-        $soapaction = "http://devbss3.grupposistematica.it/isharedoc/webservices/instanceService3/";
+
 
         $request_xml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ins="http://www.isharedoc.it/schemas/instance">
    <soapenv:Header><wsse:Security
