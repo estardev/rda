@@ -424,7 +424,6 @@ class ClientSistematica
         $client->password='$headerpassword';
         $client->useHTTPPersistentConnection(); // Uses http 1.1 instead of 1.0
 
-
         $request_xml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ins="http://www.isharedoc.it/schemas/instance">
    <soapenv:Header><wsse:Security
    soapenv:mustUnderstand="1"
