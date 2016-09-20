@@ -35,9 +35,9 @@
                     {% endif %}
                     {% for entity in categoria %}
                         {% if entity.id == categoriaSelezionata %}
-                            <option value="{{ entity.id }}" type="text" selected>({{ entity.area }}) {{ entity.descrizione }}</option>
+                            <option value="{{ entity.id }}" type="text" selected>{#({{ entity.area }})#} {{ entity.descrizione }}</option>
                         {% else %}
-                            <option value="{{ entity.id }}" type="text">({{ entity.area }}) {{ entity.descrizione }}</option>
+                            <option value="{{ entity.id }}" type="text">{#({{ entity.area }})#} {{ entity.descrizione }}</option>
                         {% endif %}
                     {% endfor %}
                 </select>

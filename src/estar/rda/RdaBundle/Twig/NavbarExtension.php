@@ -50,7 +50,7 @@ class NavbarExtension extends \Twig_Extension
         if (!is_null($utenteSessione) && is_object($utenteSessione)) {
             //Se entro in questo branch ho l'utente loggato
             if ($utenteSessione->hasRole('ROLE_ADMIN') || $utenteSessione->hasRole('ROLE_SUPER_ADMIN')) {
-                $query = $this->em->createQuery('select c.id as id, c.descrizione as descrizione, a.nome as area from estarRdaBundle:Categoria c join c.idarea a where c.idarea = a.id');
+                $query = $this->em->createQuery('select c.id as id, c.descrizione as descrizione, a.nome as area from estarRdaBundle:Categoria c join c.idarea a where c.idarea = a.id ORDER BY c.descrizione');
                 $categoria = $query->getResult();
 
             } else {
@@ -72,20 +72,18 @@ class NavbarExtension extends \Twig_Extension
 //                    ->setParameter('idutente', $utenteSessione)
 //                    ->getQuery();
 
-
-
-                $query = $this->em->
+                 $query = $this->em->
                 createQuery('select  c.id ,c.descrizione, a.nome as area
                       from estarRdaBundle:Categoria c, estarRdaBundle:Area a
                       where c.idarea = a.id
                       and c.id in (select IDENTITY(cg.idcategoria) from estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Utentegruppoutente ugu
                         where cg.idgruppoutente = ugu.idgruppoutente
-                        and ugu.idutente = :idutente)')
+                        and ugu.idutente = :idutente) ORDER BY c.descrizione')
                     ->setParameter('idutente', $utenteSessione);
-//                $query = $this->em->
-//                        createQuery('select v.idcategoria as id, v.descrizionecategoria as descrizione, v.nomearea as area from
-//                          estarRdaBundle:Vcategoriadirittiutente v where v.idutente= :utente')
-//                    ->setParameter('utente', $utenteSessione);
+                //                $query = $this->em->
+                //                        createQuery('select v.idcategoria as id, v.descrizionecategoria as descrizione, v.nomearea as area from
+                //                          estarRdaBundle:Vcategoriadirittiutente v where v.idutente= :utente')
+                //                    ->setParameter('utente', $utenteSessione);
                  $categoria=$query->getResult();
 
 
