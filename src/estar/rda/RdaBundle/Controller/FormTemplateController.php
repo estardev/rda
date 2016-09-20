@@ -458,7 +458,15 @@ class FormTemplateController extends Controller
                 'attr' => array('placeholder'=> "indicare motivazione di rigetto o validazione"),
                 'constraints' => new NotNull()
             ));
-            $validaForm->add('submit', 'submit', array('label' => $value));
+            switch ($value){
+                case "presentata": $label="Presenta per la validazione tecnica"; break;
+                case "rifiutata_tec": $label="Rifiuto Tecnico"; break;
+                case "validazione_tec": $label="Validazione Tecnica"; break;
+                case "rifiutata_amm": $label="Rifiuto Amministrativo"; break;
+                case "validazione_amm": $label="Validazione Amministrativa"; break;
+            }
+
+            $validaForm->add('submit', 'submit', array('label' => $label));
             //$MessaggioForm = $formbuilder->getForm();
             array_push($validaForms, $validaForm->createView());
         }
@@ -607,7 +615,16 @@ class FormTemplateController extends Controller
                 'label' => "Messaggio",
                 'data' => "indicare motivazione di rigetto o validazione"
             ));
-            $validaForm->add('submit', 'submit', array('label' => $value));
+
+            switch ($value){
+                case "presentata": $label="Presenta per la validazione tecnica"; break;
+                case "rifiutata_tec": $label="Rifiuto Tecnico"; break;
+                case "validazione_tec": $label="Validazione Tecnica"; break;
+                case "rifiutata_amm": $label="Rifiuto Amministrativo"; break;
+                case "validazione_amm": $label="Validazione Amministrativa"; break;
+           }
+
+            $validaForm->add('submit', 'submit', array('label' => $label));
             //$MessaggioForm = $formbuilder->getForm();
             array_push($validaForms, $validaForm->createView());
         }
