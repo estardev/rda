@@ -400,7 +400,14 @@ class FormTemplateController extends Controller
 
         $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => $tipologia)));
         $ClientSoapForm = $formbuilder->getForm();
-        $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane')));
+        if($richiesta->isCp()){
+            $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane')));
+
+        }
+        else{
+            $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane','disabled' => 'disabled')));
+
+        }
 
         $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => "Annullamento")));
         $AnnullaSoapForm = $formbuilder->getForm();
@@ -548,8 +555,14 @@ class FormTemplateController extends Controller
 
         $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => $tipologia)));
         $ClientSoapForm = $formbuilder->getForm();
-        $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane')));
+        if($richiesta->isCp()){
+            $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane')));
 
+        }
+        else{
+            $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane','disabled' => 'disabled')));
+
+        }
         $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => "Annullamento")));
         $AnnullaSoapForm = $formbuilder->getForm();
         $AnnullaSoapForm->add('submit', 'submit', array('label' => 'Distruggi Pratica ', 'attr' => array('icon' => 'glyphicon glyphicon-remove')));

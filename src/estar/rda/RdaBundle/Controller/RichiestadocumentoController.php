@@ -467,6 +467,10 @@ class RichiestadocumentoController extends Controller
         $repository = $em->getRepository('estarRdaBundle:Richiesta');
         $richiesta = $repository->find($idRichiesta);
         $idCategoria = $richiesta->getIdcategoria()->getId();
+        if ($idDocumento == 2){
+            $richiesta->setCp(1);
+            $em->persist($richiesta);
+        }
         if (!$rd) {
             $rd = new Richiestadocumento();
 

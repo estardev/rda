@@ -44,6 +44,29 @@ class Richiesta
     private $titolo;
 
     /**
+     * @return boolean
+     */
+    public function isCp()
+    {
+        return $this->cp;
+    }
+
+    /**
+     * @param boolean $cp
+     */
+    public function setCp($cp)
+    {
+        $this->cp = $cp;
+    }
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="cp", type="boolean", nullable=true)
+     */
+    private $cp;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="urlProtocollo", type="string", length=255, nullable=true)

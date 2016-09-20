@@ -21,17 +21,19 @@ class FormTemplateService
     private $user;
     private $router;
     private $em;
+    private $session;
 
 
     const MODE_INSERT = 0;
     const MODE_EDIT = 1;
     const MODE_PRINT = 2;
 
-    public function __construct($user, Router $router, EntityManager $em)
+    public function __construct($user, Router $router, EntityManager $em, $session)
     {
         $this->user = $user;
         $this->router = $router;
         $this->em = $em;
+        $this->session = $session;
 
     }
 
@@ -360,8 +362,19 @@ class FormTemplateService
 
             }
 
+            if(!$entity->isCp()){
+                $messaggio= "<strong><a href=\"../../../documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE LA COPERTURA ECONOMICA IN FORMATO PDF</a></strong>";
+            $this->session->getFlashBag()->add(
+                'notice',
+                array(
+                    "alert" => "danger",
+                    "title" => "ATTENZIONE:",
+                    "message" => "$messaggio"
+                )
+            );
+            }
 
-            //FG 20151016 gestione dei campi della richiesta
+           //FG 20151016 gestione dei campi della richiesta
 
             //controllo sul tipo di utente!!
             $statusrichiesta = $entity->getStatus();

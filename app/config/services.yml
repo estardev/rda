@@ -43,3 +43,4 @@ services:
             user:   "@usercheck.notify"
             router: "@router"
             em:     "@doctrine.orm.entity_manager"
+            session: "@session"
