@@ -241,6 +241,7 @@ class FormTemplateService
                             'expanded' => true,
                             'multiple' => false,
                             'label' => $campo->getDescrizione(),
+                            'constraints' => new NotNull(),
                             'attr' => $class
                         ));
                         $builder->get($campo->getNome() . '-' . $campo->getId())
@@ -390,14 +391,17 @@ class FormTemplateService
                         'label' => "Titolo",
                         'data' => $entity->getTitolo(),
                         'read_only' => true,
-                        'disabled' => "disabled"
+                        'disabled' => "disabled",
+
                     ));
                 }
                 else{
                     //TODO controllo del tipo di utente!!!!
                     $builder->add("titolo", "text", array(
                         'label' => "Titolo",
-                        'data' => $entity->getTitolo()
+                        'data' => $entity->getTitolo(),
+                        'constraints' => new NotNull()
+
                     ));
                 }
                 $builder->get('titolo')
@@ -432,7 +436,9 @@ class FormTemplateService
                     //TODO controllo del tipo di utente!!!!
                     $builder->add("descrizione", "textarea", array(
                         'label' => "Descrizione",
-                        'data' => $entity->getDescrizione()
+                        'data' => $entity->getDescrizione(),
+                        'constraints' => new NotNull()
+
                     ));
                 }
                 $builder->get('descrizione')

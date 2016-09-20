@@ -169,6 +169,7 @@ class FormTemplateController extends Controller
             $richiesta->setTitolo($campi['form']['titolo']);
             $richiesta->setDescrizione($campi['form']['descrizione']);
             $richiesta->setPriorita($campi['form']['priorita']);
+            $richiesta->setCp(0);
             $em->persist($richiesta);
 
             foreach ($campi['form'] as $key => $value) {
