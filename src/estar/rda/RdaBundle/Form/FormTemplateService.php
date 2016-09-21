@@ -461,7 +461,28 @@ class FormTemplateService
 
                         }
                     ));
-            }
+
+                if ($mode == FormTemplateService::MODE_PRINT or !$permessoscrittura) {
+                    //FG20160224 modifica per priorità
+                    $builder->add("priorita", "choice", array(
+                        'choices' => Richiesta::getPossibleEnumPriorita(),
+                        'label' => "Priorità richiesta",
+                        'disabled' => "disabled",
+                        'data' => $entity->getPriorita()
+                    ));
+                    }
+                else{
+                    //FG20160224 modifica per priorità
+                    $builder->add("priorita", "choice", array(
+                        'choices' => Richiesta::getPossibleEnumPriorita(),
+                        'label' => "Priorità richiesta",
+                        'data' => $entity->getPriorita()
+                    ));
+
+                }
+
+
+                }
             //        $fieldsetVisitati = array();
 
             $richiesta1 = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
