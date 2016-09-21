@@ -135,8 +135,17 @@
 
                 <tr data-state="richiesta">
 
-                    <td>{{ entity.id }}</td>
-                    <td>{{ entity.titolo }}</td>
+                {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ABS' or entity.status == 'chiusa_ABS' or entity.status == 'annullata_ABS') %}
+                    <td>
+                        <a href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">{{ entity.id }}
+                        </a></td>
+                    <td>
+                    <a href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">{{ entity.titolo }}
+                    </a></td>
+                    {% else %}
+                        <td>{{ entity.id }}</td>
+                        <td>{{ entity.titolo }}</td>
+                        {% endif %}
                     <td>
 
                 {% if entity.status=='bozza' %}

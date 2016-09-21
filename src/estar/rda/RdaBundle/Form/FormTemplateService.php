@@ -363,8 +363,8 @@ class FormTemplateService
 
             }
 
-            if(!$entity->isCp()){
-                $messaggio= "<strong><a href=\"../../../documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE LA COPERTURA ECONOMICA IN FORMATO PDF</a></strong>";
+            if(!$entity->isCp() AND $entity->getStatus()!="inviata_ABS" AND $entity->getStatus()!="annullata" AND $entity->getStatus()!="eliminata"){
+                $messaggio= "<strong><a href=\"http://rda.estar.toscana.it/app.php/documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE LA COPERTURA ECONOMICA IN FORMATO PDF</a></strong>";
             $this->session->getFlashBag()->add(
                 'notice',
                 array(
@@ -640,6 +640,8 @@ class FormTemplateService
                 //TODO non riesco a tirare su la statemachine e quindi ho preso l'ultimo stato dalla richiesta
                 $stato = $richiesta->getStatus();
                 if ( !$permessoscrittura or $stato =='rigetto_ABS') {
+                    //if(!$entity->isCp()){
+                    //}
                     $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'disabled' => 'disabled', 'icon' => 'glyphicon glyphicon-ok')));
                 } else {
                     $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'icon' => 'glyphicon glyphicon-ok')));

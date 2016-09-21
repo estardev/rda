@@ -465,6 +465,7 @@ class FormTemplateController extends Controller
                 case "validazione_tec": $label="Validazione Tecnica"; break;
                 case "rifiutata_amm": $label="Rifiuto Amministrativo"; break;
                 case "validazione_amm": $label="Validazione Amministrativa"; break;
+                default: $label= $value; break;
             }
 
             $validaForm->add('submit', 'submit', array('label' => $label));
@@ -623,7 +624,9 @@ class FormTemplateController extends Controller
                 case "validazione_tec": $label="Validazione Tecnica"; break;
                 case "rifiutata_amm": $label="Rifiuto Amministrativo"; break;
                 case "validazione_amm": $label="Validazione Amministrativa"; break;
-           }
+                default: $label= $value; break;
+
+            }
 
             $validaForm->add('submit', 'submit', array('label' => $label));
             //$MessaggioForm = $formbuilder->getForm();
