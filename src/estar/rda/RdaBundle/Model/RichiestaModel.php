@@ -806,9 +806,10 @@ class RichiestaModel
             case '100':
                 //Chiusura (iter terminato)
                 if ($articleSM->can('chiusura_ESTAR') or $iter->getAstatogestav()==RichiestaModel::STATUSESTAR_CHIUSA or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $richiesta->getStatus() == RichiestaModel::STATUS_CHIUSA_ESTAR ) {
-                    $iter= new Iter();
-                    $iter->setDastato($articleSM->getState());
+
                     if($richiesta->getStatus() != RichiestaModel::STATUS_CHIUSA_ESTAR){
+                        $iter= new Iter();
+                        $iter->setDastato($articleSM->getState());
                         $articleSM->apply('chiusura_ESTAR');
                         $iter->setAstato($articleSM->getState());
                         $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -818,14 +819,14 @@ class RichiestaModel
                         $iter->setDataora($dateTime);
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_CHIUSA);
                         $this->em->persist($iter);
-                    }
+                        $this->em->persist($richiesta);
 
+                    }
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_CHIUSA);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $this->em->persist($richiesta);
                     $this->em->flush();
                 } else {
                     //Non posso transire in quello stato
