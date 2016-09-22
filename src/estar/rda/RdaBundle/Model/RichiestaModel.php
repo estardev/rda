@@ -805,24 +805,27 @@ class RichiestaModel
 
             case '100':
                 //Chiusura (iter terminato)
-                if ($articleSM->can('chiusura_ESTAR') or $iter->getAstatogestav()==RichiestaModel::STATUSESTAR_CHIUSA or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR ) {
+                if ($articleSM->can('chiusura_ESTAR') or $iter->getAstatogestav()==RichiestaModel::STATUSESTAR_CHIUSA or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $richiesta->getStatus() == RichiestaModel::STATUS_CHIUSA_ESTAR ) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
-                    $articleSM->apply('chiusura_ESTAR');
-                    $iter->setAstato($articleSM->getState());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_CHIUSA);
-                    $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
+                    if($richiesta->getStatus() != RichiestaModel::STATUS_CHIUSA_ESTAR){
+                        $articleSM->apply('chiusura_ESTAR');
+                        $iter->setAstato($articleSM->getState());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_CHIUSA);
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $this->em->persist($iter);
+                    }
+
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_CHIUSA);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $this->em->persist($richiesta);
-                    $this->em->persist($iter);
                     $this->em->flush();
                 } else {
                     //Non posso transire in quello stato
