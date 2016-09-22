@@ -342,7 +342,7 @@ class FormTemplateController extends Controller
 
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         $stato = $richiesta->getStatus();
-        if ($stato == 'inviata_ABS' or $stato =='rigetto_ABS') {
+        if ($stato == 'inviata_ESTAR' or $stato =='rigetto_ESTAR') {
             $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 2);
 
         } else{

@@ -17,7 +17,7 @@ class CategoriadocumentoType extends AbstractType
     {
         $builder
             ->add('necessarioperabs', 'choice',
-                array('label' => 'Necessario per ABS',
+                array('label' => 'Necessario per ESTAR',
                     'choices' => array('Si'=>true, 'No'=>false),
                     'choices_as_values' => true,
                 ))

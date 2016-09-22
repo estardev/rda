@@ -16,12 +16,12 @@
         {% endif %}
 
         {%
-        if (stato=='inviata_ABS' )
+        if (stato=='inviata_ESTAR' )
         %}
             <div class="bottoni"> {{ form(annulla_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
         {% endif %}
 
-        {% if (diritti.isVA) and (stato=='da_inviare_ABS') %} <div class="bottoni"> {{ form(soap_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>{% endif %}
+        {% if (diritti.isVA) and (stato=='da_inviare_ESTAR') %} <div class="bottoni"> {{ form(soap_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>{% endif %}
 
         {% if (diritti.isAI and stato=='bozza')
             or (stato=='bozza')

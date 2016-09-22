@@ -75,7 +75,7 @@ class HomePageController extends Controller
 
               $query3 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
-                                    WHERE  r.status='da_inviare_ABS' AND c.id=r.idcategoria AND c.id=r.idcategoria
+                                    WHERE  r.status='da_inviare_ESTAR' AND c.id=r.idcategoria AND c.id=r.idcategoria
                                     AND c.id=$idCategoria
                                     ");
               $nDainv->add($query3->getResult());
@@ -87,7 +87,7 @@ class HomePageController extends Controller
 
         //$nValAmm=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.status='attesa_val_amm'")->getSingleScalarResult();
 
-        //$nDainv=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.status='da_inviare_ABS'")->getSingleScalarResult();
+        //$nDainv=$em->createQuery("SELECT COUNT(r) FROM estarRdaBundle:Richiesta r WHERE r.status='da_inviare_ESTAR'")->getSingleScalarResult();
 
 
 

@@ -22,7 +22,7 @@ class CategoriagruppoType extends AbstractType
                 'choices' => Categoriagruppo::getPossibleEnumAbilitazioni()))
             ->add('validatoreamministrativo','choice', array('label' => 'Validatore Amministrativo',
                 'choices' => Categoriagruppo::getPossibleEnumAbilitazioni()))
-            ->add('referenteabs','choice', array('label' => 'Referente ABS',
+            ->add('referenteabs','choice', array('label' => 'Referente ESTAR',
                 'choices' => Categoriagruppo::getPossibleEnumAbilitazioni()))
             ->add('idgruppoutente', 'entity', array(
                 'class' => 'estar\rda\RdaBundle\Entity\Gruppoutente',

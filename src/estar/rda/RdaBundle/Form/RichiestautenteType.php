@@ -18,7 +18,7 @@ class RichiestautenteType extends AbstractType
             ->add('creatore',null, array('label' => 'Creatore'))
             ->add('validatoretecnico',null, array('label' => 'Validatore Tecnico'))
             ->add('validatoreamministrativo',null, array('label' => 'Validatore Amministrativo'))
-            ->add('referenteabs',null, array('label' => 'Referente ABS'))
+            ->add('referenteabs',null, array('label' => 'Referente ESTAR'))
             ->add('idutente', 'entity', array(
                 'class' => 'estar\rda\RdaBundle\Entity\Utente',
                 'choice_label' => 'utenteldap',

@@ -101,7 +101,7 @@ class FormTemplateService
         $utentesessione = $this->user->getIdUtente();
 // //       $statusrichiesta = $entity->getStatus();
 //
-        //       if($diritti->getIsVA() and ($statusrichiesta=='attesa_val_amm' or $statusrichiesta=='da_inviare_ABS')){
+        //       if($diritti->getIsVA() and ($statusrichiesta=='attesa_val_amm' or $statusrichiesta=='da_inviare_ESTAR')){
         //           $prova='a';
         //       }
         //       elseif($diritti->getIsVT() and $statusrichiesta=='attesa_val_tec'){
@@ -363,7 +363,7 @@ class FormTemplateService
 
             }
 
-            if(!$entity->isCp() AND $entity->getStatus()!="inviata_ABS" AND $entity->getStatus()!="annullata" AND $entity->getStatus()!="eliminata"){
+            if(!$entity->isCp() AND $entity->getStatus()!="inviata_ESTAR" AND $entity->getStatus()!="annullata" AND $entity->getStatus()!="eliminata"){
                 $messaggio= "<strong><a href=\"http://rda.estar.toscana.it/app.php/documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE LA COPERTURA ECONOMICA IN FORMATO PDF</a></strong>";
             $this->session->getFlashBag()->add(
                 'notice',
@@ -382,7 +382,7 @@ class FormTemplateService
             $permessoscrittura=0;
             if($statusrichiesta=='bozza'
                 or ($diritti->getIsVT() and $statusrichiesta=='attesa_val_tec')
-                or ($diritti->getIsVA() and ($statusrichiesta=='attesa_val_amm' or $statusrichiesta=='da_inviare_ABS')))
+                or ($diritti->getIsVA() and ($statusrichiesta=='attesa_val_amm' or $statusrichiesta=='da_inviare_ESTAR')))
             {    $permessoscrittura = 1;
             }
             if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
@@ -660,7 +660,7 @@ class FormTemplateService
                 $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
                 //TODO non riesco a tirare su la statemachine e quindi ho preso l'ultimo stato dalla richiesta
                 $stato = $richiesta->getStatus();
-                if ( !$permessoscrittura or $stato =='rigetto_ABS') {
+                if ( !$permessoscrittura or $stato =='rigetto_ESTAR') {
                     //if(!$entity->isCp()){
                     //}
                     $builder->add('submit', 'submit', array('label' => ' Salva e chiudi', 'attr' => array('class' => 'bottoniera btn btn-success', 'disabled' => 'disabled', 'icon' => 'glyphicon glyphicon-ok')));

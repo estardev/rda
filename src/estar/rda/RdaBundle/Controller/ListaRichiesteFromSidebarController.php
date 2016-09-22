@@ -50,13 +50,13 @@ class ListaRichiesteFromSidebarController extends Controller
                                 if($idc == $idCategoria AND $idU == $idUtente AND $stato!='bozza') $entities->add($entity);
                                 else continue;
                             }
-                            //$criteria = array('status' => 'da_inviare_ABS');
+                            //$criteria = array('status' => 'da_inviare_ESTAR');
                             //$entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy($criteria);
                        //     $query = $em->createQuery(
                        //         'SELECT r
                        // FROM estarRdaBundle:Richiesta r
                        // WHERE (r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6 AND r.idutente=?7'
-                       //     )->setParameters(array(1 => 'inviata_ABS', 2 => 'evasa_ABS', 3 => 'rigetto_ABS', 4 => 'chiusa_ABS', 5 => 'annullata_ABS', 6=> $idCategoria, 7 => $idUtente));
+                       //     )->setParameters(array(1 => 'inviata_ESTAR', 2 => 'evasa_ESTAR', 3 => 'rigetto_ESTAR', 4 => 'chiusa_ESTAR', 5 => 'annullata_ESTAR', 6=> $idCategoria, 7 => $idUtente));
 //
                        //     $entities= $query->getResult();
 
@@ -89,7 +89,7 @@ class ListaRichiesteFromSidebarController extends Controller
                             $entities= $query->getResult();
                             break;
                         case 'lavorate_1': //lavorate
-                            //$criteria = array('status' => 'da_inviare_ABS');
+                            //$criteria = array('status' => 'da_inviare_ESTAR');
                             //$entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy($criteria);
                             $query = $em->createQuery(
                                 "SELECT r
@@ -120,7 +120,7 @@ class ListaRichiesteFromSidebarController extends Controller
                                 'SELECT r
                         FROM estarRdaBundle:Richiesta r
                         WHERE r.status LIKE ?4 or r.status LIKE ?5 AND r.idcategoria=?6'
-                            )->setParameters(array(4 => 'attesa_val_amm', 5 => 'da_inviare_ABS', 6 => $idCategoria));
+                            )->setParameters(array(4 => 'attesa_val_amm', 5 => 'da_inviare_ESTAR', 6 => $idCategoria));
                             $entities= $query->getResult();
                             break;
                         case 'lavorate_1': //lavorate
@@ -129,13 +129,13 @@ class ListaRichiesteFromSidebarController extends Controller
                         FROM estarRdaBundle:Richiesta r, estarRdaBundle:Iter t
                         WHERE t.idutente=$idUtente AND t.idrichiesta=r.id");
                             $entities= $query->getResult();
-                            //$criteria = array('status' => 'da_inviare_ABS');
+                            //$criteria = array('status' => 'da_inviare_ESTAR');
                             //$entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy($criteria);
                  //           $query = $em->createQuery(
                  //               'SELECT r
                  //       FROM estarRdaBundle:Richiesta r
                  //       WHERE (r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6 AND r.idutente=?7'
-                 //           )->setParameters(array(1 => 'inviata_ABS', 2 => 'evasa_ABS', 3 => 'rigetto_ABS', 4 => 'chiusa_ABS', 5 => 'annullata_ABS', 6=> $idCategoria, 7 => $idUtente));
+                 //           )->setParameters(array(1 => 'inviata_ESTAR', 2 => 'evasa_ESTAR', 3 => 'rigetto_ESTAR', 4 => 'chiusa_ESTAR', 5 => 'annullata_ESTAR', 6=> $idCategoria, 7 => $idUtente));
 //
                  //           $entities= $query->getResult();
 
@@ -147,7 +147,7 @@ class ListaRichiesteFromSidebarController extends Controller
                                 $idc=$entity->getIdcategoria()->getId();
                                 $idU = $entity->getIdutente()->getId();
                                 $stato = $entity->getStatus();
-                                if(($idc == $idCategoria AND $idU == $idUtente) or $stato=='attesa_val_amm' or $stato=='da_inviare_ABS') $entities->add($entity);
+                                if(($idc == $idCategoria AND $idU == $idUtente) or $stato=='attesa_val_amm' or $stato=='da_inviare_ESTAR') $entities->add($entity);
                                 else continue;
                             }
 

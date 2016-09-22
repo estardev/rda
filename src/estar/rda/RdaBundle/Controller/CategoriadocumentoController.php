@@ -108,7 +108,7 @@ class CategoriadocumentoController extends Controller
     {
         $form = $this->createFormBuilder()
             ->add('necessarioperabs','choice', array(
-                'label' => 'Necessario per ABS',
+                'label' => 'Necessario per ESTAR',
                 'choices_as_values' => true,
                 'choices'  => array(
                     'No' => false,

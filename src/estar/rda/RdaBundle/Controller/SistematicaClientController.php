@@ -531,22 +531,22 @@ class SistematicaClientController extends Controller
 
             $factory = $this->container->get('sm.factory');
             $articleSM = $factory->get($richiesta, 'rda');
-            if ($articleSM->can('inviato_ABS')) {
+            if ($articleSM->can('inviato_ESTAR')) {
                 $iter = new Iter();
                 $iter->setDastato($articleSM->getState());
-                $articleSM->apply('inviato_ABS');
+                $articleSM->apply('inviato_ESTAR');
                 $iter->setAstato($articleSM->getState());
                 $iter->setNumeroprotocollo($numprotocollo."/".$anno);
                 $iter->setIdrichiesta($richiesta);
                 if($tipologia=="Nuova"){
                     $iter->setMotivazione("Nuova richiesta inviata e protocollata");
                     if ($categoria->getId()==15 or $categoria->getId()==16 or $categoria->getId()==8 or $categoria->getId()==19){
-                        $iter->setAstatogestav('Validazione Amministrativa in ABS');
-                        $richiesta->setStatusgestav('Validazione Amministrativa in ABS');
+                        $iter->setAstatogestav('Validazione Amministrativa in ESTAR');
+                        $richiesta->setStatusgestav('Validazione Amministrativa in ESTAR');
                     }
                     else{
-                        $iter->setAstatogestav('Validazione Tecnica in ABS');
-                        $richiesta->setStatusgestav('Validazione Tecnica in ABS');
+                        $iter->setAstatogestav('Validazione Tecnica in ESTAR');
+                        $richiesta->setStatusgestav('Validazione Tecnica in ESTAR');
                     }
 
                 }
@@ -582,12 +582,12 @@ class SistematicaClientController extends Controller
                 elseif ($tipologia == "Documentazione aggiuntiva"){
 
                     $richiesta->setPresentato(0);
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSABS_ATTESA_INV);
+                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ATTESA_INV);
                     $em->persist($richiesta);
                 }
                 elseif ($tipologia == "Documentazione richiesta da RUP"){
                     $richiesta->setPresentato(0);
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSABS_ATTESA_INV);
+                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ATTESA_INV);
                     $em->persist($richiesta);
                 }
 

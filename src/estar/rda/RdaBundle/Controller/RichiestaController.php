@@ -352,13 +352,13 @@ class RichiestaController extends Controller
             case 'validazione_tec': $pre=3; break;
             case 'rifiutata_amm': $pre=4; break;
             case 'validazione_amm': $pre=5; break;
-            case 'inviato_ABS': $pre=6; break;
+            case 'inviato_ESTAR': $pre=6; break;
             case 'cancellazione': $pre=7; break;
             case 'annullamento': $pre=8; break;
-            case 'rifiutata_amm_ABS': $pre=9; break;
-            case 'rifiutata_tec_ABS': $pre=10; break;
-            case 'rigettata_ABS': $pre=11; break;
-            case 'chiusura_ABS': $pre=12; break;
+            case 'rifiutata_amm_ESTAR': $pre=9; break;
+            case 'rifiutata_tec_ESTAR': $pre=10; break;
+            case 'rigettata_ESTAR': $pre=11; break;
+            case 'chiusura_ESTAR': $pre=12; break;
             case 'attesa_doc_aggiuntiva': $pre=14; break;
             case 'attesa_doc_aggiuntiva_RUP': $pre=15; break;
             case 'assegnata_programmazione': $pre=16; break;
@@ -366,7 +366,7 @@ class RichiestaController extends Controller
             case 'indizione': $pre=18; break;
             case 'valutazione': $pre=19; break;
             case 'aggiudicazione': $pre=20; break;
-            case 'annullamento_ABS': $pre=21; break;
+            case 'annullamento_ESTAR': $pre=21; break;
             default: $pre=99; break;
         }
 **/

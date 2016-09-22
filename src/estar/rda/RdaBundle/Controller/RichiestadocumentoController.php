@@ -252,7 +252,7 @@ class RichiestadocumentoController extends Controller
             if ($dirittoSingolo->getIsVt() AND $statorichiesta == 'attesa_val_tec') {
                 $valida = true;
             }
-            if ($dirittoSingolo->getIsVa() AND ($statorichiesta=='attesa_val_amm' or $statorichiesta=='da_inviare_ABS')) {
+            if ($dirittoSingolo->getIsVa() AND ($statorichiesta=='attesa_val_amm' or $statorichiesta=='da_inviare_ESTAR')) {
                 $valida = true;
             }
         }

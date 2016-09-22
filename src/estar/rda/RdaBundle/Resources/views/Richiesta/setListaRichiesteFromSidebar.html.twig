@@ -156,7 +156,7 @@
                                             href="{{ path('formtemplate_print', { 'idRichiesta': entity.id, 'idCategoria': entity.idcategoria }) }}">
                                        <span class="glyphicon glyphicon-file"
                                              aria-hidden="true"></span> Genera PDF</a></li>
-                                {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ABS' or entity.status == 'chiusa_ABS' or entity.status == 'annullata_ABS') %}
+                                {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ESTAR' or entity.status == 'chiusa_ESTAR' or entity.status == 'annullata_ESTAR') %}
                                     <li><a
                                                 href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
                             <span class="glyphicon glyphicon-pencil"
@@ -168,7 +168,7 @@
                                   aria-hidden="true"></span> Modifica</a></li>
                                 {% endif %}
                                 {% if diritti is defined %}
-                                    {% if (diritti.isai and entity.status=='bozza') or (diritti.isvt and entity.status=='attesa_val_tec') or (diritti.isva and entity.status=='attesa_val_amm') or (diritti.isva and entity.status=='da_inviare_ABS') %}
+                                    {% if (diritti.isai and entity.status=='bozza') or (diritti.isvt and entity.status=='attesa_val_tec') or (diritti.isva and entity.status=='attesa_val_amm') or (diritti.isva and entity.status=='da_inviare_ESTAR') %}
 
                                         <li><a
                                                     href="{{ path('documento_byCategoria', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">

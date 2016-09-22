@@ -137,12 +137,12 @@ winzou_state_machine:
             - annullata
             - attesa_val_tec
             - attesa_val_amm
-            - da_inviare_ABS
-            - inviata_ABS
-            - evasa_ABS
-            - rigetto_ABS
-            - chiusa_ABS
-            - annullata_ABS
+            - da_inviare_ESTAR
+            - inviata_ESTAR
+            - evasa_ESTAR
+            - rigetto_ESTAR
+            - chiusa_ESTAR
+            - annullata_ESTAR
         # list of all possible transitions:
         transitions:
             presentata:
@@ -159,32 +159,32 @@ winzou_state_machine:
                 to: attesa_val_tec
             validazione_amm:
                 from: [attesa_val_amm]
-                to: da_inviare_ABS
-            inviato_ABS:
-                from: [da_inviare_ABS]
-                to: inviata_ABS
+                to: da_inviare_ESTAR
+            inviato_ESTAR:
+                from: [da_inviare_ESTAR]
+                to: inviata_ESTAR
             cancellazione:
                 from: [bozza, attesa_val_tec, attesa_val_amm]
                 to: eliminata
             annullamento:
-                from: [inviata_ABS]
+                from: [inviata_ESTAR]
                 to: annullata
-            rifiutata_amm_ABS:
-                from: [inviata_ABS]
-                to: da_inviare_ABS
-            rifiutata_tec_ABS:
-                from: [inviata_ABS]
+            rifiutata_amm_ESTAR:
+                from: [inviata_ESTAR]
+                to: da_inviare_ESTAR
+            rifiutata_tec_ESTAR:
+                from: [inviata_ESTAR]
                 to: attesa_val_tec
-            rigettata_ABS:
-                from: [inviata_ABS]
-                to: rigetto_ABS
-            chiusura_ABS:
-                from: [inviata_ABS]
-                to: chiusa_ABS
-            annullamento_ABS:
-                #from: [da_inviare_ABS]
-                from: [inviata_ABS]
-                to: inviata_ABS
+            rigettata_ESTAR:
+                from: [inviata_ESTAR]
+                to: rigetto_ESTAR
+            chiusura_ESTAR:
+                from: [inviata_ESTAR]
+                to: chiusa_ESTAR
+            annullamento_ESTAR:
+                #from: [da_inviare_ESTAR]
+                from: [inviata_ESTAR]
+                to: inviata_ESTAR
         # list of all callbacks
         callbacks:
             # will be called before applying a transition
