@@ -291,6 +291,10 @@ class ClientSistematica
         $idPratica=$this->getIdPratica(); // passato come parametro
 
         // estrazione parametri per la richiesta
+        //todo 2 vuol dire test
+        //$parametri = $this->em->getRepository('estarRdaBundle:Sistematica')->find(2);//TEST
+
+        //todo produzione
         $parametri = $this->em->getRepository('estarRdaBundle:Sistematica')->find(1);
         $headerusername = $parametri->getUser();
         $headerpassword = $parametri->getPsw();
@@ -413,9 +417,13 @@ class ClientSistematica
         //$client->endpoint = 'http://devbss3.grupposistematica.it/isharedoc/webservices/instanceService3';
         //$soapaction = "http://devbss3.grupposistematica.it/isharedoc/webservices/instanceService3/";
 
-        //todo in https
-        $client->endpoint = 'https://democorepa3.grupposistematica.it/isharedoc/webservices/webserviceInstance3';
-        $soapaction = 'https://democorepa3.grupposistematica.it/isharedoc/webservices/webserviceInstance3';
+        //todo in https test
+        //$client->endpoint = 'https://democorepa3.grupposistematica.it/isharedoc/webservices/webserviceInstance3';
+        //$soapaction = 'https://democorepa3.grupposistematica.it/isharedoc/webservices/webserviceInstance3';
+
+        //todo produzione
+        $client->endpoint = 'https://protocollo.estar.toscana.it/isharedoc/webservices/instanceService3';
+        $soapaction = 'https://protocollo.estar.toscana.it/isharedoc/webservices/instanceService3/';
 
 
         $client->operation = "InstanceMessageCreate";
