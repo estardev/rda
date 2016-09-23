@@ -206,14 +206,26 @@ class FormTemplateService
                     $options = $this->getChoicesOptions($campo->getFieldset());
 
                     if ($obbligatorio) {
-                        $builder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
-                            'choices' => $options,
-                            'expanded' => true,
-                            'multiple' => false,
-                            'label' => $campo->getDescrizione(),
-                            'constraints' => new NotNull(),
-                            'attr' => $class
-                        ));
+                        if ($campo->getPadre() != null) {
+                            $builder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
+                                'choices' => $options,
+                                'expanded' => true,
+                                'multiple' => false,
+                                'label' => $campo->getDescrizione(),
+                                //'constraints' => new NotNull(),
+                                'attr' => $class
+                            ));
+                        }
+                        else{
+                            $builder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
+                                'choices' => $options,
+                                'expanded' => true,
+                                'multiple' => false,
+                                'label' => $campo->getDescrizione(),
+                                'constraints' => new NotNull(),
+                                'attr' => $class
+                            ));
+                        }
                         $builder->get($campo->getNome() . '-' . $campo->getId())
                             ->addModelTransformer(new CallbackTransformer(
 
@@ -241,7 +253,7 @@ class FormTemplateService
                             'expanded' => true,
                             'multiple' => false,
                             'label' => $campo->getDescrizione(),
-                            'constraints' => new NotNull(),
+                            //'constraints' => new NotNull(),
                             'attr' => $class
                         ));
                         $builder->get($campo->getNome() . '-' . $campo->getId())

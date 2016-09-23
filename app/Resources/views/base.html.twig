@@ -57,6 +57,18 @@
                         $("textarea").autosize();
 
 
+                        /* DEM 20160923 Funzione per far deselezionare i radio senza dover apportare nessuna modifica!!!!
+                        $('input[type="radio"]').mousedown(function() {
+                            if (this.checked) {
+                                $(this).mouseup(function(e) {
+                                    var radio = this;
+                                    setTimeout(function() {	radio.checked = false;	}, 5);
+                                    $(this).unbind('mouseup');
+                                });
+                            }
+                        });
+                           IN QUESTA MERDA DI FRAMEWORK QUANDO VIENE DESELEZIONATO NON LO SCRIVE SUL DB...BELLO!!!*/
+
                     }
             )
         </script>

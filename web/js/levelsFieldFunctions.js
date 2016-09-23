@@ -2,6 +2,7 @@
  * Created by gianlu on 10/29/15.
  */
 function secondLevel() {
+    //console.log('second level');
    //aggiunto :not(.valorizzato) in modo tale che in edit vengano visualizzati i campi valorizzati
     $('.secondLevel:not(.valorizzato) ').each(function () {
 
@@ -20,8 +21,8 @@ function firstLevel(options) {
             var patt2 = new RegExp(/(\w+)[|](\d+)/);
 
             var name = patt.exec(this.id)[1];
-
-            $(this).find('input[type="radio"]').on('click checked', function () {
+//console.log('riga 23');
+            $(this).find('input[type="radio"]').on('click', function () {
 
                 var index = 0;
                 for (var i = 0; i < o[name].length; i++) {
