@@ -909,7 +909,7 @@ class RichiestaModel
                 //else
                 //    $idgara=false;
 
-                //attesa documentazione aggiuntiva RIP
+                //attesa documentazione aggiuntiva RUP
                 //La richiesta passa in stato di valutazione amministrativa
                 if ((($articleSM->can('rifiutata_amm_ESTAR')) AND !empty($codicegara)) or $iter->getAstatogestav()==RichiestaModel::STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR ) {
                     $iter= new Iter();

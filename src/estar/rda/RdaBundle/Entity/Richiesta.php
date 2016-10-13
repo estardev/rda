@@ -67,6 +67,29 @@ class Richiesta
     private $cp;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="assenzaconflitto", type="boolean", nullable=true)
+     */
+    private $assenzaconflitto;
+
+    /**
+     * @return boolean
+     */
+    public function isAssenzaconflitto()
+    {
+        return $this->assenzaconflitto;
+    }
+
+    /**
+     * @param boolean $assenzaconflitto
+     */
+    public function setAssenzaconflitto($assenzaconflitto)
+    {
+        $this->assenzaconflitto = $assenzaconflitto;
+    }
+
+    /**
      * @var string
      *
      * @ORM\Column(name="urlProtocollo", type="string", length=255, nullable=true)

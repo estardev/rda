@@ -170,6 +170,7 @@ class FormTemplateController extends Controller
             $richiesta->setDescrizione($campi['form']['descrizione']);
             $richiesta->setPriorita($campi['form']['priorita']);
             $richiesta->setCp(0);
+            $richiesta->setAssenzaconflitto(0);
             $em->persist($richiesta);
 
             foreach ($campi['form'] as $key => $value) {
@@ -401,7 +402,7 @@ class FormTemplateController extends Controller
 
         $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => $tipologia)));
         $ClientSoapForm = $formbuilder->getForm();
-        if($richiesta->isCp()){
+        if($richiesta->isCp() AND $richiesta->isAssenzaconflitto()){
             $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane')));
 
         }
@@ -565,7 +566,7 @@ class FormTemplateController extends Controller
 
         $formbuilder->setAction($this->generateUrl('sistematicaclient_index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idRichiesta, 'tipologia' => $tipologia)));
         $ClientSoapForm = $formbuilder->getForm();
-        if($richiesta->isCp()){
+        if($richiesta->isCp() AND $richiesta->isAssenzaconflitto()){
             $ClientSoapForm->add('submit', 'submit', array('label' => ' invia in ESTAR', 'attr' => array('icon' => 'glyphicon glyphicon-plane')));
 
         }

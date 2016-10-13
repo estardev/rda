@@ -471,6 +471,10 @@ class RichiestadocumentoController extends Controller
             $richiesta->setCp(1);
             $em->persist($richiesta);
         }
+        else if ($idDocumento == 7){
+            $richiesta->setAssenzaconflitto(1);
+            $em->persist($richiesta);
+        }
         if (!$rd) {
             $rd = new Richiestadocumento();
 
