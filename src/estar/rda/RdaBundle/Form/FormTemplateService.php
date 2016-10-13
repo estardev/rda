@@ -375,7 +375,7 @@ class FormTemplateService
 
             }
 
-            if(!$entity->isCp() AND !$entity->isAssenzaconflitto() AND $entity->getStatus()!="inviata_ESTAR" AND $entity->getStatus()!="annullata" AND $entity->getStatus()!="eliminata"){
+            if((!$entity->isCp() OR !$entity->isAssenzaconflitto()) AND $entity->getStatus()!="inviata_ESTAR" AND $entity->getStatus()!="annullata" AND $entity->getStatus()!="eliminata"){
                 $messaggio= "<strong><a href=\"http://rda.estar.toscana.it/app.php/documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE I DOCUMENTI RICHIESTI IN FORMATO PDF</a></strong>";
             $this->session->getFlashBag()->add(
                 'notice',
