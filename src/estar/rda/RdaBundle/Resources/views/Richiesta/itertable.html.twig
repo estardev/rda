@@ -22,7 +22,10 @@
 <tr>
 
     <td>{{ entity.dataora|date('d-m-Y H:i:s') }}</td>
-    <td>{% if(entity.idutente.nomecognome=='Sistematica') %} In carico presso Estar {% endif %}</td>
+    <td>{% if(entity.idutente.nomecognome=='Sistematica') %} In carico presso Estar
+        {% else %}
+            {{ entity.idutente.nomecognome  }}
+        {% endif %}</td>
     <td>{{ entity.idutente.idazienda.nome }}</td>
     <td>{{ entity.dastato }}</td>
     <td>{{ entity.astato }}</td>
