@@ -461,11 +461,11 @@ class FormTemplateController extends Controller
                 'constraints' => new NotNull()
             ));
             switch ($value){
-                case "presentata": $label="Presenta per la validazione tecnica"; break;
-                case "rifiutata_tec": $label="Rifiuto Tecnico"; break;
-                case "validazione_tec": $label="Validazione Tecnica"; break;
-                case "rifiutata_amm": $label="Rifiuto Amministrativo"; break;
-                case "validazione_amm": $label="Validazione Amministrativa"; break;
+                case "presentata": $label="Presenta per la validazione Direttore del personale"; break;
+                case "rifiutata_tec": $label="Rifiuto Direttore del personale"; break;
+                case "validazione_tec": $label="Validazione Direttore del personale"; break;
+                case "rifiutata_amm": $label="Rifiuto Direzione Aziendale"; break;
+                case "validazione_amm": $label="Validazione Direzione Aziendale"; break;
                 default: $label= $value; break;
             }
 
@@ -620,11 +620,11 @@ class FormTemplateController extends Controller
             ));
 
             switch ($value){
-                case "presentata": $label="Presenta per la validazione tecnica"; break;
-                case "rifiutata_tec": $label="Rifiuto Tecnico"; break;
-                case "validazione_tec": $label="Validazione Tecnica"; break;
-                case "rifiutata_amm": $label="Rifiuto Amministrativo"; break;
-                case "validazione_amm": $label="Validazione Amministrativa"; break;
+                case "presentata": $label="Presenta per la validazione Direzione del personale"; break;
+                case "rifiutata_tec": $label="Rifiuto Direttore del personale"; break;
+                case "validazione_tec": $label="Validazione Direttore del personale"; break;
+                case "rifiutata_amm": $label="Rifiuto Direzione Aziendale"; break;
+                case "validazione_amm": $label="Validazione Direzione Aziendale"; break;
                 default: $label= $value; break;
 
             }
