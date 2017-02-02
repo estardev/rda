@@ -28,7 +28,7 @@
 
 {% block body -%}
 
-    <h3>Benvenuto sul portale Concorsi Online.</h3>
+    <h3>Benvenuto sul portale delle Richieste d'Acquisto.</h3>
     <h4>Le tue statistiche</h4>
     <div class="table-responsive">
         <table class="table">
@@ -43,7 +43,7 @@
                 {% if (bozza['numero']) %}
                 <tr>
                     <td><strong>{{ bozza['numero'] }}</strong></td>
-                    <td> Richieste in <strong>Stato Bozza</strong> da inviare per la validazione del Direttore del Personale</td>
+                    <td> Richieste in <strong>Stato Bozza</strong> da inviare per la validazione Tecninca</td>
                     <td><a href="#"  onclick="ChangeSelect({{ bozza['idcat'] }})" ><strong>{{bozza['descrizionecategoria'] }}</strong></a> </td>
                 </tr>
                     {% endif %}
@@ -55,7 +55,7 @@
                 {% if (veltec['numero']) %}
                     <tr>
                     <td><strong>{{ veltec['numero'] }}</strong></td>
-                    <td> Richieste in <strong>Attesa di Validazione Tecnica</strong> da inviare per la validazione della Direzione Aziendale</td>
+                    <td> Richieste in <strong>Attesa di Validazione Tecnica</strong> da inviare per la validazione Amministrativa</td>
                     <td><a href="#"  onclick="ChangeSelect({{ veltec['idcat'] }})" ><strong>{{veltec['descrizionecategoria'] }}</strong></a> </td>
                 </tr>
                 {% endif %}
@@ -67,7 +67,7 @@
                 {% if (valamm['numero']) %}
                     <tr>
                     <td><strong>{{ valamm['numero'] }}</strong></td>
-                    <td> Richieste in <strong>Attesa di Valutazionedalla Direzione Aziendale</strong></td>
+                    <td> Richieste in <strong>Attesa di Valutazione Amministrativa</strong></td>
                     <td><a href="#"  onclick="ChangeSelect({{ valamm['idcat'] }})" ><strong>{{valamm['descrizionecategoria'] }}</strong></a> </td>
                 </tr>
                 {% endif %}
