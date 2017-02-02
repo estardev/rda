@@ -461,11 +461,11 @@ class FormTemplateController extends Controller
                 'constraints' => new NotNull()
             ));
             switch ($value){
-                case "presentata": $label="Presenta per la validazione tecnica"; break;
-                case "rifiutata_tec": $label="Rifiuto Tecnico"; break;
-                case "validazione_tec": $label="Validazione Tecnica"; break;
-                case "rifiutata_amm": $label="Rifiuto Amministrativo"; break;
-                case "validazione_amm": $label="Validazione Amministrativa"; break;
+                case "presentata": $label="Presenta per la validazione direttore del personale"; break;
+                case "rifiutata_tec": $label="rifiuto direttore del personale"; break;
+                case "validazione_tec": $label="validazione direttore del personale"; break;
+                case "rifiutata_amm": $label="rifiuto direttore amministrativo"; break;
+                case "validazione_amm": $label="validazione direttore amministrativo"; break;
                 default: $label= $value; break;
             }
 
@@ -620,11 +620,11 @@ class FormTemplateController extends Controller
             ));
 
             switch ($value){
-                case "presentata": $label="Presenta per la validazione tecnica"; break;
-                case "rifiutata_tec": $label="Rifiuto Tecnico"; break;
-                case "validazione_tec": $label="Validazione Tecnica"; break;
-                case "rifiutata_amm": $label="Rifiuto Amministrativo"; break;
-                case "validazione_amm": $label="Validazione Amministrativa"; break;
+                case "presentata": $label="Presenta per la validazione direttore del personale"; break;
+                case "rifiutata_tec": $label="rifiuto direttore del personale"; break;
+                case "validazione_tec": $label="validazione direttore del personale"; break;
+                case "rifiutata_amm": $label="rifiuto direttore amministrativo"; break;
+                case "validazione_amm": $label="validazione direttore amministrativo"; break;
                 default: $label= $value; break;
 
             }
