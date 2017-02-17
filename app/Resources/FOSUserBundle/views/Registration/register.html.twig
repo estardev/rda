@@ -11,7 +11,7 @@
     {% endblock %}
 
 {% block body -%}
-    {% if (is_granted("ROLE_ADMIN")) and (is_granted("IS_AUTHENTICATED_REMEMBERED")) and (is_granted("ROLE_MANAGER_USER")) %}
+    {% if (((is_granted("ROLE_ADMIN")) and (is_granted("IS_AUTHENTICATED_REMEMBERED"))) or (is_granted("ROLE_MANAGER_USER"))) %}
 
         {% if app.request.hasPreviousSession %}
             {% for type, messages in app.session.flashbag.all() %}
