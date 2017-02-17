@@ -35,8 +35,7 @@
 
         </ul>
         </li>
-        {% else %}
-        {% if (is_granted("ROLE_ADMIN") or is_granted("ROLE_SUPER_ADMIN"))%}
+    {% elseif (is_granted("ROLE_ADMIN") or is_granted("ROLE_SUPER_ADMIN"))%}
             <li>
                 <a href="#" data-toggle="collapse" aria-expanded="false" class="mydropdown" data-target="#subUtenti"><b>UTENTI</b></a>
                 <ul class="nav collapse" id="subUtenti">
