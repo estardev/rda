@@ -37,4 +37,3 @@ security:
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/ws/ServerESTAR, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, role: ROLE_USER }
-        - { path: ^/, role: ROLE_MANAGER_USER }
