@@ -130,8 +130,9 @@ class FormTemplateController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $utente = $this->getUser();
-        $idazienda= $utente->getIdazienda();
         $campi = $request->request->all();
+        $idazienda= $campi['form']['Azienda'];
+        $idazienda= $em->getRepository('estarRdaBundle:Azienda')->find($idazienda);
 
         $campiStruttura1 = $em->getRepository('estarRdaBundle:Campo')->findBy(
             array('idcategoria' => $idCategoria),

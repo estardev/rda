@@ -2,6 +2,8 @@
 
 namespace estar\rda\RdaBundle\Form;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use estar\rda\RdaBundle\Controller\UserCheckController;
 use estar\rda\RdaBundle\Entity\FormTemplate;
 use \Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router as Router;
@@ -14,6 +16,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use estar\rda\RdaBundle\Entity\Richiesta;
+
 
 class FormTemplateService
 {
@@ -28,7 +31,7 @@ class FormTemplateService
     const MODE_EDIT = 1;
     const MODE_PRINT = 2;
 
-    public function __construct($user, Router $router, EntityManager $em, $session)
+    public function __construct(UserCheckController $user, Router $router, EntityManager $em, $session)
     {
         $this->user = $user;
         $this->router = $router;
@@ -181,6 +184,22 @@ class FormTemplateService
                 'label' => "Priorità richiesta",
                 'data' => "3"
             ));
+
+            // bisogna fare una select per selezionare l'azienda richiedente
+            if ($this->user->getUtente()->getIdazienda()->getNome()=='ESTAR') {
+                $builder->add("Azienda", "choice", array(
+                    'choices' => $this->getAllAzienda(),
+                    'label' => "Azienda richiedente",
+                    //'data' => "3"
+                ));}
+            else{
+                $builder->add("Azienda", "choice", array(
+                    'label' => "Azienda richiedente",
+                    'choices'=> array($this->user->getUtente()->getIdazienda()->getId() => $this->user->getUtente()->getIdazienda()->getNome()),
+                    'attr' => array(
+                        'read_only' => true
+                    )));
+            }
 
 
             foreach ($campi as $campo) {
@@ -342,7 +361,7 @@ class FormTemplateService
             if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
                 $idRichiesta = $entity->getId();
                 $idCategoria = $idCategoria->getId();
-
+                $idAzienda = $entity->getIdAzienda()->getId();
                 //FG bugfix: in edit tira giù i campi tutte le categorie.
                 $query = $em->createQuery('SELECT c.id AS idcampo, identity (c.idcategoria) as pippocategoria, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,c.padre,vc.id,vc.valore
                                     FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
@@ -377,17 +396,17 @@ class FormTemplateService
 
             if((!$entity->isCp() OR !$entity->isAssenzaconflitto()) AND $entity->getStatus()!="inviata_ESTAR" AND $entity->getStatus()!="annullata" AND $entity->getStatus()!="eliminata"){
                 $messaggio= "<strong><a href=\"http://rda.estar.toscana.it/rda/web/app.php/documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE I DOCUMENTI RICHIESTI IN FORMATO PDF</a></strong>";
-            $this->session->getFlashBag()->add(
-                'notice',
-                array(
-                    "alert" => "danger",
-                    "title" => "ATTENZIONE:",
-                    "message" => "$messaggio"
-                )
-            );
+                $this->session->getFlashBag()->add(
+                    'notice',
+                    array(
+                        "alert" => "danger",
+                        "title" => "ATTENZIONE:",
+                        "message" => "$messaggio"
+                    )
+                );
             }
 
-           //FG 20151016 gestione dei campi della richiesta
+            //FG 20151016 gestione dei campi della richiesta
 
             //controllo sul tipo di utente!!
             $statusrichiesta = $entity->getStatus();
@@ -482,7 +501,7 @@ class FormTemplateService
                         'disabled' => "disabled",
                         'data' => $entity->getPriorita()
                     ));
-                    }
+                }
                 else{
                     //FG20160224 modifica per priorità
                     $builder->add("priorita", "choice", array(
@@ -493,8 +512,28 @@ class FormTemplateService
 
                 }
 
+                if ($mode == FormTemplateService::MODE_PRINT or !$permessoscrittura) {
+                    //FG20160224 modifica per priorità
+                    $builder->add("Azienda", "choice", array(
+                        'choices' => $this->getAllAzienda(),
+                        'label' => "Azienda Richiedente",
+                        'disabled' => "disabled",
+                        'data' => $idAzienda
+                    ));
+                }
+                else{
+                    //FG20160224 modifica per priorità
+                    $builder->add("priorita", "choice", array(
+                        'choices' => $this->getAllAzienda(),
+                        'label' => "Azienda Richiedente",
+                        'disabled' => "disabled",
+                        'data' => $idAzienda
+                    ));
 
                 }
+
+
+            }
             //        $fieldsetVisitati = array();
 
             $richiesta1 = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
@@ -604,7 +643,7 @@ class FormTemplateService
                         $class = array();
                         $label = $campo['descrizione'];
                         if ($campo['padre'] != null) {
-                            
+
                             /**verifico che il campo abbia un valore settato e setto la classe appropriata per permettere
                              * al jquery di visualizzarlo in edit
                              * */
@@ -705,4 +744,15 @@ class FormTemplateService
     {
         return 'estar_rda_rdabundle_FormTemplate';
     }
+
+    public function getAllAzienda(){
+        $aziende = new ArrayCollection();
+        $azienda = $this->em->getRepository('estarRdaBundle:Azienda')->findBy(array(),array('nome'=>'ASC'));
+        foreach ($azienda as $item){
+            $aziende->set($item->getId(),$item->getNome());
+        }
+        return $aziende;
+    }
+
+
 }
