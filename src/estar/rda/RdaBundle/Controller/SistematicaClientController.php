@@ -283,6 +283,11 @@ class SistematicaClientController extends Controller
 
                 $formbuilder = $this->createFormBuilder();
                 $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+                $formbuilder->add("Azienda", "text", array(
+                    'label' => "Azienda richiedente",
+                    'data'=> $richiesta->getIdazienda()->getNome(),
+                    'read_only' => true
+                ));
                 $formbuilder->add("titolo", "text", array(
                     'label' => "titolo",
                     'data' => $richiesta->getTitolo(),
@@ -293,11 +298,7 @@ class SistematicaClientController extends Controller
                     'data' => $richiesta->getDescrizione(),
                     'read_only' => true
                 ));
-                $formbuilder->add("Azienda", "text", array(
-                'label' => "Azienda richiedente",
-                'data'=> $richiesta->getIdazienda()->getNome(),
-                'read_only' => true
-                ));
+
                 foreach ($campiValorizzati as $campovalorizzato) {
                     $campo = $campovalorizzato;
 
