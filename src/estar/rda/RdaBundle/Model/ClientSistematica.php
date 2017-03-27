@@ -291,11 +291,13 @@ class ClientSistematica
         $idPratica=$this->getIdPratica(); // passato come parametro
 
         // estrazione parametri per la richiesta
-        //todo 2 vuol dire test
-        //$parametri = $this->em->getRepository('estarRdaBundle:Sistematica')->find(2);//TEST
+        if ($_SERVER['SERVER_NAME'] != "rda.estar.toscana.it" and $_SERVER['SERVER_NAME'] != "159.213.95.80") {
+            $parametri = $this->em->getRepository('estarRdaBundle:Sistematica')->find(2); //TEST
+        }
+        else{
+            $parametri = $this->em->getRepository('estarRdaBundle:Sistematica')->find(1); //PRODUZIONE
+        }
 
-        //todo produzione
-        $parametri = $this->em->getRepository('estarRdaBundle:Sistematica')->find(1);
         $headerusername = $parametri->getUser();
         $headerpassword = $parametri->getPsw();
         $wsdl = $parametri->getWsdl();
