@@ -293,6 +293,11 @@ class SistematicaClientController extends Controller
                     'data' => $richiesta->getDescrizione(),
                     'read_only' => true
                 ));
+                $formbuilder->add("Azienda", "text", array(
+                'label' => "Azienda richiedente",
+                'data'=> $richiesta->getIdazienda()->getNome(),
+                'read_only' => true
+                ));
                 foreach ($campiValorizzati as $campovalorizzato) {
                     $campo = $campovalorizzato;
 
