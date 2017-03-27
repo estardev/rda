@@ -82,10 +82,6 @@ sistematica:
     resource: "@estarRdaBundle/Resources/config/routing/sistematicaclient.yml"
     prefix:   /sistematicaclient
 
-estar_rda_pdf:
-    resource: "@estarRdaBundle/Resources/config/routing/pdf.yml"
-    prefix:   /pdf
-
 soapEsempio:
     path:     /soapesempio/{city}/{country}
     defaults: { _controller: estarRdaBundle:SoapEsempio:index }
