@@ -296,6 +296,7 @@ class ClientSistematica
         }
         else{
             $parametri = $this->em->getRepository('estarRdaBundle:Sistematica')->find(1); //PRODUZIONE
+
         }
 
         $headerusername = $parametri->getUser();
@@ -414,19 +415,21 @@ class ClientSistematica
         //$dateTime = date('Y-m-d').'T'.date('H:i:s');
         $client = new \nusoap_client($wsdl);
 
+        if ($_SERVER['SERVER_NAME'] != "rda.estar.toscana.it" and $_SERVER['SERVER_NAME'] != "159.213.95.80") {
+            //todo in https test
+            $client->endpoint = 'https://democorepa3.grupposistematica.it/isharedoc/webservices/webserviceInstance3';
+            $soapaction = 'https://democorepa3.grupposistematica.it/isharedoc/webservices/webserviceInstance3';
+        }
+        else{
+            //todo produzione
+            $client->endpoint = 'https://protocollo.estar.toscana.it/isharedoc/webservices/instanceService3';
+            $soapaction = 'https://protocollo.estar.toscana.it/isharedoc/webservices/instanceService3/';
+        }
+
 
         //attivo precedentemente
         //$client->endpoint = 'http://devbss3.grupposistematica.it/isharedoc/webservices/instanceService3';
         //$soapaction = "http://devbss3.grupposistematica.it/isharedoc/webservices/instanceService3/";
-
-        //todo in https test
-        //$client->endpoint = 'https://democorepa3.grupposistematica.it/isharedoc/webservices/webserviceInstance3';
-        //$soapaction = 'https://democorepa3.grupposistematica.it/isharedoc/webservices/webserviceInstance3';
-
-        //todo produzione
-        $client->endpoint = 'https://protocollo.estar.toscana.it/isharedoc/webservices/instanceService3';
-        $soapaction = 'https://protocollo.estar.toscana.it/isharedoc/webservices/instanceService3/';
-
 
         $client->operation = "InstanceMessageCreate";
         $client->soap_defencoding = 'utf-8';
