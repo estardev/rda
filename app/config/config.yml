@@ -108,6 +108,9 @@ swiftmailer:
     spool:     { type: memory }
 
 fos_user:
+    from_email:
+        address: "yourapp@yourapp.com"
+        sender_name: "Demo String"
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
     user_class: estar\rda\RdaBundle\Entity\Utente
