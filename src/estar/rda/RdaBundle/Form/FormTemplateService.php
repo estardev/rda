@@ -395,7 +395,13 @@ class FormTemplateService
             }
 
             if((!$entity->isCp() OR !$entity->isAssenzaconflitto()) AND $entity->getStatus()!="inviata_ESTAR" AND $entity->getStatus()!="annullata" AND $entity->getStatus()!="eliminata"){
-                $messaggio= "<strong><a href=\"http://rda.estar.toscana.it/rda/web/app.php/documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE I DOCUMENTI RICHIESTI IN FORMATO PDF</a></strong>";
+                if ($_SERVER['SERVER_NAME'] != "rda.estar.toscana.it" and $_SERVER['SERVER_NAME'] != "159.213.95.80") {
+                    $messaggio= "<strong><a href=\"http://159.213.145.186/rdaconcorsi/web/app.php/documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE I DOCUMENTI RICHIESTI IN FORMATO PDF</a></strong>";
+
+                }
+                else{
+                    $messaggio= "<strong><a href=\"http://rda.estar.toscana.it/rda/web/app.php/documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE I DOCUMENTI RICHIESTI IN FORMATO PDF</a></strong>";
+                }
                 $this->session->getFlashBag()->add(
                     'notice',
                     array(
