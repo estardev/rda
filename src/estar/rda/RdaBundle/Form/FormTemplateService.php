@@ -396,7 +396,7 @@ class FormTemplateService
 
             if((!$entity->isCp() OR !$entity->isAssenzaconflitto()) AND $entity->getStatus()!="inviata_ESTAR" AND $entity->getStatus()!="annullata" AND $entity->getStatus()!="eliminata"){
                 if ($_SERVER['SERVER_NAME'] != "rda.estar.toscana.it" and $_SERVER['SERVER_NAME'] != "159.213.95.80") {
-                    $messaggio= "<strong><a href=\"http://159.213.145.186/rdaconcorsi/web/app.php/documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE I DOCUMENTI RICHIESTI IN FORMATO PDF</a></strong>";
+                    $messaggio= "<strong><a href=\"http://159.213.145.186/rda/web/app.php/documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE I DOCUMENTI RICHIESTI IN FORMATO PDF</a></strong>";
 
                 }
                 else{
