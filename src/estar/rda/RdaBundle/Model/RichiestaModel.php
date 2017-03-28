@@ -252,12 +252,27 @@ class RichiestaModel
         //Se l'utente è validatore tenico
         if ($dirittiRichiesta->getIsVT()) {
 
-            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato)");
-            $query->setParameters(array(
-                'idcategoria'=>$idCategoria,
-                'idutente'=> $idUtente,
-                'stato'=> RichiestaModel::STATUS_ATTESA_VAL_TEC,
-            ));
+            //FG 20170328: se e solo se l'utente è di ESTAR, vede le sue e quelle delle altre aziende; diversamente no.
+            $query = null;
+            if (trim($utente->getIdazienda()->getNome()) == 'ESTAR') {
+                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato)");
+                $query->setParameters(array(
+                    'idcategoria'=>$idCategoria,
+                    'idutente'=> $idUtente,
+                    'stato'=> RichiestaModel::STATUS_ATTESA_VAL_TEC,
+                ));
+            } else {
+                //Non è di estar: deve vedere solo le sue
+                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato) AND r.idazienda=:idAzienda");
+                $query->setParameters(array(
+                    'idcategoria'=>$idCategoria,
+                    'idutente'=> $idUtente,
+                    'idAzienda' =>$utente->getIdazienda(),
+                    'stato'=> RichiestaModel::STATUS_ATTESA_VAL_TEC,
+                ));
+            }
+
+
             $richiesteutente = $query->getResult();
 
 
