@@ -40,6 +40,17 @@ class HomePageController extends Controller
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->findAll();
 
+        //todo prendo l'id dell'azienda per filtrare le richieste
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $idUtenteSessione =         $user->getId();
+        $utenteSessione = $em->getRepository('estarRdaBundle:Utente')->find($idUtenteSessione)->getIdazienda();
+
+        //$idGruppoUtente = $em->getRepository('estarRdaBundle:Utentegruppoutente')->find($idUtenteSessione);
+        //var_dump($idGruppoUtente);
+        //$gruppoUtente = $em->getRepository('estarRdaBundle:Categoriagruppo')->find($idGruppoUtente)->getReferenteabs();
+        //var_dump($gruppoUtente);
+
+
         //fg 20160503 bozza di codice "nuovo"
         $userCheck = $this->get("usercheck.notify");
         $dirittiTotaliRadicaliGlobbali = $userCheck->dirittiByUtente(); //array di oggetti DirittiRichiesta
@@ -48,10 +59,11 @@ class HomePageController extends Controller
           $idCategoria = $dirittoSingolo->getCategoria()->getId();
           if ($dirittoSingolo->getIsAI()) {
               //Abilitato all'inserimento
+              //filtrare in base al tipo di azienda
               $query = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.idutente=$utenteSessione AND r.status='bozza' AND c.id=r.idcategoria
-                                    AND c.id=$idCategoria
+                                    AND c.id=$idCategoria AND r.idazienda=$utenteSessione
                                     ");
               $nBozza->add($query->getResult());
 
@@ -60,7 +72,7 @@ class HomePageController extends Controller
               $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                      FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                      WHERE  r.status='attesa_val_tec' AND c.id=r.idcategoria AND c.id=r.idcategoria
-                                     AND c.id=$idCategoria
+                                     AND c.id=$idCategoria AND r.idazienda=$utenteSessione
                                      ");
               $nValtec->add($query1->getResult());
 
@@ -69,14 +81,14 @@ class HomePageController extends Controller
               $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.status='attesa_val_amm' AND c.id=r.idcategoria AND c.id=r.idcategoria
-                                    AND c.id=$idCategoria
+                                    AND c.id=$idCategoria AND r.idazienda=$utenteSessione
                                     ");
               $nValAmm->add($query2->getResult());
 
               $query3 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.status='da_inviare_ESTAR' AND c.id=r.idcategoria AND c.id=r.idcategoria
-                                    AND c.id=$idCategoria
+                                    AND c.id=$idCategoria AND r.idazienda=$utenteSessione
                                     ");
               $nDainv->add($query3->getResult());
             }

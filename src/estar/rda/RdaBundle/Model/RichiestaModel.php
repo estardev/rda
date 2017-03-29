@@ -198,6 +198,9 @@ class RichiestaModel
         $utente = $dirittiRichiesta->getUser();
         $idUtente=$utente->getId();
 
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $idUtenteSessione =         $user->getId();
+        $utenteSessione = $this->em->getRepository('estarRdaBundle:Utente')->find($idUtenteSessione)->getIdazienda();
         if ($dirittiRichiesta->getIsVA() AND $dirittiRichiesta->getIsAI() AND $dirittiRichiesta->getIsVT()){
 
             $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6 OR r.status=:stato7 OR r.status=:stato8 OR r.status=:stato9)");
@@ -224,14 +227,19 @@ class RichiestaModel
 
         //Se l'utente è validatore amministrativo
         if ($dirittiRichiesta->getIsVA()) {
-            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3)");
+            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3) AND r.idazienda=:idazienda");
             $query->setParameters(array(
                 'idcategoria'=>$idCategoria,
                 'idutente'=> $idUtente,
                 'stato1'=> RichiestaModel::STATUS_ATTESA_VAL_AMM,
                 'stato2'=> RichiestaModel::STATUS_DA_INVIARE_ESTAR,
                 'stato3'=> RichiestaModel::STATUS_INVIATA_ESTAR,
-            ));
+                //todo bisogna filtrare per azienda
+                'idazienda'=> $utenteSessione,
+                ));
+
+
+
             $richiesteutente = $query->getResult();
 
             //            foreach($entities as $entity) {
@@ -252,27 +260,14 @@ class RichiestaModel
         //Se l'utente è validatore tenico
         if ($dirittiRichiesta->getIsVT()) {
 
-            //FG 20170328: se e solo se l'utente è di ESTAR, vede le sue e quelle delle altre aziende; diversamente no.
-            $query = null;
-            if (trim($utente->getIdazienda()->getNome()) == 'ESTAR') {
-                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato)");
-                $query->setParameters(array(
-                    'idcategoria'=>$idCategoria,
-                    'idutente'=> $idUtente,
-                    'stato'=> RichiestaModel::STATUS_ATTESA_VAL_TEC,
-                ));
-            } else {
-                //Non è di estar: deve vedere solo le sue
-                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato) AND r.idazienda=:idAzienda");
-                $query->setParameters(array(
-                    'idcategoria'=>$idCategoria,
-                    'idutente'=> $idUtente,
-                    'idAzienda' =>$utente->getIdazienda(),
-                    'stato'=> RichiestaModel::STATUS_ATTESA_VAL_TEC,
-                ));
-            }
-
-
+            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato) AND r.idazienda=:idazienda");
+            $query->setParameters(array(
+                'idcategoria'=>$idCategoria,
+                'idutente'=> $idUtente,
+                'stato'=> RichiestaModel::STATUS_ATTESA_VAL_TEC,
+                //todo bisogna filtrare per azienda
+                'idazienda'=> $utenteSessione,
+            ));
             $richiesteutente = $query->getResult();
 
 
