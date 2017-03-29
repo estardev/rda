@@ -7,12 +7,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Categoria
+ * Regola
  *
  * @ORM\Table(name="regola")
  * @ORM\Entity
  */
-class Categoria
+class Regola
 {
 
     /**
