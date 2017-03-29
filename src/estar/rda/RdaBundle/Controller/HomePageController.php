@@ -41,9 +41,12 @@ class HomePageController extends Controller
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->findAll();
 
         //todo prendo l'id dell'azienda per filtrare le richieste
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        //$user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->getUser();
         $idUtenteSessione =         $user->getId();
-        $utenteSessione = $em->getRepository('estarRdaBundle:Utente')->find($idUtenteSessione)->getIdazienda();
+        $aziendaUtente = trim($user->getIdazienda()->getNome());
+        $idAziendaUtente = $user->getIdazienda()->getId();
+//        $utenteSessione = $em->getRepository('estarRdaBundle:Utente')->find($idUtenteSessione)->getIdazienda();
 
         //$idGruppoUtente = $em->getRepository('estarRdaBundle:Utentegruppoutente')->find($idUtenteSessione);
         //var_dump($idGruppoUtente);
@@ -54,41 +57,69 @@ class HomePageController extends Controller
         //fg 20160503 bozza di codice "nuovo"
         $userCheck = $this->get("usercheck.notify");
         $dirittiTotaliRadicaliGlobbali = $userCheck->dirittiByUtente(); //array di oggetti DirittiRichiesta
-
       foreach ($dirittiTotaliRadicaliGlobbali as $dirittoSingolo) {
           $idCategoria = $dirittoSingolo->getCategoria()->getId();
           if ($dirittoSingolo->getIsAI()) {
-              //Abilitato all'inserimento
+              //Abilitato all'inserimento. Se ESTAR, le vede tutte. Se non è ESTAR, vede solo quelle della sua azienda
               //filtrare in base al tipo di azienda
-              $query = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+              if ($aziendaUtente == 'ESTAR')
+                  $query = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.idutente=$utenteSessione AND r.status='bozza' AND c.id=r.idcategoria
-                                    AND c.id=$idCategoria AND r.idazienda=$utenteSessione
+                                    AND c.id=$idCategoria
+                                    "); //Un utente ESTAR vede tutte le richieste, sue e non sue
+              else
+                  $query = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+                                    WHERE  r.idutente=$utenteSessione AND r.status='bozza' AND c.id=r.idcategoria
+                                    AND c.id=$idCategoria AND r.idazienda=$idAziendaUtente
                                     ");
               $nBozza->add($query->getResult());
 
           }
           if ($dirittoSingolo->getIsVt()) {
-              $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+              //Validatore tecnico. Se è ESTAR, vede tutte quelle in attesa di validazione tecnica. Se non è ESTAR, vede solo quelle della sua azienda
+              if ($aziendaUtente == 'ESTAR')
+                  $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+                                    WHERE  r.idutente=$utenteSessione AND r.status='bozza' AND c.id=r.idcategoria
+                                    AND c.id=$idCategoria
+                                    ");
+              else
+                $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                      FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                      WHERE  r.status='attesa_val_tec' AND c.id=r.idcategoria AND c.id=r.idcategoria
-                                     AND c.id=$idCategoria AND r.idazienda=$utenteSessione
+                                     AND c.id=$idCategoria AND r.idazienda=$idAziendaUtente
                                      ");
               $nValtec->add($query1->getResult());
 
           }
           if ($dirittoSingolo->getIsVa()) {
+              //Validatore amministrativo. Estar = vede tutte quelle in attesa. Altro utente? vede solo le sue.
+              if ($aziendaUtente == 'ESTAR')
+                  $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+                                    WHERE  r.status='attesa_val_amm' AND c.id=r.idcategoria AND c.id=r.idcategoria
+                                    AND c.id=$idCategoria
+                                    ");
+                  else
               $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.status='attesa_val_amm' AND c.id=r.idcategoria AND c.id=r.idcategoria
-                                    AND c.id=$idCategoria AND r.idazienda=$utenteSessione
+                                    AND c.id=$idCategoria AND r.idazienda=$idAziendaUtente
                                     ");
               $nValAmm->add($query2->getResult());
-
-              $query3 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+              if ($aziendaUtente == 'ESTAR')
+                  $query3 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.status='da_inviare_ESTAR' AND c.id=r.idcategoria AND c.id=r.idcategoria
-                                    AND c.id=$idCategoria AND r.idazienda=$utenteSessione
+                                    AND c.id=$idCategoria
+                                    ");
+              else
+                  $query3 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
+                                    FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
+                                    WHERE  r.status='da_inviare_ESTAR' AND c.id=r.idcategoria AND c.id=r.idcategoria
+                                    AND c.id=$idCategoria AND r.idazienda=$idAziendaUtente
                                     ");
               $nDainv->add($query3->getResult());
             }
