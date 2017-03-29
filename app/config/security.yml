@@ -23,6 +23,8 @@ security:
                 csrf_provider: security.csrf.token_manager # Use form.csrf_provider instead for Symfony <2.4
                 always_use_default_target_path: true
                 default_target_path: /homepage
+                use_forward:    false
+
                 #use_referer: true
                 #failure_path: login_failure
             logout:       true
