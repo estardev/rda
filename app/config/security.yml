@@ -23,8 +23,6 @@ security:
                 csrf_provider: security.csrf.token_manager # Use form.csrf_provider instead for Symfony <2.4
                 always_use_default_target_path: true
                 default_target_path: /homepage
-                use_forward:    false
-
                 #use_referer: true
                 #failure_path: login_failure
             logout:       true
@@ -37,5 +35,5 @@ security:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/ws/ServerESTAR, role: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: http }
+        - { path: ^/ws/ServerESTAR, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, role: ROLE_USER }
