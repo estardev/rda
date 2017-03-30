@@ -291,7 +291,7 @@ class ClientSistematica
         $idPratica=$this->getIdPratica(); // passato come parametro
 
         // estrazione parametri per la richiesta
-        if ($_SERVER['SERVER_NAME'] != "rda.estar.toscana.it" and $_SERVER['SERVER_NAME'] != "159.213.95.80") {
+        if ($_SERVER['SERVER_NAME'] == "rda.estar.toscana.it" and $_SERVER['SERVER_NAME'] == "159.213.95.80") {
             $parametri = $this->em->getRepository('estarRdaBundle:Sistematica')->find(2); //TEST
         }
         else{
@@ -415,7 +415,7 @@ class ClientSistematica
         //$dateTime = date('Y-m-d').'T'.date('H:i:s');
         $client = new \nusoap_client($wsdl);
 
-        if ($_SERVER['SERVER_NAME'] != "rda.estar.toscana.it" and $_SERVER['SERVER_NAME'] != "159.213.95.80") {
+        if ($_SERVER['SERVER_NAME'] == "rda.estar.toscana.it" and $_SERVER['SERVER_NAME'] == "159.213.95.80") {
             //todo in https test
             $client->endpoint = 'https://democorepa3.grupposistematica.it/isharedoc/webservices/webserviceInstance3';
             $soapaction = 'https://democorepa3.grupposistematica.it/isharedoc/webservices/webserviceInstance3';
