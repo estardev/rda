@@ -501,7 +501,7 @@ class SistematicaClientController extends Controller
         $risposta->setIdPratica($idRichiesta);
         $risposta->setNomefile($nomefile);
         $risposta->setPath($pathfile);
-        $risposta->setOggettomessaggio($azienda.": ".$categoriamerciologica.", ".$richiesta->getTitolo());
+        $risposta->setOggettomessaggio($azienda.": ".$categoriamerciologica.", ".htmlentities($richiesta->getTitolo()));
         $risposta->setTipologia($tipologia);
         $risposta->setPriorita($prioritastringa);
         $risposta->setCategoriamerceologica($categoriamerciologica);

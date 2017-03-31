@@ -295,7 +295,7 @@ class ClientSistematica
             $parametri = $this->em->getRepository('estarRdaBundle:Sistematica')->find(2); //TEST
         }
         else{
-            $parametri = $this->em->getRepository('estarRdaBundle:Sistematica')->find(1); //PRODUZIONE
+            //$parametri = $this->em->getRepository('estarRdaBundle:Sistematica')->find(1); //PRODUZIONE
 
         }
 
@@ -422,8 +422,8 @@ class ClientSistematica
         }
         else{
             //todo produzione
-            $client->endpoint = 'https://protocollo.estar.toscana.it/isharedoc/webservices/instanceService3';
-            $soapaction = 'https://protocollo.estar.toscana.it/isharedoc/webservices/instanceService3/';
+            //$client->endpoint = 'https://protocollo.estar.toscana.it/isharedoc/webservices/instanceService3';
+            //$soapaction = 'https://protocollo.estar.toscana.it/isharedoc/webservices/instanceService3/';
         }
 
 
