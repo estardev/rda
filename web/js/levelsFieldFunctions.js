@@ -12,6 +12,61 @@ function secondLevel() {
     );
 }
 
+function firstLevelNew(options) {
+
+
+    var o = options;
+    $('.firstLevel').each(function () {
+            var patt = new RegExp(/form_(.*)+-[0-9]+/);
+            var patt2 = new RegExp(/(\w+)[|](\d+)/);
+
+            var name = patt.exec(this.id)[1];
+            $(this).find('input[type="radio"]').on('click', function () {
+
+                var index = 0;
+                for (var i = 0; i < o[name].length; i++) {
+                    var id = patt2.exec(o[name][i])[2];
+                    var option = patt2.exec(o[name][i])[1];
+
+                    index = option.indexOf($('input[name="' + this.name + '"]:checked').val());
+                    if (index != -1) {
+                        $('[id^="form_"][id$=-' + id + ']').closest('.form-group').show("slow");
+                        //break;
+
+                    } else {
+                        $('[id^="form_"][id$=-' + id + ']').closest('.form-group').hide("slow");
+                    }
+
+
+                }
+
+
+            })
+        }
+
+    );
+}
+
+function hideAndShow(nome) {
+    var index = 0;
+    for (var i = 0; i < o[name].length; i++) {
+        var id = patt2.exec(o[nome][i])[2];
+        var option = patt2.exec(o[nome][i])[1];
+
+        index = option.indexOf($('input[name="' + nome + '"]:checked').val());
+        if (index != -1) {
+            $('[id^="form_"][id$=-' + id + ']').closest('.form-group').show("slow");
+            break;
+
+        } else {
+            $('[id^="form_"][id$=-' + id + ']').closest('.form-group').hide("slow");
+        }
+
+
+    }
+
+}
+
 function firstLevel(options) {
 
 

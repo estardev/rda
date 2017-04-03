@@ -208,8 +208,9 @@ class FormTemplateService
 
                 $obbligatorio = $campo->getObbligatorioinserzione();
                 if ($campo->getTipo() == 'choice') {
-
+                    //Se è una scelta
                     if ($campo->getPadre() != null) {
+                        //se è un figlio, ha come classe "secondLevel"
                         $class = array('class' => 'secondLevel');
                         $padri = $this->getFirstLevel($campo->getPadre(), $campo->getId());
 
@@ -220,12 +221,16 @@ class FormTemplateService
                         }
 
                     } else {
+                        //Altrimenti ha come classe "firstLevel
                         $class = array('class' => 'firstLevel');
                     }
                     $options = $this->getChoicesOptions($campo->getFieldset());
 
                     if ($obbligatorio) {
                         if ($campo->getPadre() != null) {
+                            //Ha un padre
+//                            $padre = $campo->getCampopadre();
+//                            $class['padre'] = $padre->getNome().'-'.$padre->getId();
                             $builder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
                                 'choices' => $options,
                                 'expanded' => true,
@@ -234,8 +239,8 @@ class FormTemplateService
                                 //'constraints' => new NotNull(),
                                 'attr' => $class
                             ));
-                        }
-                        else{
+                        } else {
+                            //non ha un padre
                             $builder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
                                 'choices' => $options,
                                 'expanded' => true,
@@ -267,6 +272,7 @@ class FormTemplateService
                             ));
 
                     } else {
+                        //non è obbligatorio
                         $builder->add($campo->getNome() . '-' . $campo->getId(), 'choice', array(
                             'choices' => $options,
                             'expanded' => true,
@@ -298,6 +304,7 @@ class FormTemplateService
                     }
 
                 } else {
+                    //Non è di tipo choice
                     $class = array();
                     $label = $campo->getDescrizione();
 
