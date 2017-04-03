@@ -126,7 +126,6 @@ knp_snappy:
         enabled:    true
   #      binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
         binary:     /usr/local/bin/wkhtmltopdf #produzione
-  #      binary:     /usr/local/bin/wkhtmltopdf.sh #test
         options:    []
 
 winzou_state_machine:
