@@ -127,6 +127,7 @@ knp_snappy:
   #      binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
   #      binary:     /usr/local/bin/wkhtmltopdf #produzione
         binary:     /usr/local/bin/wkhtmltopdf.sh #test
+        temporary_folder: %kernel.cache_dir%/snappy
         options:    []
 
 winzou_state_machine:
