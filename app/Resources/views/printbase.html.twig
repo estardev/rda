@@ -5,7 +5,23 @@
     <title>RDA</title>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
+    <link href="{{ asset('css/bootstrap.css', absolute=false) }}" rel="stylesheet" media="screen">
+    {#<link href="http://symfony/rda/web/css/bootstrap.css" rel="stylesheet" media="screen">#}
+    <link href="{{ asset('css/style.css', absolute=false) }}" rel="stylesheet" media="screen">
+    <!-- HTML5 Shim and Respond.js add IE8 support of HTML5 elements and media queries -->
+    {% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
+    <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
+    <script src="{{ asset('js/jquery.js', absolute=false) }}"></script>
+    <script src="{{ asset('js/jquery-ui.min.js', absolute=false) }}"></script>
+    <script src="{{ asset('js/jackmoore-autosize/jquery.autosize.min.js', absolute=false) }}"></script>
 
+
+    <!-- Include all JavaScripts, compiled by Assetic -->
+    <script src="{{ asset('js/bootstrap.js', absolute=false) }}"></script>
+    <!-- Include FOSJsRoutingBundle, compiled by Assetic -->
+    {#<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>#}
+    <script src="{{ asset('js/router.js', absolute=false) }}"></script>
+    {#<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>#}
 
     {% block header %}
 
@@ -13,7 +29,7 @@
 
 
     {% block javascripts %}
-        {#<script type="text/javascript" src="{{ asset('js/navbar.js', absolute=true) }}"></script>#}
+        <script type="text/javascript" src="{{ asset('js/navbar.js', absolute=false) }}"></script>
         <script>
 
 
@@ -80,7 +96,7 @@
 <div class="left_block block_1">
     {% block sidebar %}{% endblock %}
 </div>
-{#<div class="header-logo"><img src="{{ asset('images/logoestar.png', absolute=true) }}"></div>#}
+<div class="header-logo"><img src="{{ asset('images/logoestar.png', absolute=false) }}"></div>
 <div class="container">
 
     {% block body %}
