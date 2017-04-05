@@ -100,7 +100,39 @@
 <div class="container">
 
     {% block body %}
+        <h1>Richiesta: {{ categoria.nome }}</h1>
+        <h3>Per conto di: {{ azienda.nome }}</h3>
+        <h3>Titolo: {{ titolo }}</h3>
+        <h3>Descrizione: {{ descrizione }}</h3>
+        <h3>Priorit&agrave;: {{ priorita }}</h3>
+        <hr>
         {{ form(form) }}
+        <hr>
+        <h1>Iter</h1>
+        <table class ="table">
+            <thead>
+            <tr>
+                <th>Utente</th>
+                <th>Da</th>
+                <th>A</th>
+                <th>Stato GESTAV</th>
+                <th>Data e Ora</th>
+                <th>Motivazione</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for entity in iter %}
+                <tr>
+                    <td>{{ entity.idutente.nomecognome }}</td>
+                    <td>{{ entity.dastato }} </td>
+                    <td>{{ entity.astato }}</td>
+                    <td>{{ entity.dastatogestav }} -> {{ entity.astatogestav }}</td>
+                    <td>{{ entity.dataora|date('d-m-y')  }}</td>
+                    <td>{{ entity.motivazione }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     {% endblock %}
 </div>
 

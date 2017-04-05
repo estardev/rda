@@ -430,122 +430,70 @@ class FormTemplateService
             {    $permessoscrittura = 1;
             }
             if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
-                if ($mode == FormTemplateService::MODE_PRINT  or !$permessoscrittura ) {
-                    $builder->add("titolo", "text", array(
-                        'label' => "Titolo",
-                        'data' => $entity->getTitolo(),
-                        'read_only' => true,
-                        'disabled' => "disabled",
+                //FG20170404 refactoring di un codice francamente orribile.
+                //nuovo giro: se sono in modalità "print", titolo, priorità, descrizione e azienda richiedente
+                //sono nel printbase.
+                //diversamente, vengono messi come campi form readonly se ho permesso di scrittura, non readonly
+                //se non sono in permesso di scrittura
+                if ($mode == FormTemplateService::MODE_PRINT) {
+                    //sono in modalità stampa. Non faccio nulla: gli oggetti sono aggiunti da doPrint di formTemplateController
+                } else {
+                    if ($permessoscrittura) {
+                        //ho permesso di scrittura. Devo aggiungere titolo, descrizione, priorità e azienda come campi editabili
+                        $builder->add("titolo", "text", array(
+                            'label' => "Titolo",
+                            'data' => $entity->getTitolo(),
+                            'constraints' => new NotNull()
+                        ));
+                        $builder->add("descrizione", "textarea", array(
+                            'label' => "Descrizione",
+                            'data' => $entity->getDescrizione(),
+                            'constraints' => new NotNull()
+                        ));
+                        $builder->add("priorita", "choice", array(
+                            'choices' => Richiesta::getPossibleEnumPriorita(),
+                            'label' => "Priorità richiesta",
+                            'data' => $entity->getPriorita()
+                        ));
+                        $builder->add("azienda", "choice", array(
+                            'choices' => $this->getAllAzienda(),
+                            'label' => "Azienda Richiedente",
+                            'disabled' => "disabled",
+                            'data' => $idAzienda
+                        ));
+                        //FG 20170404 ho rimosso le chiamate al callbackTransformer, probabilmente frutto di un copia e incolla, perchè non ne colgo l'utilità
+                    } else {
+                        //non ho permesso di scrittura: i campi devono essere read only
+                        $builder->add("titolo", "text", array(
+                            'label' => "Titolo",
+                            'data' => $entity->getTitolo(),
+                            'read_only' => true,
+                            'disabled' => "disabled",
+                        ));
+                        $builder->add("descrizione", "textarea", array(
+                            'label' => "Descrizione",
+                            'data' => $entity->getDescrizione(),
+                            'read_only' => true,
+                            'disabled' => "disabled"
+                        ));
+                        //FG20160224 modifica per priorità
+                        $builder->add("priorita", "choice", array(
+                            'choices' => Richiesta::getPossibleEnumPriorita(),
+                            'label' => "Priorità richiesta",
+                            'disabled' => "disabled",
+                            'read_only' => true,
+                            'data' => $entity->getPriorita()
+                        ));
+                        $builder->add("Azienda", "choice", array(
+                            'choices' => $this->getAllAzienda(),
+                            'label' => "Azienda Richiedente",
+                            'disabled' => "disabled",
+                            'read_only' => true,
+                            'data' => $idAzienda
+                        ));
 
-                    ));
+                    }
                 }
-                else{
-                    //TODO controllo del tipo di utente!!!!
-                    $builder->add("titolo", "text", array(
-                        'label' => "Titolo",
-                        'data' => $entity->getTitolo(),
-                        'constraints' => new NotNull()
-
-                    ));
-                }
-                $builder->get('titolo')
-                    ->addModelTransformer(new CallbackTransformer(
-
-                        function ($originalValue) {
-
-
-                            if (is_numeric($originalValue)) {
-                                return intval($originalValue);
-                            } else {
-                                return $originalValue;
-                            }
-
-
-                        },
-                        function ($submittedValue) {
-
-                            return $submittedValue;
-
-                        }
-                    ));
-                if ($mode == FormTemplateService::MODE_PRINT or !$permessoscrittura) {
-                    $builder->add("descrizione", "textarea", array(
-                        'label' => "Descrizione",
-                        'data' => $entity->getDescrizione(),
-                        'read_only' => true,
-                        'disabled' => "disabled"
-                    ));
-                }
-                else{
-                    //TODO controllo del tipo di utente!!!!
-                    $builder->add("descrizione", "textarea", array(
-                        'label' => "Descrizione",
-                        'data' => $entity->getDescrizione(),
-                        'constraints' => new NotNull()
-
-                    ));
-                }
-                $builder->get('descrizione')
-                    ->addModelTransformer(new CallbackTransformer(
-
-                        function ($originalValue) {
-
-
-                            if (is_numeric($originalValue)) {
-                                return intval($originalValue);
-                            } else {
-                                return $originalValue;
-                            }
-
-
-                        },
-                        function ($submittedValue) {
-
-                            return $submittedValue;
-
-                        }
-                    ));
-
-                if ($mode == FormTemplateService::MODE_PRINT or !$permessoscrittura) {
-                    //FG20160224 modifica per priorità
-                    $builder->add("priorita", "choice", array(
-                        'choices' => Richiesta::getPossibleEnumPriorita(),
-                        'label' => "Priorità richiesta",
-                        'disabled' => "disabled",
-                        'data' => $entity->getPriorita()
-                    ));
-                }
-                else{
-                    //FG20160224 modifica per priorità
-                    $builder->add("priorita", "choice", array(
-                        'choices' => Richiesta::getPossibleEnumPriorita(),
-                        'label' => "Priorità richiesta",
-                        'data' => $entity->getPriorita()
-                    ));
-
-                }
-
-                if ($mode == FormTemplateService::MODE_PRINT or !$permessoscrittura) {
-                    //FG20160224 modifica per priorità
-                    $builder->add("Azienda", "choice", array(
-                        'choices' => $this->getAllAzienda(),
-                        'label' => "Azienda Richiedente",
-                        'disabled' => "disabled",
-                        'data' => $idAzienda
-                    ));
-                }
-                else{
-                    //FG20160224 modifica per priorità
-                    $builder->add("priorita", "choice", array(
-                        'choices' => $this->getAllAzienda(),
-                        'label' => "Azienda Richiedente",
-                        'disabled' => "disabled",
-                        'data' => $idAzienda
-                    ));
-
-                }
-
-
             }
             //        $fieldsetVisitati = array();
 
@@ -559,40 +507,41 @@ class FormTemplateService
                 //FG20151028 se il campo non è visualizzabile, skip.
                 $repository = $em->getRepository('estarRdaBundle:Campo');
                 if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
-
                     $campoCheck = $repository->find($campo['idcampo']);
-
                     //DEM 20160520 I campi che hanno una data dismissione precedenti ad oggi non si vedono!
                     if (!is_null($campoCheck->getDatadismissione())) {
-
                         if($datarichiesta < $campoCheck->getDataattivazione() && $datarichiesta > $campoCheck->getDatadismissione()) continue;
                     }
-
-
                     if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
                 } else {
-
                     $campo['valore'] = '';
                 }
 //            if ($campo->getTipo() == 'choice') {
                 if ($campo['tipo'] == 'choice') {
-                    /**
-                     * if ($campo->getPadre() != null) {
-                    $class = array('class' => 'secondLevel');
-                    $padri = $this->getFirstLevel($campo->getPadre(), $campo->getId());
+                    //FG 20170404 perchè questo codice sotto era commentato?
 
-                    if (array_key_exists($this->getFather($campo->getPadre()), $firstLevels)) {
-                    array_push($firstLevels[$this->getFather($campo->getPadre())], $padri);
-                    } else {
-                    $firstLevels[$this->getFather($campo->getPadre())] = $padri;
-                    }
+                    if ($campo['padre'] != null) {
 
-                    } else {
-                    $class = array('class' => 'firstLevel');
-                    }
-                     */
+                        /**verifico che il campo abbia un valore settato e setto la classe appropriata per permettere
+                         * al jquery di visualizzarlo in edit
+                         * */
+                        if (isset($campo['valore'])) {
+                            $class = array('class' => 'secondLevel valorizzato');
 
-                    $class = array('class' => 'firstLevel');
+                        } else {
+                            $class = array('class' => 'secondLevel ');
+                        }
+                        //fine modifica per jquery
+                        $padri = $this->getFirstLevel($campo['padre'], $campo['idcampo']);
+
+                        if (array_key_exists($this->getFather($campo['padre']), $firstLevels)) {
+                            array_push($firstLevels[$this->getFather($campo['padre'])], $padri);
+                        } else {
+                            $firstLevels[$this->getFather($campo['padre'])] = $padri;
+                        }
+                    } else
+                        $class = array('class' => 'firstLevel'); //è un first level
+                    //FG20170404 END
 
                     //discrimino il caso della stampa
                     if ($mode == FormTemplateService::MODE_PRINT or !$permessoscrittura) {
@@ -602,7 +551,8 @@ class FormTemplateService
                             'label' => $campo['descrizione'],
                             'data' => $campo['valore'],
                             'read_only' => true,
-                            'disabled' => "disabled"
+                            'disabled' => "disabled",
+                            'attr' => $class
                         ));
 
 
@@ -622,23 +572,16 @@ class FormTemplateService
 
                     $builder->get($campo['nome'] . '-' . $campo['idcampo'])
                         ->addModelTransformer(new CallbackTransformer(
-
                             function ($originalValue) {
-
                                 if ("" === $originalValue) return null;
-
                                 if (is_numeric($originalValue)) {
                                     return intval($originalValue);
                                 } else {
                                     return $originalValue;
                                 }
-
-
                             },
                             function ($submittedValue) {
-
                                 return $submittedValue;
-
                             }
                         ));
 

@@ -14,7 +14,7 @@ use estar\rda\RdaBundle\Entity\FormTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\HttpFoundation\Response;
-
+use estar\rda\RdaBundle\Form\FormTemplateService;
 
 class FormTemplateController extends Controller
 {
@@ -661,14 +661,22 @@ class FormTemplateController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
-        $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, 2);
+        $res = $this->get('form_template_factory')->build($this->get('form.factory')->createNamedBuilder('form', 'form', array()), $richiesta, FormTemplateService::MODE_PRINT);
         $form = $res[0];
-
-
+        $prioritapossibili = $richiesta::getPossibleEnumPriorita();
+        $priorita = $prioritapossibili[$richiesta->getPriorita()];
+        $iter = $em->getRepository('estarRdaBundle:Iter')->findByIdrichiesta($richiesta);
 
         $html = $this->renderView('::printbase.html.twig', array(
 //            'entity' => $entity,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'azienda' => $richiesta->getIdazienda(),
+            'categoria' => $richiesta->getIdcategoria(),
+            'titolo' => $richiesta->getTitolo(),
+            'descrizione' => $richiesta->getDescrizione(),
+            'priorita' => $priorita,
+            'iter' => $iter
+
         ));
 
 
