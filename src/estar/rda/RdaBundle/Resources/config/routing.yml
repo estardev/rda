@@ -82,6 +82,10 @@ sistematica:
     resource: "@estarRdaBundle/Resources/config/routing/sistematicaclient.yml"
     prefix:   /sistematicaclient
 
+mail:
+    resource: "@estarRdaBundle/Resources/config/routing/mail.yml"
+    prefix:   /mail
+
 soapEsempio:
     path:     /soapesempio/{city}/{country}
     defaults: { _controller: estarRdaBundle:SoapEsempio:index }
