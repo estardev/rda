@@ -37,6 +37,9 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+        pathToWeb: "%kernel.root_dir%/../web"
+
 
 # Assetic Configuration
 assetic:
@@ -126,7 +129,7 @@ fos_user:
 knp_snappy:
     pdf:
         enabled:    true
-  #      binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+#        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
   #      binary:     /usr/local/bin/wkhtmltopdf #produzione
         binary:     /usr/local/bin/wkhtmltopdf.sh #test
         options:    []
