@@ -109,10 +109,20 @@
 <div class="container">
 
     {% block body %}
+        <hr>
+        <h1>Dati Richiesta</h1>
         <h1>Richiesta: {{ categoria.nome }}</h1>
         <h3>Titolo: {{ titolo }}</h3>
         <h3>Descrizione: {{ descrizione }}</h3>
         <h3>Priorit&agrave;: {{ priorita }}</h3>
+        <hr>
+        {% if documento is defined %}
+            <hr>
+            <h1>Dati Documento</h1>
+            <h3>Titolo: {{ documento.nome }}</h3>
+            <h3>Descrizione: {{ documento.descrizione }}</h3>
+            <hr>
+        {% endif %}
         <hr>
         {{ form(form) }}
         <hr>

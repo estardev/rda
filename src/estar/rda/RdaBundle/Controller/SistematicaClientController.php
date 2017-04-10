@@ -143,21 +143,25 @@ class SistematicaClientController extends Controller
     {
         $directory_sender = "sender";
         $num = $this->num();
+        //Pathname da usare
         $path = $num . "_Richiesta_" . $idRichiesta . "_categoria_" . $idCategoria;
+        //Se non esiste, lo creo
         if (!is_dir($directory_sender . "/" . $path)) mkdir($directory_sender . "/" . $path, 0777);
         $em = $this->getDoctrine()->getManager();
 
                 // generazione file pdf e zip
 
+                //Recupero tutti i documenti collegati a quella richiesta
                 $query = $em->createQuery('SELECT IDENTITY (c.iddocumento ) as iddocu
                                    FROM estarRdaBundle:Richiestadocumento c
                                    WHERE c.idrichiesta = :idRichiesta')->setparameter('idRichiesta', $idRichiesta);
                 $arrayiddocumento = $query->getResult();
-
+                //Vado a generare tutti i documenti
                 foreach ($arrayiddocumento as $idDoc) {
                     $idD = $idDoc;
                     $idDoc = $idD['iddocu'];
                     $em = $this->getDoctrine()->getManager();
+                    //Recupero tutti i campi di quel documento che siano definiti con l'eventuale valorizzazione
                     $query = $em->createQuery('SELECT c.id as idcampo,c.nome,c.descrizione,c.fieldset,c.tipo,vc.id,vc.valore
                                     FROM estarRdaBundle:Campodocumento c
                                     LEFT JOIN estarRdaBundle:Valorizzazionecampodocumento vc
@@ -171,84 +175,77 @@ class SistematicaClientController extends Controller
                     $formbuilder = $this->createFormBuilder();
                     $documento = $em->getRepository('estarRdaBundle:Documento')->find($idDoc);
                     $nomedescrizione = $documento->getDescrizione();
-                    $formbuilder->add("nome", "text", array(
-                        'label' => "nome",
-                        'data' => $documento->getNome(),
-                        'read_only' => true
-                    ));
-                    $formbuilder->add("descrizione", "textarea", array(
-                        'label' => "descrizione",
-                        'data' => $documento->getDescrizione(),
-                        'read_only' => true
-                    ));
+                    //Campi fissi
+                    //FG 20170410 rimossi e riparametrati nel printbase per darne maggiore evidenza
+//                    $formbuilder->add("nome", "text", array(
+//                        'label' => "nome",
+//                        'data' => $documento->getNome(),
+//                        'read_only' => true
+//                    ));
+//                    $formbuilder->add("descrizione", "textarea", array(
+//                        'label' => "descrizione",
+//                        'data' => $documento->getDescrizione(),
+//                        'read_only' => true
+//                    ));
+                    //Per tutti i campi...
                     foreach ($campiValorizzati as $campovalorizzato) {
                         $campo = $campovalorizzato;
-
                         $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campodocumento');
                         $campoCheck = $repository->find($campo['idcampo']);
 
                         if ($campo['tipo'] == 'choice') {
+                            //Se è una scelta...
+                            //Se è effettivamente valorizzato...
                             if(!is_null($this->getChoicesOptions($campoCheck->getFieldset())) and !is_null($campo['valore']) ){
+                                //..lo aggiungo
                                 $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
                                 $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
                                     'label' => $campo['descrizione'],
                                     'data' => $descrizioneValore,
                                     'read_only' => true
                                 ));
-                            } else continue;
+                            } else continue; //diversamente lo ignoro
                           //  $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
                           //  $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
                           //      'label' => $campo['descrizione'],
                           //      'data' => $descrizioneValore,
                           //      'read_only' => true
                           //  ));
-
+                            //FG 20170410 il significato di un value trasformer in un campo di lettura mi è oscuro. Peraltro su un choice.
                             $formbuilder->get($campo['nome'] . '-' . $campo['id'])
                                 ->addModelTransformer(new CallbackTransformer(
-
                                     function ($originalValue) {
-
                                         if ("" === $originalValue) return null;
-
                                         if (is_numeric($originalValue)) {
                                             return intval($originalValue);
                                         } else {
                                             return $originalValue;
                                         }
-
-
                                     },
                                     function ($submittedValue) {
-
                                         return $submittedValue;
-
                                     }
                                 ));
                         } else {
-
+                            // ... se non è una scelta lo aggiungo punto e basta
                             $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
                                 'label' => $campo['descrizione'],
                                 'data' => $campo['valore'],
                                 'read_only' => true
                             ));
 
+                            //FG20170410 idem come sopra
                             $formbuilder->get($campo['nome'] . '-' . $campo['id'])
                                 ->addModelTransformer(new CallbackTransformer(
-
                                     function ($originalValue) {
-
                                         if ("" === $originalValue) return null;
-
                                         if (is_numeric($originalValue)) {
                                             return intval($originalValue);
                                         } else {
                                             return $originalValue;
                                         }
-
-
                                     },
                                     function ($submittedValue) {
-
                                         return $submittedValue;
 
                                     }
@@ -264,13 +261,17 @@ class SistematicaClientController extends Controller
                     $html = $this->renderView('::printbase.html.twig', array(
                         'form' => $form->createView(),
                         'azienda' => $richiesta->getIdazienda(),
+                        'documento' => $documento,
                         'categoria' => $richiesta->getIdcategoria(),
                         'titolo' => $richiesta->getTitolo(),
                         'descrizione' => $richiesta->getDescrizione(),
                         'priorita' => $priorita,
                         'iter' => $iter
                     ));
-                    $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" . 'Documento_' . $idDoc . '_' . $nomedescrizione . "_Richiesta_" . $idRichiesta . ".pdf");
+                    //FG20170410 sistemiamo a parte il nome file
+                    $filename = 'Documento_'.$idDoc.'_'.str_replace(' ', '_', $nomedescrizione).'_Richiesta_'.$idRichiesta.'.pdf';
+//                    $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" . 'Documento_' . $idDoc . '_' . $nomedescrizione . "_Richiesta_" . $idRichiesta . ".pdf");
+                    $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" .$filename);
                 }
 
                 $usercheck = $this->get("usercheck.notify");
@@ -292,21 +293,22 @@ class SistematicaClientController extends Controller
 
                 $formbuilder = $this->createFormBuilder();
                 $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
-                $formbuilder->add("Azienda", "text", array(
-                    'label' => "Azienda richiedente",
-                    'data'=> $richiesta->getIdazienda()->getNome(),
-                    'read_only' => true
-                ));
-                $formbuilder->add("titolo", "text", array(
-                    'label' => "titolo",
-                    'data' => $richiesta->getTitolo(),
-                    'read_only' => true
-                ));
-                $formbuilder->add("descrizione", "textarea", array(
-                    'label' => "descrizione",
-                    'data' => $richiesta->getDescrizione(),
-                    'read_only' => true
-                ));
+                //FG20170410 questi campi vanno rimossi perchè nella modifica del printbase di pochi giorni fa sono parametrati.
+//                $formbuilder->add("Azienda", "text", array(
+//                    'label' => "Azienda richiedente",
+//                    'data'=> $richiesta->getIdazienda()->getNome(),
+//                    'read_only' => true
+//                ));
+//                $formbuilder->add("titolo", "text", array(
+//                    'label' => "titolo",
+//                    'data' => $richiesta->getTitolo(),
+//                    'read_only' => true
+//                ));
+//                $formbuilder->add("descrizione", "textarea", array(
+//                    'label' => "descrizione",
+//                    'data' => $richiesta->getDescrizione(),
+//                    'read_only' => true
+//                ));
 
                 foreach ($campiValorizzati as $campovalorizzato) {
                     $campo = $campovalorizzato;
