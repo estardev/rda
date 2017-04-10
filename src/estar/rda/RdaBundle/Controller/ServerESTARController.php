@@ -71,6 +71,10 @@ class ServerESTARController extends Controller
 
              } else {
                 $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $idpratica, $codicestato, $codicegara);
+                if ($risposta->getCodiceRisposta()!= 'KO'){
+                    $mail= new EmailController($this->getDoctrine()->getManager(), $this->get('service_container'));
+                    $mail->notifyEmailAction($idpratica);
+                }
                 return array(
                     'CodiceRisposta' => $risposta->getCodiceRisposta(),
                     'codiceErrore' => $risposta->getCodiceErrore(),

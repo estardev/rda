@@ -10,10 +10,10 @@ namespace estar\rda\RdaBundle\Model;
 
 use estar\rda\RdaBundle\Entity\Campo;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
 class CampoModel extends Controller
-
 {
 
     /** costruttore di default. Mi serve un entity manager e l'utente corrente */

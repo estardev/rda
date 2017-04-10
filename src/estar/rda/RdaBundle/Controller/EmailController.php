@@ -2,9 +2,12 @@
 
 namespace estar\rda\RdaBundle\Controller;
 
+use estar\rda\RdaBundle\Entity\Iter;
+use estar\rda\RdaBundle\Entity\Richiesta;
+use estar\rda\RdaBundle\Entity\Utente;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use Doctrine\ORM\EntityManager;
 use estar\rda\RdaBundle\Entity\Area;
 use estar\rda\RdaBundle\Form\AreaType;
 use Swift_Message;
@@ -15,6 +18,13 @@ use Swift_Message;
 class EmailController extends Controller
 {
 
+    public $em;
+    public $container;
+    public function __construct($em, $container)
+    {
+        $this->em = $em;
+        $this->container= $container;
+    }
     /**
      * Lists all Area entities.
      *
@@ -55,5 +65,62 @@ class EmailController extends Controller
             array('nomecognome' => $utente->getNomecognome(),
                 'risultato' => $mailLogger->dump(),
                 'test' => true));
+    }
+
+    public function notifyEmailAction($idRichiesta)
+    {
+
+        $em = $this->em;
+        /* @var $richiesta Richiesta */
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $protocollo = $richiesta->getNumeroprotocollo();
+        $categoria= $richiesta->getIdcategoria()->getDescrizione();
+        $utente= $richiesta->getIdutente()->getNomecognome();
+        $mail = $richiesta->getIdutente()->getEmail();
+
+        /* @var $iter Iter*/
+        $iter = $em->getRepository('estarRdaBundle:Iter')->findBy(array('idrichiesta' => $idRichiesta),array('id' => 'DESC'));
+        $stato = $iter[0]->getAstatogestav();
+
+        $message = \Swift_Message::newInstance();
+            $message->setSubject('RDA AVVISO: Cambio di Stato');
+//            ->setFrom('cinghialemannaro@gmail.com')
+        $message->setFrom('assistenza.rda@estar.toscana.it');
+            $message->setTo("$mail");
+            $message->setBody(
+                $this->renderView(
+                // app/Resources/views/Emails/registration.html.twig
+                    'estarRdaBundle:Email:notifyemail.html.twig',
+                    array(
+                        'nomecognome' => $utente,
+                        'protocollo' => $protocollo,
+                        'idrichiesta' => $idRichiesta,
+                        'categoria' => $categoria,
+                        'stato' => $stato
+                        )
+                ),
+                'text/html'
+            )
+            /*
+             * If you also want to include a plaintext version of the message
+            ->addPart(
+                $this->renderView(
+                    'Emails/registration.txt.twig',
+                    array('name' => $name)
+                ),
+                'text/plain'
+            )
+            */
+        ;
+        return $this->get('mailer')->send($message);
+
+        //return $this->render('estarRdaBundle:Email:notifyemail.html.twig',
+        //    array('nomecognome' => $utente->getNomecognome(),
+        //        'protocollo' => $protocollo,
+        //        'idrichiesta' => $idRichiesta,
+        //        'categoria' => $categoria,
+        //        'stato' => $stato,
+        //        'risultato' => $mailLogger->dump(),
+        //        'test' => true));
     }
 }
