@@ -406,7 +406,10 @@ class FormTemplateService
                     $messaggio= "<strong><a href=\"http://swtest.estav-sudest.toscana.it/rda/web/app.php/documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE I DOCUMENTI RICHIESTI IN FORMATO PDF</a></strong>";
 
                 }
-                else{
+                elseif($_SERVER['SERVER_NAME']=='localhost' or $_SERVER['SERVER_NAME']=='127.0.0.1'){
+                    $messaggio= "<strong><a href=\"http://localhost/rda/web/app.php/documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE I DOCUMENTI RICHIESTI IN FORMATO PDF</a></strong>";
+
+                }else{
                     $messaggio= "<strong><a href=\"http://rda.estar.toscana.it/rda/web/app.php/documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE I DOCUMENTI RICHIESTI IN FORMATO PDF</a></strong>";
                 }
                 $this->session->getFlashBag()->add(
