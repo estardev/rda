@@ -105,12 +105,11 @@
     {% block sidebar %}{% endblock %}
 </div>
 {#<div class="header-logo"><img src="{{ asset('images/logoestar.png', absolute=true) }}"></div>#}
-<div class="header-logo"><img src="{{ pathToWeb}}/images/logoestar.png"></div>
+<div class="content_logo"><div class="header-logo"><img src="{{ pathToWeb}}/images/logoestar.png"></div><div class="header-azienda"><h2>Azienda Richiedente: {{ azienda.nome }}</h2></div></div>
 <div class="container">
 
     {% block body %}
         <h1>Richiesta: {{ categoria.nome }}</h1>
-        <h3>Per conto di: {{ azienda.nome }}</h3>
         <h3>Titolo: {{ titolo }}</h3>
         <h3>Descrizione: {{ descrizione }}</h3>
         <h3>Priorit&agrave;: {{ priorita }}</h3>
