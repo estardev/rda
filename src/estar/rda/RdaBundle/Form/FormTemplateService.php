@@ -406,7 +406,7 @@ class FormTemplateService
                     $messaggio= "<strong><a href=\"http://swtest.estav-sudest.toscana.it/rda/web/app.php/documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE I DOCUMENTI RICHIESTI IN FORMATO PDF</a></strong>";
 
                 }
-                elseif($_SERVER['SERVER_NAME']=='localhost' or $_SERVER['SERVER_NAME']=='127.0.0.1'){
+                else if($_SERVER['SERVER_NAME']=='localhost' or $_SERVER['SERVER_NAME']=='127.0.0.1'){
                     $messaggio= "<strong><a href=\"http://localhost/rda/web/app.php/documento/byCategoria/$idRichiesta/$idCategoria\">RICORDARSI DI ALLEGARE I DOCUMENTI RICHIESTI IN FORMATO PDF</a></strong>";
 
                 }else{

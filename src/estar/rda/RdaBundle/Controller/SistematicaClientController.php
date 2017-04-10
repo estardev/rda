@@ -257,9 +257,18 @@ class SistematicaClientController extends Controller
                     }
                     $form = $formbuilder->getForm();
 
-
+                    $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+                    $prioritapossibili = $richiesta::getPossibleEnumPriorita();
+                    $priorita = $prioritapossibili[$richiesta->getPriorita()];
+                    $iter = $em->getRepository('estarRdaBundle:Iter')->findByIdrichiesta($richiesta);
                     $html = $this->renderView('::printbase.html.twig', array(
-                        'form' => $form->createView()
+                        'form' => $form->createView(),
+                        'azienda' => $richiesta->getIdazienda(),
+                        'categoria' => $richiesta->getIdcategoria(),
+                        'titolo' => $richiesta->getTitolo(),
+                        'descrizione' => $richiesta->getDescrizione(),
+                        'priorita' => $priorita,
+                        'iter' => $iter
                     ));
                     $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" . 'Documento_' . $idDoc . '_' . $nomedescrizione . "_Richiesta_" . $idRichiesta . ".pdf");
                 }
@@ -376,10 +385,19 @@ class SistematicaClientController extends Controller
                     }
                 }
                 $form = $formbuilder->getForm();
-
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $prioritapossibili = $richiesta::getPossibleEnumPriorita();
+        $priorita = $prioritapossibili[$richiesta->getPriorita()];
+        $iter = $em->getRepository('estarRdaBundle:Iter')->findByIdrichiesta($richiesta);
                 $html = $this->renderView('::printbase.html.twig', array(
 //            'entity' => $entity,
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
+                    'azienda' => $richiesta->getIdazienda(),
+                    'categoria' => $richiesta->getIdcategoria(),
+                    'titolo' => $richiesta->getTitolo(),
+                    'descrizione' => $richiesta->getDescrizione(),
+                    'priorita' => $priorita,
+                    'iter' => $iter
                 ));
 
 
