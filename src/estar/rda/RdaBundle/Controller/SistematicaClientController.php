@@ -151,7 +151,7 @@ class SistematicaClientController extends Controller
 
                 // generazione file pdf e zip
 
-                //Recupero tutti i documenti collegati a quella richiesta
+                //Recupero tutti i documenti con campi valorizzati collegati a quella richiesta!!
                 $query = $em->createQuery('SELECT IDENTITY (c.iddocumento ) as iddocu
                                    FROM estarRdaBundle:Richiestadocumento c
                                    WHERE c.idrichiesta = :idRichiesta')->setparameter('idRichiesta', $idRichiesta);
@@ -161,6 +161,12 @@ class SistematicaClientController extends Controller
                     $idD = $idDoc;
                     $idDoc = $idD['iddocu'];
                     $em = $this->getDoctrine()->getManager();
+                    /*
+                     * se i documenti sono
+                     * - Copertura Economica (2)
+                     * - Dichiarazione di assenza conflitto interesse (7)
+                     */
+                    //if ($idDoc==2 or $idDoc==7) continue;
                     //Recupero tutti i campi di quel documento che siano definiti con l'eventuale valorizzazione
                     $query = $em->createQuery('SELECT c.id as idcampo,c.nome,c.descrizione,c.fieldset,c.tipo,vc.id,vc.valore
                                     FROM estarRdaBundle:Campodocumento c
@@ -274,6 +280,7 @@ class SistematicaClientController extends Controller
                     $this->get('knp_snappy.pdf')->generateFromHtml($html, $directory_sender . "/" . $path . "/" .$filename);
                 }
 
+                //prendo la richiesta con tutti i campi da valorizzare!!!
                 $usercheck = $this->get("usercheck.notify");
                 $diritti = $usercheck->allRole($idCategoria);
                 $query = $em->createQuery('SELECT c.id AS idcampo, identity (c.idcategoria) as pippocategoria, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
