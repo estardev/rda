@@ -27,6 +27,13 @@ class Documento
     private $descrizione;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="path", type="string", length=255, nullable=true)
+     */
+    private $path;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
@@ -104,4 +111,22 @@ class Documento
     {
         return $this->getNome().' - '.$this->getDescrizione();
     }
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+
+
 }

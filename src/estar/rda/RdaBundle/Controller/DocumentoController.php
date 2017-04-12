@@ -6,6 +6,7 @@ use estar\rda\RdaBundle\Entity\Richiestadocumentolibero;
 use estar\rda\RdaBundle\Form\DocumentoliberoType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotNull;
 use estar\rda\RdaBundle\Entity\Documento;
 use estar\rda\RdaBundle\Form\DocumentoType;
@@ -149,19 +150,33 @@ class DocumentoController extends Controller
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-
         $entity = $em->getRepository('estarRdaBundle:Documento')->find($id);
+        if (!is_null($entity->getPath())) {
+            $request = $this->get('request');
+            $path = $this->get('kernel')->getRootDir(). "/../web/prestampati/";
+            $filename = $entity->getPath();
+            $content = file_get_contents($path.$filename);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Documento entity.');
+            $response = new Response();
+
+            //set headers
+            $response->headers->set('Content-Type', 'mime/type');
+            $response->headers->set('Content-Disposition', 'attachment;filename="'.$filename);
+
+            $response->setContent($content);
+            return $response;
+        } else {
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find Documento entity.');
+            }
+
+            $deleteForm = $this->createDeleteForm($id);
+
+            return $this->render('estarRdaBundle:Documento:show.html.twig', array(
+                'entity' => $entity,
+                'delete_form' => $deleteForm->createView(),
+            ));
         }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('estarRdaBundle:Documento:show.html.twig', array(
-            'entity' => $entity,
-            'delete_form' => $deleteForm->createView(),
-        ));
     }
 
     /**
@@ -294,15 +309,15 @@ class DocumentoController extends Controller
         $richiestaRep = $em->getRepository('estarRdaBundle:Richiesta');
         $richiesta = $richiestaRep->find($idRichiesta);
         $statorichiesta = $richiesta->getStatus();
-        $valida= false;
+        $valida = false;
         foreach ($dirittiTotaliRadicaliGlobbali as $dirittoSingolo) {
-            if ($dirittoSingolo->getIsAI() AND $statorichiesta=='bozza') {
+            if ($dirittoSingolo->getIsAI() AND $statorichiesta == 'bozza') {
                 $valida = true;
             }
             if ($dirittoSingolo->getIsVt() AND $statorichiesta == 'attesa_val_tec') {
                 $valida = true;
             }
-            if ($dirittoSingolo->getIsVa() AND ($statorichiesta=='attesa_val_amm' or $statorichiesta=='da_inviare_ESTAR')) {
+            if ($dirittoSingolo->getIsVa() AND ($statorichiesta == 'attesa_val_amm' or $statorichiesta == 'da_inviare_ESTAR')) {
                 $valida = true;
             }
         }
@@ -350,7 +365,7 @@ class DocumentoController extends Controller
             $qb->setParameter('idRichiesta', $idRichiesta);
             $count = $qb->getQuery()->getSingleScalarResult();
             $rd = $repo->findOneBy(array('iddocumento' => $entity->getIddocumento()->getId(), 'idrichiesta' => $idRichiesta));
-            if($rd) {
+            if ($rd) {
                 $helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
                 $path = $helper->asset($rd, 'docFile');
                 $documenti[$documento->getId()]['rd'] = ($count != 0) ? $rd : '';
@@ -366,7 +381,7 @@ class DocumentoController extends Controller
             //if (terzocaso) c'è da studiare qualcosa
         }
         //$file = $rd->getdocFile();
-       
+
 
         return $this->render('estarRdaBundle:Documento:index.html.twig', array(
             'entities' => $documenti,
@@ -398,15 +413,15 @@ class DocumentoController extends Controller
         $dirittiTotaliRadicaliGlobbali = $userCheck->dirittiByUtente(); //array di oggetti DirittiRichiesta
 
         $statorichiesta = $richiesta->getStatus();
-        $valida= false;
+        $valida = false;
         foreach ($dirittiTotaliRadicaliGlobbali as $dirittoSingolo) {
-            if ($dirittoSingolo->getIsAI() AND $statorichiesta=='bozza') {
+            if ($dirittoSingolo->getIsAI() AND $statorichiesta == 'bozza') {
                 $valida = true;
             }
             if ($dirittoSingolo->getIsVt() AND $statorichiesta == 'attesa_val_tec') {
                 $valida = true;
             }
-            if ($dirittoSingolo->getIsVa() AND ($statorichiesta=='attesa_val_amm' or $statorichiesta=='da_inviare_ESTAR')) {
+            if ($dirittoSingolo->getIsVa() AND ($statorichiesta == 'attesa_val_amm' or $statorichiesta == 'da_inviare_ESTAR')) {
                 $valida = true;
             }
         }
@@ -449,7 +464,7 @@ class DocumentoController extends Controller
             'idRichiesta' => $idRichiesta,
             'idCategoria' => $idCategoria,
             'create_form' => $form->createView(),
-            'valida' =>$valida,
+            'valida' => $valida,
             'rdl' => $rdl
         ));
     }

@@ -50,6 +50,28 @@ class Categoria
      */
     private $nomegestav;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="legenda", type="text", nullable=true)
+     */
+    private $legenda;
+
+    /**
+     * @return string
+     */
+    public function getLegenda()
+    {
+        return $this->legenda;
+    }
+
+    /**
+     * @param string $legenda
+     */
+    public function setLegenda($legenda)
+    {
+        $this->legenda = $legenda;
+    }
 
 
     /**
