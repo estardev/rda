@@ -27,6 +27,8 @@
            <!-- <button type="button" id="homepageSelectBtnCategoria" class="btn btn-default"><a href="{{ path('HomePage')}}"><span class="glyphicon glyphicon-home"></span> Home</a></button>-->
 
             <div class="form-group">
+                <button type="button" id="buttonlegenda" class="btn btn-default"><span class="glyphicon glyphicon-info-sign"></span></button>
+
                 <select id="homepageSelectCategoria" class="form-control">
                     {% if categoriaSelezionata != '' %}
                         <option value="defaultDisabledNavbarOption" disabled>Seleziona una categoria:</option>
@@ -46,7 +48,6 @@
                 <button type="button" id="homepageMostraTutte"  class="btn btn-default">Mostra</button>
             </div>
         </form>
-
 
         <ul class="nav navbar-nav navbar-right">
 
@@ -76,3 +77,51 @@
 
     </div><!-- /.navbar-collapse -->
 </nav>
+
+{% block javascripts %}
+<script type="text/javascript">
+    $(document).on('click', '#buttonlegenda', function () {
+        $('#legendaModal').modal('show');
+      //alert('s1');
+        });
+</script>
+    {% endblock %}
+
+<div class="modal fade" id="legendaModal" tabindex="-1" aria-hidden="true" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    <span class="sr-only">Chiudi</span>
+                </button>
+
+                <h4 id="legenda" class="modal-title">Legenda Categorie</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Descrizione</th>
+                            <th>Legenda</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for entity in categoria %}
+                        <tr>
+                            <td>{{ entity.descrizione }}</td>
+                            <td>{{ entity.legenda }}</td>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

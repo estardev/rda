@@ -50,7 +50,7 @@ class NavbarExtension extends \Twig_Extension
         if (!is_null($utenteSessione) && is_object($utenteSessione)) {
             //Se entro in questo branch ho l'utente loggato
             if ($utenteSessione->hasRole('ROLE_ADMIN') || $utenteSessione->hasRole('ROLE_SUPER_ADMIN')) {
-                $query = $this->em->createQuery('select c.id as id, c.descrizione as descrizione, a.nome as area from estarRdaBundle:Categoria c join c.idarea a where c.idarea = a.id ORDER BY c.descrizione');
+                $query = $this->em->createQuery('select c.id as id, c.descrizione as descrizione, a.nome as area, c.legenda as legenda from estarRdaBundle:Categoria c join c.idarea a where c.idarea = a.id ORDER BY c.descrizione');
                 $categoria = $query->getResult();
 
             } else {

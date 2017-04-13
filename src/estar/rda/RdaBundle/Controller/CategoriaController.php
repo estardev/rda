@@ -75,6 +75,18 @@ class CategoriaController extends Controller
         ));
     }
 
+    public function legendaAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('estarRdaBundle:Categoria')->findAll();
+
+        return $this->render('estarRdaBundle:Categoria:legenda.html.twig', array(
+            'entities' => $entities,
+        ));
+    }
+
+
     /**
      * Creates a new Categoria entity.
      *
