@@ -85,6 +85,9 @@ $(document).ready(function()
     });
 
     $(document).on("click", "#allview", function () {
+        $('#homepageSelectBtnCategoria').prop('disabled',true);
+        $('#homepageMostraTutte').attr('disabled',true);
+
         //alert("Bottone: ");
         var all = "all";
         window.location.replace(Routing.generate('richiesta_viewall', {'all': all}));
