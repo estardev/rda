@@ -3,9 +3,11 @@
     {% block javascripts %}
 
         <script type="text/javascript">
+            $(document).ready(function(){
+                $('#homepageSelectBtnCategoria').prop('disabled',true);
+                $('#homepageMostraTutte').prop('disabled',true);
+            });
 
-            $('#homepageSelectBtnCategoria').prop('disabled',true);
-            $('#homepageMostraTutte').prop('disabled',true);
             /*$(document).on("click", ".scelteSidebarLavorazione", function () {
              var selectedSidebarLavorazione = $(this).attr('id');
              $('#tableListaRichieste').html('<br><p>&nbsp;&nbsp;&nbsp;In Caricamento...</p><br>');
