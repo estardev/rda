@@ -537,6 +537,11 @@ class SistematicaClientController extends Controller
         $risposta->setIdgara($idgara);
         $risposta->setStrutturarichiedente($azienda);
 
+//        if ($this->getParameter("tipoinstallazione") == "test")
+//            $pippo = "pluto";
+//        else
+//            $pippo = "paperino";
+
         $esito = $risposta->RequestWebServer();
 
         if ($esito['esito'] == true and ($tipologia == "Nuova" or $tipologia == "Documentazione aggiuntiva" or $tipologia == "Documentazione richiesta da RUP" )) {
