@@ -15,6 +15,12 @@ parameters:
     mailer_user: assistenza.rda@estar.toscana.it
     mailer_password: '0717482560'
     mailer_port: 465
+    invioprotocollo: true #true se abilitata la funzione di invio manuale protocollo
+    endpoint: indirizzo_endpoint
+    tipoinstallazione: test
+    #    applicativo: RDA Online
+    applicativo: RDA Test
+    #    applicativo: RDA Concorsi
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt

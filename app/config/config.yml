@@ -39,6 +39,8 @@ twig:
     strict_variables: "%kernel.debug%"
     globals:
         pathToWeb: "%kernel.root_dir%/../web"
+        applicativo: "%applicativo%"
+        invioprotocollo: "%invioprotocollo%"
 
 
 # Assetic Configuration
