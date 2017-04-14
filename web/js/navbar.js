@@ -86,7 +86,7 @@ $(document).ready(function()
 
     $(document).on("click", "#allview", function () {
         //alert("Bottone: ");
-        var all = "";
+        var all = "all";
         window.location.replace(Routing.generate('richiesta_viewall', {'all': all}));
     });
 
