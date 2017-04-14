@@ -44,3 +44,9 @@ richiesta_valida:
     path:     /{id}/valida/{transizione}
     defaults: { _controller: "estarRdaBundle:Richiesta:valida" }
     methods:  POST
+
+richiesta_viewall:
+    path:     /view/{all}
+    defaults: { _controller: "estarRdaBundle:Richiesta:viewAll" }
+    options:
+          expose: true

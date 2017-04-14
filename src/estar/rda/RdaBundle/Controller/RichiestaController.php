@@ -31,6 +31,26 @@ class RichiestaController extends Controller
         ));
     }
 
+    public function viewAllAction($all){
+
+        $em = $this->getDoctrine()->getManager();
+        $utente = $this->get('usercheck.notify')->getIdUtente();
+
+        $query1 = $em->createQuery("SELECT r
+                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Iter i
+                                     WHERE  i.idutente=$utente
+                                     AND r.id = i.idrichiesta
+                                     ");
+        $entities = $query1->getResult();
+
+        //TODO: creare pulsanti per l'edit, la gestione dei documenti e la stampa in PDF
+        //Sono tutti pulsanti che puntano a FormTemplateController
+        return $this->render('estarRdaBundle:Richiesta:indexViewAll.html.twig', array(
+            'entities' => $entities,
+        ));
+    }
+
+
     /**
      *
      * Trova tutte le richieste filtrando per categoria (e utente da sessione)
