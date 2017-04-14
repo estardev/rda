@@ -23,6 +23,12 @@
              }
              });
              });*/
+
+            function ChangeSelect(idSelect){
+                $('#homepageSelectCategoria').val(idSelect).trigger('change');
+
+            }
+
             $(document).on("keyup", "#searchRichiesta", function () {
                 var filter = $(this).val();
                 var regExPattern = "gi";
@@ -101,10 +107,10 @@
 
                 {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ESTAR' or entity.status == 'chiusa_ESTAR' or entity.status == 'annullata_ESTAR') %}
                     <td>
-                        <a href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">{{ entity.id }}
+                        <a href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}" onclick="ChangeSelect({{ entity.idcategoria }})">{{ entity.id }}
                         </a></td>
                     <td>
-                    <a href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">{{ entity.titolo }}
+                    <a href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}" onclick="ChangeSelect({{ entity.idcategoria }})">{{ entity.titolo }}
                     </a></td>
                     {% else %}
                         <td>{{ entity.id }}</td>
@@ -221,7 +227,7 @@
                                              aria-hidden="true"></span> Genera PDF</a></li>
                 {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ESTAR' or entity.status == 'chiusa_ESTAR' or entity.status == 'annullata_ESTAR') %}
                     <li><a
-                                href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
+                                href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}" onclick="ChangeSelect({{ entity.idcategoria }})">
                             <span class="glyphicon glyphicon-pencil"
                                   aria-hidden="true"></span> Modifica</a></li>
                     <li><a
