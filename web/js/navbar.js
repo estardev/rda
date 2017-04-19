@@ -87,7 +87,7 @@ $(document).ready(function()
     $(document).on("click", "#allview", function () {
         $('#homepageSelectBtnCategoria').prop('disabled',true);
         $('#homepageMostraTutte').prop('disabled',true);
-
+        $('#homepageSelectCategoria').val('defaultDisabledNavbarOption');
         //alert("Bottone: ");
         var all = "all";
         window.location.replace(Routing.generate('richiesta_viewall', {'all': all}));
