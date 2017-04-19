@@ -19,7 +19,7 @@
                 {% set upload = documento.upload %}
                 {% set alert = documento.alert %}
                 <tr>
-                    <td>{% if(entity.id == 2 or entity.id == 7)%}<span style="color: red" class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> {% endif %}<a href="{{ path('documento_show', { 'id': entity.id }) }}">{{ entity.nome }}</a></td>
+                    <td>{% if(entity.id == 2 or entity.id == 7)%}<span {% if(alert==false) %} style="color: green"  {% else %} style="color: red"{% endif %} class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> {% endif %}<a href="{{ path('documento_show', { 'id': entity.id }) }}">{{ entity.nome }}</a></td>
                     <td>{{ entity.descrizione }}</td>
                    {# <td>{{ entity.id }}</td>#}
                     <td>
