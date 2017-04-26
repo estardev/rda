@@ -8,6 +8,14 @@
     {% block javascripts %}
         {{parent()}}
         <script type="text/javascript" src="{{ asset('js/registration.js', absolute=true) }}"></script>
+        <script type="text/javascript">
+        $(document).ready(function(){
+        $('#homepageSelectBtnCategoria').prop('disabled',true);
+        $('#homepageMostraTutte').prop('disabled',true);
+        $('#homepageSelectCategoria').val('defaultDisabledNavbarOption');
+        });
+        </script>
+
     {% endblock %}
 
 {% block body -%}

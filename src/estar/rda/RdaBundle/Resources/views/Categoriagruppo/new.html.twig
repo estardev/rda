@@ -1,5 +1,15 @@
 {% extends '::base.html.twig' %}
 
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#homepageSelectBtnCategoria').prop('disabled',true);
+        $('#homepageMostraTutte').prop('disabled',true);
+        $('#homepageSelectCategoria').val('defaultDisabledNavbarOption');
+    });
+</script>
+{{parent()}}
+{% endblock %}
+
 {% block body -%}
     <h1>Creazione di un nuovo permesso</h1>
 
