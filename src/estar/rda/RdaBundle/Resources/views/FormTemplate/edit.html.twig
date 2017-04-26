@@ -12,6 +12,7 @@
         {%
             if (stato=='bozza') or (stato=='attesa_val_tec') or (stato =='attesa_val_amm') or (stato=='da_inviare_ESTAR')
         %}
+            {{ dump(stato) }}
             <div class="bottoni"> {{ form(delete_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
         {% endif %}
 
