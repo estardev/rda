@@ -73,7 +73,7 @@ class NavbarExtension extends \Twig_Extension
 //                    ->getQuery();
 
                  $query = $this->em->
-                createQuery('select  c.id ,c.descrizione, a.nome as area
+                createQuery('select  c.id ,c.descrizione, a.nome as area, c.legenda as legenda
                       from estarRdaBundle:Categoria c, estarRdaBundle:Area a
                       where c.idarea = a.id
                       and c.id in (select IDENTITY(cg.idcategoria) from estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Utentegruppoutente ugu
