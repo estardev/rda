@@ -33,7 +33,7 @@ class SecurityController extends BaseController
 
         $uid = $this->checkSmartCardString($request);
 
-        // se $uid contiene false c'è stato un errore, altrimenti $uid contiene il CF
+        // se $uid contiene false c'ï¿½ stato un errore, altrimenti $uid contiene il CF
 
         if ($uid!=false){
 
@@ -46,7 +46,7 @@ class SecurityController extends BaseController
 
 
                 if ($utente){
-                    $username = $utente->getIdfosuser()->getUsername();
+                    $username = $utente->getUsername();
 
                     $userManager = $this->get('fos_user.user_manager');
                     $user = $userManager->findUserByUsername($username);
@@ -171,7 +171,7 @@ class SecurityController extends BaseController
          $differenzatempo = $timeattuale - $time;
 
         if (($differenzatempo/60)>5){
-            // è passato troppo tempo (5 minuti) dall'ultima richiesta con questa stringa
+            // ï¿½ passato troppo tempo (5 minuti) dall'ultima richiesta con questa stringa
             return false;
         }
 
