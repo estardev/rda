@@ -1,16 +1,5 @@
 {% extends '::base.html.twig' %}
 
-    {% block javascripts %}
-<script type="text/javascript">
-    $(document).ready(function(){
-        $('#homepageSelectBtnCategoria').prop('disabled',true);
-        $('#homepageMostraTutte').prop('disabled',true);
-        $('#homepageSelectCategoria').val('defaultDisabledNavbarOption');
-    });
-</script>
-{{parent()}}
-{% endblock %}
-
 {% block header %}
         {{parent()}}
         <link href="{{ asset('css/registration.css', absolute=true) }}" rel="stylesheet" media="screen">
@@ -19,6 +8,13 @@
  {% block javascripts %}
      {{parent()}}
      <script type="text/javascript" src="{{ asset('js/edituser.js', absolute=true) }}"></script>
+     <script type="text/javascript">
+         $(document).ready(function(){
+             $('#homepageSelectBtnCategoria').prop('disabled',true);
+             $('#homepageMostraTutte').prop('disabled',true);
+             $('#homepageSelectCategoria').val('defaultDisabledNavbarOption');
+         });
+     </script>
  {% endblock %}
 
 {% block body -%}
