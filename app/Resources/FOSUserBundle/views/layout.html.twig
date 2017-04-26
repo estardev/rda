@@ -1,5 +1,6 @@
 {% extends '::base.html.twig' %}
 
+    {% block javascripts %}
 <script type="text/javascript">
     $(document).ready(function(){
         $('#homepageSelectBtnCategoria').prop('disabled',true);
@@ -7,7 +8,9 @@
         $('#homepageSelectCategoria').val('defaultDisabledNavbarOption');
     });
 </script>
-{% endblock %}
+        {{parent()}}
+
+    {% endblock %}
 
 {% block body -%}
     <div>
