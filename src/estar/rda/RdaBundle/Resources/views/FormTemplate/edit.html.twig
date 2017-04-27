@@ -11,6 +11,7 @@
         <div class="bottoni"> {{ form(print_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
         {% if (stato=='bozza') or (stato=='attesa_val_tec') or (stato =='attesa_val_amm') or (stato=="da_inviare_ESTAR") %}
             <div class="bottoni"> {{ form(delete_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
+            {{ dump(stato) }}
         {% endif %}
 
         {% if (stato=='inviata_ESTAR' ) %}
