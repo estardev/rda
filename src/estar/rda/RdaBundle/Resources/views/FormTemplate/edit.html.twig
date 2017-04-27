@@ -9,9 +9,9 @@
 
        <div class="bottoni">{{ form(back_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
         <div class="bottoni"> {{ form(print_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
-        {% if (stato == 'bozza') or (stato == 'attesa_val_tec') or (stato == 'attesa_val_amm') or (stato == 'da_inviare_ESTAR') %}
-            qui<div class="bottoni"> {{ form(delete_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
-        {% endif %}
+       {# {% if (stato == 'bozza') or (stato == 'attesa_val_tec') or (stato == 'attesa_val_amm') or (stato == 'da_inviare_ESTAR') %} #}
+            <div class="bottoni"> {{ form(delete_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
+        {# {% endif %} #}
 
         {% if (stato=='inviata_ESTAR' ) %}
             <div class="bottoni"> {{ form(annulla_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
@@ -29,7 +29,6 @@
 
     {{ form(edit_form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-    <div class="bottoni"> {{ form(delete_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
 
 
 
