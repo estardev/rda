@@ -131,7 +131,7 @@ fos_user:
 knp_snappy:
     pdf:
         enabled:    true
- #       binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" #locale
+  #      binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" #locale
   #      binary:     /usr/local/bin/wkhtmltopdf #produzione
         binary:     /usr/local/bin/wkhtmltopdf.sh #test
         options:    []
@@ -175,7 +175,7 @@ winzou_state_machine:
                 from: [da_inviare_ESTAR]
                 to: inviata_ESTAR
             cancellazione:
-                from: [bozza, attesa_val_tec, attesa_val_amm]
+                from: [bozza, attesa_val_tec, attesa_val_amm, da_inviare_ESTAR]
                 to: eliminata
             annullamento:
                 from: [inviata_ESTAR]
