@@ -50,6 +50,28 @@ class RichiestaController extends Controller
         ));
     }
 
+    public function aggregateAction($all){
+
+        $em = $this->getDoctrine()->getManager();
+        $utente = $this->get('usercheck.notify')->getUtente();
+        $aziendaUtente = $utente->getIdAzienda();
+
+        $query1 = $em->createQuery("SELECT r
+                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Iter i, estarRdaBundle:Richiestaaggregazione ra
+                                     WHERE r.id = i.idrichiesta
+                                     AND r.id = ra.idrichiesta
+                                     AND ra.idazienda = $aziendaUtente
+                                     AND r.status != 'bozza'
+                                     ");
+        $entities = $query1->getResult();
+
+        //TODO: creare pulsanti per l'edit, la gestione dei documenti e la stampa in PDF
+        //Sono tutti pulsanti che puntano a FormTemplateController
+        return $this->render('estarRdaBundle:Richiesta:aggregateAll.html.twig', array(
+            'entities' => $entities,
+            'azienda' => $aziendaUtente
+        ));
+    }
 
     /**
      *

@@ -6,9 +6,11 @@ namespace estar\rda\RdaBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use estar\rda\RdaBundle\Entity\Campo;
 use estar\rda\RdaBundle\Entity\Iter;
+use estar\rda\RdaBundle\Entity\Richiestaaggregazione;
 use estar\rda\RdaBundle\Entity\Utente;
 use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Entity\Valorizzazionecamporichiesta;
+use estar\rda\RdaBundle\estarRdaBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\FormTemplate;
 use Symfony\Component\HttpFoundation\Request;
@@ -172,6 +174,13 @@ class FormTemplateController extends Controller
             $richiesta->setPriorita($campi['form']['priorita']);
             $richiesta->setCp(0);
             $richiesta->setAssenzaconflitto(0);
+
+            foreach ($campi['form']['Azienda_agg'] as $azi) {
+                $richiestaaggregazione= new Richiestaaggregazione();
+                $richiestaaggregazione->setIdazienda($em->getRepository('estarRdaBundle:Azienda')->find($azi));
+                $richiesta->addRichiestaaggregazioneon($richiestaaggregazione);
+            }
+
             $em->persist($richiesta);
 
             foreach ($campi['form'] as $key => $value) {
@@ -532,6 +541,20 @@ class FormTemplateController extends Controller
             $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
             $richiesta->setTitolo($campi['form']['titolo']);
             $richiesta->setDescrizione($campi['form']['descrizione']);
+
+            /* nel caso di utente ABS le richieste possono essere fatte per più aziende*/
+            $richiesteAggregate = $em->getRepository('estarRdaBundle:Richiestaaggregazione')->findBy( array('idrichiesta' => $idRichiesta));
+            foreach ($richiesteAggregate as $eliminarichiesteaggregate){
+                $em->remove($eliminarichiesteaggregate);
+                $em->flush();
+            }
+            if (isset($campi['form']['Azienda_agg'])){
+                foreach ($campi['form']['Azienda_agg'] as $azi) {
+                    $richiestaaggregazione= new Richiestaaggregazione();
+                    $richiestaaggregazione->setIdazienda($em->getRepository('estarRdaBundle:Azienda')->find($azi));
+                    $richiesta->addRichiestaaggregazioneon($richiestaaggregazione);
+                }
+            }
 
             foreach ($campi['form'] as $key => $value) {
                 if (!strrpos($key, "-")) {

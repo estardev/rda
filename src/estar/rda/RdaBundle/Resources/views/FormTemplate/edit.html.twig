@@ -61,4 +61,21 @@
 
 {% endblock %}
 
+    {% block javascripts %}
+        {{parent()}}
+        <script type="text/javascript">
+            $(document).ready(function(){
+                //$('#form_Azienda_agg :input').attr('disabled',true);
+                    var selezionato = "";
+                    selezionato = $('#form_azienda option:selected').val();
+                        if(selezionato == 21){
+                            $('#form_Azienda_agg :input').removeAttr('disabled');
+                        }
+                        else{
+                            $('#form_Azienda_agg :input').attr('disabled',true);
+                        }
+                    }
+                );
 
+        </script>
+    {% endblock %}

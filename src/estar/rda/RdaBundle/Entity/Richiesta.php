@@ -2,6 +2,7 @@
 
 namespace estar\rda\RdaBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,6 +18,34 @@ class Richiesta
      * @ORM\Column(name="dataora", type="datetime", nullable=true)
      */
     private $dataora;
+
+    /**
+     * @ORM\OneToMany(targetEntity="estar\rda\RdaBundle\Entity\Richiestaaggregazione", mappedBy="idrichiesta", cascade={"persist"})
+     */
+    private $richiestaAggregazione;
+
+    public function __construct() {
+        $this->richiestaAggregazione = new ArrayCollection();
+     }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRichiestaaggregazione()
+    {
+        return $this->richiestaAggregazione;
+    }
+
+    public function addRichiestaaggregazioneon(Richiestaaggregazione $c)
+    {
+        $c->setIdrichiesta($this);
+        $this->richiestaAggregazione->add($c);
+    }
+
+    public function removeRichiestaaggregazioneon(Richiestaaggregazione $c)
+    {
+        $this->richiestaAggregazione->removeElement($c);
+    }
 
     /**
      * @return \DateTime

@@ -3,9 +3,13 @@
 namespace estar\rda\RdaBundle\Form;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityRepository;
 use estar\rda\RdaBundle\Controller\UserCheckController;
+use estar\rda\RdaBundle\Entity\Azienda;
 use estar\rda\RdaBundle\Entity\FormTemplate;
 use \Doctrine\ORM\EntityManager;
+use estar\rda\RdaBundle\Entity\Richiestaaggregazione;
+use estar\rda\RdaBundle\estarRdaBundle;
 use Symfony\Bundle\FrameworkBundle\Routing\Router as Router;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,7 +29,7 @@ class FormTemplateService
     private $router;
     private $em;
     private $session;
-
+    private $idRichiestaG;
 
     const MODE_INSERT = 0;
     const MODE_EDIT = 1;
@@ -201,6 +205,16 @@ class FormTemplateService
                     )));
             }
 
+            if ($this->user->getUtente()->getIdazienda()->getNome()=='ESTAR') {
+                $builder->add('Azienda_agg', 'choice', array(
+                    'choices' => $this->getAllAzienda(),
+                    "multiple" => true,
+                    "expanded" => true,
+                    'label'    => 'NEL CASO DI RICHIESTE PROGRAMMATE DA PARTE DI ESTAR PER LE AZIENDE',
+                    'attr' => array('class' => 'richiesta_abs')
+
+                ));
+            }
 
             foreach ($campi as $campo) {
                 //FG 20151027 modifica per campi visualizzabili a seconda dei diritti
@@ -367,6 +381,7 @@ class FormTemplateService
             $em = $this->em;
             if (get_class($entity) != 'estar\rda\RdaBundle\Entity\Categoria') {
                 $idRichiesta = $entity->getId();
+                $this->idRichiestaG = $idRichiesta;
                 $idCategoria = $idCategoria->getId();
                 $idAzienda = $entity->getIdAzienda()->getId();
                 //FG bugfix: in edit tira giù i campi tutte le categorie.
@@ -464,6 +479,24 @@ class FormTemplateService
                             'disabled' => "disabled",
                             'data' => $idAzienda
                         ));
+                        if ($this->user->getUtente()->getIdazienda()->getNome()=='ESTAR') {
+
+                            $builder->add('Azienda_agg', 'choice', array(
+                                'choices' => $this->getAllAzienda(),
+                                "multiple" => true,
+//                                'property' => 'nome',
+                                "expanded" => true,
+                                'choice_attr' => function($obj) {
+                                if ($this->ricercaAzienda($obj)){
+                                    return ['checked' => 'true'];
+                                }
+                                else{
+                                    return array();
+                                }
+                            },
+                                'label'    => 'NEL CASO DI RICHIESTE PROGRAMMATE DA PARTE DI ESTAR PER LE AZIENDE'
+                            ));
+                        }
                         //FG 20170404 ho rimosso le chiamate al callbackTransformer, probabilmente frutto di un copia e incolla, perchè non ne colgo l'utilità
                     } else {
                         //non ho permesso di scrittura: i campi devono essere read only
@@ -499,7 +532,6 @@ class FormTemplateService
                 }
             }
             //        $fieldsetVisitati = array();
-
             $richiesta1 = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
             $datarichiesta= $richiesta1->getDataora();
 
@@ -712,6 +744,15 @@ class FormTemplateService
         }
         return $aziende;
     }
+    function ricercaAzienda($obj){
+        $richiesteAggregate = $this->em->getRepository('estarRdaBundle:Richiestaaggregazione')->findBy( array('idrichiesta' => $this->idRichiestaG));
+        foreach ($richiesteAggregate as $richiesta){
+            if ($richiesta->getIdazienda()->getId() == $obj)
+                return true;
+            else
+                continue;
+        }
 
+    }
 
 }

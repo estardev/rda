@@ -50,3 +50,9 @@ richiesta_viewall:
     defaults: { _controller: "estarRdaBundle:Richiesta:viewAll" }
     options:
           expose: true
+
+richiesta_aggregate:
+    path:     /aggregate/{all}
+    defaults: { _controller: "estarRdaBundle:Richiesta:aggregate" }
+    options:
+          expose: true
