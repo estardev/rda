@@ -79,6 +79,9 @@
         $('#legendaModal').modal('show');
       //alert('s1');
         });
+    $(document).ready(function() {
+        $('#tableListaRichieste').DataTable({bFilter: false, paging: false})
+    });
 </script>
     {% endblock %}
 
