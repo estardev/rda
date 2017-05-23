@@ -13,6 +13,10 @@
              $('#homepageSelectBtnCategoria').prop('disabled',true);
              $('#homepageMostraTutte').prop('disabled',true);
              $('#homepageSelectCategoria').val('defaultDisabledNavbarOption');
+             {% for gruppo in gruppi %}
+             var inputDaModificare = 'form_gruppiutente_'+{{ gruppo.idgruppoutente }};
+                 document.getElementById(inputDaModificare).checked = true;
+             {%   endfor %}
          });
      </script>
  {% endblock %}

@@ -291,7 +291,7 @@ class ProfileExtendedController extends ProfileController
         // Creiamo l'array di gruppi a cui ? collegato l'utente
         $gruppi = $em->getRepository('estar\rda\RdaBundle\Entity\Utentegruppoutente')->findBy(array('idutente' => $utente->getId()));
         //FG ci peschiamo i gruppi
-        $gruppi = $em->getRepository('estar\rda\RdaBundle\Entity\Utentegruppoutente')->findBy(array('idutente' => $idUtente, 'amministratore' => '1'));
+        $gruppiAmministrati = $em->getRepository('estar\rda\RdaBundle\Entity\Utentegruppoutente')->findBy(array('idutente' => $idUtente, 'amministratore' => '1'));
         $stringaGruppo = "";
 
         foreach ($gruppi as $gruppo) {
@@ -349,7 +349,10 @@ class ProfileExtendedController extends ProfileController
         return $this->render('FOSUserBundle:Profile:editother.html.twig', array(
             'editform' => $formBuilder->getForm()->createView(),
             'hiddenform' => $hiddenFormBuilder->getForm()->createView(),
-            'idUtente' => $idUtente
+            'idUtente' => $idUtente,
+            'gruppi' => $gruppi,
+            'gruppiAmministrati' => $gruppiAmministrati
+
         ));
 
     }
