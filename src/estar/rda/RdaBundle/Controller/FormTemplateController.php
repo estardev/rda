@@ -175,12 +175,13 @@ class FormTemplateController extends Controller
             $richiesta->setCp(0);
             $richiesta->setAssenzaconflitto(0);
 
-            foreach ($campi['form']['Azienda_agg'] as $azi) {
-                $richiestaaggregazione= new Richiestaaggregazione();
-                $richiestaaggregazione->setIdazienda($em->getRepository('estarRdaBundle:Azienda')->find($azi));
-                $richiesta->addRichiestaaggregazioneon($richiestaaggregazione);
+            if (isset($campi['form']['Azienda_agg'])) {
+                foreach ($campi['form']['Azienda_agg'] as $azi) {
+                    $richiestaaggregazione = new Richiestaaggregazione();
+                    $richiestaaggregazione->setIdazienda($em->getRepository('estarRdaBundle:Azienda')->find($azi));
+                    $richiesta->addRichiestaaggregazioneon($richiestaaggregazione);
+                }
             }
-
             $em->persist($richiesta);
 
             foreach ($campi['form'] as $key => $value) {
