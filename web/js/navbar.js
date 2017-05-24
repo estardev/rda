@@ -94,7 +94,6 @@ $(document).ready(function()
         window.location.replace(Routing.generate('richiesta_viewall', {'all': all}));
     });
 
-
     $(document).on("click", "#richiesteaggregate", function () {
         $('#homepageSelectBtnCategoria').prop('disabled',true);
         $('#homepageMostraTutte').prop('disabled',true);
