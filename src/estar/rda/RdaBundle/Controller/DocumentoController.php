@@ -2,14 +2,18 @@
 
 namespace estar\rda\RdaBundle\Controller;
 
+use estar\rda\RdaBundle\Entity\Richiestadocumento;
 use estar\rda\RdaBundle\Entity\Richiestadocumentolibero;
 use estar\rda\RdaBundle\Form\DocumentoliberoType;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotNull;
 use estar\rda\RdaBundle\Entity\Documento;
 use estar\rda\RdaBundle\Form\DocumentoType;
+use Vich\UploaderBundle\Handler\UploadHandler;
+use Vich\UploaderBundle\Mapping\PropertyMapping;
 
 /**
  * Documento controller.
@@ -81,6 +85,63 @@ class DocumentoController extends Controller
 
             return $this->redirect($this->generateUrl('documento_liberoByRichiesta', array('idRichiesta' => $idRichiesta, 'idCategoria' => $idCategoria)));
         }
+
+        return $this->render('estarRdaBundle:Documento:new.html.twig', array(
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteLiberoAction(Request $request)
+    {
+        $entity = $request->request->all();
+        $documentoDaEliminare = $entity['idDocumento'];
+        $idCategoria = $entity['idCategoria'];
+        $em = $this->getDoctrine()->getManager();
+        $documento = $em->getRepository('estarRdaBundle:Richiestadocumentolibero')->find($documentoDaEliminare);
+        $nomeDocumento = $documento->getFilepath();
+        $idRichiesta = $documento->getIdrichiesta();
+        $controllo = $documento->isDainviare();
+
+        if (!$controllo){
+            //elimino riga e documento dal file sistem
+           $em->remove($documento);
+            $em->flush();
+        return $this->redirect($this->generateUrl('documento_liberoByRichiesta', array('idRichiesta' => $idRichiesta, 'idCategoria' => $idCategoria)));
+        }
+        else{
+            //il documento è già stato inviato
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                array(
+                    'alert' => 'success',
+                    'title' => 'Success!',
+                    'message' => "Il documento non può essere cancellato perchè è già stato inviato"
+                )
+            );
+            return $this->redirect($this->generateUrl('documento_liberoByRichiesta', array('idRichiesta' => $idRichiesta, 'idCategoria' => $idCategoria)));
+
+        }
+
+        //        $entity =
+//        $form = $this->createCreateFormLibero($entity, $idRichiesta, $idCategoria);
+//        $form->handleRequest($request);
+//
+//        if ($form->isValid()) {
+//
+//            $em = $this->getDoctrine()->getManager();
+//            $repository = $em->getRepository('estarRdaBundle:Richiesta');
+//            $richiesta = $repository->find($idRichiesta);
+//            $entity->setIdrichiesta($richiesta);
+//            $em->persist($entity);
+//            $em->flush();
+//
+//            return $this->redirect($this->generateUrl('documento_liberoByRichiesta', array('idRichiesta' => $idRichiesta, 'idCategoria' => $idCategoria)));
+//        }
 
         return $this->render('estarRdaBundle:Documento:new.html.twig', array(
             'entity' => $entity,

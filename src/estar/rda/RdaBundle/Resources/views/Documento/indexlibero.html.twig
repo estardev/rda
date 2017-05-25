@@ -1,12 +1,13 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <div class="panel panel-default" xmlns="http://www.w3.org/1999/html">
+    <div class="row">
 
+    <div class="panel panel-default" xmlns="http://www.w3.org/1999/html">
 
         <div class="panel-heading"><h4>Allegati Liberi</h4></div>
 
-        <table class="table">
+        <table class="table table-responsive table-hover">
             <thead>
             <tr>
                 <th>Descrizione</th>
@@ -16,9 +17,9 @@
             </thead>
             <tbody>
             {% for entity in entities %}
-                <tr>
-                    <td>{{ entity.descrizione }}</td>
-                    <td>
+                <tr >
+                    <td class="col-lg-3">{{ entity.descrizione }}</td>
+                    <td class="col-lg-6">
                         <div class="btn-group" role="group">
                             <form class="form" method="post" enctype="multipart/form-data">
                                 {% if valida %}
@@ -52,8 +53,8 @@
                             </form>
                         </div>
                     </td>
-                    <td>
-                        <form method="get">
+                    <td class="col-lg-6">
+                        <form class="bottoni" method="get">
                             <a class="btn btn-default"
                                         href="{{ app.request.basePath }}/{{ (vich_uploader_asset(entity, 'docFile')) }}"
                                         download
@@ -61,8 +62,15 @@
                                         class="glyphicon glyphicon-download"
                                         aria-hidden="true"></span> Scarica</a>
                         </form>
-
-
+                        <form class="bottoni" style="padding-left: 5px;" method="post" action="{{ path('documento_deletelibero') }}">
+                            <input name="idDocumento" type="hidden" value="{{ entity }}" />
+                            <input name="idCategoria" type="hidden" value="{{ idCategoria }}" />
+                            {% if not entity.dainviare %}
+                            <input class="btn btn-danger" type="submit" value="Elimina">
+                            {% else %}
+                                <input disabled="disabled" class="btn btn-danger" type="submit" value="Elimina">
+                            {% endif %}
+                        </form>
                     </td>
                 </tr>
             {% endfor %}
@@ -77,5 +85,6 @@
    <div class="bottoniera">
       <a class="btn btn-default" href="{{ path('richiesta_bycategoria', { 'idCategoria': idCategoria}) }}"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Indietro</a>
    </div>
+    </div>
 
 {% endblock %}

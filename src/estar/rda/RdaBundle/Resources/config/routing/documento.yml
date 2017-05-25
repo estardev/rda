@@ -20,6 +20,11 @@ documento_createlibero:
     defaults: { _controller: "estarRdaBundle:Documento:createlibero" }
     methods:  POST
 
+documento_deletelibero:
+    path:     /deletelibero/
+    defaults: { _controller: "estarRdaBundle:Documento:deleteLibero" }
+    methods:  POST
+
 documento_edit:
     path:     /{id}/edit
     defaults: { _controller: "estarRdaBundle:Documento:edit" }
