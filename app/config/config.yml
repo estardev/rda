@@ -218,7 +218,7 @@ vich_uploader:
 
     mappings:
         richiesta_documento:
-            uri_prefix:         /documenti #test
+            uri_prefix:         /rda/web/documenti #test
             #uri_prefix:         /documenti #produzione
             upload_destination: %kernel.root_dir%/../web/documenti
             namer:              namer.richiesta_documento
