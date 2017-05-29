@@ -47,6 +47,7 @@ class RegistrationExtendedController extends RegistrationParentController
         if ($form->isValid()) {
             $event = new FormEvent($form, $request);
             $dispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
+            $user->setUtentecartaoperatore($user->getCodicefiscale());
 
             $userManager->updateUser($user);
 
