@@ -88,7 +88,9 @@
             //        //alert(id);
             //
             //    });
-
+            $(document).ready(function() {
+                $('#tableListaRichieste').DataTable({bFilter: false, paging: false, bInfo: false, order:[ 0, 'desc' ]})
+            });
         </script>
 
         {{ parent() }}
@@ -98,6 +100,7 @@
     {% endblock %}
 
 {% block body -%}
+    <div class="row">
 
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -118,7 +121,7 @@
             <div class="clearfix"></div>
         </div>
         {#<div class="panel-body">Table qua</div>#}
-        <table class="table" id="tableListaRichieste">
+        <table class="table table-responsive table-hover" id="tableListaRichieste">
             <thead>
             <tr>
                 <th>Id Pratica</th>
@@ -196,6 +199,7 @@
             {% endfor %}
             </tbody>
         </table>
+    </div>
     </div>
 
     <div class="modal fade" id="iterModal" tabindex="-1" aria-hidden="true" role="dialog" aria php
