@@ -221,7 +221,7 @@ class DocumentoController extends Controller
             $response = new Response();
 
             //set headers
-            $response->headers->set('Content-Type', 'mime/type');
+            $response->headers->set('Content-Type', 'application/zip');
             $response->headers->set('Content-Disposition', 'attachment;filename="'.$filename);
 
             $response->setContent($content);
