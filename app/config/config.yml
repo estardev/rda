@@ -132,8 +132,8 @@ knp_snappy:
     pdf:
         enabled:    true
   #      binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" #locale
-  #      binary:     /usr/local/bin/wkhtmltopdf #produzione
-        binary:     /usr/local/bin/wkhtmltopdf.sh #test
+        binary:     /usr/local/bin/wkhtmltopdf #produzione
+  #      binary:     /usr/local/bin/wkhtmltopdf.sh #test
         options:    []
 
 winzou_state_machine:
@@ -218,8 +218,8 @@ vich_uploader:
 
     mappings:
         richiesta_documento:
-            uri_prefix:         /rda/web/documenti #test
-            #uri_prefix:         /documenti #produzione
+            #uri_prefix:         /rda/web/documenti #test
+            uri_prefix:         /documenti #produzione
             upload_destination: %kernel.root_dir%/../web/documenti
             namer:              namer.richiesta_documento
             directory_namer:    directory_namer.richiesta_documento
