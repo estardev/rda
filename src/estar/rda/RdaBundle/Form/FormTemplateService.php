@@ -485,6 +485,7 @@ class FormTemplateService
                             'choices' => $this->getAllAzienda(),
                             "multiple" => true,
                             'disabled' => "disabled",
+                            'read_only' => true,
 //                                'property' => 'nome',
                             "expanded" => true,
                             'choice_attr' => function($obj) {
