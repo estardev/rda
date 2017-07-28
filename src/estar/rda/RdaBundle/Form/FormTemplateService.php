@@ -455,6 +455,48 @@ class FormTemplateService
                 //se non sono in permesso di scrittura
                 if ($mode == FormTemplateService::MODE_PRINT) {
                     //sono in modalità stampa. Non faccio nulla: gli oggetti sono aggiunti da doPrint di formTemplateController
+                    $builder->add("titolo", "text", array(
+                        'label' => "Titolo",
+                        'data' => $entity->getTitolo(),
+                        'disabled' => "disabled"
+
+                    ));
+                    $builder->add("descrizione", "textarea", array(
+                        'label' => "Descrizione",
+                        'data' => $entity->getDescrizione(),
+                        'disabled' => "disabled",
+                    ));
+                    $builder->add("priorita", "choice", array(
+                        'choices' => Richiesta::getPossibleEnumPriorita(),
+                        'label' => "Priorità richiesta",
+                        'data' => $entity->getPriorita(),
+                        'disabled' => "disabled",
+
+                    ));
+                    $builder->add("azienda", "choice", array(
+                        'choices' => $this->getAllAzienda(),
+                        'label' => "Azienda Richiedente",
+                        'disabled' => "disabled",
+                        'data' => $idAzienda
+                    ));
+                    if ($this->user->getUtente()->getIdazienda()->getNome()=='ESTAR') {
+
+                        $builder->add('Azienda_agg', 'choice', array(
+                            'choices' => $this->getAllAzienda(),
+                            "multiple" => true,
+//                                'property' => 'nome',
+                            "expanded" => true,
+                            'choice_attr' => function($obj) {
+                                if ($this->ricercaAzienda($obj)){
+                                    return ['checked' => 'true'];
+                                }
+                                else{
+                                    return array();
+                                }
+                            },
+                            'label'    => 'NEL CASO DI RICHIESTE PROGRAMMATE DA PARTE DI ESTAR PER LE AZIENDE'
+                        ));
+                    }
                 } else {
                     if ($permessoscrittura) {
                         //ho permesso di scrittura. Devo aggiungere titolo, descrizione, priorità e azienda come campi editabili
