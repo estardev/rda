@@ -484,6 +484,7 @@ class FormTemplateService
                         $builder->add('Azienda_agg', 'choice', array(
                             'choices' => $this->getAllAzienda(),
                             "multiple" => true,
+                            'disabled' => "disabled",
 //                                'property' => 'nome',
                             "expanded" => true,
                             'choice_attr' => function($obj) {
