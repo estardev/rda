@@ -7,11 +7,11 @@
 
     <div class="bottoniera">
 
-       <div class="bottoni">{{ form(back_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
+        <div class="bottoni">{{ form(back_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
         <div class="bottoni"> {{ form(print_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
         {% if (stato == 'bozza') or (stato == 'attesa_val_tec') or (stato == 'attesa_val_amm') or (stato == 'da_inviare_ESTAR') %}
             {% if entity.numeroprotocollo is null %}
-            <div class="bottoni"> {{ form(delete_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
+                <div class="bottoni"> {{ form(delete_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
             {% endif %}
         {% endif %}
 
@@ -23,16 +23,17 @@
             <div class="bottoni"> {{ form(soap_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
         {% endif %}
 
-        {% if (diritti.isAI and stato=='bozza') or (stato=='bozza') or (diritti.isVT and stato=='attesa_val_tec') or (diritti.isVA and stato=='attesa_val_amm')%}
-            <div class="bottoni"> <button class="btn btn-primary" data-toggle="modal" data-target="#confirmModal"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Cambia Stato</button></div>
+        {% if (diritti.isAI and stato=='bozza') or (stato=='bozza') or (diritti.isVT and stato=='attesa_val_tec') or (diritti.isVA and stato=='attesa_val_amm') %}
+            <div class="bottoni">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#confirmModal"><span
+                            class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Cambia Stato
+                </button>
+            </div>
         {% endif %}
 
     </div>
 
     {{ form(edit_form, {'attr': {'novalidate': 'novalidate'}}) }}
-
-
-
 
 
     <div class="modal fade" id="confirmModal"
@@ -50,7 +51,7 @@
                 </div>
 
                 <div class="modal-body">
-                    {% for valida_form in valida_forms  %}
+                    {% for valida_form in valida_forms %}
                         {{ form(valida_form) }}
                     {% endfor %}
                     <!--<textarea name="messaggio" style="width: 100%; height: 200px; border: 1px solid #c0c0c0;"></textarea>-->
@@ -62,21 +63,24 @@
 {% endblock %}
 
     {% block javascripts %}
-        {{parent()}}
+        {{ parent() }}
         <script type="text/javascript">
-            $(document).ready(function(){
-                //$('#form_Azienda_agg :input').attr('disabled',true);
+            $(document).ready(function () {
+                    $('form').submit(function () {
+                            $('button[name="form[submit]"]').attr('disabled', true);
+                        }
+                    );
+                    //$('#form_Azienda_agg :input').attr('disabled',true);
                     var selezionato = "";
                     selezionato = $('#form_azienda option:selected').val();
-                        if(selezionato == 21){
-                            $('#form_Azienda_agg :input').removeAttr('disabled');
-                        }
-                        else{
-                            $('#form_Azienda_agg :input').attr('disabled',true);
-                            $('#form_Azienda_agg :input').attr('checked',false);
-                        }
+                    if (selezionato == 21) {
+                        $('#form_Azienda_agg :input').removeAttr('disabled');
                     }
-                );
-
+                    else {
+                        $('#form_Azienda_agg :input').attr('disabled', true);
+                        $('#form_Azienda_agg :input').attr('checked', false);
+                    }
+                }
+            );
         </script>
     {% endblock %}
