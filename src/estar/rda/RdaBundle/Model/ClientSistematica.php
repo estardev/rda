@@ -498,7 +498,7 @@ class ClientSistematica
 </soapenv:Envelope>'; //appIdentifier '.$this->getNumeroProtocollo().'
 
 
-        $response = $client->send($request_xml, $soapaction, '');
+        $response = $client->send($request_xml, $soapaction, 0,300);
         $res=$client->responseData;
         file_put_contents("REQUESTserver/".$number."_richiestaclient.xml",$client->request );
         file_put_contents("REQUESTserver/".$number."_rispostastaclient.xml",$client->response );
