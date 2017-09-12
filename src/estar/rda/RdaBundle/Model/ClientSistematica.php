@@ -454,6 +454,7 @@ class ClientSistematica
          <storyboardCode>'.$storyboardcode.'</storyboardCode>
          <metaViewName>'.$setmetaviewname.'</metaViewName>
          <direction>'.$setdirection.'</direction>
+         <requestId>'.$idPratica.'_'.$tipologia.'</requestId>
          <contacts>
             '.$contact.'
          </contacts>
