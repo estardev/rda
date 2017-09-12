@@ -426,6 +426,13 @@ class ClientSistematica
             $soapaction = 'https://protocollo.estar.toscana.it/isharedoc/webservices/instanceService3/';
         }
 
+        if ($tipologia =='Nuova' OR $tipologia=='Annullamento'){
+            $requestId = '<requestId>'.$idPratica.'_'.$tipologia.'</requestId>';
+        }
+        else{
+            $requestId = '<requestId></requestId>';
+        }
+
         //attivo precedentemente
         //$client->endpoint = 'http://devbss3.grupposistematica.it/isharedoc/webservices/instanceService3';
         //$soapaction = "http://devbss3.grupposistematica.it/isharedoc/webservices/instanceService3/";
@@ -454,7 +461,7 @@ class ClientSistematica
          <storyboardCode>'.$storyboardcode.'</storyboardCode>
          <metaViewName>'.$setmetaviewname.'</metaViewName>
          <direction>'.$setdirection.'</direction>
-         <requestId>'.$idPratica.'_'.$tipologia.'</requestId>
+'.$requestId.'
          <contacts>
             '.$contact.'
          </contacts>
