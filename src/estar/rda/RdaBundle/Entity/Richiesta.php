@@ -20,6 +20,12 @@ class Richiesta
     private $dataora;
 
     /**
+     * @var \DateTime
+     * @ORM\Column(name="dataUltimaModifica", type="datetime", nullable=true)
+     */
+    private $dataultimamodifica;
+
+    /**
      * @ORM\OneToMany(targetEntity="estar\rda\RdaBundle\Entity\Richiestaaggregazione", mappedBy="idrichiesta", cascade={"persist"})
      */
     private $richiestaAggregazione;
@@ -117,6 +123,24 @@ class Richiesta
     {
         $this->assenzaconflitto = $assenzaconflitto;
     }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDataultimamodifica()
+    {
+        return $this->dataultimamodifica;
+    }
+
+    /**
+     * @param \DateTime $dataultimamodifica
+     */
+    public function setDataultimamodifica($dataultimamodifica)
+    {
+        $this->dataultimamodifica = $dataultimamodifica;
+    }
+
+
 
     /**
      * @var string

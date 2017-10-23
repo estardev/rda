@@ -95,7 +95,7 @@
                 <th>Titolo</th>
                 <th>Status</th>
                 <th>Azienda</th>
-                <th>Anno programmazione</th>
+                <th>Data Modifica</th>
                 <th>Numero protocollo</th>
                 <th>Azioni</th>
             </tr>
@@ -175,7 +175,11 @@
 
                     </td>
                     <td>{{ entity.idAzienda.nome }}</td>
-                    <td>{{ entity.annoprogrammazione }}</td>
+                    {% if entity.dataultimamodifica is not null %}
+                        <td>{{ entity.dataultimamodifica|date('d-m-Y H:i:s') }}</td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
                     <td>{{ entity.numeroprotocollo }}</td>
                     <td>
 

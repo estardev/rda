@@ -30,6 +30,12 @@ class Iter
 
     /**
      * @var string
+     * @ORM\Column(name="rup", type="string",length=255, nullable=true)
+     */
+    private $rup;
+
+    /**
+     * @var string
      * @ORM\Column(name="motivazione", type="text",length=65535, nullable=true)
      */
     private $motivazione;
@@ -135,6 +141,22 @@ class Iter
     {
         $this->urlprotocollo = $urlprotocollo;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRup()
+    {
+        return $this->rup;
+    }
+
+    /**
+     * @param string $rup
+     */
+    public function setRup($rup)
+    {
+        $this->rup = $rup;
     }
 
     /**

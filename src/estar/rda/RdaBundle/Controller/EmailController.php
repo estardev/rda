@@ -2,8 +2,10 @@
 
 namespace estar\rda\RdaBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use estar\rda\RdaBundle\Entity\Iter;
 use estar\rda\RdaBundle\Entity\Richiesta;
+use estar\rda\RdaBundle\Entity\Richiestaaggregazione;
 use estar\rda\RdaBundle\Entity\Utente;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -77,6 +79,16 @@ class EmailController extends Controller
         $categoria= $richiesta->getIdcategoria()->getDescrizione();
         $utente= $richiesta->getIdutente()->getNomecognome();
         $mail = $richiesta->getIdutente()->getEmail();
+        $descrizione = $richiesta->getDescrizione();
+        $azienda = $richiesta->getIdazienda()->getNome();
+
+        /* @var $richiestaaggregate Richiestaaggregazione */
+
+        $richiestaaggregate = $this->em->getRepository('estarRdaBundle:Richiestaaggregazione')->findOneBy(array('idrichiesta' => $idRichiesta));
+        $aziendaRichesta = new ArrayCollection();
+        foreach ($richiestaaggregate as $aziendaR){
+           $aziendaRichesta = $aziendaR->getIdazienda()->getNome();
+        }
 
         /* @var $iter Iter*/
         $iter = $em->getRepository('estarRdaBundle:Iter')->findBy(array('idrichiesta' => $idRichiesta),array('id' => 'DESC'));
@@ -96,7 +108,10 @@ class EmailController extends Controller
                         'protocollo' => $protocollo,
                         'idrichiesta' => $idRichiesta,
                         'categoria' => $categoria,
-                        'stato' => $stato
+                        'stato' => $stato,
+                        'descrizione' => $descrizione,
+                        'azienda' => $azienda,
+                        'aziendaRichiesta' => $aziendaRichesta
                         )
                 ),
                 'text/html'

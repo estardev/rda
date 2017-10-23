@@ -4,7 +4,7 @@
 </tr>
 <tr class="alert-info">
     <th>Data</th>
-    <th>Utente</th>
+    <th>Utente/RUP</th>
     <th>Azienda</th>
     <th>Da Stato</th>
     <th>A Stato</th>
@@ -22,10 +22,14 @@
 <tr>
 
     <td>{{ entity.dataora|date('d-m-Y H:i:s') }}</td>
-    <td>{% if(entity.idutente.nomecognome=='Sistematica') %} In carico presso Estar
+    <td>{% if entity.idutente.nomecognome=='Sistematica' and entity.rup is defined %}
+           {{ entity.rup }}
+    {% elseif entity.idutente.nomecognome=='Sistematica' %}
+        In carico presso Estar
         {% else %}
             {{ entity.idutente.nomecognome  }}
-        {% endif %}</td>
+        {% endif %}
+    </td>
     <td>{{ entity.idutente.idazienda.nome }}</td>
     <td>{{ entity.dastato }}</td>
     <td>{{ entity.astato }}</td>
@@ -33,6 +37,7 @@
     <td>{{ entity.dastatogestav }}</td>
     <td>{{ entity.astatogestav }}</td>
     <td>{{ entity.motivazione }}</td>
+
 </tr>
 {% endfor %}
 </tbody>

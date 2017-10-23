@@ -36,7 +36,7 @@
     <th>Id Pratica</th>
     <th>Titolo</th>
     <th>Status</th>
-    <th>Anno programmazione</th>
+    <th>Data Modifica</th>
     <th>Numero protocollo</th>
     <th>Azioni</th>
 </tr>
@@ -55,7 +55,11 @@
                         aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
             </button>
         </td>
-        <td>{{ entity.annoprogrammazione }}</td>
+        {% if entity.dataultimamodifica is not null %}
+            <td>{{ entity.dataultimamodifica|date('d-m-Y H:i:s') }}</td>
+        {% else %}
+            <td></td>
+        {% endif %}
         <td>{{ entity.numeroprotocollo }}</td>
         <td>
             <div class="btn-group">
