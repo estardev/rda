@@ -882,7 +882,7 @@ class RichiestaModel
                 
             case '110':
                 //Annullato ESTAR
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $articleSM->can('annullamento_ESTAR') or $richiesta->getStatus()==RichiestaModel::STATUS_ANNULLATA) {
+                if ($richiesta->getStatus()==RichiestaModel::STATUS_ANNULLATA) {
                     $iter= new Iter();
                     $iter->setDastato($articleSM->getState());
                     //$articleSM->apply('annullamento_ESTAR');
