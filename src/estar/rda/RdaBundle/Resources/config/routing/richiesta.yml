@@ -57,8 +57,3 @@ richiesta_aggregate:
     options:
           expose: true
 
-richiesta_globale:
-    path:     /globale/{all}
-    defaults: { _controller: "estarRdaBundle:Richiesta:globale" }
-    options:
-          expose: true
