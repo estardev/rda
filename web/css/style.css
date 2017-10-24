@@ -76,6 +76,11 @@ overflow: hidden;
 .bottoniera{
 	float:right;
 }
+.bottonieratop{
+	/*padding-top: 15px;*/
+	margin-top: 15px;
+
+}
 
 .panel-heading h4 {
 	white-space: nowrap;

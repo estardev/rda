@@ -841,6 +841,7 @@ class RichiestaModel
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
+            case '091':
 
             case '100':
                 //Chiusura (iter terminato)
@@ -914,6 +915,7 @@ class RichiestaModel
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
+            case '111':
     // //      case '120':
      //          //Archiviato ESTAR
      //          if ($articleSM->can('chiusura_ESTAR') or $iter->getAstatogestav()==RichiestaModel::STATUSESTAR_ARCHIVIATA) {

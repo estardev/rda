@@ -27,13 +27,15 @@ class ServerESTARController extends Controller
      * @Soap\Param("password", phpType = "string")
      * @Soap\Param("note", phpType = "string")
      * @Soap\Param("idpratica", phpType = "int")
+     * @Soap\Param("numeroAttoAggiudicazione", phpType = "int")
+     * @Soap\Param("numeroProtocolloLettera", phpType = "int")
      * @Soap\Param("dataRequest", phpType = "string")
      * @Soap\Param("codicestato", phpType = "string")
      * @Soap\Param("codicegara", phpType = "string")
      * @Soap\Param("rup", phpType = "string")
      * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\String[]")
      */
-    public function notifyAction($username, $password, $note=null, $idpratica, $dataRequest=null, $codicestato, $codicegara=null, $rup=null)
+    public function notifyAction($username, $password, $note=null, $idpratica, $dataRequest=null, $codicestato, $codicegara=null, $rup=null,$numeroAttoAggiudicazione=null,$numeroProtocolloLettera=null)
     {   $username1=strtolower($username);
         $em = $this->getDoctrine()->getManager();
         $postdata = file_get_contents("php://input");
@@ -71,7 +73,7 @@ class ServerESTARController extends Controller
             );
 
              } else {
-                $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $idpratica, $codicestato, $codicegara,$rup);
+                $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $idpratica, $codicestato, $codicegara,$rup,$numeroAttoAggiudicazione,$numeroProtocolloLettera);
                 if ($risposta->getCodiceRisposta()!= 'KO'){
                     $mail= new EmailController($this->getDoctrine()->getManager(), $this->get('service_container'));
                     $mail->notifyEmailAction($idpratica);
