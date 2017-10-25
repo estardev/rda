@@ -4,17 +4,17 @@
 <br>
 <br>
 <p>
-    La richiesta
+    La richiesta dal titolo <b>{{ titolo }}</b>
     <br>
-" {{ descrizione }} "
+    inerente a: " {{ descrizione }} "
     <br>
     con:
 <ul type=”disc”>
-    <li>id richiesta {{ idrichiesta }} (<b>protocollo {{ protocollo }}</b>)</li>
-    <li>della categoria <b>"{{ categoria }}"</b></li>
-    <li>richiesta dall'azienda <b>{{ azienda }}</b></li>
+    <li>Id richiesta {{ idrichiesta }} (<b>protocollo {{ protocollo }}</b>)</li>
+    <li>Della categoria <b>"{{ categoria }}"</b></li>
+    <li>Richiesta dall'azienda <b>{{ azienda }}</b></li>
     {% if aziendaRichiesta is defined %}
-        <li>relativa alle aziende:</li>
+        <li>Relativa alle aziende:</li>
     {% for aziendaR in aziendaRichiesta %}
     <li><b>{{ aziendaR }}</b></li>
     {% endfor %}
