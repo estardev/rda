@@ -102,14 +102,30 @@ overflow: hidden;
 }
 .modal-lg {
     max-width: 900px;
+	margin-left:-450px;
+
 }
+
 @media screen and (min-width: 768px) {
+	.modal {
+		display: none;
+		overflow: auto;
+		overflow-y: scroll;
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: -200px;
+		z-index: 1040;
+	}
+
     .modal-dialog {
         width: 900px;
         margin: 30px auto;
     }
     .modal-content {
-        -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+		width: fit-content;
+		-webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     }
 }

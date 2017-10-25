@@ -192,6 +192,9 @@ winzou_state_machine:
             chiusura_ESTAR:
                 from: [inviata_ESTAR]
                 to: chiusa_ESTAR
+            apertura_ESTAR:
+                from: [chiusa_ESTAR]
+                to: inviata_ESTAR
             annullamento_ESTAR:
                 #from: [da_inviare_ESTAR]
                 from: [inviata_ESTAR]

@@ -24,6 +24,12 @@ class Iter
 
     /**
      * @var string
+     * @ORM\Column(name="numeroAttoAggiudicazione", type="string",length=255, nullable=true)
+     */
+    private $numeroAttoAggiudicazione;
+
+    /**
+     * @var string
      * @ORM\Column(name="astato", type="string",length=255, nullable=true)
      */
     private $astato;
@@ -160,6 +166,23 @@ class Iter
     }
 
     /**
+     * @return string
+     */
+    public function getNumeroAttoAggiudicazione()
+    {
+        return $this->numeroAttoAggiudicazione;
+    }
+
+    /**
+     * @param string $numeroAttoAggiudicazione
+     */
+    public function setNumeroAttoAggiudicazione($numeroAttoAggiudicazione)
+    {
+        $this->numeroAttoAggiudicazione = $numeroAttoAggiudicazione;
+    }
+
+
+    /**
      * @var \estar\rda\RdaBundle\Entity\Richiesta
      * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Richiesta")
      * @ORM\JoinColumns({
@@ -180,6 +203,29 @@ class Iter
      * @ORM\Column(name="numeroProtocollo", type="string", length=100, nullable=true)
      */
     private $numeroprotocollo;
+
+    /**
+     * @var string
+     * @ORM\Column(name="numeroProtocolloLettera", type="string", length=255, nullable=true)
+     */
+    private $numeroProtocolloLettera;
+
+    /**
+     * @return string
+     */
+    public function getNumeroProtocolloLettera()
+    {
+        return $this->numeroProtocolloLettera;
+    }
+
+    /**
+     * @param string $numeroProtocolloLettera
+     */
+    public function setNumeroProtocolloLettera($numeroProtocolloLettera)
+    {
+        $this->numeroProtocolloLettera = $numeroProtocolloLettera;
+    }
+
 
     /**
      * Set dataora

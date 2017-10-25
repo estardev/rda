@@ -2,13 +2,10 @@
 
 namespace estar\rda\RdaBundle\Model;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use estar\rda\RdaBundle\Entity\Richiesta;
-use estar\rda\RdaBundle\Entity\Campo;
 use estar\rda\RdaBundle\Entity\Iter;
 use \Doctrine\ORM\EntityManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use estar\rda\RdaBundle\Entity\Utente;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
 /**
@@ -51,7 +48,10 @@ class RichiestaModel
     const STATUSESTAR_ANNULLATA = "Conferma pratica annullata ESTAR";
     const STATUSESTAR_ARCHIVIATA = "Archiviata da ESTAR";
     const STATUSESTAR_CHIUSA = "Chiusa da ESTAR per termine Iter";
+    const STATUSESTAR_APERTURA = "Riapertura pratica ESTAR";
     const STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP = "Richiesta documentazione (RUP)";
+    const STATUSESTAR_RICHIESTA_CON_PIU_GARE = "Richiesta con più gare";
+    const STATUSESTAR_AGGIUDICAZIONE_PARZIALE = "Aggiudicazione Parziale";
 
     protected $em;
 
@@ -78,7 +78,8 @@ class RichiestaModel
      *
      * @return array di campo
      */
-    public function mostraCampi($idRichiesta) {
+    public function mostraCampi($idRichiesta)
+    {
         //tiro su la richiesta
         $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')
             ->find($idRichiesta);
@@ -98,19 +99,19 @@ class RichiestaModel
             array('ordinamento' => 'ASC')
         );
         $toReturn = array();
-        foreach($campi as $campo) {
+        foreach ($campi as $campo) {
             //se posso vederlo come utente abilitato all'inserimento...
-            if ($campo->getObbligatorioinserzione()>=0 && $isAbilitatoInserimento>0) {
+            if ($campo->getObbligatorioinserzione() >= 0 && $isAbilitatoInserimento > 0) {
                 array_push($toReturn, $campo);
                 continue;
             }
             //se non posso vederlo come utente abilitato ma come validatore tecnico si
-            if ($campo->getObbligatoriovalidazionetecnica()>=0 && $isValidatoreTecnico>0) {
+            if ($campo->getObbligatoriovalidazionetecnica() >= 0 && $isValidatoreTecnico > 0) {
                 array_push($toReturn, $campo);
                 continue;
             }
             //se non posso vederlo come utente abilitato o come validatore tecnico ma come validatore amministrativo si
-            if ($campo->getObbligatoriovalidazioneamministrativa()>=0 && $isValidatoreAmministrativo>0) {
+            if ($campo->getObbligatoriovalidazioneamministrativa() >= 0 && $isValidatoreAmministrativo > 0) {
                 array_push($toReturn, $campo);
                 continue;
             }
@@ -120,15 +121,14 @@ class RichiestaModel
         return $toReturn;
 
 
-
-
     }
 
     /** metodo che restituisce i campi necessari per il passaggio allo stato successivo
      *
      * @return array di campo
      */
-    function campiNecessariProssimoPasso($idRichiesta) {
+    function campiNecessariProssimoPasso($idRichiesta)
+    {
         //primo step mi tiro su la richiesta
         $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')
             ->find($idRichiesta);
@@ -155,7 +155,6 @@ class RichiestaModel
      */
 
 
-
     /** metodo che restituisce gli stati a cui la richiesta pu� transire
      *
      * @return un array con il nome dei campi cos� come definiti nella macchina a stati
@@ -166,7 +165,8 @@ class RichiestaModel
      *
      * @return true or false
      */
-    public function puoAvanzare($idRichiesta, $nuovostatus) {
+    public function puoAvanzare($idRichiesta, $nuovostatus)
+    {
         //tiro su la richiesta
         $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')
             ->find($idRichiesta);
@@ -175,7 +175,7 @@ class RichiestaModel
 
         //punto primo: una richiesta pu� sempre andare indietro.
         if ($nuovostatus == RichiestaModel::STATUS_BOZZA) return true;
-        if ($nuovostatus == RichiestaModel::STATUS_ATTESA_VAL_TEC && $vecchiostatus==RichiestaModel::STATUS_ATTESA_VAL_AMM) return true;;
+        if ($nuovostatus == RichiestaModel::STATUS_ATTESA_VAL_TEC && $vecchiostatus == RichiestaModel::STATUS_ATTESA_VAL_AMM) return true;;
         //TODO da finire!
     }
 
@@ -191,22 +191,23 @@ class RichiestaModel
      * @param $dirittiRichiesta
      * @return array(Richiesta)
      */
-    public function getRichiesteByUser($idCategoria, DirittiRichiesta $dirittiRichiesta) {
+    public function getRichiesteByUser($idCategoria, DirittiRichiesta $dirittiRichiesta)
+    {
 
         //Primo passo: ci troviamo tutte le richieste della categoria.
         $entities = $this->em->getRepository('estarRdaBundle:Richiesta')->findBy(array('idcategoria' => $idCategoria));
         $utente = $dirittiRichiesta->getUser();
-        $idUtente=$utente->getId();
+        $idUtente = $utente->getId();
 
-        if ($dirittiRichiesta->getIsVA() AND $dirittiRichiesta->getIsAI() AND $dirittiRichiesta->getIsVT()){
+        if ($dirittiRichiesta->getIsVA() AND $dirittiRichiesta->getIsAI() AND $dirittiRichiesta->getIsVT()) {
 
             $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6 OR r.status=:stato7 OR r.status=:stato8 OR r.status=:stato9)");
             $query->setParameters(array(
-                'idcategoria'=> $idCategoria,
-                'idutente'=> $idUtente,
-                'stato1'=> RichiestaModel::STATUS_ATTESA_VAL_AMM,
-                'stato2'=> RichiestaModel::STATUS_DA_INVIARE_ESTAR,
-                'stato3'=> RichiestaModel::STATUS_INVIATA_ESTAR,
+                'idcategoria' => $idCategoria,
+                'idutente' => $idUtente,
+                'stato1' => RichiestaModel::STATUS_ATTESA_VAL_AMM,
+                'stato2' => RichiestaModel::STATUS_DA_INVIARE_ESTAR,
+                'stato3' => RichiestaModel::STATUS_INVIATA_ESTAR,
                 'stato4' => RichiestaModel::STATUS_ATTESA_VAL_TEC,
                 'stato5' => RichiestaModel::STATUS_ELIMINATA,
                 'stato6' => RichiestaModel::STATUS_ANNULLATA,
@@ -219,98 +220,97 @@ class RichiestaModel
             $richiesteutente = $query->getResult();
             return $richiesteutente;
 
-        }else{
+        } else {
 
 
-        //Se l'utente è validatore amministrativo
-        if ($dirittiRichiesta->getIsVA()) {
-            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3)");
-            $query->setParameters(array(
-                'idcategoria'=>$idCategoria,
-                'idutente'=> $idUtente,
-                'stato1'=> RichiestaModel::STATUS_ATTESA_VAL_AMM,
-                'stato2'=> RichiestaModel::STATUS_DA_INVIARE_ESTAR,
-                'stato3'=> RichiestaModel::STATUS_INVIATA_ESTAR,
-            ));
-            $richiesteutente = $query->getResult();
-
-            //            foreach($entities as $entity) {
-            //            //Vede tutte quelle in attesa di validazione amministrativa
-            //            if ($entity->getStatus() == RichiestaModel::STATUS_ATTESA_VAL_AMM) {
-            //                array_push($toReturn, $entity);
-            //                continue;
-            //            }
-            //            //Vede tutte quelle che ha inserito
-            //            $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
-            //                'idrichiesta'=>$entity->getId()));
-            //            if ($iter)
-            //                array_push($toReturn, $entity);
-            //        }
-            return $richiesteutente;
-        }
-
-        //Se l'utente è validatore tenico
-        if ($dirittiRichiesta->getIsVT()) {
-
-            //FG 20170328: se e solo se l'utente è di ESTAR, vede le sue e quelle delle altre aziende; diversamente no.
-            $query = null;
-            if (trim($utente->getIdazienda()->getNome()) == 'ESTAR') {
-                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato)");
+            //Se l'utente è validatore amministrativo
+            if ($dirittiRichiesta->getIsVA()) {
+                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3)");
                 $query->setParameters(array(
-                    'idcategoria'=>$idCategoria,
-                    'idutente'=> $idUtente,
-                    'stato'=> RichiestaModel::STATUS_ATTESA_VAL_TEC,
+                    'idcategoria' => $idCategoria,
+                    'idutente' => $idUtente,
+                    'stato1' => RichiestaModel::STATUS_ATTESA_VAL_AMM,
+                    'stato2' => RichiestaModel::STATUS_DA_INVIARE_ESTAR,
+                    'stato3' => RichiestaModel::STATUS_INVIATA_ESTAR,
                 ));
-            } else {
-                //Non è di estar: deve vedere solo le sue
-                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato) AND r.idazienda=:idAzienda");
-                $query->setParameters(array(
-                    'idcategoria'=>$idCategoria,
-                    'idutente'=> $idUtente,
-                    'idAzienda' =>$utente->getIdazienda(),
-                    'stato'=> RichiestaModel::STATUS_ATTESA_VAL_TEC,
-                ));
+                $richiesteutente = $query->getResult();
+
+                //            foreach($entities as $entity) {
+                //            //Vede tutte quelle in attesa di validazione amministrativa
+                //            if ($entity->getStatus() == RichiestaModel::STATUS_ATTESA_VAL_AMM) {
+                //                array_push($toReturn, $entity);
+                //                continue;
+                //            }
+                //            //Vede tutte quelle che ha inserito
+                //            $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
+                //                'idrichiesta'=>$entity->getId()));
+                //            if ($iter)
+                //                array_push($toReturn, $entity);
+                //        }
+                return $richiesteutente;
             }
 
+            //Se l'utente è validatore tenico
+            if ($dirittiRichiesta->getIsVT()) {
 
-            $richiesteutente = $query->getResult();
-
-
-
-            //          foreach($entities as $entity) {
-            //              //Vede tutte quelle in attesa di validazione tecnica
-            //              if ($entity->getStatus() == RichiestaModel::STATUS_ATTESA_VAL_TEC) {
-            //                  array_push($toReturn, $entity);
-            //                  continue;
-            //              }
-            //              //Vede tutte quelle che ha inserito
-            //              $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
-            //                  'idrichiesta'=>$entity->getId()));
-            //              if ($iter)
-            //                  array_push($toReturn, $entity);
-            //          }
-            return $richiesteutente;
-        }
-
-        //Se l'utente è utente
-        if ($dirittiRichiesta->getIsAI()) {
-            //vede soltanto le sue
-            //ciclo su richiesta, guardo per ogni richiesta se c'è un iter con utente = utente
-
-            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente");
-            $query->setParameter('idutente', $idUtente);
-            $richiesteutente = $query->getResult();
+                //FG 20170328: se e solo se l'utente è di ESTAR, vede le sue e quelle delle altre aziende; diversamente no.
+                $query = null;
+                if (trim($utente->getIdazienda()->getNome()) == 'ESTAR') {
+                    $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato)");
+                    $query->setParameters(array(
+                        'idcategoria' => $idCategoria,
+                        'idutente' => $idUtente,
+                        'stato' => RichiestaModel::STATUS_ATTESA_VAL_TEC,
+                    ));
+                } else {
+                    //Non è di estar: deve vedere solo le sue
+                    $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato) AND r.idazienda=:idAzienda");
+                    $query->setParameters(array(
+                        'idcategoria' => $idCategoria,
+                        'idutente' => $idUtente,
+                        'idAzienda' => $utente->getIdazienda(),
+                        'stato' => RichiestaModel::STATUS_ATTESA_VAL_TEC,
+                    ));
+                }
 
 
-            //foreach($entities as $entity) {
-            //    $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
-            //        'idrichiesta'=>$entity->getId()));
-            //    if ($iter)
-            //        array_push($toReturn, $entity);
-            //
-            //}
-            return $richiesteutente;
-        }
+                $richiesteutente = $query->getResult();
+
+
+                //          foreach($entities as $entity) {
+                //              //Vede tutte quelle in attesa di validazione tecnica
+                //              if ($entity->getStatus() == RichiestaModel::STATUS_ATTESA_VAL_TEC) {
+                //                  array_push($toReturn, $entity);
+                //                  continue;
+                //              }
+                //              //Vede tutte quelle che ha inserito
+                //              $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
+                //                  'idrichiesta'=>$entity->getId()));
+                //              if ($iter)
+                //                  array_push($toReturn, $entity);
+                //          }
+                return $richiesteutente;
+            }
+
+            //Se l'utente è utente
+            if ($dirittiRichiesta->getIsAI()) {
+                //vede soltanto le sue
+                //ciclo su richiesta, guardo per ogni richiesta se c'è un iter con utente = utente
+
+                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente");
+                $query->setParameter('idutente', $idUtente);
+                $richiesteutente = $query->getResult();
+
+
+                //foreach($entities as $entity) {
+                //    $iter = $this->em->getRepository('estarRdaBundle:Iter')->findOneBy(array('idutente' => $utente->getId(),
+                //        'idrichiesta'=>$entity->getId()));
+                //    if ($iter)
+                //        array_push($toReturn, $entity);
+                //
+                //}
+                return $richiesteutente;
+            }
         }
 
         //return $toReturn;
@@ -321,7 +321,8 @@ class RichiestaModel
      *
      * @return array(Categoria) un array di categorie
      */
-    public function getCategorieByUser() {
+    public function getCategorieByUser()
+    {
         $usercheck = $this->container->get("usercheck.notify");
 
         $utente = $usercheck->getUtente();
@@ -334,7 +335,7 @@ class RichiestaModel
         // check: se l'utente � amministratore di sistema, vede tutto.
         $utenteFos = $utente->getIdFosUser();
 
-        if ($utenteFos->is_granted('ROLE_ADMIN')|| $utenteFos->is_granted('ROLE_SUPERADMIN')) {
+        if ($utenteFos->is_granted('ROLE_ADMIN') || $utenteFos->is_granted('ROLE_SUPERADMIN')) {
             $query = $this->em->createQuery('select c.id, c.descrizione, a.nome as area from estarRdaBundle:Categoria c join c.idarea a where c.idarea = a.id');
             $categoria = $query->getResult();
 
@@ -346,7 +347,7 @@ class RichiestaModel
             createQuery('select v.idcategoria as id, v.descrizionecategoria as descrizione, v.nomearea as area from
                           estarRdaBundle:Vcategoriadirittiutente v where v.idutente= :utente')
                 ->setParameter('utente', $utente->getId());
-            $categoria=$query->getResult();
+            $categoria = $query->getResult();
 
 //            $query = $this->em->
 //                createQuery('select c.id, c.descrizione, a.nome as area from estarRdaBundle:Categoria c join c.idarea a
@@ -373,7 +374,8 @@ class RichiestaModel
      * @param string $codicegara
      * @return RispostaPerSistematica
      */
-    public function getPratica($utente, $data, $note, $idpratica, $codicestato, $codicegara,$rup) {
+    public function getPratica($utente, $data, $note, $idpratica, $codicestato, $codicegara, $rup, $numeroAttoAggiudicazione, $numeroProtocolloLettera)
+    {
         // Ci costruiamo l'oggetto risposta
 
         $dateRisposta = new \DateTime();
@@ -403,7 +405,6 @@ class RichiestaModel
         }
 
 
-
         //Prendiamo la richiesta
 
         $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')->findOneBy(array('id' => $idpratica));
@@ -412,7 +413,7 @@ class RichiestaModel
         if (is_null($richiesta)) {
             $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
             $risposta->setCodiceErrore(RispostaPerSistematica::codiceErrorePraticaNonTrovata);
-            $risposta->setDescrizioneErrore("Non è stata trovata alcuna pratica con id ".$idpratica);
+            $risposta->setDescrizioneErrore("Non è stata trovata alcuna pratica con id " . $idpratica);
             return $risposta;
         }
 
@@ -421,14 +422,14 @@ class RichiestaModel
         $factory = $this->container->get('sm.factory');
         $articleSM = $factory->get($richiesta, 'rda');
 
-        $iter= new Iter();
+        $iter = new Iter();
 
-        switch($codicestato){
+        switch ($codicestato) {
             case '010':
                 //valutazione tecnica
                 //La richiesta passa in stato di valutazione tecnica
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
-                    $iter= new Iter();
+                    $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
                     $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -453,15 +454,15 @@ class RichiestaModel
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto"); //.$articleSM->can('rifiutata_tec_ESTAR')." - ".$articleSM->getState());
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto"); //.$articleSM->can('rifiutata_tec_ESTAR')." - ".$articleSM->getState());
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
-               case '020':
+            case '020':
                 //valutazione amministrativa
                 //La richiesta passa in stato di valutazione amministrativa
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
-                    $iter= new Iter();
+                    $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
                     $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -504,7 +505,7 @@ class RichiestaModel
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
@@ -513,7 +514,7 @@ class RichiestaModel
                 //attesa documentazione aggiuntiva tecnica
                 //La richiesta passa in stato di valutazione tecnica
                 if ($articleSM->can('rifiutata_tec_ESTAR')) {
-                    $iter= new Iter();
+                    $iter = new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rifiutata_tec_ESTAR');
                     $iter->setAstato($articleSM->getState());
@@ -539,52 +540,52 @@ class RichiestaModel
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
                 }
                 //TODO: ricordiamoci di mettere un avviso via mail
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
             case '031':
-                    //attesa documentazione aggiuntiva amministrativa
-                    //La richiesta passa in stato di valutazione amministrativa
-                    if ($articleSM->can('rifiutata_amm_ESTAR')) {
-                        $iter= new Iter();
-                        $iter->setDastato($articleSM->getState());
-                        $articleSM->apply('rifiutata_amm_ESTAR');
-                        $iter->setAstato($articleSM->getState());
-                        $iter->setDastatogestav($richiesta->getStatusgestav());
-                        $iter->setAstatogestav($richiesta->getStatusgestav());
-                        $iter->setIdrichiesta($richiesta);
-                        $iter->setMotivazione($note);
-                        $iter->setDataora($dateTime);
-                        $iter->setIdutente($utente);
-                        $iter->setDatafornita($dataFornita);
-                        $iter->setRup($rup);
-                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ATTESA_AMM);
-                        $richiesta->setPresentato(14);
-                        $richiesta->setDataultimamodifica($dateTime);
-                        $richiesta->setCodicegara(null);
-                        $this->em->persist($richiesta);
-                        $this->em->persist($iter);
-                        $this->em->flush();
+                //attesa documentazione aggiuntiva amministrativa
+                //La richiesta passa in stato di valutazione amministrativa
+                if ($articleSM->can('rifiutata_amm_ESTAR')) {
+                    $iter = new Iter();
+                    $iter->setDastato($articleSM->getState());
+                    $articleSM->apply('rifiutata_amm_ESTAR');
+                    $iter->setAstato($articleSM->getState());
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav($richiesta->getStatusgestav());
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dateTime);
+                    $iter->setIdutente($utente);
+                    $iter->setDatafornita($dataFornita);
+                    $iter->setRup($rup);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ATTESA_AMM);
+                    $richiesta->setPresentato(14);
+                    $richiesta->setDataultimamodifica($dateTime);
+                    $richiesta->setCodicegara(null);
+                    $this->em->persist($richiesta);
+                    $this->em->persist($iter);
+                    $this->em->flush();
 
-                    } else {
-                        //Non posso transire in quello stato
-                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
-                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                        $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto "); //.$articleSM->can('rifiutata_tec_ESTAR')." - ".$articleSM->getState());
-                    }
-                    $risposta->setDataRisposta($dataRisposta);
-                    return $risposta;
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto "); //.$articleSM->can('rifiutata_tec_ESTAR')." - ".$articleSM->getState());
+                }
+                $risposta->setDataRisposta($dataRisposta);
+                return $risposta;
 
             case '040':
                 //rigetto pratica controllo tecnico
                 //La richiesta passa in stato di rifiutata ESTAR
-                if ($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus()=='rigetto_ESTAR') {
-                    $iter= new Iter();
+                if ($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus() == 'rigetto_ESTAR') {
+                    $iter = new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rigettata_ESTAR');
                     $iter->setAstato($articleSM->getState());
@@ -609,7 +610,7 @@ class RichiestaModel
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
@@ -617,8 +618,8 @@ class RichiestaModel
             case '041':
                 //rigetto pratica controllo amministrativo
                 //La richiesta passa in stato di rifiutata ESTAR
-                if ($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus()=='rigetto_ESTAR') {
-                    $iter= new Iter();
+                if ($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus() == 'rigetto_ESTAR') {
+                    $iter = new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rigettata_ESTAR');
                     $iter->setAstato($articleSM->getState());
@@ -643,21 +644,21 @@ class RichiestaModel
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '050':
                 //Assegnata programmazione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav()==RichiestaModel::STATUSESTAR_ASSEGNATAPROGRAMMAZIONE) {
-                    $iter= new Iter();
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ASSEGNATAPROGRAMMAZIONE) {
+                    $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ASSEGNATAPROGRAMMAZIONE);
                     $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione('La pratica è stata programmata per l\'anno '.$note);
+                    $iter->setMotivazione('La pratica è stata programmata per l\'anno ' . $note);
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
@@ -676,15 +677,15 @@ class RichiestaModel
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '060':
                 //Istruttoria tecnica
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav()==RichiestaModel::STATUSESTAR_ISTRUTTORIA) {
-                    $iter= new Iter();
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ISTRUTTORIA) {
+                    $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
                     $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -708,15 +709,15 @@ class RichiestaModel
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '061':
                 //Istruttoria amministrativa
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav()==RichiestaModel::STATUSESTAR_ISTRUTTORIA_AMM) {
-                    $iter= new Iter();
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ISTRUTTORIA_AMM) {
+                    $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
                     $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -740,15 +741,15 @@ class RichiestaModel
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '070':
                 //Indizione
-                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR AND !empty($codicegara)) or $iter->getAstatogestav()==RichiestaModel::STATUSESTAR_INDIZIONE) {
-                    $iter= new Iter();
+                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR AND !empty($codicegara)) or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_INDIZIONE) {
+                    $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
                     $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -772,18 +773,18 @@ class RichiestaModel
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    if($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR and empty($codicegara))
+                    if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR and empty($codicegara))
                         $risposta->setDescrizioneErrore("Non è stato indicato il codice Gara");
                     else
-                        $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+                        $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '080':
                 //Valutazione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav()==RichiestaModel::STATUSESTAR_VALUTAZIONE) {
-                    $iter= new Iter();
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_VALUTAZIONE) {
+                    $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
                     $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -806,20 +807,27 @@ class RichiestaModel
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '090':
                 //Aggiudicazione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav()==RichiestaModel::STATUSESTAR_AGGIUDICAZIONE) {
-                    $iter= new Iter();
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_AGGIUDICAZIONE) {
+                    $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSESTAR_AGGIUDICAZIONE);
                     $iter->setIdrichiesta($richiesta);
+                    if (!is_null($iter->getNumeroAttoAggiudicazione())) {
+                        $numeroAtto = $iter->getNumeroAttoAggiudicazione() . ', ' . $numeroAttoAggiudicazione;
+                    } else {
+                        $numeroAtto = $numeroAttoAggiudicazione;
+                    }
+                    $iter->setNumeroAttoAggiudicazione($numeroAtto);
+                    $iter->setNumeroProtocolloLettera($numeroProtocolloLettera);
                     $iter->setMotivazione($note);
                     $iter->setDataora($dateTime);
                     $iter->setIdutente($utente);
@@ -837,24 +845,67 @@ class RichiestaModel
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
             case '091':
+                //aggiudicazione parziale
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
+                    $iter = new Iter();
+                    $iter->setDastato($richiesta->getStatus());
+                    $iter->setAstato($richiesta->getStatus());
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_AGGIUDICAZIONE_PARZIALE);
+                    $iter->setIdrichiesta($richiesta);
+                    if (!is_null($iter->getNumeroAttoAggiudicazione())) {
+                        $numeroAtto = $iter->getNumeroAttoAggiudicazione() . ', ' . $numeroAttoAggiudicazione;
+                    } else {
+                        $numeroAtto = $numeroAttoAggiudicazione;
+                    }
+                    $iter->setNumeroAttoAggiudicazione($numeroAtto);
+                    $iter->setNumeroProtocolloLettera($numeroProtocolloLettera);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dateTime);
+                    $iter->setIdutente($utente);
+                    $iter->setDatafornita($dataFornita);
+                    $iter->setRup($rup);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_AGGIUDICAZIONE_PARZIALE);
+                    $richiesta->setDataultimamodifica($dateTime);
+                    $this->em->persist($richiesta);
+                    $this->em->persist($iter);
+                    $this->em->flush();
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
+                }
+                $risposta->setDataRisposta($dataRisposta);
+                return $risposta;
 
             case '100':
                 //Chiusura (iter terminato)
-                if ($articleSM->can('chiusura_ESTAR') or $iter->getAstatogestav()==RichiestaModel::STATUSESTAR_CHIUSA or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $richiesta->getStatus() == RichiestaModel::STATUS_CHIUSA_ESTAR ) {
+                if ($articleSM->can('chiusura_ESTAR') or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_CHIUSA or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $richiesta->getStatus() == RichiestaModel::STATUS_CHIUSA_ESTAR) {
 
-                    if($richiesta->getStatus() != RichiestaModel::STATUS_CHIUSA_ESTAR){
-                        $iter= new Iter();
+                    if ($richiesta->getStatus() != RichiestaModel::STATUS_CHIUSA_ESTAR) {
+                        $iter = new Iter();
                         $iter->setDastato($articleSM->getState());
                         $articleSM->apply('chiusura_ESTAR');
                         $iter->setAstato($articleSM->getState());
                         $iter->setDastatogestav($richiesta->getStatusgestav());
                         $iter->setAstatogestav(RichiestaModel::STATUSESTAR_CHIUSA);
                         $iter->setIdrichiesta($richiesta);
+                        if (!is_null($iter->getNumeroAttoAggiudicazione())) {
+                            $numeroAtto = $iter->getNumeroAttoAggiudicazione() . ', ' . $numeroAttoAggiudicazione;
+                        } else {
+                            $numeroAtto = $numeroAttoAggiudicazione;
+                        }
+                        $iter->setNumeroAttoAggiudicazione($numeroAtto);
+                        $iter->setNumeroProtocolloLettera($numeroProtocolloLettera);
                         $iter->setMotivazione($note);
                         $iter->setDataora($dateTime);
                         $iter->setIdutente($utente);
@@ -873,18 +924,50 @@ class RichiestaModel
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
 
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
+
             case '101':
                 //stato in cui verrà comunicata la chiusura per errore e la riapertura della pratica
-                
+                if ($articleSM->can('apertura_ESTAR')) {
+                    $iter = new Iter();
+                    $iter->setDastato($articleSM->getState());
+                    $articleSM->apply('apertura_ESTAR');
+                    $iter->setAstato($articleSM->getState());
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_APERTURA);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dateTime);
+                    $iter->setIdutente($utente);
+                    $iter->setDatafornita($dataFornita);
+                    $iter->setRup($rup);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $richiesta->setCodicegara($codicegara);
+                    $richiesta->setDataultimamodifica($dateTime);
+                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_APERTURA);
+                    $this->em->persist($richiesta);
+                    $this->em->persist($iter);
+                    $this->em->flush();
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
+                }
+                //TODO: ricordiamoci di mettere un avviso via mail
+                $risposta->setDataRisposta($dataRisposta);
+                return $risposta;
+
             case '110':
                 //Annullato ESTAR
-                if ($richiesta->getStatus()==RichiestaModel::STATUS_ANNULLATA) {
-                    $iter= new Iter();
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_ANNULLATA) {
+                    $iter = new Iter();
                     $iter->setDastato($articleSM->getState());
                     //$articleSM->apply('annullamento_ESTAR');
                     $iter->setAstato($articleSM->getState());
@@ -909,44 +992,82 @@ class RichiestaModel
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
 
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '111':
-    // //      case '120':
-     //          //Archiviato ESTAR
-     //          if ($articleSM->can('chiusura_ESTAR') or $iter->getAstatogestav()==RichiestaModel::STATUSESTAR_ARCHIVIATA) {
-     //              $iter= new Iter();
-     //              $iter->setDastato($articleSM->getState());
-     //              $articleSM->apply('chiusura_ESTAR');
-     //              $iter->setAstato($articleSM->getState());
-     //              $iter->setDastatogestav($richiesta->getStatusgestav());
-     //              $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ARCHIVIATA);
-     //              $iter->setIdrichiesta($richiesta);
-     //              $iter->setMotivazione($note);
-     //              $iter->setDataora($dateTime);
-     //              $iter->setIdutente($utente);
-     //              $iter->setDatafornita($dataFornita);
-     //              $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-     //              $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-     //              $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-     //              $richiesta->setPresentato(12);
-     //              $this->em->persist($richiesta);
-     //              $this->em->persist($iter);
-     //              $this->em->flush();
+                if (!($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR OR
+                    $richiesta->getAstatogestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+                    $iter = new Iter();
+                    $iter->setDastato($articleSM->getState());
+                    //$articleSM->apply('annullamento_ESTAR');
+                    $iter->setAstato($articleSM->getState());
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione("Contattare il RUP");
+                    $iter->setDataora($dateTime);
+                    $iter->setIdutente($utente);
+                    $iter->setDatafornita($dataFornita);
+                    $iter->setRup($rup);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE);
+                    $richiesta->setDataultimamodifica($dateTime);
+                    $richiesta->setCodicegara($codicegara);
+                    $this->em->persist($richiesta);
+                    $this->em->persist($iter);
+                    $this->em->flush();
+                } elseif (!($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR OR
+                    $richiesta->getAstatogestav() == RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
 
-     //          } else {
-     //              //Non posso transire in quello stato
-     //              $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
-     //              $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-     //              $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+                }
+                $risposta->setDataRisposta($dataRisposta);
+                return $risposta;
 
-     //          }
-     //          $risposta->setDataRisposta($dataRisposta);
-     //          return $risposta;
+            // //      case '120':
+            //          //Archiviato ESTAR
+            //          if ($articleSM->can('chiusura_ESTAR') or $iter->getAstatogestav()==RichiestaModel::STATUSESTAR_ARCHIVIATA) {
+            //              $iter= new Iter();
+            //              $iter->setDastato($articleSM->getState());
+            //              $articleSM->apply('chiusura_ESTAR');
+            //              $iter->setAstato($articleSM->getState());
+            //              $iter->setDastatogestav($richiesta->getStatusgestav());
+            //              $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ARCHIVIATA);
+            //              $iter->setIdrichiesta($richiesta);
+            //              $iter->setMotivazione($note);
+            //              $iter->setDataora($dateTime);
+            //              $iter->setIdutente($utente);
+            //              $iter->setDatafornita($dataFornita);
+            //              $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+            //              $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+            //              $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+            //              $richiesta->setPresentato(12);
+            //              $this->em->persist($richiesta);
+            //              $this->em->persist($iter);
+            //              $this->em->flush();
+
+            //          } else {
+            //              //Non posso transire in quello stato
+            //              $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+            //              $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+            //              $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+
+            //          }
+            //          $risposta->setDataRisposta($dataRisposta);
+            //          return $risposta;
 
             case '130':
 
@@ -957,8 +1078,8 @@ class RichiestaModel
 
                 //attesa documentazione aggiuntiva RUP
                 //La richiesta passa in stato di valutazione amministrativa
-                if ((($articleSM->can('rifiutata_amm_ESTAR')) AND !empty($codicegara)) or $iter->getAstatogestav()==RichiestaModel::STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR ) {
-                    $iter= new Iter();
+                if ((($articleSM->can('rifiutata_amm_ESTAR')) AND !empty($codicegara)) or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
+                    $iter = new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rifiutata_amm_ESTAR');
                     $iter->setAstato($articleSM->getState());
@@ -984,7 +1105,7 @@ class RichiestaModel
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica ".$idpratica." non può transire nello stato richiesto ");
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
                 }
                 //TODO: ricordiamoci di mettere un avviso via mail
                 $risposta->setDataRisposta($dataRisposta);
