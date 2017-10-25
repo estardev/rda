@@ -81,13 +81,14 @@ class EmailController extends Controller
         $mail = $richiesta->getIdutente()->getEmail();
         $descrizione = $richiesta->getDescrizione();
         $azienda = $richiesta->getIdazienda()->getNome();
+        $titolo = $richiesta->getTitolo();
 
         /* @var $richiestaaggregate Richiestaaggregazione */
 
         $richiestaaggregate = $this->em->getRepository('estarRdaBundle:Richiestaaggregazione')->findOneBy(array('idrichiesta' => $idRichiesta));
         $aziendaRichesta = new ArrayCollection();
         foreach ($richiestaaggregate as $aziendaR){
-           $aziendaRichesta = $aziendaR->getIdazienda()->getNome();
+           $aziendaRichesta->add($aziendaR->getIdazienda()->getNome());
         }
 
         /* @var $iter Iter*/
@@ -109,6 +110,7 @@ class EmailController extends Controller
                         'idrichiesta' => $idRichiesta,
                         'categoria' => $categoria,
                         'stato' => $stato,
+                        'titolo' => $titolo,
                         'descrizione' => $descrizione,
                         'azienda' => $azienda,
                         'aziendaRichiesta' => $aziendaRichesta
