@@ -13,7 +13,7 @@
     <li>Id richiesta {{ idrichiesta }} (<b>protocollo {{ protocollo }}</b>)</li>
     <li>Della categoria <b>"{{ categoria }}"</b></li>
     <li>Richiesta dall'azienda <b>{{ azienda }}</b></li>
-    {% if aziendaRichiesta is defined %}
+    {% if aziendaRichiesta is not null %}
         <li>Relativa alle aziende:</li>
     {% for aziendaR in aziendaRichiesta %}
     <li><b>{{ aziendaR }}</b></li>

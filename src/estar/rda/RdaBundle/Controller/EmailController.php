@@ -85,7 +85,10 @@ class EmailController extends Controller
 
         /* @var $richiestaaggregate Richiestaaggregazione */
 
-        $richiestaaggregate = $this->em->getRepository('estarRdaBundle:Richiestaaggregazione')->findOneBy(array('idrichiesta' => $idRichiesta));
+//        $richiestaaggregate = $this->em->getRepository('estarRdaBundle:Richiestaaggregazione')->findOneBy(array('idrichiesta' => $idRichiesta));
+        $richiesteAggregate = $this->em->getRepository('estarRdaBundle:Richiestaaggregazione')->findBy( array('idrichiesta' => $idRichiesta));
+
+
         $aziendaRichesta = new ArrayCollection();
         foreach ($richiestaaggregate as $aziendaR){
            $aziendaRichesta->add($aziendaR->getIdazienda()->getNome());
