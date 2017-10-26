@@ -15,11 +15,13 @@
     <li>Richiesta dall'azienda <b>{{ azienda }}</b></li>
     {% if aziendaRichiesta is not null %}
         <li>Relativa alle aziende:</li>
-    {% for aziendaR in aziendaRichiesta %}
-    <li><b>{{ aziendaR }}</b></li>
-    {% endfor %}
+        <ul>
+            {% for aziendaR in aziendaRichiesta %}
+                <li><b>{{ aziendaR }}</b></li>
+            {% endfor %}
+        </ul>
     {% endif %}
-    <li>si trova nello stato <b>{{ stato }}</li>
+    <li>si trova nello stato: <b>{{ stato }}</li>
 </ul>
 <br>
 Si prega di controllare sul portale.<br>
