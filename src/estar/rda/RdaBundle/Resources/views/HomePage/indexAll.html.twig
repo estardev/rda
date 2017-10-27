@@ -65,20 +65,20 @@
                     {extend:                   'excel',
                         className: 'bottoniera bottonieratop btn btn-primary',
             exportOptions: {
-                columns: [3,1,8,9,2,4,5,6,0,10]
+                columns: [3,1,9,10,2,4,5,7,0,6]
                     }
             },
                     {extend:                   'csv',
                         className: 'bottoniera bottonieratop btn btn-primary',
                         exportOptions: {
-                            columns: [3,1,8,9,2,4,5,6,0,10]
+                            columns: [3,1,9,10,2,4,5,7,0,6]
                         }
                     },
                     {extend:                   'print',
                         orientation: 'landscape',
                         className: 'bottoniera bottonieratop btn btn-primary',
                         exportOptions: {
-                            columns: [3,1,8,9,2,4,5,6,0,10]
+                            columns: [3,1,9,10,2,4,5,7,0,6]
                         }
                     },
                     {extend:                   'pdf',
@@ -87,7 +87,7 @@
 
                         pageSize: 'LEGAL',
                         exportOptions: {
-                            columns: [3,1,8,9,2,4,5,6,0,10]
+                            columns: [3,1,9,10,2,4,5,7,0,6]
                         }
                     }
             ]
@@ -129,7 +129,6 @@
                 <th>Azioni</th>
                 <th hidden>Descrizione</th>
                 <th hidden>Categoria</th>
-                <th hidden>Codice Gara</th>
             </tr>
             </thead>
 
@@ -339,7 +338,6 @@
                     </td>
                     <td hidden>{{ entity.descrizione }}</td>
                     <td hidden>{{ entity.idCategoria.descrizione }}</td>
-                    <td hidden>{{ entity.codiceGara }}</td>
 
                 </tr>
             {% endfor %}
