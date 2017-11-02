@@ -16,7 +16,8 @@
         {% endif %}
 
         {% if (stato=='inviata_ESTAR' ) %}
-            <div class="bottoni"> {{ form(annulla_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
+            <div class="bottoni"
+                 id="cancellazione"> {{ form(annulla_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
         {% endif %}
 
         {% if (diritti.isVA) and (stato=='da_inviare_ESTAR') %}
@@ -66,21 +67,30 @@
         {{ parent() }}
         <script type="text/javascript">
             $(document).ready(function () {
-                    $('form').submit(function () {
-                            $('button[name="form[submit]"]').attr('disabled', true);
-                        }
-                    );
-                    //$('#form_Azienda_agg :input').attr('disabled',true);
-                    var selezionato = "";
-                    selezionato = $('#form_azienda option:selected').val();
-                    if (selezionato == 21) {
-                        $('#form_Azienda_agg :input').removeAttr('disabled');
+                $('form').submit(function () {
+                        $('button[name="form[submit]"]').attr('disabled', true);
                     }
-                    else {
-                        $('#form_Azienda_agg :input').attr('disabled', true);
-                        $('#form_Azienda_agg :input').attr('checked', false);
-                    }
+                );
+                //$('#form_Azienda_agg :input').attr('disabled',true);
+                var selezionato = "";
+                selezionato = $('#form_azienda option:selected').val();
+                if (selezionato == 21) {
+                    $('#form_Azienda_agg :input').removeAttr('disabled');
                 }
-            );
+                else {
+                    $('#form_Azienda_agg :input').attr('disabled', true);
+                    $('#form_Azienda_agg :input').attr('checked', false);
+                }
+                //FG20171102 modifica per conferma su bottone di cancellazione
+                var $divCancellazione = $('#cancellazione');
+                var pulsanteCancellazione = $divCancellazione.find('button')[0];
+                $(pulsanteCancellazione).on("click", function () {
+                    return confirm("Sei sicuro di voler cancellare la richiesta?");
+                })
+
+            })
+
+
+            ;
         </script>
     {% endblock %}
