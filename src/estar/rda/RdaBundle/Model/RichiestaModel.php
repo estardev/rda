@@ -1000,7 +1000,7 @@ class RichiestaModel
 
             case '111':
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR AND
-                    $richiesta->getAstatogestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE) {
+                    $richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE) {
                     $iter = new Iter();
                     $iter->setDastato($articleSM->getState());
                     //$articleSM->apply('annullamento_ESTAR');
@@ -1023,7 +1023,7 @@ class RichiestaModel
                     $this->em->persist($iter);
                     $this->em->flush();
                 } elseif ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR AND
-                    $richiesta->getAstatogestav() == RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE) {
+                    $richiesta->getStatusgestav() == RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE) {
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
