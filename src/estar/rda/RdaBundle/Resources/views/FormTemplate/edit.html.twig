@@ -20,7 +20,7 @@
 
         {% if (stato=='inviata_ESTAR' ) %}
             <div class="bottoni"
-                 id="cancellazione"> {{ form(annulla_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
+                 id="annulla"> {{ form(annulla_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
         {% endif %}
 
         {% if (diritti.isVA) and (stato=='da_inviare_ESTAR') %}
@@ -106,11 +106,11 @@
                     $('#form_Azienda_agg :input').attr('disabled', true);
                     $('#form_Azienda_agg :input').attr('checked', false);
                 }
-                //FG20171102 modifica per conferma su bottone di cancellazione
-                var $divCancellazione = $('#cancellazione');
-                var pulsanteCancellazione = $divCancellazione.find('button')[0];
-                $(pulsanteCancellazione).on("click", function () {
-                    return confirm("Sei sicuro di voler cancellare la richiesta?");
+                //FG20171102 modifica per conferma su bottone di annnulla
+                var $divannulla = $('#annulla');
+                var pulsanteannulla = $divannulla.find('button')[0];
+                $(pulsanteannulla).on("click", function () {
+                    return confirm("Sei sicuro di voler annullare la richiesta?");
                 })
 
             })
