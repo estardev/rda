@@ -428,7 +428,7 @@ class RichiestaModel
             case '010':
                 //valutazione tecnica
                 //La richiesta passa in stato di valutazione tecnica
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
+                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -461,7 +461,7 @@ class RichiestaModel
             case '020':
                 //valutazione amministrativa
                 //La richiesta passa in stato di valutazione amministrativa
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
+                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -513,7 +513,7 @@ class RichiestaModel
             case '030':
                 //attesa documentazione aggiuntiva tecnica
                 //La richiesta passa in stato di valutazione tecnica
-                if ($articleSM->can('rifiutata_tec_ESTAR')) {
+                if (($articleSM->can('rifiutata_tec_ESTAR')) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rifiutata_tec_ESTAR');
@@ -548,7 +548,7 @@ class RichiestaModel
             case '031':
                 //attesa documentazione aggiuntiva amministrativa
                 //La richiesta passa in stato di valutazione amministrativa
-                if ($articleSM->can('rifiutata_amm_ESTAR')) {
+                if (($articleSM->can('rifiutata_amm_ESTAR')) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rifiutata_amm_ESTAR');
@@ -584,7 +584,7 @@ class RichiestaModel
             case '040':
                 //rigetto pratica controllo tecnico
                 //La richiesta passa in stato di rifiutata ESTAR
-                if ($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus() == 'rigetto_ESTAR') {
+                if (($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus() == 'rigetto_ESTAR') AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rigettata_ESTAR');
@@ -618,7 +618,7 @@ class RichiestaModel
             case '041':
                 //rigetto pratica controllo amministrativo
                 //La richiesta passa in stato di rifiutata ESTAR
-                if ($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus() == 'rigetto_ESTAR') {
+                if (($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus() == 'rigetto_ESTAR') AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rigettata_ESTAR');
@@ -651,7 +651,7 @@ class RichiestaModel
 
             case '050':
                 //Assegnata programmazione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ASSEGNATAPROGRAMMAZIONE) {
+                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ASSEGNATAPROGRAMMAZIONE) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -684,7 +684,7 @@ class RichiestaModel
 
             case '060':
                 //Istruttoria tecnica
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ISTRUTTORIA) {
+                if ((($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ISTRUTTORIA) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -716,7 +716,7 @@ class RichiestaModel
 
             case '061':
                 //Istruttoria amministrativa
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ISTRUTTORIA_AMM) {
+                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ISTRUTTORIA_AMM) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -748,7 +748,7 @@ class RichiestaModel
 
             case '070':
                 //Indizione
-                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR AND !empty($codicegara)) or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_INDIZIONE) {
+                if ((($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR AND !empty($codicegara)) or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_INDIZIONE) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -783,7 +783,7 @@ class RichiestaModel
 
             case '080':
                 //Valutazione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_VALUTAZIONE) {
+                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_VALUTAZIONE) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -814,7 +814,7 @@ class RichiestaModel
 
             case '090':
                 //Aggiudicazione
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_AGGIUDICAZIONE) {
+                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_AGGIUDICAZIONE) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -849,9 +849,10 @@ class RichiestaModel
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
+
             case '091':
                 //aggiudicazione parziale
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
+                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($richiesta->getStatus());
                     $iter->setAstato($richiesta->getStatus());
@@ -889,7 +890,7 @@ class RichiestaModel
 
             case '100':
                 //Chiusura (iter terminato)
-                if ($articleSM->can('chiusura_ESTAR') or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_CHIUSA or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $richiesta->getStatus() == RichiestaModel::STATUS_CHIUSA_ESTAR) {
+                if (($articleSM->can('chiusura_ESTAR') or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_CHIUSA or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $richiesta->getStatus() == RichiestaModel::STATUS_CHIUSA_ESTAR) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
 
                     if ($richiesta->getStatus() != RichiestaModel::STATUS_CHIUSA_ESTAR) {
                         $iter = new Iter();
@@ -932,7 +933,7 @@ class RichiestaModel
 
             case '101':
                 //stato in cui verrà comunicata la chiusura per errore e la riapertura della pratica
-                if ($articleSM->can('apertura_ESTAR')) {
+                if (($articleSM->can('apertura_ESTAR')) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('apertura_ESTAR');
@@ -966,7 +967,7 @@ class RichiestaModel
 
             case '110':
                 //Annullato ESTAR
-                if ($richiesta->getStatus() == RichiestaModel::STATUS_ANNULLATA) {
+                if (($richiesta->getStatus() == RichiestaModel::STATUS_ANNULLATA) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($articleSM->getState());
                     //$articleSM->apply('annullamento_ESTAR');
@@ -1078,7 +1079,7 @@ class RichiestaModel
 
                 //attesa documentazione aggiuntiva RUP
                 //La richiesta passa in stato di valutazione amministrativa
-                if ((($articleSM->can('rifiutata_amm_ESTAR')) AND !empty($codicegara)) or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
+                if (((($articleSM->can('rifiutata_amm_ESTAR')) AND !empty($codicegara)) or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
                     $iter = new Iter();
                     $iter->setDastato($articleSM->getState());
                     $articleSM->apply('rifiutata_amm_ESTAR');
