@@ -428,27 +428,34 @@ class RichiestaModel
             case '010':
                 //valutazione tecnica
                 //La richiesta passa in stato di valutazione tecnica
-                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($richiesta->getStatus());
-                    $iter->setAstato($richiesta->getStatus());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_VALUTAZIONE_TEC);
-                    $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_VALUTAZIONE_TEC);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $richiesta->setCodicegara(null);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($richiesta->getStatus());
+                        $iter->setAstato($richiesta->getStatus());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_VALUTAZIONE_TEC);
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_VALUTAZIONE_TEC);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setCodicegara(null);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
+                    } else {
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    }
 
                 } else {
                     //Non posso transire in quello stato
@@ -461,45 +468,34 @@ class RichiestaModel
             case '020':
                 //valutazione amministrativa
                 //La richiesta passa in stato di valutazione amministrativa
-                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($richiesta->getStatus());
-                    $iter->setAstato($richiesta->getStatus());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_VALUTAZIONE_AMM);
-                    $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_VALUTAZIONE_AMM);
-                    $richiesta->setCodicegara(null);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
-                    //$iter= new Iter();
-                    //$iter->setDastato($articleSM->getState());
-                    //$articleSM->apply('rifiutata_amm_ESTAR');
-                    //$iter->setAstato($articleSM->getState());
-                    //$iter->setDastatogestav($richiesta->getStatusgestav());
-                    //$iter->setAstatogestav($richiesta->getStatusgestav());
-                    //$iter->setIdrichiesta($richiesta);
-                    //$iter->setMotivazione($note);
-                    //$iter->setDataora($dateTime);
-                    //$iter->setIdutente($utente);
-                    //$iter->setDatafornita($dataFornita);
-                    //$risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    //$risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    //$risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    //$richiesta->setPresentato(9);
-                    //$this->em->persist($richiesta);
-                    //$this->em->persist($iter);
-                    //$this->em->flush();
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($richiesta->getStatus());
+                        $iter->setAstato($richiesta->getStatus());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_VALUTAZIONE_AMM);
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_VALUTAZIONE_AMM);
+                        $richiesta->setCodicegara(null);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
+                    } else {
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    }
 
                 } else {
                     //Non posso transire in quello stato
@@ -513,29 +509,35 @@ class RichiestaModel
             case '030':
                 //attesa documentazione aggiuntiva tecnica
                 //La richiesta passa in stato di valutazione tecnica
-                if (($articleSM->can('rifiutata_tec_ESTAR')) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($articleSM->getState());
-                    $articleSM->apply('rifiutata_tec_ESTAR');
-                    $iter->setAstato($articleSM->getState());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav($richiesta->getStatusgestav());
-                    $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ATTESA_TEC);
-                    $richiesta->setPresentato(14);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $richiesta->setCodicegara(null);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
+                if ($articleSM->can('rifiutata_tec_ESTAR')) {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+                        $iter = new Iter();
+                        $iter->setDastato($articleSM->getState());
+                        $articleSM->apply('rifiutata_tec_ESTAR');
+                        $iter->setAstato($articleSM->getState());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav($richiesta->getStatusgestav());
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ATTESA_TEC);
+                        $richiesta->setPresentato(14);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setCodicegara(null);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
+                    } else {
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
@@ -548,29 +550,36 @@ class RichiestaModel
             case '031':
                 //attesa documentazione aggiuntiva amministrativa
                 //La richiesta passa in stato di valutazione amministrativa
-                if (($articleSM->can('rifiutata_amm_ESTAR')) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($articleSM->getState());
-                    $articleSM->apply('rifiutata_amm_ESTAR');
-                    $iter->setAstato($articleSM->getState());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav($richiesta->getStatusgestav());
-                    $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ATTESA_AMM);
-                    $richiesta->setPresentato(14);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $richiesta->setCodicegara(null);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
+                if ($articleSM->can('rifiutata_amm_ESTAR')) {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($articleSM->getState());
+                        $articleSM->apply('rifiutata_amm_ESTAR');
+                        $iter->setAstato($articleSM->getState());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav($richiesta->getStatusgestav());
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ATTESA_AMM);
+                        $richiesta->setPresentato(14);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setCodicegara(null);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
+                    } else {
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    }
 
                 } else {
                     //Non posso transire in quello stato
@@ -584,28 +593,35 @@ class RichiestaModel
             case '040':
                 //rigetto pratica controllo tecnico
                 //La richiesta passa in stato di rifiutata ESTAR
-                if (($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus() == 'rigetto_ESTAR') AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($articleSM->getState());
-                    $articleSM->apply('rigettata_ESTAR');
-                    $iter->setAstato($articleSM->getState());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_RIGETTO);
-                    $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_RIGETTO);
-                    $richiesta->setCodicegara(null);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
+                if ($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus() == 'rigetto_ESTAR') {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($articleSM->getState());
+                        $articleSM->apply('rigettata_ESTAR');
+                        $iter->setAstato($articleSM->getState());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_RIGETTO);
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_RIGETTO);
+                        $richiesta->setCodicegara(null);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
+                    } else {
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
@@ -618,28 +634,35 @@ class RichiestaModel
             case '041':
                 //rigetto pratica controllo amministrativo
                 //La richiesta passa in stato di rifiutata ESTAR
-                if (($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus() == 'rigetto_ESTAR') AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($articleSM->getState());
-                    $articleSM->apply('rigettata_ESTAR');
-                    $iter->setAstato($articleSM->getState());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_RIGETTO_AMM);
-                    $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_RIGETTO_AMM);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $richiesta->setCodicegara(null);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
+                if ($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus() == 'rigetto_ESTAR') {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($articleSM->getState());
+                        $articleSM->apply('rigettata_ESTAR');
+                        $iter->setAstato($articleSM->getState());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_RIGETTO_AMM);
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_RIGETTO_AMM);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setCodicegara(null);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
+                    } else {
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
@@ -651,28 +674,35 @@ class RichiestaModel
 
             case '050':
                 //Assegnata programmazione
-                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ASSEGNATAPROGRAMMAZIONE) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($richiesta->getStatus());
-                    $iter->setAstato($richiesta->getStatus());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ASSEGNATAPROGRAMMAZIONE);
-                    $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione('La pratica è stata programmata per l\'anno ' . $note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setAnnoprogrammazione($note);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ASSEGNATAPROGRAMMAZIONE);
-                    $richiesta->setCodicegara(null);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ASSEGNATAPROGRAMMAZIONE) {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($richiesta->getStatus());
+                        $iter->setAstato($richiesta->getStatus());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ASSEGNATAPROGRAMMAZIONE);
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione('La pratica è stata programmata per l\'anno ' . $note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setAnnoprogrammazione($note);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ASSEGNATAPROGRAMMAZIONE);
+                        $richiesta->setCodicegara(null);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
+                    } else {
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
@@ -684,27 +714,34 @@ class RichiestaModel
 
             case '060':
                 //Istruttoria tecnica
-                if ((($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ISTRUTTORIA) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($richiesta->getStatus());
-                    $iter->setAstato($richiesta->getStatus());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ISTRUTTORIA);
-                    $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ISTRUTTORIA);
-                    $richiesta->setCodicegara($codicegara);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ISTRUTTORIA) {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($richiesta->getStatus());
+                        $iter->setAstato($richiesta->getStatus());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ISTRUTTORIA);
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ISTRUTTORIA);
+                        $richiesta->setCodicegara($codicegara);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
+                    } else {
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
@@ -716,27 +753,34 @@ class RichiestaModel
 
             case '061':
                 //Istruttoria amministrativa
-                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ISTRUTTORIA_AMM) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($richiesta->getStatus());
-                    $iter->setAstato($richiesta->getStatus());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ISTRUTTORIA_AMM);
-                    $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ISTRUTTORIA_AMM);
-                    $richiesta->setCodicegara($codicegara);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ISTRUTTORIA_AMM) {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($richiesta->getStatus());
+                        $iter->setAstato($richiesta->getStatus());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ISTRUTTORIA_AMM);
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ISTRUTTORIA_AMM);
+                        $richiesta->setCodicegara($codicegara);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
+                    } else {
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
@@ -748,27 +792,34 @@ class RichiestaModel
 
             case '070':
                 //Indizione
-                if ((($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR AND !empty($codicegara)) or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_INDIZIONE) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($richiesta->getStatus());
-                    $iter->setAstato($richiesta->getStatus());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_INDIZIONE);
-                    $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_INDIZIONE);
-                    $richiesta->setCodicegara($codicegara);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
+                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR AND !empty($codicegara)) or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_INDIZIONE) {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($richiesta->getStatus());
+                        $iter->setAstato($richiesta->getStatus());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_INDIZIONE);
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_INDIZIONE);
+                        $richiesta->setCodicegara($codicegara);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
+                    } else {
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
@@ -783,26 +834,33 @@ class RichiestaModel
 
             case '080':
                 //Valutazione
-                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_VALUTAZIONE) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($richiesta->getStatus());
-                    $iter->setAstato($richiesta->getStatus());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_VALUTAZIONE);
-                    $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_VALUTAZIONE);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_VALUTAZIONE) {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($richiesta->getStatus());
+                        $iter->setAstato($richiesta->getStatus());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_VALUTAZIONE);
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_VALUTAZIONE);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
+                    } else {
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
@@ -814,33 +872,40 @@ class RichiestaModel
 
             case '090':
                 //Aggiudicazione
-                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_AGGIUDICAZIONE) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($richiesta->getStatus());
-                    $iter->setAstato($richiesta->getStatus());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_AGGIUDICAZIONE);
-                    $iter->setIdrichiesta($richiesta);
-                    if (!is_null($iter->getNumeroAttoAggiudicazione())) {
-                        $numeroAtto = $iter->getNumeroAttoAggiudicazione() . ', ' . $numeroAttoAggiudicazione;
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_AGGIUDICAZIONE) {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($richiesta->getStatus());
+                        $iter->setAstato($richiesta->getStatus());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_AGGIUDICAZIONE);
+                        $iter->setIdrichiesta($richiesta);
+                        if (!is_null($iter->getNumeroAttoAggiudicazione())) {
+                            $numeroAtto = $iter->getNumeroAttoAggiudicazione() . ', ' . $numeroAttoAggiudicazione;
+                        } else {
+                            $numeroAtto = $numeroAttoAggiudicazione;
+                        }
+                        $iter->setNumeroAttoAggiudicazione($numeroAtto);
+                        $iter->setNumeroProtocolloLettera($numeroProtocolloLettera);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_AGGIUDICAZIONE);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
                     } else {
-                        $numeroAtto = $numeroAttoAggiudicazione;
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     }
-                    $iter->setNumeroAttoAggiudicazione($numeroAtto);
-                    $iter->setNumeroProtocolloLettera($numeroProtocolloLettera);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_AGGIUDICAZIONE);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
@@ -849,36 +914,42 @@ class RichiestaModel
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
-
             case '091':
                 //aggiudicazione parziale
-                if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($richiesta->getStatus());
-                    $iter->setAstato($richiesta->getStatus());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_AGGIUDICAZIONE_PARZIALE);
-                    $iter->setIdrichiesta($richiesta);
-                    if (!is_null($iter->getNumeroAttoAggiudicazione())) {
-                        $numeroAtto = $iter->getNumeroAttoAggiudicazione() . ', ' . $numeroAttoAggiudicazione;
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($richiesta->getStatus());
+                        $iter->setAstato($richiesta->getStatus());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_AGGIUDICAZIONE_PARZIALE);
+                        $iter->setIdrichiesta($richiesta);
+                        if (!is_null($iter->getNumeroAttoAggiudicazione())) {
+                            $numeroAtto = $iter->getNumeroAttoAggiudicazione() . ', ' . $numeroAttoAggiudicazione;
+                        } else {
+                            $numeroAtto = $numeroAttoAggiudicazione;
+                        }
+                        $iter->setNumeroAttoAggiudicazione($numeroAtto);
+                        $iter->setNumeroProtocolloLettera($numeroProtocolloLettera);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_AGGIUDICAZIONE_PARZIALE);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
                     } else {
-                        $numeroAtto = $numeroAttoAggiudicazione;
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     }
-                    $iter->setNumeroAttoAggiudicazione($numeroAtto);
-                    $iter->setNumeroProtocolloLettera($numeroProtocolloLettera);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_AGGIUDICAZIONE_PARZIALE);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
@@ -890,7 +961,7 @@ class RichiestaModel
 
             case '100':
                 //Chiusura (iter terminato)
-                if (($articleSM->can('chiusura_ESTAR') or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_CHIUSA or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $richiesta->getStatus() == RichiestaModel::STATUS_CHIUSA_ESTAR) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
+                if ($articleSM->can('chiusura_ESTAR') or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_CHIUSA or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $richiesta->getStatus() == RichiestaModel::STATUS_CHIUSA_ESTAR) {
 
                     if ($richiesta->getStatus() != RichiestaModel::STATUS_CHIUSA_ESTAR) {
                         $iter = new Iter();
@@ -933,28 +1004,35 @@ class RichiestaModel
 
             case '101':
                 //stato in cui verrà comunicata la chiusura per errore e la riapertura della pratica
-                if (($articleSM->can('apertura_ESTAR')) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($articleSM->getState());
-                    $articleSM->apply('apertura_ESTAR');
-                    $iter->setAstato($articleSM->getState());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_APERTURA);
-                    $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setCodicegara($codicegara);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_APERTURA);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
+                if ($articleSM->can('apertura_ESTAR')) {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($articleSM->getState());
+                        $articleSM->apply('apertura_ESTAR');
+                        $iter->setAstato($articleSM->getState());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_APERTURA);
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setCodicegara($codicegara);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_APERTURA);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
+                    } else {
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
@@ -967,28 +1045,35 @@ class RichiestaModel
 
             case '110':
                 //Annullato ESTAR
-                if (($richiesta->getStatus() == RichiestaModel::STATUS_ANNULLATA) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($articleSM->getState());
-                    //$articleSM->apply('annullamento_ESTAR');
-                    $iter->setAstato($articleSM->getState());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ANNULLATA);
-                    $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ANNULLATA);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $richiesta->setCodicegara(null);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
+                if ($richiesta->getStatus() == RichiestaModel::STATUS_ANNULLATA) {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($articleSM->getState());
+                        //$articleSM->apply('annullamento_ESTAR');
+                        $iter->setAstato($articleSM->getState());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ANNULLATA);
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ANNULLATA);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setCodicegara(null);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
+                    } else {
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
@@ -1079,29 +1164,36 @@ class RichiestaModel
 
                 //attesa documentazione aggiuntiva RUP
                 //La richiesta passa in stato di valutazione amministrativa
-                if (((($articleSM->can('rifiutata_amm_ESTAR')) AND !empty($codicegara)) or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) AND (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE))) {
-                    $iter = new Iter();
-                    $iter->setDastato($articleSM->getState());
-                    $articleSM->apply('rifiutata_amm_ESTAR');
-                    $iter->setAstato($articleSM->getState());
-                    $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP);
-                    $iter->setIdrichiesta($richiesta);
-                    $iter->setMotivazione($note);
-                    $iter->setDataora($dateTime);
-                    $iter->setIdutente($utente);
-                    $iter->setDatafornita($dataFornita);
-                    $iter->setRup($rup);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $richiesta->setCodicegara($codicegara);
-                    $richiesta->setDataultimamodifica($dateTime);
-                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP);
-                    $richiesta->setPresentato(15);
-                    $this->em->persist($richiesta);
-                    $this->em->persist($iter);
-                    $this->em->flush();
+                if ((($articleSM->can('rifiutata_amm_ESTAR')) AND !empty($codicegara)) or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($articleSM->getState());
+                        $articleSM->apply('rifiutata_amm_ESTAR');
+                        $iter->setAstato($articleSM->getState());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP);
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setCodicegara($codicegara);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP);
+                        $richiesta->setPresentato(15);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
+                    } else {
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
