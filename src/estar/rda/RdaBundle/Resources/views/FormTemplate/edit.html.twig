@@ -19,8 +19,10 @@
         {% endif %}
 
         {% if (stato=='inviata_ESTAR' ) %}
-            <div class="bottoni"
-                 id="annulla"> {{ form(annulla_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
+            <div class="bottoni">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#confirmModalAnnulla"><span
+                            class="glyphicon glyphicon-remove" aria-hidden="true"></span> Annullare Richiesta
+                </button></div>
         {% endif %}
 
         {% if (diritti.isVA) and (stato=='da_inviare_ESTAR') %}
@@ -86,36 +88,48 @@
         </div>
     </div>
 
+    <div class="modal fade" id="confirmModalAnnulla"
+         aria-hidden="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span class="sr-only">Chiudi</span>
+                    </button>
+
+                    <h4 class="modal-title">Sicuro di voler annullare?</h4>
+                </div>
+
+                <div class="modal-body">
+                    {{ form(annulla_form, {'attr': {'novalidate': 'novalidate'}}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
     {% block javascripts %}
         {{ parent() }}
         <script type="text/javascript">
             $(document).ready(function () {
-                $('form').submit(function () {
-                        $('button[name="form[submit]"]').attr('disabled', true);
+                    $('form').submit(function () {
+                            $('button[name="form[submit]"]').attr('disabled', true);
+                        }
+                    );
+                    //$('#form_Azienda_agg :input').attr('disabled',true);
+                    var selezionato = "";
+                    selezionato = $('#form_azienda option:selected').val();
+                    if (selezionato == 21) {
+                        $('#form_Azienda_agg :input').removeAttr('disabled');
                     }
-                );
-                //$('#form_Azienda_agg :input').attr('disabled',true);
-                var selezionato = "";
-                selezionato = $('#form_azienda option:selected').val();
-                if (selezionato == 21) {
-                    $('#form_Azienda_agg :input').removeAttr('disabled');
+                    else {
+                        $('#form_Azienda_agg :input').attr('disabled', true);
+                        $('#form_Azienda_agg :input').attr('checked', false);
+                    }
                 }
-                else {
-                    $('#form_Azienda_agg :input').attr('disabled', true);
-                    $('#form_Azienda_agg :input').attr('checked', false);
-                }
-                //FG20171102 modifica per conferma su bottone di annnulla
-                var $divannulla = $('#annulla');
-                var pulsanteannulla = $divannulla.find('button')[0];
-                $(pulsanteannulla).on("click", function () {
-                    return confirm("Sei sicuro di voler annullare la richiesta?");
-                })
-
-            })
-
-
-            ;
+            );
         </script>
     {% endblock %}
