@@ -106,8 +106,7 @@ class RichiestaController extends Controller
                 if ($aziendaUtente == 'ESTAR')
                     $query = $em->createQuery("SELECT r
                                     FROM estarRdaBundle:Richiesta r
-                                    WHERE   (r.status='bozza'
-                                    OR r.status = 'chiusa_ESTAR') 
+                                    WHERE   r.status='bozza' 
                                     AND r.idutente=$utenteSessione 
                                     AND r.idcategoria=$idCategoria
                                     "); //Un utente ESTAR vede tutte le richieste, sue e non sue
@@ -115,8 +114,7 @@ class RichiestaController extends Controller
                     $query = $em->createQuery("SELECT r
                                     FROM estarRdaBundle:Richiesta r
                                     WHERE  r.idutente=$utenteSessione 
-                                    AND (r.status='bozza' 
-                                    OR r.status = 'chiusa_ESTAR') 
+                                    AND r.status='bozza' 
                                     AND r.idcategoria = $idCategoria 
                                     AND r.idazienda=$idAziendaUtente
                                     ");
@@ -130,15 +128,13 @@ class RichiestaController extends Controller
                 if ($aziendaUtente == 'ESTAR')
                     $query1 = $em->createQuery("SELECT r
                                     FROM estarRdaBundle:Richiesta r
-                                    WHERE  (r.status='attesa_val_tec'
-                                    OR r.status = 'chiusa_ESTAR') 
+                                    WHERE  r.status='attesa_val_tec' 
                                     AND r.idcategoria=$idCategoria
                                     ");
                 else
                     $query1 = $em->createQuery("SELECT r
                                      FROM estarRdaBundle:Richiesta r
-                                     WHERE  (r.status='attesa_val_tec' 
-                                     OR r.status = 'chiusa_ESTAR') 
+                                     WHERE  r.status='attesa_val_tec' 
                                      AND r.idcategoria=$idCategoria 
                                      AND r.idazienda=$idAziendaUtente
                                      ");
@@ -154,8 +150,7 @@ class RichiestaController extends Controller
                                     FROM estarRdaBundle:Richiesta r
                                     WHERE  (r.status='attesa_val_amm' 
                                     OR r.status='da_inviare_ESTAR' 
-                                    OR r.status='inviata_ESTAR'
-                                    OR r.status = 'chiusa_ESTAR') 
+                                    OR r.status='inviata_ESTAR') 
                                     AND r.idcategoria=$idCategoria
                                     ");
                 else
@@ -163,8 +158,7 @@ class RichiestaController extends Controller
                                     FROM estarRdaBundle:Richiesta r
                                     WHERE  (r.status='attesa_val_amm'
                                     OR r.status='da_inviare_ESTAR' 
-                                    OR r.status='inviata_ESTAR'
-                                    OR r.status = 'chiusa_ESTAR') 
+                                    OR r.status='inviata_ESTAR') 
                                     AND r.idcategoria=$idCategoria 
                                     AND r.idazienda=$idAziendaUtente
                                     ");
@@ -173,6 +167,15 @@ class RichiestaController extends Controller
                 }
 
             }
+
+            //prendo anche quelle chiuse per categoria che posso vedere
+            $query3 = $em->createQuery("SELECT r
+                                    FROM estarRdaBundle:Richiesta r
+                                    WHERE   r.status = 'chiusa_ESTAR'
+                                    AND r.idcategoria=$idCategoria");
+                foreach ($query3->getResult() as $richiesta3) {
+                    $richieste->add($richiesta3);
+                }
         }
 
         return $this->render('estarRdaBundle:HomePage:indexAll.html.twig', array(
