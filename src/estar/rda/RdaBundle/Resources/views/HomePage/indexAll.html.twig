@@ -26,48 +26,30 @@
     <script type="text/javascript" src="{{ asset('js/homepage.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            $(document).on("keyup", "#searchRichiesta", function () {
-                var filter = $(this).val();
-                var regExPattern = "gi";
-                var regEx = new RegExp(filter, regExPattern);
-                $("#tableListaRichiesteHome tr").each(function () {
-                    if ($(this).data('state'))
-                        if (
-                            $(this).text().search(new RegExp(filter, "i")) < 0
-                            && $(this).data('state').search(regEx) < 0
-                        ) {
-                            $(this).hide();
-                        } else {
-                            $(this).show();
-                        }
-                });
-            });
-            $(document).on('click', '#statoiter', function () {
-                var idrichiesta = $(this).attr('data-id');
-                $('#iterModal').modal('show');
-                $('#numeropratica').html('<h4 id="numeropratica" class="modal-title">Iter Pratica ' + idrichiesta + '</h4>');
-                $('#richiestamodel').html('<tbody><td class="warning"><td>In Caricamento...</td></tr></tbody>');
-                //alert('s1');
-                $.ajax({
-                    type: "POST",
-                    url: Routing.generate('iter_byrichiesta'),
-                    data: {idrichiesta: idrichiesta},
-                    success: function (data) {
-                        $('#richiestamodel').html(data);
-                        //alert('s2');
-                    }
-                });
-                //alert(id);
-
-            });
-            $('#tableListaRichiesteHome').DataTable({bFilter: false, paging: true, bInfo: false, order:[ 0, 'desc' ], dom: 'Bfrtip',
+//            $(document).on("keyup", "#searchRichiesta", function () {
+//                var filter = $(this).val();
+//                var regExPattern = "gi";
+//                var regEx = new RegExp(filter, regExPattern);
+//                $("#tableListaRichiesteHome tr").each(function () {
+//                    if ($(this).data('state'))
+//                        if (
+//                            $(this).text().search(new RegExp(filter, "i")) < 0
+//                            && $(this).data('state').search(regEx) < 0
+//                        ) {
+//                            $(this).hide();
+//                        } else {
+//                            $(this).show();
+//                        }
+//                });
+//            });
+            var table = $('#tableListaRichiesteHome').DataTable({bFilter: true, paging: true, bInfo: false, order:[ 0, 'desc' ], dom: 'Bfrtip',
                 buttons: [
                     {extend:                   'excel',
                         className: 'bottoniera bottonieratop btn btn-primary',
-            exportOptions: {
-                columns: [3,1,9,10,2,4,5,7,0,6]
-                    }
-            },
+                        exportOptions: {
+                            columns: [3,1,9,10,2,4,5,7,0,6]
+                        }
+                    },
                     {extend:                   'csv',
                         className: 'bottoniera bottonieratop btn btn-primary',
                         exportOptions: {
@@ -90,8 +72,33 @@
                             columns: [3,1,9,10,2,4,5,7,0,6]
                         }
                     }
-            ]
+                ]
             });
+
+            $('#searchRichiesta').on('keyup', function() {
+                table.search( this.value ).draw();
+            });
+
+
+            $(document).on('click', '#statoiter', function () {
+                var idrichiesta = $(this).attr('data-id');
+                $('#iterModal').modal('show');
+                $('#numeropratica').html('<h4 id="numeropratica" class="modal-title">Iter Pratica ' + idrichiesta + '</h4>');
+                $('#richiestamodel').html('<tbody><td class="warning"><td>In Caricamento...</td></tr></tbody>');
+                //alert('s1');
+                $.ajax({
+                    type: "POST",
+                    url: Routing.generate('iter_byrichiesta'),
+                    data: {idrichiesta: idrichiesta},
+                    success: function (data) {
+                        $('#richiestamodel').html(data);
+                        //alert('s2');
+                    }
+                });
+                //alert(id);
+
+            });
+
             $('#homepageSelectBtnCategoria').prop('disabled',true);
             $('#homepageMostraTutte').prop('disabled',true);
             $('#homepageSelectCategoria').val('defaultDisabledNavbarOption');

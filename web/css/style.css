@@ -135,3 +135,9 @@ overflow: hidden;
 	white-space: nowrap;
 	width: 1%;
 }
+
+.dataTables_wrapper .dataTables_filter {
+	float: right;
+	text-align: right;
+	visibility: hidden;
+}
