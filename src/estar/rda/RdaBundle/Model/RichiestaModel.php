@@ -961,9 +961,9 @@ class RichiestaModel
 
             case '100':
                 //Chiusura (iter terminato)
-                if ($articleSM->can('chiusura_ESTAR') or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_CHIUSA or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $richiesta->getStatus() == RichiestaModel::STATUS_CHIUSA_ESTAR) {
+                if ($articleSM->can('chiusura_ESTAR') or $richiesta->getStatus() == RichiestaModel::STATUS_CHIUSA_ESTAR) {
 
-                    if ($richiesta->getStatus() != RichiestaModel::STATUS_CHIUSA_ESTAR or $richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE) {
+                    if ($richiesta->getStatus() != RichiestaModel::STATUS_CHIUSA_ESTAR AND $richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE) {
                         $iter = new Iter();
                         $iter->setDastato($articleSM->getState());
                         $articleSM->apply('chiusura_ESTAR');
@@ -987,12 +987,11 @@ class RichiestaModel
                         $richiesta->setDataultimamodifica($dateTime);
                         $this->em->persist($iter);
                         $this->em->persist($richiesta);
-                    } else {
-                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $this->em->flush();
                     }
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $this->em->flush();
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
