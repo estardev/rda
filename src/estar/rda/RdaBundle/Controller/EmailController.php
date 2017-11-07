@@ -96,7 +96,7 @@ class EmailController extends Controller
         $stato = $iter[0]->getAstatogestav();
 
         $message = \Swift_Message::newInstance();
-            $message->setSubject('RDA AVVISO: Cambio di Stato');
+            $message->setSubject('RDA AVVISO: Cambio di Stato richiesta n: '.$idRichiesta.' (protocollo '.$protocollo.')');
 //            ->setFrom('cinghialemannaro@gmail.com')
         $message->setFrom('assistenza.rda@estar.toscana.it');
             $message->setTo("$mail");
