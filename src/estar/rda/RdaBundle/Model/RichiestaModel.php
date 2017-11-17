@@ -1004,7 +1004,12 @@ class RichiestaModel
 
             case '101':
                 //stato in cui verrà comunicata la chiusura per errore e la riapertura della pratica
-                if ($articleSM->can('apertura_ESTAR')) {
+                if($richiesta->getStatusgestav() == RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE){
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                }
+                elseif ($articleSM->can('apertura_ESTAR')) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
                         $iter = new Iter();
