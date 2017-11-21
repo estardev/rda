@@ -135,7 +135,7 @@ knp_snappy:
   #      binary:     /usr/local/bin/wkhtmltopdf #produzione
         binary:     /usr/local/bin/wkhtmltopdf.sh #test
         options:
-            no-outline: true
+#            no-outline: true
             page-size: LETTER
             # Recommended to set UTF-8 as default encoding :)
             encoding: UTF-8
