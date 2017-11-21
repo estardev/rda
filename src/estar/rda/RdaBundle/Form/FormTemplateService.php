@@ -455,7 +455,7 @@ class FormTemplateService
                 //se non sono in permesso di scrittura
                 if ($mode == FormTemplateService::MODE_PRINT) {
                     //sono in modalità stampa. Non faccio nulla: gli oggetti sono aggiunti da doPrint di formTemplateController
-                    $builder->add("titolo", "text", array(
+                    $builder->add("titolo", "textarea", array(
                         'label' => "Titolo",
                         'data' => $entity->getTitolo(),
                         'disabled' => "disabled"
@@ -667,7 +667,8 @@ class FormTemplateService
                 } else {
                     //discrimino il caso della stampa
                     if ($mode == FormTemplateService::MODE_PRINT or !$permessoscrittura) {
-                        $builder->add($campo['nome'] . '-' . $campo['idcampo'], $campo['tipo'], array(
+                        if($campo['tipo']=='text') $tipocampo ='textarea'; else $tipocampo=$campo['tipo'];
+                        $builder->add($campo['nome'] . '-' . $campo['idcampo'], $tipocampo, array(
                             'label' => $campo['descrizione'],
                             'data' => $campo['valore'],
                             'read_only' => true,
