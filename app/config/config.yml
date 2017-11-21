@@ -139,9 +139,9 @@ knp_snappy:
             page-size: LETTER
             # Recommended to set UTF-8 as default encoding :)
             encoding: UTF-8
-            enable-javascript: true
+#            enable-javascript: true
             no-background: true
-            disable-smart-shrinking: true
+#            disable-smart-shrinking: true
 
 
 winzou_state_machine:
