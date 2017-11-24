@@ -216,7 +216,10 @@ class FormTemplateService
                 ));
             }
 
+            $oggi = new \DateTime();
             foreach ($campi as $campo) {
+
+                if ($oggi<$campo->getDataattivazione() or ($oggi>$campo->getDatadismissione() and !is_null($campo->getDatadismissione()))) continue;
                 //FG 20151027 modifica per campi visualizzabili a seconda dei diritti
                 if (!($diritti->campoVisualizzabile($diritti, $campo))) continue;
 
@@ -589,7 +592,7 @@ class FormTemplateService
                     $campoCheck = $repository->find($campo['idcampo']);
                     //DEM 20160520 I campi che hanno una data dismissione precedenti ad oggi non si vedono!
                     if (!is_null($campoCheck->getDatadismissione())) {
-                        if($datarichiesta < $campoCheck->getDataattivazione() && $datarichiesta > $campoCheck->getDatadismissione()) continue;
+                        if($datarichiesta < $campoCheck->getDataattivazione() OR $datarichiesta > $campoCheck->getDatadismissione()) continue;
                     }
                     if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
                 } else {
