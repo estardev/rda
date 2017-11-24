@@ -131,7 +131,7 @@
                 <th>Azienda</th>
                 <th>Data Modifica</th>
                 <th>Numero protocollo</th>
-                <th>Codice Gara</th>
+                <th hidden>Codice Gara</th>
                 <th hidden>Data protocollo</th>
                 <th>Azioni</th>
                 <th hidden>Descrizione</th>
@@ -228,7 +228,7 @@
                         <td></td>
                     {% endif %}
                     <td>{{ entity.numeroprotocollo }}</td>
-                    <td>{{ entity.codicegara }}</td>
+                    <td hidden>{{ entity.codicegara }}</td>
                     <td hidden>{{ entity.dataprotocollo }}</td>
                     <td>
 
