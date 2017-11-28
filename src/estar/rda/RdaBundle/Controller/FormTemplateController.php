@@ -564,7 +564,8 @@ class FormTemplateController extends Controller
                 $a = explode('-', $key);
                 $idCampo = $a[1];
 
-//            $campo = $em->getRepository('estarRdaBundle:Campo')->find($idCampo);
+                $campoInsert = $em->getRepository('estarRdaBundle:Campo')->find($idCampo);
+                $categoriaInsert = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
 
                 $vcr = $em->getRepository('estarRdaBundle:Valorizzazionecamporichiesta')->findOneBy(
                     array('idrichiesta' => $idRichiesta, 'idcampo' => $idCampo)
@@ -572,6 +573,17 @@ class FormTemplateController extends Controller
                 );
                 if ($vcr != null) {
                     $vcr->setValore(trim($value));
+                }
+                else{
+                    if ($value != "") {
+                        $nuovocampo = new Valorizzazionecamporichiesta();
+                        $nuovocampo->setIdrichiesta($richiesta);
+                        $nuovocampo->setValore(trim($value));
+                        $nuovocampo->setIdcampo($campoInsert);
+                        $nuovocampo->setIdcategoria($categoriaInsert);
+                        $em->persist($nuovocampo);
+                        $em->flush();
+                    }
                 }
 
             }
