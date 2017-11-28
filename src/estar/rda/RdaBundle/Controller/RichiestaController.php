@@ -4,10 +4,10 @@ namespace estar\rda\RdaBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use estar\rda\RdaBundle\Entity\Iter;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Form\RichiestaType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Richiesta controller.
@@ -32,7 +32,8 @@ class RichiestaController extends Controller
         ));
     }
 
-    public function viewAllAction($all){
+    public function viewAllAction($all)
+    {
 
         $em = $this->getDoctrine()->getManager();
         $utente = $this->get('usercheck.notify')->getIdUtente();
@@ -51,7 +52,8 @@ class RichiestaController extends Controller
         ));
     }
 
-    public function aggregateAction($all){
+    public function aggregateAction($all)
+    {
 
         $em = $this->getDoctrine()->getManager();
         $utente = $this->get('usercheck.notify')->getUtente();
@@ -74,7 +76,8 @@ class RichiestaController extends Controller
         ));
     }
 
-    public function globaleAction($all){
+    public function globaleAction($all)
+    {
         $utenteSessione = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -103,14 +106,15 @@ class RichiestaController extends Controller
             if ($dirittoSingolo->getIsAI()) {
                 //Abilitato all'inserimento. Se ESTAR, le vede tutte. Se non è ESTAR, vede solo quelle della sua azienda
                 //filtrare in base al tipo di azienda
-                if ($aziendaUtente == 'ESTAR')
+                if ($aziendaUtente == 'ESTAR') {
                     $query = $em->createQuery("SELECT r
                                     FROM estarRdaBundle:Richiesta r
                                     WHERE   r.status='bozza' 
                                     AND r.idutente=$utenteSessione 
                                     AND r.idcategoria=$idCategoria
                                     "); //Un utente ESTAR vede tutte le richieste, sue e non sue
-                else
+
+                } else{
                     $query = $em->createQuery("SELECT r
                                     FROM estarRdaBundle:Richiesta r
                                     WHERE  r.idutente=$utenteSessione 
@@ -118,6 +122,8 @@ class RichiestaController extends Controller
                                     AND r.idcategoria = $idCategoria 
                                     AND r.idazienda=$idAziendaUtente
                                     ");
+                }
+
                 foreach ($query->getResult() as $richiesta) {
                     $richieste->add($richiesta);
                 }
@@ -171,11 +177,12 @@ class RichiestaController extends Controller
             //prendo anche quelle chiuse per categoria che posso vedere
             $query3 = $em->createQuery("SELECT r
                                     FROM estarRdaBundle:Richiesta r
-                                    WHERE   r.status = 'chiusa_ESTAR'
+                                    WHERE   (r.status = 'chiusa_ESTAR'
+                                    OR r.status = 'annullata')
                                     AND r.idcategoria=$idCategoria");
-                foreach ($query3->getResult() as $richiesta3) {
-                    $richieste->add($richiesta3);
-                }
+            foreach ($query3->getResult() as $richiesta3) {
+                $richieste->add($richiesta3);
+            }
         }
 
         return $this->render('estarRdaBundle:HomePage:indexAll.html.twig', array(
@@ -376,7 +383,7 @@ class RichiestaController extends Controller
 //        if ($form->isValid()) {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($id);
-        $idCa=$entity->getIdcategoria()->getId();
+        $idCa = $entity->getIdcategoria()->getId();
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Richiesta entity.');
@@ -390,7 +397,7 @@ class RichiestaController extends Controller
         $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
         $dataIter = $dateTime->format(\DateTime::ATOM);
 
-        $iter= new Iter();
+        $iter = new Iter();
         $iter->setDastato($articleSM->getState());
         $articleSM->apply('cancellazione');
         $iter->setAstato($articleSM->getState());
@@ -410,6 +417,7 @@ class RichiestaController extends Controller
 
 
     //TODO Parte integrata nel caso di "Annullamento" della richiesta tramite invocazione di webservice
+
     /**
      * Annulla una richiesta
      * @param Request $request
@@ -434,7 +442,7 @@ class RichiestaController extends Controller
         $factory = $this->container->get('sm.factory');
         $articleSM = $factory->get($entity, 'rda');
 
-        $iter= new Iter();
+        $iter = new Iter();
         $iter->setDastato($articleSM->getState());
         $articleSM->apply('annullamento');
         $iter->setAstato($articleSM->getState());
@@ -483,12 +491,12 @@ class RichiestaController extends Controller
     {
 
         $campi = $request->request->all();
-        $messaggio= $campi['form']['messaggio'];
+        $messaggio = $campi['form']['messaggio'];
 
         $em = $this->getDoctrine()->getManager();
 
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($id);
-        $idcategoria=$richiesta->getIdcategoria();
+        $idcategoria = $richiesta->getIdcategoria();
 
         // Get the factory
         $factory = $this->get('sm.factory');
@@ -496,33 +504,33 @@ class RichiestaController extends Controller
         // Get the state machine for this object, and graph called "simple"
         $articleSM = $factory->get($richiesta, 'rda');
         $utente = $this->get('usercheck.notify')->getUtente();
-        $iter= new Iter();
+        $iter = new Iter();
 
-    /**    switch($transizione)
-        {
-            case 'presentata': $pre=1; break;
-            case 'rifiutata_tec': $pre=2; break;
-            case 'validazione_tec': $pre=3; break;
-            case 'rifiutata_amm': $pre=4; break;
-            case 'validazione_amm': $pre=5; break;
-            case 'inviato_ESTAR': $pre=6; break;
-            case 'cancellazione': $pre=7; break;
-            case 'annullamento': $pre=8; break;
-            case 'rifiutata_amm_ESTAR': $pre=9; break;
-            case 'rifiutata_tec_ESTAR': $pre=10; break;
-            case 'rigettata_ESTAR': $pre=11; break;
-            case 'chiusura_ESTAR': $pre=12; break;
-            case 'attesa_doc_aggiuntiva': $pre=14; break;
-            case 'attesa_doc_aggiuntiva_RUP': $pre=15; break;
-            case 'assegnata_programmazione': $pre=16; break;
-            case 'istruttoria': $pre=17; break;
-            case 'indizione': $pre=18; break;
-            case 'valutazione': $pre=19; break;
-            case 'aggiudicazione': $pre=20; break;
-            case 'annullamento_ESTAR': $pre=21; break;
-            default: $pre=99; break;
-        }
-**/
+        /**    switch($transizione)
+         * {
+         * case 'presentata': $pre=1; break;
+         * case 'rifiutata_tec': $pre=2; break;
+         * case 'validazione_tec': $pre=3; break;
+         * case 'rifiutata_amm': $pre=4; break;
+         * case 'validazione_amm': $pre=5; break;
+         * case 'inviato_ESTAR': $pre=6; break;
+         * case 'cancellazione': $pre=7; break;
+         * case 'annullamento': $pre=8; break;
+         * case 'rifiutata_amm_ESTAR': $pre=9; break;
+         * case 'rifiutata_tec_ESTAR': $pre=10; break;
+         * case 'rigettata_ESTAR': $pre=11; break;
+         * case 'chiusura_ESTAR': $pre=12; break;
+         * case 'attesa_doc_aggiuntiva': $pre=14; break;
+         * case 'attesa_doc_aggiuntiva_RUP': $pre=15; break;
+         * case 'assegnata_programmazione': $pre=16; break;
+         * case 'istruttoria': $pre=17; break;
+         * case 'indizione': $pre=18; break;
+         * case 'valutazione': $pre=19; break;
+         * case 'aggiudicazione': $pre=20; break;
+         * case 'annullamento_ESTAR': $pre=21; break;
+         * default: $pre=99; break;
+         * }
+         **/
         //        TODO recupero ruolo utente
 
 
@@ -545,7 +553,7 @@ class RichiestaController extends Controller
             array(
                 'alert' => 'info',
                 'title' => 'Informazione!',
-                'message' => 'Passato nello stato '.$richiesta->getStatus().' con la motivazione: "'.$messaggio.'".'
+                'message' => 'Passato nello stato ' . $richiesta->getStatus() . ' con la motivazione: "' . $messaggio . '".'
             )
         );
 
