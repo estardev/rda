@@ -259,10 +259,3 @@ be_simple_soap:
                 wsdl: https://democorepaumbria.grupposistematica.it/isharedoc/webservices/webserviceInstance.wsdl
 
 
-oneup_uploader:
-    mappings:
-        gallery:
-            frontend: blueimp # or any uploader you use in the frontend
-            root_folder: true
-            storage:
-                directory: "%kernel.root_dir%/../web/uploads/"
