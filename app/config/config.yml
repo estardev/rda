@@ -132,8 +132,8 @@ knp_snappy:
     pdf:
         enabled:    true
   #      binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" #locale
-        binary:     /usr/local/bin/wkhtmltopdf #produzione
-  #      binary:     /usr/local/bin/wkhtmltopdf.sh #test
+  #      binary:     /usr/local/bin/wkhtmltopdf #produzione
+        binary:     /usr/local/bin/wkhtmltopdf.sh #test
         options:
             no-outline: true
             page-size: LETTER
@@ -257,3 +257,12 @@ be_simple_soap:
                 wsdl: http://www.webservicex.com/globalweather.asmx?wsdl
             Sistematica:
                 wsdl: https://democorepaumbria.grupposistematica.it/isharedoc/webservices/webserviceInstance.wsdl
+
+
+oneup_uploader:
+    mappings:
+        gallery:
+            frontend: blueimp # or any uploader you use in the frontend
+            root_folder: true
+            storage:
+                directory: "%kernel.root_dir%/../web/uploads/"
