@@ -198,25 +198,52 @@ class RichiestaModel
         $entities = $this->em->getRepository('estarRdaBundle:Richiesta')->findBy(array('idcategoria' => $idCategoria));
         $utente = $dirittiRichiesta->getUser();
         $idUtente = $utente->getId();
+        $idAzienda = $utente->getIdazienda();
 
         if ($dirittiRichiesta->getIsVA() AND $dirittiRichiesta->getIsAI() AND $dirittiRichiesta->getIsVT()) {
+            if (trim($utente->getIdazienda()->getNome()) == 'ESTAR') {
+                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6 OR r.status=:stato7 OR r.status=:stato8 OR r.status=:stato9)");
+                $query->setParameters(array(
+                    'idcategoria' => $idCategoria,
+                    'idutente' => $idUtente,
+                    'stato1' => RichiestaModel::STATUS_ATTESA_VAL_AMM,
+                    'stato2' => RichiestaModel::STATUS_DA_INVIARE_ESTAR,
+                    'stato3' => RichiestaModel::STATUS_INVIATA_ESTAR,
+                    'stato4' => RichiestaModel::STATUS_ATTESA_VAL_TEC,
+                    'stato5' => RichiestaModel::STATUS_ELIMINATA,
+                    'stato6' => RichiestaModel::STATUS_ANNULLATA,
+                    'stato7' => RichiestaModel::STATUS_CHIUSA_ESTAR,
+                    'stato8' => RichiestaModel::STATUS_ANNULLATA_ESTAR,
+                    'stato9' => RichiestaModel::STATUS_RIGETTO_ESTAR,
 
-            $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6 OR r.status=:stato7 OR r.status=:stato8 OR r.status=:stato9)");
-            $query->setParameters(array(
-                'idcategoria' => $idCategoria,
-                'idutente' => $idUtente,
-                'stato1' => RichiestaModel::STATUS_ATTESA_VAL_AMM,
-                'stato2' => RichiestaModel::STATUS_DA_INVIARE_ESTAR,
-                'stato3' => RichiestaModel::STATUS_INVIATA_ESTAR,
-                'stato4' => RichiestaModel::STATUS_ATTESA_VAL_TEC,
-                'stato5' => RichiestaModel::STATUS_ELIMINATA,
-                'stato6' => RichiestaModel::STATUS_ANNULLATA,
-                'stato7' => RichiestaModel::STATUS_CHIUSA_ESTAR,
-                'stato8' => RichiestaModel::STATUS_ANNULLATA_ESTAR,
-                'stato9' => RichiestaModel::STATUS_RIGETTO_ESTAR,
+
+                ));
+
+            }
+            else{
+                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND r.idazienda=:idazienda AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6 OR r.status=:stato7 OR r.status=:stato8 OR r.status=:stato9)");
+                $query->setParameters(array(
+                    'idcategoria' => $idCategoria,
+                    'idutente' => $idUtente,
+                    'idazienda' => $idAzienda,
+                    'stato1' => RichiestaModel::STATUS_ATTESA_VAL_AMM,
+                    'stato2' => RichiestaModel::STATUS_DA_INVIARE_ESTAR,
+                    'stato3' => RichiestaModel::STATUS_INVIATA_ESTAR,
+                    'stato4' => RichiestaModel::STATUS_ATTESA_VAL_TEC,
+                    'stato5' => RichiestaModel::STATUS_ELIMINATA,
+                    'stato6' => RichiestaModel::STATUS_ANNULLATA,
+                    'stato7' => RichiestaModel::STATUS_CHIUSA_ESTAR,
+                    'stato8' => RichiestaModel::STATUS_ANNULLATA_ESTAR,
+                    'stato9' => RichiestaModel::STATUS_RIGETTO_ESTAR,
 
 
-            ));
+                ));
+
+            }
+
+            //todo aggiungere azienda per selezione
+            //AND r.idazienda=$idAziendaUtente
+
             $richiesteutente = $query->getResult();
             return $richiesteutente;
 
@@ -225,14 +252,27 @@ class RichiestaModel
 
             //Se l'utente è validatore amministrativo
             if ($dirittiRichiesta->getIsVA()) {
-                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3)");
-                $query->setParameters(array(
-                    'idcategoria' => $idCategoria,
-                    'idutente' => $idUtente,
-                    'stato1' => RichiestaModel::STATUS_ATTESA_VAL_AMM,
-                    'stato2' => RichiestaModel::STATUS_DA_INVIARE_ESTAR,
-                    'stato3' => RichiestaModel::STATUS_INVIATA_ESTAR,
-                ));
+                if (trim($utente->getIdazienda()->getNome()) == 'ESTAR') {
+                    $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r AND r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3)");
+                    $query->setParameters(array(
+                        'idcategoria' => $idCategoria,
+                        'idutente' => $idUtente,
+                        'stato1' => RichiestaModel::STATUS_ATTESA_VAL_AMM,
+                        'stato2' => RichiestaModel::STATUS_DA_INVIARE_ESTAR,
+                        'stato3' => RichiestaModel::STATUS_INVIATA_ESTAR,
+                    ));
+                } else {
+                    $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND r.idazienda=:idazienda AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3)");
+                    $query->setParameters(array(
+                        'idcategoria' => $idCategoria,
+                        'idutente' => $idUtente,
+                        'idazienda' => $idAzienda,
+                        'stato1' => RichiestaModel::STATUS_ATTESA_VAL_AMM,
+                        'stato2' => RichiestaModel::STATUS_DA_INVIARE_ESTAR,
+                        'stato3' => RichiestaModel::STATUS_INVIATA_ESTAR,
+                    ));
+                }
+
                 $richiesteutente = $query->getResult();
 
                 //            foreach($entities as $entity) {

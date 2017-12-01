@@ -87,7 +87,6 @@ class RichiestaController extends Controller
         $idUtenteSessione = $user->getId();
         $aziendaUtente = trim($user->getIdazienda()->getNome());
         $idAziendaUtente = $user->getIdazienda()->getId();
-
         $userCheck = $this->get("usercheck.notify");
 
         /*
@@ -174,15 +173,27 @@ class RichiestaController extends Controller
 
             }
 
-            //prendo anche quelle chiuse per categoria che posso vedere
-            $query3 = $em->createQuery("SELECT r
+            if ($aziendaUtente == 'ESTAR'){
+                //prendo anche quelle chiuse per categoria che posso vedere
+                $query3 = $em->createQuery("SELECT r
                                     FROM estarRdaBundle:Richiesta r
                                     WHERE   (r.status = 'chiusa_ESTAR'
                                     OR r.status = 'annullata')
                                     AND r.idcategoria=$idCategoria");
+            }
+            else{
+                //prendo anche quelle chiuse per categoria che posso vedere
+                $query3 = $em->createQuery("SELECT r
+                                    FROM estarRdaBundle:Richiesta r
+                                    WHERE   (r.status = 'chiusa_ESTAR'
+                                    OR r.status = 'annullata')
+                                    AND r.idcategoria=$idCategoria
+                                    AND r.idazienda=$idAziendaUtente");
+            }
             foreach ($query3->getResult() as $richiesta3) {
                 $richieste->add($richiesta3);
             }
+
         }
 
         return $this->render('estarRdaBundle:HomePage:indexAll.html.twig', array(
