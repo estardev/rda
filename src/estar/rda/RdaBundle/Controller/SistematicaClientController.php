@@ -198,8 +198,8 @@ class SistematicaClientController extends Controller
                         $campo = $campovalorizzato;
                         $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campodocumento');
                         $campoCheck = $repository->find($campo['idcampo']);
-
-                        if ($campo['tipo'] == 'choice') {
+                        if($campo['tipo']=='text') $tipocampo ='textarea'; else $tipocampo=$campo['tipo'];
+                        if ($tipocampo == 'choice') {
                             //Se è una scelta...
                             //Se è effettivamente valorizzato...
                             if(!is_null($this->getChoicesOptions($campoCheck->getFieldset())) and !is_null($campo['valore']) ){
@@ -234,7 +234,7 @@ class SistematicaClientController extends Controller
                                 ));
                         } else {
                             // ... se non è una scelta lo aggiungo punto e basta
-                            $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
+                            $formbuilder->add($campo['nome'] . '-' . $campo['id'], $tipocampo, array(
                                 'label' => $campo['descrizione'],
                                 'data' => $campo['valore'],
                                 'read_only' => true
@@ -322,9 +322,10 @@ class SistematicaClientController extends Controller
 
                     $repository = $this->getDoctrine()->getRepository('estarRdaBundle:Campo');
                     $campoCheck = $repository->find($campo['idcampo']);
+                    if($campo['tipo']=='text') $tipocampo ='textarea'; else $tipocampo=$campo['tipo'];
                     if (!($diritti->campoVisualizzabile($diritti, $campoCheck))) continue;
 
-                    if ($campo['tipo'] == 'choice') {
+                    if ($tipocampo == 'choice') {
 
                         if(!is_null($this->getChoicesOptions($campoCheck->getFieldset())) and !is_null($campo['valore']) ){
                             $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
@@ -365,7 +366,7 @@ class SistematicaClientController extends Controller
                             ));
                     } else {
 
-                        $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
+                        $formbuilder->add($campo['nome'] . '-' . $campo['id'], $tipocampo, array(
                             'label' => $campo['descrizione'],
                             'data' => $campo['valore'],
                             'read_only' => true
