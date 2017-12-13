@@ -132,8 +132,8 @@ knp_snappy:
     pdf:
         enabled:    true
   #      binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" #locale
-  #      binary:     /usr/local/bin/wkhtmltopdf #produzione
-        binary:     /usr/local/bin/wkhtmltopdf.sh #test
+        binary:     /usr/local/bin/wkhtmltopdf #produzione
+  #      binary:     /usr/local/bin/wkhtmltopdf.sh #test
         options:
             no-outline: true
             page-size: LETTER
