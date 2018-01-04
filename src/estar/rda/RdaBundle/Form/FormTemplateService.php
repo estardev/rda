@@ -403,8 +403,9 @@ class FormTemplateService
                 $campiValorizzati = array();
                 foreach ($campiValorizzatiIntermedi as $campovalorizzato) {
                     $campoTemp = $campovalorizzato;
-                    if ($campoTemp['pippocategoria'] == $idCategoria)
+                    if ($campoTemp['pippocategoria'] == $idCategoria){
                         array_push($campiValorizzati, $campoTemp);
+                    }
                 }
             } else {
                 $idCategoria = $idCategoria->getId();
@@ -629,7 +630,7 @@ class FormTemplateService
                     if ($mode == FormTemplateService::MODE_PRINT or !$permessoscrittura) {
                         //$descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
                         $options = $this->getChoicesOptions($campo['fieldset']);
-                        $builder->add($campo['nome'] . '-' . $campo['idcampo'], 'text', array(
+                        $builder->add($campo['nome'] . '-' . $campo['idcampo'], 'textarea', array(
                             'label' => $campo['descrizione'],
                             'data' => $campo['valore'],
                             'read_only' => true,

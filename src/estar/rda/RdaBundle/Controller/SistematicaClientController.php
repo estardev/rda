@@ -205,7 +205,7 @@ class SistematicaClientController extends Controller
                             if(!is_null($this->getChoicesOptions($campoCheck->getFieldset())) and !is_null($campo['valore']) ){
                                 //..lo aggiungo
                                 $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                                $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                                $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'textarea', array(
                                     'label' => $campo['descrizione'],
                                     'data' => $descrizioneValore,
                                     'read_only' => true
@@ -329,7 +329,7 @@ class SistematicaClientController extends Controller
 
                         if(!is_null($this->getChoicesOptions($campoCheck->getFieldset())) and !is_null($campo['valore']) ){
                             $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                            $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                            $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'textarea', array(
                                 'label' => $campo['descrizione'],
                                 'data' => $descrizioneValore,
                                 'read_only' => true

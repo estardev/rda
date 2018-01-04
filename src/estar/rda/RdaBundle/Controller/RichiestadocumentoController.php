@@ -160,7 +160,7 @@ class RichiestadocumentoController extends Controller
             if ($campo->getTipo() == 'radio') {
                 $fieldsetName = $campo->getFieldset();
 
-                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
+                $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'textarea', array(
                     'label' => $fieldsetName,
                     'data' => $campo->getDescrizione(),
                     'read_only' => true,
@@ -268,13 +268,13 @@ class RichiestadocumentoController extends Controller
                 $fieldsetName = $campo->getFieldset();
                 if ($mode == 'modifica') {
                     if($valida){
-                        $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
+                        $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'textarea', array(
                             'label' => $fieldsetName,
                             'data' => $campo->getDescrizione(),
 
                         ));
                     } else{
-                        $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
+                        $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'textarea', array(
                             'label' => $fieldsetName,
                             'data' => $campo->getDescrizione(),
                             'read_only' => true,
@@ -284,7 +284,7 @@ class RichiestadocumentoController extends Controller
                     }
 
                 } else {
-                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'text', array(
+                    $formbuilder->add($campo->getNome() . '-' . $campo->getId(), 'textarea', array(
                         'label' => $fieldsetName,
                     ));
                 }
@@ -607,14 +607,14 @@ class RichiestadocumentoController extends Controller
 
             if ($campo['tipo'] == 'choice') {
                 $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'textarea', array(
                     'label' => $campo['descrizione'],
                     'data' => $descrizioneValore,
                     'read_only' => true
                 ));
             } else {
-
-                $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
+                if($campo['tipo']=='text') $tipocampo ='textarea'; else $tipocampo=$campo['tipo'];
+                $formbuilder->add($campo['nome'] . '-' . $campo['id'], $tipocampo, array(
                     'label' => $campo['descrizione'],
                     'data' => $campo['valore'],
                     'read_only' => true

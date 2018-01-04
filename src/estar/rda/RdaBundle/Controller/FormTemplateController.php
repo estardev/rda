@@ -314,14 +314,14 @@ class FormTemplateController extends Controller
 //                $fieldsetName = $campo->getFieldset();
 
                 $descrizioneValore = $this->selectedOption($this->getChoicesOptions($campoCheck->getFieldset()), $campo['valore']);
-                $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'text', array(
+                $formbuilder->add($campo['nome'] . '-' . $campo['id'], 'textarea', array(
                     'label' => $campo['descrizione'],
                     'data' => $descrizioneValore,
                     'read_only' => true
                 ));
             } else {
-
-                $formbuilder->add($campo['nome'] . '-' . $campo['id'], $campo['tipo'], array(
+                if($campo['tipo']=='text') $tipocampo ='textarea'; else $tipocampo=$campo['tipo'];
+                $formbuilder->add($campo['nome'] . '-' . $campo['id'], $tipocampo, array(
                     'label' => $campo['descrizione'],
                     'data' => $campo['valore'],
                     'read_only' => true
