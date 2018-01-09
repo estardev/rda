@@ -200,7 +200,7 @@ class RichiestaModel
         $idUtente = $utente->getId();
         $idAzienda = $utente->getIdazienda();
 
-        if ($dirittiRichiesta->getIsVA() AND $dirittiRichiesta->getIsAI() AND $dirittiRichiesta->getIsVT()) {
+        if (($dirittiRichiesta->getIsVA() AND $dirittiRichiesta->getIsAI() AND $dirittiRichiesta->getIsVT()) or $dirittiRichiesta->isRead()) {
             if (trim($utente->getIdazienda()->getNome()) == 'ESTAR') {
                 $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6 OR r.status=:stato7 OR r.status=:stato8 OR r.status=:stato9)");
                 $query->setParameters(array(
@@ -337,8 +337,10 @@ class RichiestaModel
                 //vede soltanto le sue
                 //ciclo su richiesta, guardo per ogni richiesta se c'è un iter con utente = utente
 
-                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente");
-                $query->setParameter('idutente', $idUtente);
+                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente and r.idcategoria=:idcategoria ");
+                $query->setParameters(array('idutente'=> $idUtente,
+                'idcategoria' => $idCategoria));
+
                 $richiesteutente = $query->getResult();
 
 

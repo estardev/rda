@@ -138,13 +138,15 @@
                 <th hidden>Categoria</th>
             </tr>
             </thead>
+{#{{ dump(diritti) }}#}
+            {% for entity0 in entities %}
 
-            {% for entity in entities %}
-
+                {% set entity = entity0[0] %}
+                {% set diritto = entity0[1] %}
 
                 <tr data-state="richiesta">
 
-                    {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ESTAR' or entity.status == 'chiusa_ESTAR' or entity.status == 'annullata_ESTAR') %}
+                    {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ESTAR' or entity.status == 'chiusa_ESTAR' or entity.status == 'annullata_ESTAR' or diritto=='READ') %}
                         <td>
                             <a href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}" onclick="ChangeSelect({{ entity.idcategoria }})">{{ entity.id }}
                             </a></td>
@@ -270,7 +272,7 @@
                                             href="{{ path('formtemplate_print', { 'idRichiesta': entity.id, 'idCategoria': entity.idcategoria }) }}">
                                        <span class="glyphicon glyphicon-file"
                                              aria-hidden="true"></span> Genera PDF</a></li>
-                                {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ESTAR' or entity.status == 'chiusa_ESTAR' or entity.status == 'annullata_ESTAR') %}
+                                {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ESTAR' or entity.status == 'chiusa_ESTAR' or entity.status == 'annullata_ESTAR' or diritto=='READ') %}
                                     <li><a
                                                 href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}" onclick="ChangeSelect({{ entity.idcategoria }})">
                             <span class="glyphicon glyphicon-pencil"

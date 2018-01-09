@@ -169,13 +169,13 @@ class UserCheckController extends Controller
 //                                    AND cg.idgruppoutente = gu.id
 //                                    WHERE ugu.idutente = :idUtente')
         $query = $this->em->createQuery('SELECT max(cg.abilitatoinserimentorichieste) as inserimento,
-                                    max(cg.validatoretecnico) as valtec, max(cg.validatoreamministrativo) as valamm
+                                    max(cg.validatoretecnico) as valtec, max(cg.validatoreamministrativo) as valamm,
+                                    max(cg.readonly) as readonly
                                     FROM estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Gruppoutente gu, estarRdaBundle:Utentegruppoutente ugu
                                     WHERE ugu.idgruppoutente = gu.id
                                     AND cg.idgruppoutente = gu.id
                                     AND ugu.idutente = :idUtente
                                     AND cg.idcategoria = :idCategoria')
-
             ->setparameter('idUtente', $idUtente)->setparameter('idCategoria', $categoria);
 
         $diritti = $query->getResult();
@@ -184,11 +184,13 @@ class UserCheckController extends Controller
             if ($diritto['inserimento'] >0 ) $dirittiRichiesta->setIsAI(true);
             if ($diritto['valamm'] >0 ) $dirittiRichiesta->setIsVA(true);
             if ($diritto['valtec'] >0 ) $dirittiRichiesta->setIsVT(true);
+            if ($diritto['readonly'] >0 ) $dirittiRichiesta->setIsRead(true);
         }
         $dirittiRichiesta->setUser($utente);
         //FG20160415 mettiamo anche la categoria
         $categoriaDB = $this->em->getRepository('estarRdaBundle:Categoria')->findOneById($categoria);
         $dirittiRichiesta->setCategoria($categoriaDB);
+//        var_dump($diritti);
         return $dirittiRichiesta;
         //vecchio codice di Demetrio
         //$idgruppoutente = $this->getIdUtenteGruppoUtente();
@@ -287,7 +289,8 @@ class UserCheckController extends Controller
 //                                    AND cg.idgruppoutente = gu.id
 //                                    WHERE ugu.idutente = :idUtente')
         $query = $this->em->createQuery('SELECT max(cg.abilitatoinserimentorichieste) as inserimento,
-                                    max(cg.validatoretecnico) as valtec, max(cg.validatoreamministrativo) as valamm
+                                    max(cg.validatoretecnico) as valtec, max(cg.validatoreamministrativo) as valamm,
+                                    max(cg.readonly) as readonly
                                     FROM estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Gruppoutente gu, estarRdaBundle:Utentegruppoutente ugu
                                     WHERE ugu.idgruppoutente = gu.id
                                     AND cg.idgruppoutente = gu.id
@@ -302,6 +305,7 @@ class UserCheckController extends Controller
             if ($diritto['inserimento'] >0 ) $dirittiRichiesta->setIsAI(true);
             if ($diritto['valamm'] >0 ) $dirittiRichiesta->setIsVA(true);
             if ($diritto['valtec'] >0 ) $dirittiRichiesta->setIsVT(true);
+            if ($diritto['readonly'] >0 ) $dirittiRichiesta->setIsRead(true);
         }
         $dirittiRichiesta->setUser($utente);
         //FG20160415 mettiamo anche la categoria

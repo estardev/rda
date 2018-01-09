@@ -9,7 +9,8 @@
         </button>
         &nbsp;
     </div>
-    <div class="navbar-left navbar-brand"><a class="navbar-brand" href="{{ path('HomePage')}}"><b>{{ applicativo }}</b></a></div>
+    <div class="navbar-left navbar-brand"><a class="navbar-brand" href="{{ path('HomePage') }}"><b>{{ applicativo }}</b></a>
+    </div>
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="navbar-collapse-1">
 
@@ -22,71 +23,80 @@
 
         {% if is_granted("ROLE_USER") %}
 
-        <form class="navbar-form navbar-left">
+            <form class="navbar-form navbar-left">
 
-           <!-- <button type="button" id="homepageSelectBtnCategoria" class="btn btn-default"><a href="{{ path('HomePage')}}"><span class="glyphicon glyphicon-home"></span> Home</a></button>-->
+                <!-- <button type="button" id="homepageSelectBtnCategoria" class="btn btn-default"><a href="{{ path('HomePage') }}"><span class="glyphicon glyphicon-home"></span> Home</a></button>-->
 
-            <div class="form-group">
-                <button type="button" id="buttonlegenda" class="btn btn-default"><span class="glyphicon glyphicon-info-sign"></span></button>
+                <div class="form-group">
+                    <button type="button" id="buttonlegenda" class="btn btn-default"><span
+                                class="glyphicon glyphicon-info-sign"></span></button>
 
-                <select id="homepageSelectCategoria" class="form-control">
-                    {% if categoriaSelezionata != '' %}
-                        <option value="defaultDisabledNavbarOption" disabled>Seleziona una categoria:</option>
-                    {% else %}
-                        <option value="defaultDisabledNavbarOption" disabled selected>Seleziona una categoria:</option>
-                    {% endif %}
-                    {% for entity in categoria %}
-                        {% if entity.id == categoriaSelezionata %}
-                            <option value="{{ entity.id }}" type="text" selected>{#({{ entity.area }})#} {{ entity.descrizione }}</option>
+                    <select id="homepageSelectCategoria" class="form-control">
+                        {% if categoriaSelezionata != '' %}
+                            <option value="defaultDisabledNavbarOption" disabled>Seleziona una categoria:</option>
                         {% else %}
-                            <option value="{{ entity.id }}" type="text">{#({{ entity.area }})#} {{ entity.descrizione }}</option>
+                            <option value="defaultDisabledNavbarOption" disabled selected>Seleziona una categoria:
+                            </option>
                         {% endif %}
-                    {% endfor %}
-                </select>
+                        {% for entity in categoria %}
+                            {% if entity.id == categoriaSelezionata %}
+                                <option value="{{ entity.id }}" type="text"
+                                        selected>{#({{ entity.area }})#} {{ entity.descrizione }}</option>
+                            {% else %}
+                                <option value="{{ entity.id }}"
+                                        type="text">{#({{ entity.area }})#} {{ entity.descrizione }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <button type="button" id="homepageSelectBtnCategoria" class="btn btn-default">Nuova</button>
+                    <button type="button" id="homepageMostraTutte" class="btn btn-default">Mostra</button>
+                    <button type="button" title="Richieste Globali" id="richiesteglobali" class="btn btn-default"><span
+                                class="glyphicon glyphicon-list-alt"></span></button>
+                    <button type="button" title="Richieste Lavorate" id="allview" class="btn btn-default"><span
+                                class="glyphicon glyphicon-search"></span></button>
+                    <button type="button" title="Gare Programmate" id="richiesteaggregate" class="btn btn-default"><span
+                                class="glyphicon glyphicon-th-large"></span> Gare Programmate
+                    </button>
+                </div>
+            </form>
 
-            <button type="button" id="homepageSelectBtnCategoria" class="btn btn-default">Nuova</button>
-                <button type="button" id="homepageMostraTutte"  class="btn btn-default">Mostra</button>
-                <button type="button" title="Richieste Globali" id="richiesteglobali"  class="btn btn-default"><span class="glyphicon glyphicon-list-alt"></span></button>
-                <button type="button" title="Richieste Lavorate" id="allview"  class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-                <button type="button" title="Gare Programmate" id="richiesteaggregate"  class="btn btn-default"><span class="glyphicon glyphicon-th-large"></span> Gare Programmate</button>
-            </div>
-        </form>
+            <ul class="nav navbar-nav navbar-right">
 
-        <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        Benvenuto, <b>{{ app.user.username|upper }}</b>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ path('fos_user_profile_show') }}">Visualizza Utente</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ path('fos_user_change_password') }}">Cambio Password</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ path('fos_user_security_logout') }}">Logout</a></li>
+                    </ul>
+                </li>
 
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    Benvenuto, <b>{{ app.user.username|upper }}</b>
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="{{ path('fos_user_profile_show') }}">Visualizza Utente</a></li>
-                    <li class="divider"></li>
-                    <li><a href="{{ path('fos_user_change_password') }}">Cambio Password</a></li>
-                    <li class="divider"></li>
-                    <li><a href="{{ path('fos_user_security_logout') }}">Logout</a></li>
-                </ul>
-            </li>
-
-        </ul>
+            </ul>
         {% endif %}
 
     </div><!-- /.navbar-collapse -->
 </nav>
 
 {% block javascripts %}
-<script type="text/javascript">
-    $(document).on('click', '#buttonlegenda', function () {
-        $('#legendaModal').modal('show');
-      //alert('s1');
+    <script type="text/javascript">
+        $(document).on('click', '#buttonlegenda', function () {
+            $('#legendaModal').modal('show');
+            //alert('s1');
         });
-    $(document).ready(function() {
-        $('#tableListaRichieste').DataTable({bFilter: false, paging: false, bInfo: false, order:[ 0, 'desc' ]})
-    });
-</script>
-    {% endblock %}
+        $(document).ready(function () {
+            $('#tableListaRichieste').DataTable({bFilter: false, paging: false, bInfo: false, order: [0, 'desc']})
+        });
+    </script>
+{% endblock %}
 
-<div class="modal fade" id="legendaModal" tabindex="-1" aria-hidden="true" role="dialog" aria-labelledby="myLargeModalLabel">
+<div class="modal fade" id="legendaModal" tabindex="-1" aria-hidden="true" role="dialog"
+     aria-labelledby="myLargeModalLabel">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">

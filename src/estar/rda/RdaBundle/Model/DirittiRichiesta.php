@@ -26,6 +26,11 @@ class DirittiRichiesta
     /**
      * @var bool
      */
+    private $isRead;
+
+    /**
+     * @var bool
+     */
     private $isVA;
 
     /**
@@ -41,6 +46,22 @@ class DirittiRichiesta
      * @var Categoria
      */
     private $categoria;
+
+    /**
+     * @return bool
+     */
+    public function isRead()
+    {
+        return $this->isRead;
+    }
+
+    /**
+     * @param bool $isRead
+     */
+    public function setIsRead($isRead)
+    {
+        $this->isRead = $isRead;
+    }
 
     /**
      * @return Utente
@@ -137,6 +158,7 @@ class DirittiRichiesta
         $this->isAI = false;
         $this->isVA = false;
         $this->isVT = false;
+        $this->isRead = false;
     }
 
     /** funzione di comodo che mi dice se un campo � visualizzabile oppure no
@@ -148,23 +170,23 @@ class DirittiRichiesta
     public function campoVisualizzabile($diritti,  $campo) {
         //TODO spostare nella classe DirittiRichiesta
         $isAbilitatoInserimento = $diritti->getIsAI();
-        $isValidatoreTecnico = $diritti->getIsVT();;
+        $isValidatoreTecnico = $diritti->getIsVT();
         $isValidatoreAmministrativo = $diritti->getIsVA();
-
+        $isRead = $diritti->isRead();
         $permessiInserzione = $campo->getObbligatorioinserzione();
         $permessiValidazionetecnica = $campo->getObbligatoriovalidazionetecnica();
         $permessiValidazioneAmministrativa = $campo->getObbligatoriovalidazioneamministrativa();
 
         //se posso vederlo come utente abilitato all'inserimento...
-        if ($permessiInserzione>=0 && $isAbilitatoInserimento) {
+        if ($permessiInserzione>=0 and ($isAbilitatoInserimento or $isRead)) {
             return true;
         }
         //se non posso vederlo come utente abilitato ma come validatore tecnico si
-        if ($permessiValidazionetecnica>=0 && $isValidatoreTecnico) {
+        if ($permessiValidazionetecnica>=0 and ($isValidatoreTecnico or $isRead)) {
             return true;
         }
         //se non posso vederlo come utente abilitato o come validatore tecnico ma come validatore amministrativo si
-        if ($permessiValidazioneAmministrativa>=0 && $isValidatoreAmministrativo) {
+        if ($permessiValidazioneAmministrativa>=0 and ($isValidatoreAmministrativo or $isRead)) {
             return true;
         }
         return false;

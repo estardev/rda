@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use estar\rda\RdaBundle\Entity\Iter;
 use estar\rda\RdaBundle\Entity\Richiesta;
 use estar\rda\RdaBundle\Form\RichiestaType;
+use estar\rda\RdaBundle\Model\DirittiRichiesta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -100,6 +101,7 @@ class RichiestaController extends Controller
 
         $dirittiTotaliRadicaliGlobbali = $userCheck->dirittiByUtente();
         //dump($dirittiTotaliRadicaliGlobbali);//array di oggetti DirittiRichiesta
+        /* @var $dirittoSingolo DirittiRichiesta */
         foreach ($dirittiTotaliRadicaliGlobbali as $dirittoSingolo) {
             $idCategoria = $dirittoSingolo->getCategoria()->getId();
             if ($dirittoSingolo->getIsAI()) {
@@ -124,7 +126,7 @@ class RichiestaController extends Controller
                 }
 
                 foreach ($query->getResult() as $richiesta) {
-                    $richieste->add($richiesta);
+                    $richieste->add(array($richiesta,'AI'));
                 }
 
             }
@@ -144,7 +146,7 @@ class RichiestaController extends Controller
                                      AND r.idazienda=$idAziendaUtente
                                      ");
                 foreach ($query1->getResult() as $richiesta1) {
-                    $richieste->add($richiesta1);
+                    $richieste->add(array($richiesta1,'VT'));
                 }
 
             }
@@ -168,7 +170,29 @@ class RichiestaController extends Controller
                                     AND r.idazienda=$idAziendaUtente
                                     ");
                 foreach ($query2->getResult() as $richiesta2) {
-                    $richieste->add($richiesta2);
+                    $richieste->add(array($richiesta2,'VA'));
+                }
+
+            }
+            if ($dirittoSingolo->isRead()) {
+                //Abilitato alla lettura. Se ESTAR, le vede tutte. Se non è ESTAR, vede solo quelle della sua azienda
+                //filtrare in base al tipo di azienda
+                if ($aziendaUtente == 'ESTAR') {
+                    $query = $em->createQuery("SELECT r
+                                    FROM estarRdaBundle:Richiesta r
+                                    WHERE  r.idcategoria=$idCategoria
+                                    "); //Un utente ESTAR vede tutte le richieste, sue e non sue
+
+                } else {
+                    $query = $em->createQuery("SELECT r
+                                    FROM estarRdaBundle:Richiesta r
+                                    WHERE r.idcategoria = $idCategoria 
+                                    AND r.idazienda=$idAziendaUtente
+                                    ");
+                }
+
+                foreach ($query->getResult() as $richiesta3) {
+                    $richieste->add(array($richiesta3,'READ'));
                 }
 
             }
@@ -190,11 +214,13 @@ class RichiestaController extends Controller
                                     AND r.idcategoria=$idCategoria
                                     AND r.idazienda=$idAziendaUtente");
             }
-            foreach ($query3->getResult() as $richiesta3) {
-                $richieste->add($richiesta3);
+            foreach ($query3->getResult() as $richiesta4) {
+                $richieste->add(array($richiesta4,''));
             }
 
         }
+
+//        var_dump($richieste);
 
         return $this->render('estarRdaBundle:HomePage:indexAll.html.twig', array(
             'entities' => $richieste));

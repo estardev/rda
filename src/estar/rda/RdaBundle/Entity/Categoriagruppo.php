@@ -36,6 +36,13 @@ class Categoriagruppo
     /**
      * @var boolean
      *
+     * @ORM\Column(name="readonly", type="boolean", nullable=true)
+     */
+    private $readonly;
+
+    /**
+     * @var boolean
+     *
      * @ORM\Column(name="referenteAbs", type="boolean", nullable=true)
      */
     private $referenteabs;
@@ -237,4 +244,22 @@ class Categoriagruppo
         return $choices;
 
     }
+
+    /**
+     * @return bool
+     */
+    public function isReadonly()
+    {
+        return $this->readonly;
+    }
+
+    /**
+     * @param bool $readonly
+     */
+    public function setReadonly($readonly)
+    {
+        $this->readonly = $readonly;
+    }
+
+
 }
