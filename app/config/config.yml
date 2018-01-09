@@ -190,7 +190,7 @@ winzou_state_machine:
                 to: annullata
             rifiutata_amm_ESTAR:
                 from: [inviata_ESTAR]
-                to: da_inviare_ESTAR
+                to: attesa_val_amm
             rifiutata_tec_ESTAR:
                 from: [inviata_ESTAR]
                 to: attesa_val_tec
