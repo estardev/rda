@@ -23,6 +23,7 @@
                 <th>Abilitato Inserimento</th>
                 <th>Validatore Tecnico</th>
                 <th>Validatore Amm. </th>
+                <th>Sola lettura </th>
                 <th>Referente ESTAR</th>
                 <th>Azioni</th>
             </tr>
@@ -35,6 +36,7 @@
                 <td>{% if entity.abilitatoinserimentorichieste %} Si {% else %} No {% endif %}</td>
                 <td>{% if entity.validatoretecnico %} Si {% else %} No {% endif %}</td>
                 <td>{% if entity.validatoreamministrativo %} Si {% else %} No {% endif %}</td>
+                <td>{% if entity.readonly %} Si {% else %} No {% endif %}</td>
                 <td>{% if entity.referenteabs %} Si {% else %} No {% endif %}</td>
 
 
