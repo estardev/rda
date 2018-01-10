@@ -74,7 +74,7 @@ class ServerESTARController extends Controller
 
              } else {
                 $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $idpratica, $codicestato, $codicegara,$rup,$numeroAttoAggiudicazione,$numeroProtocolloLettera);
-                if ($risposta->getCodiceRisposta()!= 'KO' and $codicestato=='090'){
+                if ($risposta->getCodiceRisposta()!= 'KO' and ($codicestato=='090' or $codicestato=='030' or $codicestato=='031' or $codicestato=='130' or $codicestato=='091' or $codicestato=='040' or $codicestato=='041')){
                     $mail= new EmailController($this->getDoctrine()->getManager(), $this->get('service_container'));
                     $mail->notifyEmailAction($idpratica);
                 }
