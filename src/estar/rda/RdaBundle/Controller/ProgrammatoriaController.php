@@ -20,7 +20,7 @@ class ProgrammatoriaController extends Controller
     public function getMapPriorita($pro)
     {
         switch ($pro){
-            case 1: $priorita = 1; break;
+            case 1: $priorita = 3; break;
             case 2: $priorita = 2; break;
             case 3: $priorita = 3; break;
         }
@@ -28,6 +28,9 @@ class ProgrammatoriaController extends Controller
         return $priorita;
     }
 
+    /*
+     * IMPORTANTE MAP DEI CAMBI CHE NON DOVRANNO MAI VARIARE SUL DB
+     */
     public function getMapCampoByCategoria($categoria)
     {
         switch ($categoria){
