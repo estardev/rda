@@ -459,9 +459,10 @@ class SistematicaClientController extends Controller
      * @param string $idRichiesta
      * @param string $idCategoria
      * @param string $tipologia
+     * @param integer $programmatoria
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($idCategoria, $idRichiesta, $tipologia)
+    public function indexAction($idCategoria, $idRichiesta, $tipologia, $programmatoria=0)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -473,7 +474,7 @@ class SistematicaClientController extends Controller
         $azienda = $richiesta->getIdazienda()->getNome();
         $priorita=$richiesta->getPriorita();
         switch ($priorita){
-            case 1: $prioritastringa="Prioritaria"; break;
+            case 1: $prioritastringa="Emergenza"; break;
             case 2: $prioritastringa="Elevata"; break;
             case 3: $prioritastringa="Standard"; break;
         }
@@ -512,7 +513,7 @@ class SistematicaClientController extends Controller
                 break;
 
             case "Documentazione richiesta da RUP":
-                $ritorno = $this->generateZip($idCategoria, $idRichiesta, $tipologia);
+                $ritorno = $this->generateZip($idCategoria, $idRichiesta);
                 if ($ritorno['esito']) {
                     $idGestav = $richiesta->getIdgestav();
                     $idgara= $richiesta->getCodicegara();
@@ -542,12 +543,30 @@ class SistematicaClientController extends Controller
         $risposta->setIdgara($idgara);
         $risposta->setStrutturarichiedente($azienda);
 
+        if ($programmatoria == 1){
+        $risposta->setCui($richiesta->getProcui());
+        $risposta->setRup($richiesta->getProrupnome());
+        $risposta->setFlagGaraProgrammata(1);
+        $risposta->setAnnoProgrammazione($richiesta->getProanno());
+
+        if ($richiesta->getProanno() == $anno) $risposta->setProgrammazione('Anno Corrente');
+        else if($richiesta->getProanno() > $anno) $risposta->setProgrammazione('Anni Successivi');
+        }
+
+
 //        if ($this->getParameter("tipoinstallazione") == "test")
 //            $pippo = "pluto";
 //        else
 //            $pippo = "paperino";
 
         $esito = $risposta->RequestWebServer();
+
+        if ($programmatoria == 1 ) {
+            if ($esito['esito'] == true)
+                return new Response($esito['protocollo'],200);
+            else
+                return new Response("",500);
+        }
 
         if ($esito['esito'] == true and ($tipologia == "Nuova" or $tipologia == "Documentazione aggiuntiva" or $tipologia == "Documentazione richiesta da RUP" )) {
             $numprotocollo = $esito['protocollo'];

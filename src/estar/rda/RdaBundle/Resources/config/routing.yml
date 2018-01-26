@@ -139,3 +139,7 @@ iter_byrichiestagestav:
     defaults: { _controller: estarRdaBundle:Iter:iterByRichiestaGestav }
     options:
           expose: true
+
+programmatoria:
+    path:     /prog
+    defaults: { _controller: estarRdaBundle:Programmatoria:index }

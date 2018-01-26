@@ -74,7 +74,42 @@ class Richiesta
     /**
      * @var string
      *
-     * @ORM\Column(name="titolo", type="string", length=255, nullable=false)
+     * @ORM\Column(name="procui", type="string", length=255, nullable=true)
+     */
+    private $procui;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="prorupnome", type="string", length=255, nullable=true)
+     */
+    private $prorupnome;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="proutenteins", type="string", length=255, nullable=true)
+     */
+    private $proutenteins;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="proanno", type="string", length=255, nullable=true)
+     */
+    private $proanno;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="proid", type="string", length=255, nullable=true)
+     */
+    private $proid;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="titolo", type="string", length=255, nullable=true)
      */
     private $titolo;
 
@@ -264,6 +299,31 @@ class Richiesta
      * @ORM\Column(name="priorita", type="string", length=45, nullable=true)
      */
     private $priorita;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="prioritaGestav", type="string", length=45, nullable=true)
+     */
+    private $prioritaGestav;
+
+    /**
+     * @return string
+     */
+    public function getPrioritaGestav()
+    {
+        return $this->prioritaGestav;
+    }
+
+    /**
+     * @param string $prioritaGestav
+     */
+    public function setPrioritaGestav($prioritaGestav)
+    {
+        $this->prioritaGestav = $prioritaGestav;
+    }
+
+
 
     /**
      * @var string
@@ -616,13 +676,95 @@ class Richiesta
     }
 
     /**
+     * @return string
+     */
+    public function getProcui()
+    {
+        return $this->procui;
+    }
+
+    /**
+     * @param string $procui
+     */
+    public function setProcui($procui)
+    {
+        $this->procui = $procui;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProrupnome()
+    {
+        return $this->prorupnome;
+    }
+
+    /**
+     * @param string $prorupnome
+     */
+    public function setProrupnome($prorupnome)
+    {
+        $this->prorupnome = $prorupnome;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProutenteins()
+    {
+        return $this->proutenteins;
+    }
+
+    /**
+     * @param string $proutenteins
+     */
+    public function setProutenteins($proutenteins)
+    {
+        $this->proutenteins = $proutenteins;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProanno()
+    {
+        return $this->proanno;
+    }
+
+    /**
+     * @param string $proanno
+     */
+    public function setProanno($proanno)
+    {
+        $this->proanno = $proanno;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProid()
+    {
+        return $this->proid;
+    }
+
+    /**
+     * @param string $proid
+     */
+    public function setProid($proid)
+    {
+        $this->proid = $proid;
+    }
+
+
+
+    /**
      * Ritorna i valori possibili per la priorit�
      * @return array
      */
     public static function getPossibleEnumPriorita()
     {
         $choices = array(
-            '1' => 'Prioritaria',
+            '1' => 'Emergenza',
             '2' => 'Elevata',
             '3' => 'Standard');
         return $choices;

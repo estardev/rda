@@ -50,14 +50,14 @@
                 var idrichiesta = $(this).attr('data-id');
                 $('#iterModal').modal('show');
                 $('#numeropratica').html('<h4 id="numeropratica" class="modal-title">Iter Pratica ' + idrichiesta + '</h4>');
-                $('#richiestamodel').html('<tbody><td class="warning"><td>In Caricamento...</td></tr></tbody>');
+                $('#tableiter').html('<tbody><td class="warning"><td>In Caricamento...</td></tr></tbody>');
                 //alert('s1');
                 $.ajax({
                     type: "POST",
                     url: Routing.generate('iter_byrichiesta'),
                     data: {idrichiesta: idrichiesta},
                     success: function (data) {
-                        $('#richiestamodel').html(data);
+                        $('#tableiter').html(data);
                         //alert('s2');
                     }
                 });
@@ -318,8 +318,7 @@
 
                 <div class="modal-body">
                     <div class="modal-body">
-                        <table class="table table-hover table-striped table-responsive" id="richiestamodel">
-                        </table>
+                        <div id="tableiter"></div>
                     </div>
                 </div>
                 <div class="modal-footer">

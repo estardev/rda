@@ -202,7 +202,7 @@ class RichiestaModel
 
         if (($dirittiRichiesta->getIsVA() AND $dirittiRichiesta->getIsAI() AND $dirittiRichiesta->getIsVT()) or $dirittiRichiesta->isRead()) {
             if (trim($utente->getIdazienda()->getNome()) == 'ESTAR') {
-                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6 OR r.status=:stato7 OR r.status=:stato8 OR r.status=:stato9)");
+                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria and r.proid is null AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6 OR r.status=:stato7 OR r.status=:stato8 OR r.status=:stato9)");
                 $query->setParameters(array(
                     'idcategoria' => $idCategoria,
                     'idutente' => $idUtente,
@@ -221,7 +221,7 @@ class RichiestaModel
 
             }
             else{
-                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND r.idazienda=:idazienda AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6 OR r.status=:stato7 OR r.status=:stato8 OR r.status=:stato9)");
+                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND r.idazienda=:idazienda and r.proid is null AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3 OR r.status=:stato4 OR r.status=:stato5 OR r.status=:stato6 OR r.status=:stato7 OR r.status=:stato8 OR r.status=:stato9)");
                 $query->setParameters(array(
                     'idcategoria' => $idCategoria,
                     'idutente' => $idUtente,
@@ -253,7 +253,7 @@ class RichiestaModel
             //Se l'utente è validatore amministrativo
             if ($dirittiRichiesta->getIsVA()) {
                 if (trim($utente->getIdazienda()->getNome()) == 'ESTAR') {
-                    $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r AND r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3)");
+                    $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r AND r.idcategoria=:idcategoria and r.proid is null AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3)");
                     $query->setParameters(array(
                         'idcategoria' => $idCategoria,
                         'idutente' => $idUtente,
@@ -262,7 +262,7 @@ class RichiestaModel
                         'stato3' => RichiestaModel::STATUS_INVIATA_ESTAR,
                     ));
                 } else {
-                    $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND r.idazienda=:idazienda AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3)");
+                    $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND r.idazienda=:idazienda and r.proid is null AND (r.idutente=:idutente OR r.status=:stato1 OR r.status=:stato2 OR r.status=:stato3)");
                     $query->setParameters(array(
                         'idcategoria' => $idCategoria,
                         'idutente' => $idUtente,
@@ -296,7 +296,7 @@ class RichiestaModel
                 //FG 20170328: se e solo se l'utente è di ESTAR, vede le sue e quelle delle altre aziende; diversamente no.
                 $query = null;
                 if (trim($utente->getIdazienda()->getNome()) == 'ESTAR') {
-                    $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato)");
+                    $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria and r.proid is null AND (r.idutente=:idutente OR r.status=:stato)");
                     $query->setParameters(array(
                         'idcategoria' => $idCategoria,
                         'idutente' => $idUtente,
@@ -304,7 +304,7 @@ class RichiestaModel
                     ));
                 } else {
                     //Non è di estar: deve vedere solo le sue
-                    $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria AND (r.idutente=:idutente OR r.status=:stato) AND r.idazienda=:idAzienda");
+                    $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idcategoria=:idcategoria and r.proid is null AND (r.idutente=:idutente OR r.status=:stato) AND r.idazienda=:idAzienda");
                     $query->setParameters(array(
                         'idcategoria' => $idCategoria,
                         'idutente' => $idUtente,
@@ -337,7 +337,7 @@ class RichiestaModel
                 //vede soltanto le sue
                 //ciclo su richiesta, guardo per ogni richiesta se c'è un iter con utente = utente
 
-                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente and r.idcategoria=:idcategoria ");
+                $query = $this->em->createQuery("SELECT r FROM estarRdaBundle:Richiesta r WHERE r.idutente=:idutente and r.proid is null AND r.idcategoria=:idcategoria ");
                 $query->setParameters(array('idutente'=> $idUtente,
                 'idcategoria' => $idCategoria));
 
@@ -414,9 +414,10 @@ class RichiestaModel
      * @param string $idpratica
      * @param string $codicestato
      * @param string $codicegara
+     * @param string $prioritaGestav
      * @return RispostaPerSistematica
      */
-    public function getPratica($utente, $data, $note, $idpratica, $codicestato, $codicegara, $rup, $numeroAttoAggiudicazione, $numeroProtocolloLettera)
+    public function getPratica($utente, $data, $note, $idpratica, $codicestato, $codicegara, $rup, $numeroAttoAggiudicazione, $numeroProtocolloLettera,$prioritaGestav)
     {
         // Ci costruiamo l'oggetto risposta
 
@@ -484,12 +485,14 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                         $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_VALUTAZIONE_TEC);
                         $richiesta->setDataultimamodifica($dateTime);
                         $richiesta->setCodicegara(null);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
@@ -524,12 +527,14 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                         $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_VALUTAZIONE_AMM);
                         $richiesta->setCodicegara(null);
                         $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
@@ -565,6 +570,7 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
@@ -572,6 +578,7 @@ class RichiestaModel
                         $richiesta->setPresentato(14);
                         $richiesta->setDataultimamodifica($dateTime);
                         $richiesta->setCodicegara(null);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
@@ -607,6 +614,7 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
@@ -614,6 +622,7 @@ class RichiestaModel
                         $richiesta->setPresentato(14);
                         $richiesta->setDataultimamodifica($dateTime);
                         $richiesta->setCodicegara(null);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
@@ -650,12 +659,14 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                         $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_RIGETTO);
                         $richiesta->setCodicegara(null);
                         $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
@@ -691,12 +702,14 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                         $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_RIGETTO_AMM);
                         $richiesta->setDataultimamodifica($dateTime);
                         $richiesta->setCodicegara(null);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
@@ -730,6 +743,7 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
@@ -737,6 +751,7 @@ class RichiestaModel
                         $richiesta->setDataultimamodifica($dateTime);
                         $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ASSEGNATAPROGRAMMAZIONE);
                         $richiesta->setCodicegara(null);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
@@ -770,12 +785,14 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                         $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ISTRUTTORIA);
                         $richiesta->setCodicegara($codicegara);
                         $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
@@ -809,12 +826,14 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                         $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ISTRUTTORIA_AMM);
                         $richiesta->setCodicegara($codicegara);
                         $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
@@ -848,12 +867,14 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                         $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_INDIZIONE);
                         $richiesta->setCodicegara($codicegara);
                         $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
@@ -890,11 +911,13 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                         $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_VALUTAZIONE);
                         $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
@@ -935,11 +958,13 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                         $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_AGGIUDICAZIONE);
                         $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
@@ -979,11 +1004,13 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                         $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_AGGIUDICAZIONE_PARZIALE);
                         $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
@@ -1025,8 +1052,10 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_CHIUSA);
                         $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($iter);
                         $this->em->persist($richiesta);
                     }
@@ -1066,12 +1095,14 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                         $richiesta->setCodicegara($codicegara);
                         $richiesta->setDataultimamodifica($dateTime);
                         $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_APERTURA);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
@@ -1107,12 +1138,14 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                         $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ANNULLATA);
                         $richiesta->setDataultimamodifica($dateTime);
                         $richiesta->setCodicegara(null);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
@@ -1151,12 +1184,14 @@ class RichiestaModel
                     $iter->setIdutente($utente);
                     $iter->setDatafornita($dataFornita);
                     $iter->setRup($rup);
+                    $iter->setPrioritaGestav($prioritaGestav);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE);
                     $richiesta->setDataultimamodifica($dateTime);
                     $richiesta->setCodicegara($codicegara);
+                    $richiesta->setPrioritaGestav($prioritaGestav);
                     $this->em->persist($richiesta);
                     $this->em->persist($iter);
                     $this->em->flush();
@@ -1226,6 +1261,7 @@ class RichiestaModel
                         $iter->setIdutente($utente);
                         $iter->setDatafornita($dataFornita);
                         $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
@@ -1233,6 +1269,7 @@ class RichiestaModel
                         $richiesta->setDataultimamodifica($dateTime);
                         $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP);
                         $richiesta->setPresentato(15);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();

@@ -43,6 +43,7 @@ class RichiestaController extends Controller
                                      FROM estarRdaBundle:Richiesta r, estarRdaBundle:Iter i
                                      WHERE  i.idutente=$utente
                                      AND r.id = i.idrichiesta
+                                     AND r.proid is null
                                      ");
         $entities = $query1->getResult();
 
@@ -113,6 +114,7 @@ class RichiestaController extends Controller
                                     WHERE   r.status='bozza' 
                                     AND r.idutente=$utenteSessione 
                                     AND r.idcategoria=$idCategoria
+                                    AND r.proid is null
                                     "); //Un utente ESTAR vede tutte le richieste, sue e non sue
 
                 } else{
@@ -122,6 +124,7 @@ class RichiestaController extends Controller
                                     AND r.status='bozza' 
                                     AND r.idcategoria = $idCategoria 
                                     AND r.idazienda=$idAziendaUtente
+                                    AND r.proid is null
                                     ");
                 }
 
@@ -137,6 +140,7 @@ class RichiestaController extends Controller
                                     FROM estarRdaBundle:Richiesta r
                                     WHERE  r.status='attesa_val_tec' 
                                     AND r.idcategoria=$idCategoria
+                                    AND r.proid is null
                                     ");
                 else
                     $query1 = $em->createQuery("SELECT r
@@ -144,6 +148,7 @@ class RichiestaController extends Controller
                                      WHERE  r.status='attesa_val_tec' 
                                      AND r.idcategoria=$idCategoria 
                                      AND r.idazienda=$idAziendaUtente
+                                     AND r.proid is null
                                      ");
                 foreach ($query1->getResult() as $richiesta1) {
                     $richieste->add(array($richiesta1,'VT'));
@@ -159,6 +164,7 @@ class RichiestaController extends Controller
                                     OR r.status='da_inviare_ESTAR' 
                                     OR r.status='inviata_ESTAR') 
                                     AND r.idcategoria=$idCategoria
+                                    AND r.proid is null
                                     ");
                 else
                     $query2 = $em->createQuery("SELECT r
@@ -168,6 +174,7 @@ class RichiestaController extends Controller
                                     OR r.status='inviata_ESTAR') 
                                     AND r.idcategoria=$idCategoria 
                                     AND r.idazienda=$idAziendaUtente
+                                    AND r.proid is null
                                     ");
                 foreach ($query2->getResult() as $richiesta2) {
                     $richieste->add(array($richiesta2,'VA'));
@@ -181,6 +188,7 @@ class RichiestaController extends Controller
                     $query = $em->createQuery("SELECT r
                                     FROM estarRdaBundle:Richiesta r
                                     WHERE  r.idcategoria=$idCategoria
+                                    AND r.proid is null
                                     "); //Un utente ESTAR vede tutte le richieste, sue e non sue
 
                 } else {
@@ -188,6 +196,7 @@ class RichiestaController extends Controller
                                     FROM estarRdaBundle:Richiesta r
                                     WHERE r.idcategoria = $idCategoria 
                                     AND r.idazienda=$idAziendaUtente
+                                    AND r.proid is null
                                     ");
                 }
 
@@ -203,6 +212,7 @@ class RichiestaController extends Controller
                                     FROM estarRdaBundle:Richiesta r
                                     WHERE   (r.status = 'chiusa_ESTAR'
                                     OR r.status = 'annullata')
+                                    AND r.proid is null
                                     AND r.idcategoria=$idCategoria");
             }
             else{
@@ -212,6 +222,7 @@ class RichiestaController extends Controller
                                     WHERE   (r.status = 'chiusa_ESTAR'
                                     OR r.status = 'annullata')
                                     AND r.idcategoria=$idCategoria
+                                    AND r.proid is null
                                     AND r.idazienda=$idAziendaUtente");
             }
             foreach ($query3->getResult() as $richiesta4) {

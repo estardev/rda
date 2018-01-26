@@ -208,6 +208,31 @@ class ClientSistematica
     private $priorita;
 
     /**
+     * @var string
+     */
+    private $cui;
+
+    /**
+     * @var string
+     */
+    private $rup;
+
+    /**
+     * @var string
+     */
+    private $flagGaraProgrammata;
+
+    /**
+     * @var string
+     */
+    private $programmazione;
+
+    /**
+     * @var string
+     */
+    private $annoProgrammazione;
+
+    /**
      * @return string
      */
     public function getPriorita()
@@ -263,6 +288,88 @@ class ClientSistematica
      * @var string
      */
     private $path;
+
+    /**
+     * @return string
+     */
+    public function getCui()
+    {
+        return $this->cui;
+    }
+
+    /**
+     * @param string $cui
+     */
+    public function setCui($cui)
+    {
+        $this->cui = $cui;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRup()
+    {
+        return $this->rup;
+    }
+
+    /**
+     * @param string $rup
+     */
+    public function setRup($rup)
+    {
+        $this->rup = $rup;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFlagGaraProgrammata()
+    {
+        return $this->flagGaraProgrammata;
+    }
+
+    /**
+     * @param string $flagGaraProgrammata
+     */
+    public function setFlagGaraProgrammata($flagGaraProgrammata)
+    {
+        $this->flagGaraProgrammata = $flagGaraProgrammata;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProgrammazione()
+    {
+        return $this->programmazione;
+    }
+
+    /**
+     * @param string $programmazione
+     */
+    public function setProgrammazione($programmazione)
+    {
+        $this->programmazione = $programmazione;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAnnoProgrammazione()
+    {
+        return $this->annoProgrammazione;
+    }
+
+    /**
+     * @param string $annoProgrammazione
+     */
+    public function setAnnoProgrammazione($annoProgrammazione)
+    {
+        $this->annoProgrammazione = $annoProgrammazione;
+    }
+
+
 
     /** costruttore di default. Mi serve un entity manager e l'utente corrente */
     public function __construct($em, $user)
@@ -320,6 +427,50 @@ class ClientSistematica
         $attachmentSetfileset1 = $parametri->getAttachmentSetfileset1();
         $attachmentSetcontenttype1 = $parametri->getAttachmentSetcontenttype1();
         $searchtype2 = $parametri->getRequestSetinstanceoperation();
+
+        if ($this->getFlagGaraProgrammata() == 1 ){
+            $programmazionePiu = '<variable>
+	            <key>flagProgrammazione</key>
+               	<type>string</type>
+                <valueString>1</valueString>
+			</variable>';
+            if (!is_null($this->getCui())){
+                $programmazionePiu .='<variable>
+	            <key>codiceGaraCui</key>
+               	<type>string</type>
+                <valueString>'.$this->getCui().'</valueString>
+			</variable>';
+            }
+            if (!is_null($this->getRup())){
+                $programmazionePiu .='<variable>
+	            <key>rupPortale</key>
+               	<type>string</type>
+                <valueString>'.$this->getRup().'</valueString>
+			</variable>';
+            }
+            if (!is_null($this->getAnnoProgrammazione())){
+                $programmazionePiu .='<variable>
+	            <key>annoProgrammazione</key>
+               	<type>string</type>
+                <valueString>'.$this->getAnnoProgrammazione().'</valueString>
+			</variable>';
+            }
+            if (!is_null($this->getProgrammazione())){
+                $programmazionePiu .='<variable>
+	            <key>programmazione</key>
+               	<type>string</type>
+                <valueString>'.$this->getProgrammazione().'</valueString>
+			</variable>';
+            }
+        }
+        else{
+            $programmazionePiu = '<variable>
+	            <key>flagProgrammazione</key>
+               	<type>string</type>
+                <valueString>0</valueString>
+			</variable>';
+        }
+
 
         $contact='<contact>
                <type>'.$contactsettype1.'</type>
@@ -497,6 +648,7 @@ class ClientSistematica
                	<type>string</type>
                 <valueString>'.$strutturarichiedente.'</valueString>
 			</variable>
+			'.$programmazionePiu.'
          </variables>
         '.$references.$attachmentfile.'
          <startWorkflow>'.$startWorkflow.'</startWorkflow>

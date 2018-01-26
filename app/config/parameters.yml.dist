@@ -21,3 +21,16 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+#connessione per software programmazione
+    # AMBIENTE SVILUPPO
+    #auth-dev.estav-centro.toscana.it
+    database_host2: 159.213.95.8
+    # AMBIENTE TEST
+    #database_host2: 159.213.95.8
+    # AMBIENTE PRODUZIONE
+    # mysql01.estav-centro.toscana.it
+    #database_host2: 159.213.95.6
+    database_port2: 3306
+    database_name2: abs
+    database_user2: rda
+    database_password2: 3star2018!

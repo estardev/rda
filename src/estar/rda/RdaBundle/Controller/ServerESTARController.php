@@ -30,12 +30,13 @@ class ServerESTARController extends Controller
      * @Soap\Param("dataRequest", phpType = "string")
      * @Soap\Param("codicestato", phpType = "string")
      * @Soap\Param("codicegara", phpType = "string")
+     * @Soap\Param("prioritaGestav", phpType = "string")
      * @Soap\Param("rup", phpType = "string")
      * @Soap\Param("numeroAttoAggiudicazione", phpType = "string")
      * @Soap\Param("numeroProtocolloLettera", phpType = "string")
      * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\String[]")
      */
-    public function notifyAction($username, $password, $note=null, $idpratica, $dataRequest=null, $codicestato, $codicegara=null, $rup=null,$numeroAttoAggiudicazione=null,$numeroProtocolloLettera=null)
+    public function notifyAction($username, $password, $note=null, $idpratica, $dataRequest=null, $codicestato, $codicegara=null, $rup=null,$numeroAttoAggiudicazione=null,$numeroProtocolloLettera=null, $prioritaGestav=null)
     {   $username1=strtolower($username);
         $em = $this->getDoctrine()->getManager();
         $postdata = file_get_contents("php://input");
@@ -73,7 +74,7 @@ class ServerESTARController extends Controller
             );
 
              } else {
-                $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $idpratica, $codicestato, $codicegara,$rup,$numeroAttoAggiudicazione,$numeroProtocolloLettera);
+                $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $idpratica, $codicestato, $codicegara,$rup,$numeroAttoAggiudicazione,$numeroProtocolloLettera,$prioritaGestav);
                 if ($risposta->getCodiceRisposta()!= 'KO' and ($codicestato=='090' or $codicestato=='030' or $codicestato=='031' or $codicestato=='130' or $codicestato=='091' or $codicestato=='040' or $codicestato=='041')){
                     $mail= new EmailController($this->getDoctrine()->getManager(), $this->get('service_container'));
                     $mail->notifyEmailAction($idpratica);

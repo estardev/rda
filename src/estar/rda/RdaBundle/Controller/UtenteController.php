@@ -27,7 +27,7 @@ class UtenteController extends Controller
         $ent = $em->getRepository('estarRdaBundle:Utente')->findAll();
         //var_dump($entities);
         foreach($ent as $entity){
-            if($entity->getNomecognome()=='Sistematica') continue;
+            if($entity->getNomecognome()=='Sistematica' or $entity->getNomecognome()=='Software Programmazione') continue;
             else $entities->add($entity);
         }
         return $this->render('estarRdaBundle:Utente:index.html.twig', array(

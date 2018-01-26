@@ -45,6 +45,7 @@ class HomePageController extends Controller
                                     WHERE   r.status='bozza' 
                                     AND r.idutente=$utenteSessione 
                                     AND r.idcategoria=$idCategoria
+                                    AND r.proid is null
                                     "); //Un utente ESTAR vede tutte le richieste, sue e non sue
                 else
                     $query = $em->createQuery("SELECT r
@@ -53,6 +54,7 @@ class HomePageController extends Controller
                                     AND r.status='bozza' 
                                     AND r.idcategoria = $idCategoria 
                                     AND r.idazienda=$idAziendaUtente
+                                    AND r.proid is null
                                     ");
                 foreach ($query->getResult() as $richiesta) {
                     $richieste->add($richiesta);
@@ -66,6 +68,7 @@ class HomePageController extends Controller
                                     FROM estarRdaBundle:Richiesta r
                                     WHERE  r.status='attesa_val_tec' 
                                     AND r.idcategoria=$idCategoria
+                                    AND r.proid is null
                                     ");
                 else
                     $query1 = $em->createQuery("SELECT r
@@ -73,6 +76,7 @@ class HomePageController extends Controller
                                      WHERE  r.status='attesa_val_tec' 
                                      AND r.idcategoria=$idCategoria 
                                      AND r.idazienda=$idAziendaUtente
+                                     AND r.proid is null
                                      ");
                 foreach ($query1->getResult() as $richiesta1) {
                     $richieste->add($richiesta1);
@@ -88,6 +92,7 @@ class HomePageController extends Controller
                                     OR r.status='da_inviare_ESTAR' 
                                     OR r.status='inviata_ESTAR') 
                                     AND r.idcategoria=$idCategoria
+                                    AND r.proid is null
                                     ");
                 else
                     $query2 = $em->createQuery("SELECT r
@@ -97,6 +102,7 @@ class HomePageController extends Controller
                                     OR r.status='inviata_ESTAR') 
                                     AND r.idcategoria=$idCategoria 
                                     AND r.idazienda=$idAziendaUtente
+                                    AND r.proid is null
                                     ");
                 foreach ($query2->getResult() as $richiesta2) {
                     $richieste->add($richiesta2);
@@ -141,13 +147,13 @@ class HomePageController extends Controller
                     $query = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.idutente=$utenteSessione AND r.status='bozza' AND c.id=r.idcategoria
-                                    AND c.id=$idCategoria
+                                    AND c.id=$idCategoria AND r.proid is null
                                     "); //Un utente ESTAR vede tutte le richieste, sue e non sue
                 else
                     $query = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.idutente=$utenteSessione AND r.status='bozza' AND c.id=r.idcategoria
-                                    AND c.id=$idCategoria AND r.idazienda=$idAziendaUtente
+                                    AND c.id=$idCategoria AND r.idazienda=$idAziendaUtente AND r.proid is null
                                     ");
                 $nBozza->add($query->getResult());
 
@@ -158,13 +164,13 @@ class HomePageController extends Controller
                     $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.idutente=$utenteSessione AND r.status='bozza' AND c.id=r.idcategoria
-                                    AND c.id=$idCategoria
+                                    AND c.id=$idCategoria AND r.proid is null
                                     ");
                 else
                     $query1 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                      FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                      WHERE  r.status='attesa_val_tec' AND c.id=r.idcategoria AND c.id=r.idcategoria
-                                     AND c.id=$idCategoria AND r.idazienda=$idAziendaUtente
+                                     AND c.id=$idCategoria AND r.idazienda=$idAziendaUtente AND r.proid is null
                                      ");
                 $nValtec->add($query1->getResult());
 
@@ -175,26 +181,26 @@ class HomePageController extends Controller
                     $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.status='attesa_val_amm' AND c.id=r.idcategoria AND c.id=r.idcategoria
-                                    AND c.id=$idCategoria
+                                    AND c.id=$idCategoria AND r.proid is null
                                     ");
                 else
                     $query2 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.status='attesa_val_amm' AND c.id=r.idcategoria AND c.id=r.idcategoria
-                                    AND c.id=$idCategoria AND r.idazienda=$idAziendaUtente
+                                    AND c.id=$idCategoria AND r.idazienda=$idAziendaUtente AND r.proid is null
                                     ");
                 $nValAmm->add($query2->getResult());
                 if ($aziendaUtente == 'ESTAR')
                     $query3 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.status='da_inviare_ESTAR' AND c.id=r.idcategoria AND c.id=r.idcategoria
-                                    AND c.id=$idCategoria
+                                    AND c.id=$idCategoria AND r.proid is null
                                     ");
                 else
                     $query3 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
                                     WHERE  r.status='da_inviare_ESTAR' AND c.id=r.idcategoria AND c.id=r.idcategoria
-                                    AND c.id=$idCategoria AND r.idazienda=$idAziendaUtente
+                                    AND c.id=$idCategoria AND r.idazienda=$idAziendaUtente AND r.proid is null
                                     ");
                 $nDainv->add($query3->getResult());
             }

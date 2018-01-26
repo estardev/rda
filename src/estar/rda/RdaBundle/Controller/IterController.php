@@ -36,7 +36,7 @@ class IterController extends Controller
         $idRichiesta = $request->request->get('idrichiesta');
 
         $em = $this->getDoctrine()->getManager();
-
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         $entities = $em->getRepository('estarRdaBundle:Iter')->findBy(
             array('idrichiesta' => $idRichiesta),
             array('dataora' => 'DESC')
@@ -45,7 +45,8 @@ class IterController extends Controller
         //TODO: fare un filtro sui permessi dell'utente relativi agli stati
         //Sono tutti pulsanti che puntano a FormTemplateController
         return $this->render('estarRdaBundle:Richiesta:itertable.html.twig', array(
-            'entities' => $entities
+            'entities' => $entities,
+            'richiesta' => $richiesta
         ));
     }
 

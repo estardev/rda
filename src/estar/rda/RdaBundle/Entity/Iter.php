@@ -36,6 +36,12 @@ class Iter
 
     /**
      * @var string
+     * @ORM\Column(name="prioritaGestav", type="string",length=45, nullable=true)
+     */
+    private $prioritaGestav;
+
+    /**
+     * @var string
      * @ORM\Column(name="rup", type="string",length=255, nullable=true)
      */
     private $rup;
@@ -451,6 +457,22 @@ class Iter
     {
         $this->numeroprotocollo = $numeroprotocollo;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrioritaGestav()
+    {
+        return $this->prioritaGestav;
+    }
+
+    /**
+     * @param string $prioritaGestav
+     */
+    public function setPrioritaGestav($prioritaGestav)
+    {
+        $this->prioritaGestav = $prioritaGestav;
     }
 
 
