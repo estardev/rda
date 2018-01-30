@@ -17,6 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProgrammatoriaController extends Controller
 {
+    const IDUTENTE_SOFTWARE_PROGRAMMAZIONE = 252;
+
+
+
     public function getMapPriorita($pro)
     {
         switch ($pro){
@@ -77,7 +81,6 @@ class ProgrammatoriaController extends Controller
          * utente denominato SoftwareProgrammazione che serve per il servizio
          * presente con questo id in produzione ed in sviluppo locale
          */
-        $IDUTENTE_SOFTWARE_PROGRAMMAZIONE = 252;
         $dateTime = new \DateTime();
         $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
 
@@ -106,7 +109,7 @@ class ProgrammatoriaController extends Controller
             $status = 'da_inviare_ESTAR';
             $azienda = $em->getRepository('estarRdaBundle:Azienda')->find(21);
             $priorita = $this->getMapPriorita($programmazione->getLprId());
-            $id_utente = $em->getRepository('estarRdaBundle:Utente')->find($IDUTENTE_SOFTWARE_PROGRAMMAZIONE);
+            $id_utente = $em->getRepository('estarRdaBundle:Utente')->find(ProgrammatoriaController::IDUTENTE_SOFTWARE_PROGRAMMAZIONE);
             $ivaesclusa = $programmazione->getProImportoComplessivoIe();
 
             //todo campi non presenti sul DB da aggiungere

@@ -139,7 +139,7 @@ class SistematicaClientController extends Controller
         return $num = $max + 1;
     }
 
-    public function generateZip($idCategoria, $idRichiesta )
+    public function generateZip($idCategoria, $idRichiesta,$programmatoria=0 )
     {
         $directory_sender = "sender";
         $num = $this->num();
@@ -282,7 +282,7 @@ class SistematicaClientController extends Controller
 
                 //prendo la richiesta con tutti i campi da valorizzare!!!
                 $usercheck = $this->get("usercheck.notify");
-                $diritti = $usercheck->allRole($idCategoria);
+                $diritti = $usercheck->allRole($idCategoria,$programmatoria);
                 $query = $em->createQuery('SELECT c.id AS idcampo, identity (c.idcategoria) as pippocategoria, c.nome,c.descrizione,c.fieldset,c.tipo,c.dataattivazione,vc.id,vc.valore
                                     FROM estarRdaBundle:Campo c LEFT JOIN estarRdaBundle:Valorizzazionecamporichiesta vc
                                     WITH c.id = vc.idcampo
@@ -491,7 +491,7 @@ class SistematicaClientController extends Controller
                 break;
 
             case "Nuova":
-                $ritorno = $this->generateZip($idCategoria, $idRichiesta);
+                $ritorno = $this->generateZip($idCategoria, $idRichiesta,$programmatoria);
                 if ($ritorno['esito']) {
                     $idGestav = "xxxxx";
                     $idgara="";

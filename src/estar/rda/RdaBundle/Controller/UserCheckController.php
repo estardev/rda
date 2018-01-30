@@ -153,11 +153,15 @@ class UserCheckController extends Controller
      * @param $categoria id della categoria su cui si lavora
      * @return DirittiRichiesta i diritti della richiesta
      */
-    public function allRole($categoria)
+    public function allRole($categoria, $programmatoria=0)
     {
-        $utente = $this->getUtente();
-        $idUtente =  $utente->getId();
-
+        if ($programmatoria==0) {
+            $utente = $this->getUtente();
+            $idUtente = $utente->getId();
+        }else{
+            $utente = $this->em->getRepository('estarRdaBundle:Utente')->find(ProgrammatoriaController::IDUTENTE_SOFTWARE_PROGRAMMAZIONE);
+            $idUtente = ProgrammatoriaController::IDUTENTE_SOFTWARE_PROGRAMMAZIONE;
+        }
         //recupero il massimo livello di accesso per la categoria a cui � collegato l'utente tramite i gruppi
         //di appartenenza
 //        $query = $this->em->createQuery('SELECT max(cg.abilitatoinserimentorichieste) as inserimento,
