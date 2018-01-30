@@ -644,6 +644,11 @@ class ClientSistematica
                 <valueString>'.$this->getPriorita().'</valueString>
 			</variable>
 			<variable>
+	            <key>priorita</key>
+               	<type>string</type>
+                <valueString>'.$this->getPriorita().'</valueString>
+			</variable>
+			<variable>
 	            <key>aziendaRichiedente</key>
                	<type>string</type>
                 <valueString>'.$strutturarichiedente.'</valueString>
