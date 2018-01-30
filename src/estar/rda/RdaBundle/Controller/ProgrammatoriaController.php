@@ -188,6 +188,6 @@ class ProgrammatoriaController extends Controller
                 $em->getConnection()->rollBack();
             }
         }
-        return new Response();
+        return new Response('ok',200);
     }
 }
