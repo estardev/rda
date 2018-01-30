@@ -75,8 +75,7 @@ class ProgrammatoriaController extends Controller
     {
         $anno=date('Y');
 
-        $em = $this->getDoctrine()->getManager();
-        $em->getConnection()->beginTransaction();
+
         /*
          * utente denominato SoftwareProgrammazione che serve per il servizio
          * presente con questo id in produzione ed in sviluppo locale
@@ -95,6 +94,8 @@ class ProgrammatoriaController extends Controller
 //            ->findAll();
         /* @var $programmazione AbsPro */
         foreach ($programs as $programmazione) {
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
 
             if ($programmazione->getProAnno() < $anno){
                 continue;
