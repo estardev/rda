@@ -17,16 +17,25 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProgrammatoriaController extends Controller
 {
+    /*
+     *  utente denominato SoftwareProgrammazione che serve per il servizio
+     * presente con questo id in produzione ed in sviluppo locale
+     */
     const IDUTENTE_SOFTWARE_PROGRAMMAZIONE = 252;
-
 
 
     public function getMapPriorita($pro)
     {
-        switch ($pro){
-            case 1: $priorita = 3; break;
-            case 2: $priorita = 2; break;
-            case 3: $priorita = 3; break;
+        switch ($pro) {
+            case 1:
+                $priorita = 3;
+                break;
+            case 2:
+                $priorita = 2;
+                break;
+            case 3:
+                $priorita = 3;
+                break;
         }
 
         return $priorita;
@@ -37,35 +46,91 @@ class ProgrammatoriaController extends Controller
      */
     public function getMapCampoByCategoria($categoria)
     {
-        switch ($categoria){
-            case 1: $campo = 25; break;
-            case 2: $campo = 189; break;
-            case 3: $campo = 48; break;
-            case 4: $campo = 206; break;
-            case 5: $campo = 207; break;
-            case 7: $campo = 208; break;
-            case 8: $campo = 209; break;
-            case 9: $campo = 210; break;
-            case 11: $campo = 211; break;
-            case 12: $campo = 212; break;
-            case 15: $campo = 213; break;
-            case 16: $campo = 214; break;
-            case 19: $campo = 215; break;
-            case 20: $campo = 216; break;
-            case 21: $campo = 217; break;
-            case 27: $campo = 218; break;
-            case 30: $campo = 221; break;
-            case 31: $campo = 408; break;
-            case 32: $campo = 674; break;
-            case 33: $campo = 451; break;
-            case 34: $campo = 482; break;
-            case 35: $campo = 513; break;
-            case 36: $campo = 544; break;
-            case 37: $campo = 575; break;
-            case 38: $campo = 606; break;
-            case 39: $campo = 637; break;
-            case 40: $campo = 949; break;
-            case 41: $campo = 968; break;
+        switch ($categoria) {
+            case 1:
+                $campo = 25;
+                break;
+            case 2:
+                $campo = 189;
+                break;
+            case 3:
+                $campo = 48;
+                break;
+            case 4:
+                $campo = 206;
+                break;
+            case 5:
+                $campo = 207;
+                break;
+            case 7:
+                $campo = 208;
+                break;
+            case 8:
+                $campo = 209;
+                break;
+            case 9:
+                $campo = 210;
+                break;
+            case 11:
+                $campo = 211;
+                break;
+            case 12:
+                $campo = 212;
+                break;
+            case 15:
+                $campo = 213;
+                break;
+            case 16:
+                $campo = 214;
+                break;
+            case 19:
+                $campo = 215;
+                break;
+            case 20:
+                $campo = 216;
+                break;
+            case 21:
+                $campo = 217;
+                break;
+            case 27:
+                $campo = 218;
+                break;
+            case 30:
+                $campo = 221;
+                break;
+            case 31:
+                $campo = 408;
+                break;
+            case 32:
+                $campo = 674;
+                break;
+            case 33:
+                $campo = 451;
+                break;
+            case 34:
+                $campo = 482;
+                break;
+            case 35:
+                $campo = 513;
+                break;
+            case 36:
+                $campo = 544;
+                break;
+            case 37:
+                $campo = 575;
+                break;
+            case 38:
+                $campo = 606;
+                break;
+            case 39:
+                $campo = 637;
+                break;
+            case 40:
+                $campo = 949;
+                break;
+            case 41:
+                $campo = 968;
+                break;
         }
 
         return $campo;
@@ -73,35 +138,26 @@ class ProgrammatoriaController extends Controller
 
     public function indexAction()
     {
-        $anno=date('Y');
+        $anno = date('Y');
 
 
-        /*
-         * utente denominato SoftwareProgrammazione che serve per il servizio
-         * presente con questo id in produzione ed in sviluppo locale
-         */
         $dateTime = new \DateTime();
         $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
 
         $programmazioneDoctrine = $this->getDoctrine()->getManager('programmazione');
 
         $programs = $programmazioneDoctrine->getRepository('estarRdaBundle:AbsPro')->findBy(
-            array('pro_prontoper_rda' => 'S','pro_trasferito_rda'=>'N'),
+            array('pro_prontoper_rda' => 'S', 'pro_trasferito_rda' => 'N'),
             array('pro_id' => 'ASC')
         );
-//        $programs = $this->get('doctrine')
-//            ->getRepository('estarRdaBundle:AbsPro', 'programmazione')->findBy(array('pro_prontoper_rda' => 'S'));
-//            ->findAll();
         /* @var $programmazione AbsPro */
+        $em = $this->getDoctrine()->getManager();
         foreach ($programs as $programmazione) {
-            $em = $this->getDoctrine()->getManager();
-            $em->getConnection()->beginTransaction();
-
-            if ($programmazione->getProAnno() < $anno){
+            if ($programmazione->getProAnno() < $anno) {
                 continue;
             }
             $titolo = $programmazione->getProOggettoEsteso();
-            if (is_null($programmazione->getProNote()) or $programmazione->getProNote() =="")
+            if (is_null($programmazione->getProNote()) or $programmazione->getProNote() == "")
                 $descrizione = $programmazione->getProOggettoEsteso();
             else
                 $descrizione = $programmazione->getProNote();
@@ -119,7 +175,6 @@ class ProgrammatoriaController extends Controller
             $utente_inserimento = $programmazione->getProUtenteIns();
             $anno_programmazione = $programmazione->getProAnno();
             $idRiferimento_programmazione = $programmazione->getProId();
-
 
             //registro la richiesta programmazione
             $richiesta_programmazione = new Richiesta();
@@ -141,7 +196,6 @@ class ProgrammatoriaController extends Controller
             $em->persist($richiesta_programmazione);
             $em->flush();
             $em->refresh($richiesta_programmazione);
-            $idRichiesta = $richiesta_programmazione->getId();
             //registro l'iter
             $iter = new Iter();
             $iter->setIdutente($id_utente);
@@ -171,23 +225,56 @@ class ProgrammatoriaController extends Controller
             $em->persist($valorizzazionecamporichiesta);
             $em->flush();
 
+            $programmazione->setProTrasferitoRda('S');
+            $programmazione->setProDatatrasfRda($dateTime);
+            $programmazioneDoctrine->flush();
 
-            //todo richiamare controller
 //            $sistematicaController = $this->get('sistematicaclientcontroller');
-            $esito = $this->forward('estarRdaBundle:SistematicaClient:index', array('idCategoria' => $programmazione->getCtrId(), 'idRichiesta' => $idRichiesta, 'tipologia' => "Nuova",'programmatoria'=>1));
-//            $esito = $sistematicaController->indexAction($programmazione->getCtrId(), $idRichiesta, 'Nuova',1);
-            if ($esito != "" and  $esito->getStatusCode()=='200') {
+//            $esito = $this->forward('estarRdaBundle:SistematicaClient:index', array('idCategoria' => $programmazione->getCtrId(), 'idRichiesta' => $idRichiesta, 'tipologia' => "Nuova", 'programmatoria' => 1));
+////            $esito = $sistematicaController->indexAction($programmazione->getCtrId(), $idRichiesta, 'Nuova',1);
+//            if ($esito != "" and $esito->getStatusCode() == '200') {
+//                $numprotocollo = $esito->getContent();
+//                $programmazione->setProTrasferitoRda('S');
+//                $programmazione->setProDatatrasfRda($dateTime);
+//                $programmazione->setProProtocolloRda($numprotocollo);
+//                $programmazioneDoctrine->flush();
+//                $em->getConnection()->commit();
+//                $em->getConnection()->close();
+//            } else {
+//                $em->getConnection()->rollBack();
+//                $em->getConnection()->close();
+//            }
+        }
+
+        $entitym = $this->getDoctrine()->getManager();
+        $query =  $entitym->createQuery("SELECT r
+                                    FROM estarRdaBundle:Richiesta r
+                                    WHERE   r.status='da_inviare_ESTAR' 
+                                    AND r.idutente=252
+                                    AND r.idazienda=21
+                                    AND r.numeroprotocollo is null
+                                    AND r.procui is not null
+                                    AND r.prorupnome is not null
+                                    AND r.proutenteins is not null
+                                    AND r.proanno is not null
+                                    ");
+        $protocollare = $query->getResult();
+
+        foreach ($protocollare as $richiestaP){
+            /* @var $richiestaP Richiesta */
+            $idCategoria = $richiestaP->getIdcategoria()->getId();
+            $idR = $richiestaP->getId();
+            $idProgrammata = $richiestaP->getProid();
+            $esito = $this->forward('estarRdaBundle:SistematicaClient:index', array('idCategoria' => $idCategoria, 'idRichiesta' => $idR, 'tipologia' => "Nuova", 'programmatoria' => 1));
+            if ($esito != "" and $esito->getStatusCode() == '200') {
                 $numprotocollo = $esito->getContent();
-                $programmazione->setProTrasferitoRda('S');
-                $programmazione->setProDatatrasfRda($dateTime);
+                $programmazione = $programmazioneDoctrine->getRepository('estarRdaBundle:AbsPro')->find($idProgrammata);
                 $programmazione->setProProtocolloRda($numprotocollo);
                 $programmazioneDoctrine->flush();
-                $em->getConnection()->commit();
-            }
-            else{
-                $em->getConnection()->rollBack();
             }
         }
-        return new Response('ok',200);
+
+
+        return new Response('ok', 200);
     }
 }

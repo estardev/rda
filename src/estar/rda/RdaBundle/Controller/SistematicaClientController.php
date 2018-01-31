@@ -561,14 +561,8 @@ class SistematicaClientController extends Controller
 
         $esito = $risposta->RequestWebServer();
 
-        if ($programmatoria == 1 ) {
-            if ($esito['esito'] == true)
-                return new Response($esito['protocollo'],200);
-            else
-                return new Response("",500);
-        }
-
-        if ($esito['esito'] == true and ($tipologia == "Nuova" or $tipologia == "Documentazione aggiuntiva" or $tipologia == "Documentazione richiesta da RUP" )) {
+        if ($esito['esito'] == true and ($tipologia == "Nuova" or $tipologia == "Documentazione aggiuntiva" or $tipologia == "Documentazione richiesta da RUP" ))
+        {
             $numprotocollo = $esito['protocollo'];
             $idGestav=$esito['chiavesistematica'];
             $urlGestav=$esito['urlprotocollo'];
@@ -691,7 +685,9 @@ class SistematicaClientController extends Controller
                 //}
 
                 $em->flush();
-
+                if ($programmatoria == 1 ) {
+                   return new Response($numprotocollo,200);
+                   }
                 //return $this->redirect($this->generateUrl("richiesta"));
                 //return $this->render('@estarRda/Testing/index.html.twig', array(
                 //    'hello' => $myrespons,
