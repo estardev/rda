@@ -30,6 +30,8 @@ parameters:
     # AMBIENTE PRODUZIONE
     # mysql01.estav-centro.toscana.it
     #database_host2: 159.213.95.6
+    #FG20170212 si raggiunge solo con l'ip di dmz: 10.180.1.18
+    #database_host2: 10.180.1.18
     database_port2: 3306
     database_name2: abs
     database_user2: rda
