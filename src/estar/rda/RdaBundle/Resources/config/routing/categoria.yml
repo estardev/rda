@@ -10,6 +10,10 @@ categoria_new:
     path:     /new
     defaults: { _controller: "estarRdaBundle:Categoria:new" }
 
+categoria_newtestata:
+    path:     /new
+    defaults: { _controller: "estarRdaBundle:Categoria:newtestata" }
+
 categoria_create:
     path:     /create
     defaults: { _controller: "estarRdaBundle:Categoria:create" }
@@ -19,12 +23,26 @@ categoria_edit:
     path:     /{id}/edit
     defaults: { _controller: "estarRdaBundle:Categoria:edit" }
 
+categoria_edittestata:
+    path:     /{id}/edittestata
+    defaults: { _controller: "estarRdaBundle:Categoria:edittestata" }
+
 categoria_update:
     path:     /{id}/update
     defaults: { _controller: "estarRdaBundle:Categoria:update" }
+    methods:  [POST, PUT]
+
+categoria_updatetestata:
+    path:     /{id}/updatetestata
+    defaults: { _controller: "estarRdaBundle:Categoria:updatetestata" }
     methods:  [POST, PUT]
 
 categoria_delete:
     path:     /{id}/delete
     defaults: { _controller: "estarRdaBundle:Categoria:delete" }
     methods:  [POST, DELETE]
+
+categoria_legenda:
+    path:     /legenda
+    defaults: { _controller: "estarRdaBundle:Categoria:legenda" }
+

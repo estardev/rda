@@ -7,13 +7,17 @@
  */
 namespace estar\rda\RdaBundle\Twig;
 
-use estar\rda\RdaBundle\Entity\GenericDoctrine;
+use estar\rda\RdaBundle\estarRdaBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use Symfony\Component\Routing\RouterInterface;
 
 class NavbarExtension extends \Twig_Extension
 {
 
     protected $em;
+    protected $user;
+    protected $session;
 
     public function __construct($em, $user, $session)
     {
@@ -36,8 +40,60 @@ class NavbarExtension extends \Twig_Extension
 
         $utenteSessione= $this->user->getToken()->getUser();
 
-        $categoria = $this->em->getRepository('estarRdaBundle:Categoria')->findAll();
+        //FG 20151026 gestione aree su categoria
+        //$categoria = $this->em->getRepository('estarRdaBundle:Categoria')->findAll();
+        //FG 20151112 ulteriore modifica: ACL non fa vedere le categorie a chi non se le merita.
+        //$query = $this->em->createQuery('select c.id, c.descrizione, a.nome as area from estarRdaBundle:Categoria c join c.idarea a where c.idarea = a.id');
+        //$categoria = $query->getResult();
+        // check: se l'utente � amministratore di sistema, vede tutto.
+        //$utenteFos = $utenteSessione->getIdFosUser();
+        if (!is_null($utenteSessione) && is_object($utenteSessione)) {
+            //Se entro in questo branch ho l'utente loggato
+            if ($utenteSessione->hasRole('ROLE_ADMIN') || $utenteSessione->hasRole('ROLE_SUPER_ADMIN')) {
+                $query = $this->em->createQuery('select c.id as id, c.descrizione as descrizione, a.nome as area, c.legenda as legenda from estarRdaBundle:Categoria c join c.idarea a where c.idarea = a.id ORDER BY c.descrizione');
+                $categoria = $query->getResult();
+
+            } else {
+                //Altrimenti dobbiamo mostrare solo le categorie a cui ha accesso
+                //FIXME FG: questa query non viene eseguita da Doctrine per motivi mistico-cabalistici da investigare.
+//                $subquery=$this->em->createQueryBuilder()
+//                    ->select('IDENTITY(cg.idcategoria)')
+//                    ->from('estarRdaBundle:Categoriagruppo','cg',)
+//                    ->leftjoin( 'cg.idgruppoutente','gu')
+//                    ->where('gu.id = :idutente')
+//                    ->getDQL();
+//
+//
+//                $query=$this->em->createQueryBuilder()
+//                    ->select('c.id, c.descrizione, a.nome as area')
+//                    ->from('estarRdaBundle:Categoria','c')
+//                    ->leftjoin( 'c.idarea','a')
+//                    ->where($this->em->createQueryBuilder()->expr()->in('c.id', $subquery))
+//                    ->setParameter('idutente', $utenteSessione)
+//                    ->getQuery();
+
+                 $query = $this->em->
+                createQuery('select  c.id ,c.descrizione, a.nome as area, c.legenda as legenda
+                      from estarRdaBundle:Categoria c, estarRdaBundle:Area a
+                      where c.idarea = a.id
+                      and c.id in (select IDENTITY(cg.idcategoria) from estarRdaBundle:Categoriagruppo cg, estarRdaBundle:Utentegruppoutente ugu
+                        where cg.idgruppoutente = ugu.idgruppoutente
+                        and ugu.idutente = :idutente) ORDER BY c.descrizione')
+                    ->setParameter('idutente', $utenteSessione);
+                //                $query = $this->em->
+                //                        createQuery('select v.idcategoria as id, v.descrizionecategoria as descrizione, v.nomearea as area from
+                //                          estarRdaBundle:Vcategoriadirittiutente v where v.idutente= :utente')
+                //                    ->setParameter('utente', $utenteSessione);
+                 $categoria=$query->getResult();
+
+
+            }
+        } else {
+            //l'utente non � loggato
+            $categoria = array();
+        }
         $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')->findAll();
+
 
         $categoriaSelezionata = $this->session->get('homepageSelectCategoria');
 

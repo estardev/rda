@@ -1,0 +1,26 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+<div class="panel panel-default">
+    <div class="panel-heading"><h4>Legenda Categorie</h4></div>
+
+       <table class="table">
+        <thead>
+            <tr>
+                <th>Descrizione</th>
+                <th>legenda</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td>{{ entity.descrizione }}</td>
+                <td>{{ entity.legenda }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% endblock %}
+    
+

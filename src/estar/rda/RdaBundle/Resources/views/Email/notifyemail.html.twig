@@ -1,0 +1,34 @@
+<html>
+<body>
+<h1>Buongiorno {{ nomecognome }}</h1>
+<br>
+<br>
+<p>
+    La richiesta dal titolo <b>{{ titolo }}</b>
+    <br>
+    inerente a: " {{ descrizione }} "
+    <br>
+    con:
+<ul type=”disc”>
+    <li>Id richiesta {{ idrichiesta }} (<b>protocollo {{ protocollo }}</b>)</li>
+    <li>Della categoria <b>"{{ categoria }}"</b></li>
+    <li>Richiesta dall'azienda <b>{{ azienda }}</b></li>
+    {% if aziendaRichiesta is not null %}
+        <li>Relativa alle aziende:</li>
+        <ul>
+            {% for aziendaR in aziendaRichiesta %}
+                <li><b>{{ aziendaR }}</b></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <li>si trova nello stato: <b>{{ stato }}</li>
+</ul>
+<br>
+Si prega di controllare sul portale.<br>
+Il team di RDA<br>
+<br>
+Per informazioni scrivere ad <a href="mailto:assistenza.rda@estar.toscana.it">assistenza.rda@estar.toscana.it</a>
+
+</p>
+</body>
+</html>

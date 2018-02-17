@@ -1,3 +1,11 @@
+estar_rda_area:
+    resource: "@estarRdaBundle/Resources/config/routing/area.yml"
+    prefix:   /area
+
+estar_rda_iter:
+    resource: "@estarRdaBundle/Resources/config/routing/iter.yml"
+    prefix:   /iter
+
 estar_rda_fosuser:
     resource: "@estarRdaBundle/Resources/config/routing/fosuser.yml"
     prefix:   /fosuser
@@ -14,10 +22,6 @@ estar_rda_campodocumento:
     resource: "@estarRdaBundle/Resources/config/routing/campodocumento.yml"
     prefix:   /campodocumento
 
-estar_rda_valorizzazionecamporichiesta:
-    resource: "@estarRdaBundle/Resources/config/routing/valorizzazionecamporichiesta.yml"
-    prefix:   /valorizzazionecamporichiesta
-
 estar_rda_valorizzazionecampodocumento:
     resource: "@estarRdaBundle/Resources/config/routing/valorizzazionecampodocumento.yml"
     prefix:   /valorizzazionecampodocumento
@@ -25,10 +29,6 @@ estar_rda_valorizzazionecampodocumento:
 estar_rda_utentegruppoutente:
     resource: "@estarRdaBundle/Resources/config/routing/utentegruppoutente.yml"
     prefix:   /utentegruppoutente
-
-estar_rda_utente:
-    resource: "@estarRdaBundle/Resources/config/routing/utente.yml"
-    prefix:   /utente
 
 estar_rda_richiestautente:
     resource: "@estarRdaBundle/Resources/config/routing/richiestautente.yml"
@@ -58,10 +58,6 @@ estar_rda_categoriadocumento:
     resource: "@estarRdaBundle/Resources/config/routing/categoriadocumento.yml"
     prefix:   /categoriadocumento
     
-estar_rda_campodocumento:
-    resource: "@estarRdaBundle/Resources/config/routing/campodocumento.yml"
-    prefix:   /campodocumento
-
 estar_rda_categoria:
     resource: "@estarRdaBundle/Resources/config/routing/categoria.yml"
     prefix:   /categoria
@@ -78,9 +74,17 @@ estar_rda_formtemplate:
     resource: "@estarRdaBundle/Resources/config/routing/formtemplate.yml"
     prefix:   /formtemplate
 
-estar_rda_pdf:
-    resource: "@estarRdaBundle/Resources/config/routing/pdf.yml"
-    prefix:   /pdf
+estar_rda_formbuilder:
+    resource: "@estarRdaBundle/Resources/config/routing/formbuilder.yml"
+    prefix:   /formbuilder
+
+sistematica:
+    resource: "@estarRdaBundle/Resources/config/routing/sistematicaclient.yml"
+    prefix:   /sistematicaclient
+
+mail:
+    resource: "@estarRdaBundle/Resources/config/routing/mail.yml"
+    prefix:   /mail
 
 soapEsempio:
     path:     /soapesempio/{city}/{country}
@@ -89,6 +93,12 @@ soapEsempio:
 HomePage:
     path:     /homepage
     defaults: { _controller: estarRdaBundle:HomePage:index }
+
+underCostruction:
+    path:     /underCostruction
+    defaults: { _controller: estarRdaBundle:UnderCostruction:index}
+    options:
+      expose: true
 
 navbarSelectedSessionSet:
     path:     /navbarSelectedSession/set
@@ -108,7 +118,28 @@ navbarSelectedSessionClear:
     options:
       expose: true
 
+setListaRichiesteFromSidebar:
+    path:     /listaRichiesteFromSidebar/set
+    defaults: { _controller: estarRdaBundle:ListaRichiesteFromSidebar:setListaRichieste }
+    options:
+      expose: true
+
 HelloCiao:
     path: /testing
     defaults: { _controller: estarRdaBundle:TestingNotify:index }
 
+iter_byrichiesta:
+    path:     /iter/set
+    defaults: { _controller: estarRdaBundle:Iter:iterByRichiesta }
+    options:
+          expose: true
+
+iter_byrichiestagestav:
+    path:     /itergestav/set
+    defaults: { _controller: estarRdaBundle:Iter:iterByRichiestaGestav }
+    options:
+          expose: true
+
+programmatoria:
+    path:     /prog
+    defaults: { _controller: estarRdaBundle:Programmatoria:index }

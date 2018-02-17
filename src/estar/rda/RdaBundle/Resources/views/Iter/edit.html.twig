@@ -1,0 +1,15 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Iter edit</h1>
+
+    {{ form(edit_form) }}
+
+<div class="bottoniera">
+        <a class="btn btn-default" href="{{ path('iter') }}">
+            Indietro
+        </a>
+
+    <!-- <li>{{ form(delete_form) }}</li> -->
+</div>
+{% endblock %}

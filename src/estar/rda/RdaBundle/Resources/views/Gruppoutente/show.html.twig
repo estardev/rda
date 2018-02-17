@@ -1,5 +1,16 @@
 {% extends '::base.html.twig' %}
 
+    {% block javascripts %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#homepageSelectBtnCategoria').prop('disabled',true);
+        $('#homepageMostraTutte').prop('disabled',true);
+        $('#homepageSelectCategoria').val('defaultDisabledNavbarOption');
+    });
+</script>
+{{parent()}}
+{% endblock %}
+
 {% block body -%}
     <h1>Gruppoutente</h1>
 
@@ -19,18 +30,27 @@
             </tr>
         </tbody>
     </table>
-
+    <br>
+    &nbsp;
+    <div class="btn-group">
+        <a class="btn btn-default btn-sm"  href="{{ path('gruppoutente') }}">
+Torna Indietro        </a>
+        <a class="btn btn-default btn-sm"  href="{{ path('formbuilder_showByCategoria', { 'idCategoria': entity.id }) }}">
+Modifica        </a>
+    </div>
+    {#
         <ul class="record_actions">
     <li>
         <a href="{{ path('gruppoutente') }}">
-            Back to the list
+            Torna indietro
         </a>
     </li>
     <li>
-        <a href="{{ path('gruppoutente_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('formbuilder_showByCategoria', { 'idCategoria': entity.id }) }}">
             Edit
         </a>
     </li>
-    <li>{{ form(delete_form) }}</li>
+   <!-- <li>{{ form(delete_form) }}</li> -->
 </ul>
+   #}
 {% endblock %}

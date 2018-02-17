@@ -35,7 +35,30 @@ richiesta_delete:
     defaults: { _controller: "estarRdaBundle:Richiesta:delete" }
     methods:  [POST, DELETE]
 
+richiesta_annulla:
+    path:     /{id}/delete
+    defaults: { _controller: "estarRdaBundle:Richiesta:annulla" }
+    methods:  [POST, DELETE]
+
 richiesta_valida:
     path:     /{id}/valida/{transizione}
     defaults: { _controller: "estarRdaBundle:Richiesta:valida" }
     methods:  POST
+
+richiesta_viewall:
+    path:     /view/{all}
+    defaults: { _controller: "estarRdaBundle:Richiesta:viewAll" }
+    options:
+          expose: true
+
+richiesta_aggregate:
+    path:     /aggregate/{all}
+    defaults: { _controller: "estarRdaBundle:Richiesta:aggregate" }
+    options:
+          expose: true
+
+richiesta_globale:
+    path:     /globale/{all}
+    defaults: { _controller: "estarRdaBundle:Richiesta:globale" }
+    options:
+          expose: true

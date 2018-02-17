@@ -2,55 +2,84 @@
 
 namespace estar\rda\RdaBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Campodocumento
+ *
+ * @ORM\Table(name="campodocumento", indexes={@ORM\Index(name="fkCampodocumentoDocumento1Idx", columns={"idDocumento"})})
+ * @ORM\Entity
  */
 class Campodocumento
 {
     /**
      * @var string
+     *
+     * @ORM\Column(name="nome", type="string", length=255, nullable=true)
      */
     private $nome;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="descrizione", type="string", length=255, nullable=true)
      */
     private $descrizione;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="tipo", type="string", length=255, nullable=true)
      */
     private $tipo;
 
     /**
      * @var boolean
+     *
+     * @ORM\Column(name="obbligatorio", type="boolean", nullable=true)
      */
     private $obbligatorio;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="ordinamento", type="integer", nullable=true)
      */
     private $ordinamento;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="fieldset", type="text", length=65535, nullable=true)
      */
     private $fieldset;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="ordinamentoFieldset", type="string", length=255, nullable=true)
      */
     private $ordinamentofieldset;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var \estar\rda\RdaBundle\Entity\Documento
+     *
+     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Documento")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idDocumento", referencedColumnName="id")
+     * })
      */
     private $iddocumento;
+
 
 
     /**
@@ -254,5 +283,6 @@ class Campodocumento
     {
         return $this->iddocumento;
     }
-}
 
+    public function __toString(){return strval($this->getId());}
+}

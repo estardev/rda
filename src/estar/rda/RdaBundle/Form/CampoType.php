@@ -2,6 +2,7 @@
 
 namespace estar\rda\RdaBundle\Form;
 
+use estar\rda\RdaBundle\Entity\Campo;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -14,23 +15,22 @@ class CampoType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
-            ->add('nome',null, array('label' => 'Nome'))
-            ->add('descrizione',null, array('label' => 'Descrizione'))
-            ->add('tipo',null, array('label' => 'Tipo'))
-            ->add('obbligatorioinserzione',null, array('label' => 'Inserzione Obbligatoria'))
-            ->add('obbligatoriovalidazione',null, array('label' => 'Validazione Obbligatoria'))
-            ->add('ordinamento',null, array('label' => 'Ordinamento del Campo'))
-            ->add('fieldset',null, array('label' => 'Raggruppamento di Appartenenza'))
-            ->add('ordinamentofieldset',null, array('label' => 'Ordinamento del Raggruppamento'))
-            ->add('idcategoria', 'entity', array(
-                'class' => 'estar\rda\RdaBundle\Entity\Categoria',
-                'choice_label' => 'descrizione',
-                'label' => 'Categoria',
-            ))
+            ->add('nome')
+            ->add('descrizione')
+            ->add('tipo', 'choice', array('choices' => Campo::getPossibleEnumValues()))
+            ->add('fieldset', 'hidden')
+            ->add('figlio', new CampoFiglioType())
+            ->add('obbligatoriovalidazioneamministrativa', 'choice', array('choices' => Campo::getPossibleEnumObblighi()))
+            ->add('obbligatorioinserzione', 'choice', array('choices' => Campo::getPossibleEnumObblighi()))
+            ->add('obbligatoriovalidazionetecnica', 'choice', array('choices' => Campo::getPossibleEnumObblighi()))
+//            ->add('ordinamento')
+//            ->add('dataattivazione')
+//            ->add('datadismissione')
         ;
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */

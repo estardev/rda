@@ -1,16 +1,26 @@
 {% extends '::base.html.twig' %}
 
+    {% block javascripts %}
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#homepageSelectBtnCategoria').prop('disabled',true);
+        $('#homepageMostraTutte').prop('disabled',true);
+        $('#homepageSelectCategoria').val('defaultDisabledNavbarOption');
+    });
+</script>
+{{parent()}}
+{% endblock %}
+
 {% block body -%}
-    <h1>Categoriagruppo edit</h1>
+    <h1>Modifica dei Permessi</h1>
 
     {{ form(edit_form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('categoriagruppo') }}">
-            Back to the list
+<div class="bottoniera">
+        <a class="btn btn-default" href="{{ path('categoriagruppo') }}">
+            Indietro alla Lista
         </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <!-- <li>{{ form(delete_form) }}</li> -->
+</div>
 {% endblock %}

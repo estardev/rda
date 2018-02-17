@@ -18,15 +18,14 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new AppBundle\AppBundle(),
             new estar\rda\RdaBundle\estarRdaBundle(),
-			new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
-			new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
+            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+            new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
-            //new Slik\DompdfBundle\SlikDompdfBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             new winzou\Bundle\StateMachineBundle\winzouStateMachineBundle(),
-//            new Slik\DompdfBundle\SlikDompdfBundle()
             new Vich\UploaderBundle\VichUploaderBundle(),
+            new BeSimple\SoapBundle\BeSimpleSoapBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
@@ -41,6 +40,6 @@ class AppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
+        $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
     }
 }

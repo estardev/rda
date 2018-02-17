@@ -15,11 +15,31 @@ class CategoriaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nome',null, array('label' => 'Nome'))
-            ->add('descrizione',null, array('label' => 'Descrizione'))
-        ;
+            ->add('nome', null, array('label' => 'Nome'))
+            ->add('descrizione', null, array('label' => 'Descrizione'))
+            ->add('gruppogestav', null, array('label' => 'Gruppo Utente Gestav'))
+            ->add('idarea', 'entity', array(
+        'class' => 'estar\rda\RdaBundle\Entity\Area',
+        'choice_label' => 'descrizione',
+        'label' => 'Area',
+    ));
+
+
+
+
+//        $builder->add('campi', null, array('label' => 'Campi', 'type' => new CampoType(), 'mapped' => false, 'options' => array('data_class' => 'estar\rda\RdaBundle\Entity\Campo')));
+        $builder->add('campi', 'collection', array(
+            'type' => new CampoType(),
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false
+//            'mapped' => false
+//            'prototype' => true,
+
+        ));
     }
-    
+
+
     /**
      * @param OptionsResolverInterface $resolver
      */

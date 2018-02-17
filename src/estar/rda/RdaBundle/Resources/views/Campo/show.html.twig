@@ -22,8 +22,8 @@
                 <td>{{ entity.obbligatorioinserzione }}</td>
             </tr>
             <tr>
-                <th>Obbligatoriovalidazione</th>
-                <td>{{ entity.obbligatoriovalidazione }}</td>
+                <th>Obbligatoriovalidazionetecnica</th>
+                <td>{{ entity.obbligatoriovalidazionetecnica }}</td>
             </tr>
             <tr>
                 <th>Ordinamento</th>
@@ -34,8 +34,20 @@
                 <td>{{ entity.fieldset }}</td>
             </tr>
             <tr>
-                <th>Ordinamentofieldset</th>
-                <td>{{ entity.ordinamentofieldset }}</td>
+                <th>Obbligatoriovalidazioneamministrativa</th>
+                <td>{{ entity.obbligatoriovalidazioneamministrativa }}</td>
+            </tr>
+            <tr>
+                <th>Padre</th>
+                <td>{{ entity.padre }}</td>
+            </tr>
+            <tr>
+                <th>Dataattivazione</th>
+                <td>{{ entity.dataattivazione|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Datadismissione</th>
+                <td>{{ entity.datadismissione|date('Y-m-d H:i:s') }}</td>
             </tr>
             <tr>
                 <th>Id</th>
@@ -44,17 +56,15 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('campo') }}">
-            Back to the list
+<div class="bottoniera">
+        <a class="btn btn-default" href="{{ path('campo') }}">
+            Torna indietro
         </a>
-    </li>
-    <li>
-        <a href="{{ path('campo_edit', { 'id': entity.id }) }}">
+
+        <a class="btn btn-default" href="{{ path('campo_edit', { 'id': entity.id }) }}">
             Edit
         </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+
+    <!-- <li>{{ form(delete_form) }}</li> -->
+</div>
 {% endblock %}

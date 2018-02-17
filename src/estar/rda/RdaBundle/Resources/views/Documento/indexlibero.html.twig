@@ -1,0 +1,90 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <div class="row">
+
+    <div class="panel panel-default" xmlns="http://www.w3.org/1999/html">
+
+        <div class="panel-heading"><h4>Allegati Liberi</h4></div>
+
+        <table class="table table-responsive table-hover">
+            <thead>
+            <tr>
+                <th>Descrizione</th>
+                <th>Percorso</th>
+                <th>Azioni</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for entity in entities %}
+                <tr >
+                    <td class="col-lg-3">{{ entity.descrizione }}</td>
+                    <td class="col-lg-6">
+                        <div class="btn-group" role="group">
+                            <form class="form" method="post" enctype="multipart/form-data">
+                                {% if valida %}
+                                <input onclick="$('#docfile').click();" type="text" name="subfile" id="subfile"
+                                       class="form-control" style="display: inline;width:99%"
+                                       value="{{ (vich_uploader_asset(entity, 'docFile')) }}"/>
+                                <input type="file" name="docfile" class="form-control "
+                                       style="display: inline;width:1%; visibility:hidden;" id="docfile"/>
+                                {% else %}
+                                    <input  readonly onclick="return false;" type="text" name="subfile" id="subfile"
+                                           class="form-control" style="display: inline;width:99%"
+                                           value="{{ (vich_uploader_asset(entity, 'docFile')) }}"/>
+                                    <input type="file" name="docfile" class="form-control "
+                                           style="display: inline;width:1%; visibility:hidden;" id="docfile"/>
+                                {% endif %}
+                                <script>
+                                    $('#docfile').change(function () {
+                                        var path = $(this).val();
+                                        var file = path.replace("C:\\fakepath\\", "");
+                                        $subfile = $('#subfile');
+                                        $subfile.val(file)
+                                                .html(file)
+                                                .text(file);
+                                    });
+
+                                </script>
+
+
+                                {# in caso di documento gi� presente deve essere presente l'upload con il pulsante "sostituisci"#}
+
+                            </form>
+                        </div>
+                    </td>
+                    <td class="col-lg-6">
+                        <form class="bottoni" method="get">
+                            <a class="btn btn-default"
+                                        href="{{ (vich_uploader_asset(entity, 'docFile')) }}"
+                                        download
+                                ><span
+                                        class="glyphicon glyphicon-download"
+                                        aria-hidden="true"></span> Scarica</a>
+                        </form>
+                        <form class="bottoni" style="padding-left: 5px;" method="post" action="{{ path('documento_deletelibero') }}">
+                            <input name="idDocumento" type="hidden" value="{{ entity }}" />
+                            <input name="idCategoria" type="hidden" value="{{ idCategoria }}" />
+                            {% if not entity.dainviare %}
+                            <input class="btn btn-danger" type="submit" value="Elimina">
+                            {% else %}
+                                <input disabled="disabled" class="btn btn-danger" type="submit" value="Elimina">
+                            {% endif %}
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if valida %}
+    <div class="panel-heading"><h4>Aggiunta nuovo Allegato</h4>
+        {{ form(create_form, {'attr': {'novalidate': 'novalidate'}}) }}
+    </div>
+{% endif %}
+   <div class="bottoniera">
+      <a class="btn btn-default" href="{{ path('richiesta_bycategoria', { 'idCategoria': idCategoria}) }}"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Indietro</a>
+   </div>
+    </div>
+
+{% endblock %}

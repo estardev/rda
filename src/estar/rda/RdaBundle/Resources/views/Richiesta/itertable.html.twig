@@ -1,0 +1,57 @@
+<h3>Richiesta con priorità RDA - <b>
+        {% if richiesta.priorita == 1 %} Emergenza{% endif %}
+        {% if richiesta.priorita == 2 %} Elevata{% endif %}
+        {% if richiesta.priorita == 3 %} Standard{% endif %}
+    </b>{% if richiesta.prioritaGestav is not null %}
+            - ultima priorità assegnata da iShareDoc <b>{{ richiesta.prioritaGestav }}</b>
+            {% endif %}
+        </h3>
+<table class="table table-hover table-striped table-responsive" id="richiestamodel">
+
+    <thead>
+    <tr class="alert-info">
+        <th>Data</th>
+        <th>Utente/RUP</th>
+        <th>Azienda</th>
+        <th>Da Stato</th>
+        <th>A Stato</th>
+        <th>Priorità assegnata</th>
+        <th>Protocollo</th>
+        <th>Da Stato Gestav</th>
+        <th>A Stato Gestav</th>
+        <th>Motivazione</th>
+        <th>Numero Atto Aggiudicazione</th>
+        <th>Numero Protocollo Lettera</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <!-- TODO Ciclo che stampa tutto l'iter in base ad un idRichiesta -->
+    {% for entity in entities %}
+        <tr>
+
+            <td>{{ entity.dataora|date('d-m-Y H:i:s') }}</td>
+            <td>{% if entity.idutente.nomecognome=='Sistematica' and entity.rup is defined %}
+                    {{ entity.rup }}
+                {% elseif entity.idutente.nomecognome=='Sistematica' %}
+                    In carico presso Estar
+                {% else %}
+                    {{ entity.idutente.nomecognome }}
+                {% endif %}
+            </td>
+            <td>{{ entity.idutente.idazienda.nome }}</td>
+            <td>{{ entity.dastato }}</td>
+            <td>{{ entity.astato }}</td>
+            <td>{{ entity.prioritaGestav }}</td>
+            <td>{{ entity.numeroprotocollo }}</td>
+            <td>{{ entity.dastatogestav }}</td>
+            <td>{{ entity.astatogestav }}</td>
+            <td>{{ entity.motivazione }}</td>
+            <td>{{ entity.numeroAttoAggiudicazione }}</td>
+            <td>{{ entity.numeroProtocolloLettera }}</td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

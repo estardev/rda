@@ -1,14 +1,13 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <h1>Categoria creation</h1>
+    <h1>Creazione di una nuova categoria</h1>
 
     {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-<button type="button" class="btn btn-default"><a href="{{ path('categoria') }}">
+    <div class="bottoniera">
+<a class="btn btn-default" href="{{ path('categoria') }}">
             <span class="glyphicon glyphicon-chevron-left"></span> Ritorna alla lista categorie
-        </a></button>
-    
-    </li>
-</ul>
+        </a>
+    </div>
 {% endblock %}

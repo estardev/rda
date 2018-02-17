@@ -2,25 +2,55 @@ html, body {
 	margin: 0;
 	padding: 0;
 	width: 100%;
-	height: 100%; 
+	height: 100%;
 }
 
-body{
+.content_logo{
+overflow: hidden;
+}
 
+.header-logo{
+	margin-left:15px;
+	margin-bottom:20px;
+	float: left;
+}
+.header-azienda{
+	margin-left:5px;
+	margin-bottom:10px;
+	padding-top: 15px;
+	float: left;
+}
+
+.container{
+	padding-bottom:20px;
+}
+
+#form_submit_delete{
+	background-color: #a94442;
+	border-color: #a94442;
+
+}
+
+.btn-primary{
+	margin-right:10px;
 }
 
 .left_block {
 	display: block;
-	float: left; 
+	float: left;
 }
 
 .right_block {
 	display: block;
-	float: right; 
+	float: right;
 }
 
 .h4 {
-	 font-weight: bold;
+	font-weight: bold;
+}
+
+.panel {
+	border-radius: 0px !important;
 }
 
 .navbar-brand {
@@ -36,4 +66,78 @@ body{
 	text-align: center;
 	margin: auto;
 	height:100%;
+}
+
+.bottoni{
+
+	float:left;
+}
+
+.bottoniera{
+	float:right;
+}
+.bottonieratop{
+	/*padding-top: 15px;*/
+	margin-top: 15px;
+
+}
+
+.panel-heading h4 {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: normal;
+	width: 75%;
+	padding-top: 8px;
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 10px;
+    z-index: 1050;
+}
+.modal-sm {
+    max-width: 300px;
+}
+.modal-lg {
+    max-width: 900px;
+	margin-left:-450px;
+
+}
+
+@media screen and (min-width: 768px) {
+	.modal {
+		display: none;
+		overflow: auto;
+		overflow-y: scroll;
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: -200px;
+		z-index: 1040;
+	}
+
+    .modal-dialog {
+        width: 900px;
+        margin: 30px auto;
+    }
+    .modal-content {
+		width: fit-content;
+		-webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+}
+
+.table td.fit,
+.table th.fit {
+	white-space: nowrap;
+	width: 1%;
+}
+
+.dataTables_wrapper .dataTables_filter {
+	float: right;
+	text-align: right;
+	visibility: hidden;
 }

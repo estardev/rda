@@ -2,29 +2,77 @@
 
 namespace estar\rda\RdaBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Categoria
  *
- * @ORM\Table(name="categoria")
+ * @ORM\Table(name="categoria", indexes={@ORM\Index(name="idxidarea", columns={"idarea"})})
  * @ORM\Entity
  */
 class Categoria
 {
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Campo", mappedBy="idcategoria" ,cascade={"persist"})
+     */
+
+    private $campi;
+
+    /**
      * @var string
      *
-     * @ORM\Column(name="nome", type="string", length=45, nullable=true)
+     * @ORM\Column(name="nome", type="string", length=255, nullable=true)
      */
     private $nome;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="descrizione", type="string", length=100, nullable=true)
+     * @ORM\Column(name="descrizione", type="string", length=255, nullable=true)
      */
     private $descrizione;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="gruppogestav", type="string", length=255, nullable=true)
+     */
+    private $gruppogestav;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nomegestav", type="string", length=255, nullable=true)
+     */
+    private $nomegestav;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="legenda", type="text", nullable=true)
+     */
+    private $legenda;
+
+    /**
+     * @return string
+     */
+    public function getLegenda()
+    {
+        return $this->legenda;
+    }
+
+    /**
+     * @param string $legenda
+     */
+    public function setLegenda($legenda)
+    {
+        $this->legenda = $legenda;
+    }
+
 
     /**
      * @var integer
@@ -35,8 +83,17 @@ class Categoria
      */
     private $id;
 
+    /**
+     * @var \estar\rda\RdaBundle\Entity\Area
+     *
+     * @ORM\ManyToOne(targetEntity="estar\rda\RdaBundle\Entity\Area")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idarea", referencedColumnName="id")
+     * })
+     */
+    private $idarea;
 
-    public function __toString(){return strval($this->getId());}
+
     /**
      * Set nome
      *
@@ -94,4 +151,114 @@ class Categoria
     {
         return $this->id;
     }
+
+    /**
+     * Set idarea
+     *
+     * @param \estar\rda\RdaBundle\Entity\Area $idarea
+     *
+     * @return Categoria
+     */
+    public function setIdarea(\estar\rda\RdaBundle\Entity\Area $idarea = null)
+    {
+        $this->idarea = $idarea;
+
+        return $this;
+    }
+
+    /**
+     * Get idarea
+     *
+     * @return \estar\rda\RdaBundle\Entity\Area
+     */
+    public function getIdarea()
+    {
+        return $this->idarea;
+    }
+
+    public function __toString()
+    {
+        return strval($this->getId());
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getCampi()
+    {
+        return $this->campi;
+    }
+
+
+    public function __construct()
+    {
+        $this->campi = new ArrayCollection();
+    }
+
+
+
+    public function addCampus($campo)
+    {
+        if ( ! $this->campi->contains($campo) ) {
+            $campo->setIdcategoria($this);
+            $this->campi->add($campo);
+        }
+        return $this->campi;
+    }
+    public function removeCampus( $campo)
+    {
+        if ($this->campi->contains($campo)) {
+            $this->campi->removeElement($campo);
+        }
+        return $this->campi;
+    }
+    /**
+     * @param Collection $campi
+     * @return $this
+     */
+    public function setCampi(Collection $campi)
+    {
+        $this->campi = $campi;
+        return $this->campi;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGruppogestav()
+    {
+        return $this->gruppogestav;
+    }
+
+    /**
+     * @param string $gruppogestav
+     *
+     * @return Categoria
+     */
+    public function setGruppogestav($gruppogestav)
+    {
+        $this->gruppogestav = $gruppogestav;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNomegestav()
+    {
+        return $this->nomegestav;
+    }
+
+    /**
+     * @param string $nomegestav
+     * @return Categoria
+     */
+    public function setNomegestav($nomegestav)
+    {
+        $this->nomegestav = $nomegestav;
+        return $this;
+    }
+
+
 }

@@ -19,18 +19,30 @@
             </tr>
         </tbody>
     </table>
-
+    <br>
+    &nbsp;
+    <div class="btn-group">
+        <a class="btn btn-default btn-sm"  href="{{ path('categoria') }}">
+            Torna Indietro
+        </a>
+        <a class="btn btn-default btn-sm"  href="{{ path('formbuilder_showByCategoria', { 'idCategoria': entity.id }) }}">
+            Modifica
+        </a>
+    </div>
+    {#
         <ul class="record_actions">
     <li>
         <a href="{{ path('categoria') }}">
-            Back to the list
+            Torna indietro
         </a>
     </li>
     <li>
-        <a href="{{ path('categoria_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('formbuilder_showByCategoria', { 'idCategoria': entity.id }) }}">
             Edit
         </a>
     </li>
-    <li>{{ form(delete_form) }}</li>
+   <!-- <li>{{ form(delete_form) }}</li> -->
+
 </ul>
+#}
 {% endblock %}

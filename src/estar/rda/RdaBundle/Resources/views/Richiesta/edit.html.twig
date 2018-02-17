@@ -5,12 +5,10 @@
 
     {{ form(edit_form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('richiesta') }}">
-            Back to the list
+<div class="bottoniera">
+        <a class="btn btn-default" href="{{ path('richiesta') }}">
+            Torna indietro
         </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+        <!-- <li>{{ form(delete_form) }}</li> -->
+</div>
 {% endblock %}

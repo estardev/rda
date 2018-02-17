@@ -26,7 +26,7 @@ class Utentegruppoutente
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var \estar\rda\RdaBundle\Entity\Utente
@@ -49,7 +49,7 @@ class Utentegruppoutente
     private $idgruppoutente;
 
 
-    public function __toString(){return strval($this->getId());}
+
     /**
      * Set amministratore
      *
@@ -131,4 +131,6 @@ class Utentegruppoutente
     {
         return $this->idgruppoutente;
     }
+
+    public function __toString(){return strval($this->getId());}
 }

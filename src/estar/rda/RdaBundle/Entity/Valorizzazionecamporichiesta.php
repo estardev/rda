@@ -15,7 +15,7 @@ class Valorizzazionecamporichiesta
     /**
      * @var string
      *
-     * @ORM\Column(name="valore", type="string", length=45, nullable=true)
+     * @ORM\Column(name="valore", type="string", length=65535, nullable=true)
      */
     private $valore;
 
@@ -59,7 +59,7 @@ class Valorizzazionecamporichiesta
     private $idcampo;
 
 
-    public function __toString(){return strval($this->getId());}
+
     /**
      * Set valore
      *
@@ -165,4 +165,6 @@ class Valorizzazionecamporichiesta
     {
         return $this->idcampo;
     }
+
+    public function __toString(){return strval($this->getId());}
 }

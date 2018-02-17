@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile as File;
  * @ORM\Entity
  *
  * @Vich\Uploadable
+ * @ORM\HasLifecycleCallbacks
  */
 class Richiestadocumento
 {
@@ -22,6 +23,31 @@ class Richiestadocumento
      * @ORM\Column(name="dataInvio", type="datetime", nullable=true)
      */
     private $datainvio;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="daInviare", type="boolean", options={"default" = 0})
+     */
+    private $dainviare = 0;
+
+    /**
+     * @return boolean
+     */
+    public function isDainviare()
+    {
+        return $this->dainviare;
+    }
+
+    /**
+     * @param boolean $dainviare
+     * @return Richiestadocumento
+     */
+    public function setDainviare($dainviare)
+    {
+        $this->dainviare = $dainviare;
+        return $this;
+    }
 
     /**
      * @var string
@@ -55,6 +81,81 @@ class Richiestadocumento
      * })
      */
     private $idrichiesta;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="idGestav", type="string", length=100, nullable=true)
+     */
+    private $idgestav;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="dataProtocollo", type="string", length=100, nullable=true)
+     */
+    private $dataprotocollo;
+
+    /**
+     * @return string
+     */
+    public function getIdgestav()
+    {
+        return $this->idgestav;
+    }
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="urlProtocollo", type="string", length=255, nullable=true)
+     */
+    private $urlprotocollo;
+
+    /**
+     * @return string
+     */
+    public function getUrlprotocollo()
+    {
+        return $this->urlprotocollo;
+    }
+
+    /**
+     * @param string $urlprotocollo
+     * @return Richiestadocumento
+     */
+    public function setUrlprotocollo($urlprotocollo)
+    {
+        $this->urlprotocollo = $urlprotocollo;
+        return $this;
+    }
+
+    /**
+     * @param string $idgestav
+     * @return Richiestadocumento
+     */
+    public function setIdgestav($idgestav)
+    {
+        $this->idgestav = $idgestav;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataprotocollo()
+    {
+        return $this->dataprotocollo;
+    }
+
+    /**
+     * @param string $dataprotocollo
+     * @return Richiestadocumento
+     */
+    public function setDataprotocollo($dataprotocollo)
+    {
+        $this->dataprotocollo = $dataprotocollo;
+        return $this;
+    }
 
     /**
      * @var \estar\rda\RdaBundle\Entity\Documento
@@ -204,9 +305,9 @@ class Richiestadocumento
      *
      * @Vich\UploadableField(mapping="richiesta_documento", fileNameProperty="filePath")
      *
-     * @var File
+     * @var File $docFile
      */
-    private $docFile;
+    public $docFile;
 
     /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
@@ -235,5 +336,6 @@ class Richiestadocumento
     {
         return $this->docFile;
     }
+
 
 }

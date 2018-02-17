@@ -2,11 +2,16 @@
 
 {% block body -%}
     <h1>Richiesta creation</h1>
+    <div class="bottoniera">
 
+        <div class="bottoni">{{ form(back_form) }}</div>
+
+       </div>
     {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-   <button type="button" class="btn btn-default"><a href="{{ path('richiesta') }}">
+    <div class="bottoniera">
+<a class="btn btn-default" href="{{ path('richiesta') }}">
             <span class="glyphicon glyphicon-chevron-left"></span> Ritorna alle richieste
-        </a></button>
-
+        </a>
+    </div>
 {% endblock %}

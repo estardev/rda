@@ -1,0 +1,193 @@
+<?php
+
+namespace estar\rda\RdaBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
+
+class ListaRichiesteFromSidebarController extends Controller
+{
+    public function setListaRichiesteAction()
+    {   $request = $this->get('request');
+        $selectedSidebarLavorazione = $request->request->get('selectedSidebarLavorazione');
+        $idCategoria = $request->request->get('idCategoria');
+        $utente = $this->getUser();
+        $idUtente =  $utente->getId();
+        $em = $this->getDoctrine()->getManager();
+        //var_dump($idCategoria);
+        $userCheck = $this->get("usercheck.notify");
+        $dirittiTotaliRadicaliGlobbali = $userCheck->dirittiByUtente(); //array di oggetti DirittiRichiesta
+
+        $diritti = $userCheck->allRole($idCategoria);
+
+        foreach ($dirittiTotaliRadicaliGlobbali as $dirittoSingolo) {
+            $idC = $dirittoSingolo->getCategoria()->getId();
+            if($idCategoria!=$idC) continue;
+            else{//funziona non toccarlo più!!!!!!!!!
+                if ($dirittoSingolo->getIsAI()) {
+                    //Abilitato all'inserimento
+
+                    switch ($selectedSidebarLavorazione){
+                        case 'lavorate_0': //in lavorazione
+                            $query = $em->createQuery(
+                                'SELECT r
+                        FROM estarRdaBundle:Richiesta r
+                        WHERE r.status LIKE ?1  AND r.idcategoria=?6 AND r.idutente=?7'
+                            )->setParameters(array(1 => 'bozza', 6 => $idCategoria, 7 => $idUtente));
+
+                            $entities= $query->getResult();
+                            break;
+                        case 'lavorate_1': //lavorate
+
+                            $entities= new ArrayCollection();
+                            $ent = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
+                            foreach($ent as $entity){
+                                $idc=$entity->getIdcategoria()->getId();
+                                $idU = $entity->getIdutente()->getId();
+                                $stato= $entity->getStatus();
+                                if($idc == $idCategoria AND $idU == $idUtente AND $stato!='bozza') $entities->add($entity);
+                                else continue;
+                            }
+                            //$criteria = array('status' => 'da_inviare_ESTAR');
+                            //$entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy($criteria);
+                       //     $query = $em->createQuery(
+                       //         'SELECT r
+                       // FROM estarRdaBundle:Richiesta r
+                       // WHERE (r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6 AND r.idutente=?7'
+                       //     )->setParameters(array(1 => 'inviata_ESTAR', 2 => 'evasa_ESTAR', 3 => 'rigetto_ESTAR', 4 => 'chiusa_ESTAR', 5 => 'annullata_ESTAR', 6=> $idCategoria, 7 => $idUtente));
+//
+                       //     $entities= $query->getResult();
+
+                            break;
+                        case 'lavorate_2': //tutte
+                            $entities= new ArrayCollection();
+                            $ent = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
+                            foreach($ent as $entity){
+                                $idc=$entity->getIdcategoria()->getId();
+                                $idU = $entity->getIdutente()->getId();
+                                if($idc == $idCategoria AND $idU == $idUtente) $entities->add($entity);
+                                else continue;
+                            }
+
+                            break;
+                    }
+
+                }
+                if ($dirittoSingolo->getIsVt()) {
+                    switch ($selectedSidebarLavorazione){
+
+                        //TODO: VANNO PASSATE GLI idCategoria PER SISTEMARE LE QUERY??
+                        case 'lavorate_0': //in lavorazione
+                            $query = $em->createQuery(
+                                'SELECT r
+                        FROM estarRdaBundle:Richiesta r
+                        WHERE r.status LIKE ?2 AND r.idcategoria=?6'
+                            )->setParameters(array(2 => 'attesa_val_tec', 6 => $idCategoria));
+
+                            $entities= $query->getResult();
+                            break;
+                        case 'lavorate_1': //lavorate
+                            //$criteria = array('status' => 'da_inviare_ESTAR');
+                            //$entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy($criteria);
+                            $query = $em->createQuery(
+                                "SELECT r
+                        FROM estarRdaBundle:Richiesta r, estarRdaBundle:Iter t
+                        WHERE t.idutente=$idUtente AND t.idrichiesta=r.id");
+                            $entities= $query->getResult();
+
+                            break;
+                        case 'lavorate_2': //tutte
+                            $entities= new ArrayCollection();
+                            $ent = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
+                            foreach($ent as $entity){
+                                $idc=$entity->getIdcategoria()->getId();
+                                $idU = $entity->getIdutente()->getId();
+                                $stato = $entity->getStatus();
+                                if(($idc == $idCategoria AND $idU == $idUtente) or $stato=='attesa_val_tec') $entities->add($entity);
+                                else continue;
+                            }
+
+                            break;
+                    }
+
+                }
+                if ($dirittoSingolo->getIsVa()) {
+                    switch ($selectedSidebarLavorazione){
+                        case 'lavorate_0': //in lavorazione
+                            $query = $em->createQuery(
+                                'SELECT r
+                        FROM estarRdaBundle:Richiesta r
+                        WHERE r.status LIKE ?4 or r.status LIKE ?5 AND r.idcategoria=?6'
+                            )->setParameters(array(4 => 'attesa_val_amm', 5 => 'da_inviare_ESTAR', 6 => $idCategoria));
+                            $entities= $query->getResult();
+                            break;
+                        case 'lavorate_1': //lavorate
+                            $query = $em->createQuery(
+                                "SELECT r
+                        FROM estarRdaBundle:Richiesta r, estarRdaBundle:Iter t
+                        WHERE t.idutente=$idUtente AND t.idrichiesta=r.id");
+                            $entities= $query->getResult();
+                            //$criteria = array('status' => 'da_inviare_ESTAR');
+                            //$entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy($criteria);
+                 //           $query = $em->createQuery(
+                 //               'SELECT r
+                 //       FROM estarRdaBundle:Richiesta r
+                 //       WHERE (r.status LIKE ?1 OR r.status LIKE ?2 OR r.status LIKE ?3 OR r.status LIKE ?4 OR r.status LIKE ?5) AND r.idcategoria=?6 AND r.idutente=?7'
+                 //           )->setParameters(array(1 => 'inviata_ESTAR', 2 => 'evasa_ESTAR', 3 => 'rigetto_ESTAR', 4 => 'chiusa_ESTAR', 5 => 'annullata_ESTAR', 6=> $idCategoria, 7 => $idUtente));
+//
+                 //           $entities= $query->getResult();
+
+                            break;
+                        case 'lavorate_2': //tutte
+                            $entities= new ArrayCollection();
+                            $ent = $em->getRepository('estarRdaBundle:Richiesta')->findAll();
+                            foreach($ent as $entity){
+                                $idc=$entity->getIdcategoria()->getId();
+                                $idU = $entity->getIdutente()->getId();
+                                $stato = $entity->getStatus();
+                                if(($idc == $idCategoria AND $idU == $idUtente) or $stato=='attesa_val_amm' or $stato=='da_inviare_ESTAR') $entities->add($entity);
+                                else continue;
+                            }
+
+                            break;
+                    }
+                }
+            }
+        }
+
+        //$entities = $em->getRepository('estarRdaBundle:Richiesta')->findBy(array('status' => 'bozza'));
+
+        //$entities_json = json_encode($entities);
+
+
+        //return new Response($entities);
+        return $this->render('estarRdaBundle:Richiesta:table.html.twig', array(
+            'entities' => $entities,
+            'diritti' => $diritti
+        ));
+
+    }
+
+    /*public function getNavbarSessionAction()
+    {
+        $response = array();
+        $response['homepageSelectCategoria'] = $this->get('session')->get('homepageSelectCategoria');
+
+        return new Response(json_encode($response));
+
+    }*/
+
+    /*public function clearNavbarSessionAction()
+    {
+        //$response = array();
+        //$response['homepageSelectCategoria'] = "";
+
+        $this->get('session')->set('homepageSelectCategoria', '');
+        //$response['homepageSelectCategoria'] = $this->get('session')->get('homepageSelectCategoria');
+
+        //return new Response(json_encode($response));
+
+    }*/
+}

@@ -1,15 +1,15 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <h1>Documento creation</h1>
+    <h1>Creazione di un nuovo documento</h1>
 
     {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
         <ul class="record_actions">
-    <li>
-        <a href="{{ path('documento') }}">
-            Back to the list
+            <div class="bottoniera">
+        <a class="btn btn-default" href="{{ path('documento') }}">
+            Indietro alla Lista
         </a>
-    </li>
+                </div>
 </ul>
 {% endblock %}

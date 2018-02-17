@@ -10,7 +10,7 @@ parameters:
 
 framework:
     #esi:             ~
-    #translator:      { fallbacks: ["%locale%"] }
+    translator:      { fallbacks: ["%locale%"] }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -18,7 +18,9 @@ framework:
     form:            ~
     csrf_protection: ~
     validation:      { enable_annotations: true }
-    #serializer:      { enable_annotations: true }
+    serializer:
+#    { enable_annotations: true }
+        enabled : true
     templating:
         engines: ['twig']
         #assets_version: SomeVersionScheme
@@ -35,6 +37,11 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+        pathToWeb: "%kernel.root_dir%/../web"
+        applicativo: "%applicativo%"
+        invioprotocollo: "%invioprotocollo%"
+
 
 # Assetic Configuration
 assetic:
@@ -56,7 +63,7 @@ braincrafted_bootstrap:
     output_dir:
     assets_dir: %kernel.root_dir%/../vendor/twbs/bootstrap
     jquery_path: %kernel.root_dir%/../vendor/jquery/jquery/jquery-1.11.1.js
-    less_filter: less # "less", "lessphp", "sass" or "none"
+    css_preprocessor: less # "less", "lessphp", "sass" or "none"
     fonts_dir: %kernel.root_dir%/../web/fonts
     auto_configure:
         assetic: true
@@ -71,13 +78,25 @@ braincrafted_bootstrap:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   pdo_mysql
-        host:     "%database_host%"
-        port:     "%database_port%"
-        dbname:   "%database_name%"
-        user:     "%database_user%"
-        password: "%database_password%"
-        charset:  UTF8
+        default_connection:   default
+        connections:
+            default:
+                driver:   pdo_mysql
+                host:     "%database_host%"
+                port:     "%database_port%"
+                dbname:   "%database_name%"
+                user:     "%database_user%"
+                password: "%database_password%"
+                charset:  UTF8
+            programmazione:
+                driver:   pdo_mysql
+                host:     "%database_host2%"
+                port:     "%database_port2%"
+                dbname:   "%database_name2%"
+                user:     "%database_user2%"
+                password: "%database_password2%"
+                charset:  UTF8
+
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml
         #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
@@ -86,9 +105,21 @@ doctrine:
         #     path:     "%database_path%"
 
     orm:
+        default_entity_manager: default
+        entity_managers:
+                default:
+                    connection: default
+                    mappings:
+                        estarRdaBundle: ~
+                    naming_strategy: doctrine.orm.naming_strategy.underscore
+                    auto_mapping: true
+                programmazione:
+                    connection: programmazione
+                    mappings:
+                        estarRdaBundle: ~
+                    naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_generate_proxy_classes: "%kernel.debug%"
-        naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
+
 
 # app/config/config.yml
 doctrine_migrations:
@@ -103,22 +134,39 @@ swiftmailer:
     host:      "%mailer_host%"
     username:  "%mailer_user%"
     password:  "%mailer_password%"
-    spool:     { type: memory }
+    port:      "%mailer_port%"
+    encryption: ssl
+#    auth_mode:  login
 
 fos_user:
+    from_email:
+        address: "yourapp@yourapp.com"
+        sender_name: "Demo String"
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
-    user_class: estar\rda\RdaBundle\Entity\User
+    user_class: estar\rda\RdaBundle\Entity\Utente
     registration:
             form:
                 type: app_user_registration
+    profile:
+            form:
+                type: app_user_profile
 
 knp_snappy:
     pdf:
         enabled:    true
-        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
-#        binary:     /usr/local/bin/wkhtmltopdf
-        options:    []
+  #      binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" #locale
+        binary:     /usr/local/bin/wkhtmltopdf #produzione
+#        binary:     /usr/local/bin/wkhtmltopdf.sh #test
+        options:
+            no-outline: true
+            page-size: LETTER
+            # Recommended to set UTF-8 as default encoding :)
+            encoding: UTF-8
+            enable-javascript: true
+            no-background: true
+            disable-smart-shrinking: true
+
 
 winzou_state_machine:
     my_bundle_article:
@@ -128,9 +176,16 @@ winzou_state_machine:
         # list of all possible states:
         states:
             - bozza
+            - eliminata
+            - annullata
             - attesa_val_tec
             - attesa_val_amm
-            - inserita_ABS
+            - da_inviare_ESTAR
+            - inviata_ESTAR
+            - evasa_ESTAR
+            - rigetto_ESTAR
+            - chiusa_ESTAR
+            - annullata_ESTAR
         # list of all possible transitions:
         transitions:
             presentata:
@@ -147,13 +202,35 @@ winzou_state_machine:
                 to: attesa_val_tec
             validazione_amm:
                 from: [attesa_val_amm]
-                to: inserita_ABS
-            rifiutata_amm_ABS:
-                from: [inserita_ABS]
+                to: da_inviare_ESTAR
+            inviato_ESTAR:
+                from: [da_inviare_ESTAR]
+                to: inviata_ESTAR
+            cancellazione:
+                from: [bozza, attesa_val_tec, attesa_val_amm, da_inviare_ESTAR]
+                to: eliminata
+            annullamento:
+                from: [inviata_ESTAR]
+                to: annullata
+            rifiutata_amm_ESTAR:
+                from: [inviata_ESTAR]
                 to: attesa_val_amm
-            rifiutata_tec_ABS:
-                from: [inserita_ABS]
+            rifiutata_tec_ESTAR:
+                from: [inviata_ESTAR]
                 to: attesa_val_tec
+            rigettata_ESTAR:
+                from: [inviata_ESTAR]
+                to: rigetto_ESTAR
+            chiusura_ESTAR:
+                from: [inviata_ESTAR]
+                to: chiusa_ESTAR
+            apertura_ESTAR:
+                from: [chiusa_ESTAR]
+                to: inviata_ESTAR
+            annullamento_ESTAR:
+                #from: [da_inviare_ESTAR]
+                from: [inviata_ESTAR]
+                to: inviata_ESTAR
         # list of all callbacks
         callbacks:
             # will be called before applying a transition
@@ -176,9 +253,40 @@ vich_uploader:
 
     mappings:
         richiesta_documento:
-            uri_prefix:         /images/products
-            upload_destination: %kernel.root_dir%/../web/images/products
-
+            uri_prefix:         /rda/web/documenti #produzione #test
+            #uri_prefix:         /documenti #produzione
+            upload_destination: %kernel.root_dir%/../web/documenti
+            namer:              namer.richiesta_documento
+            directory_namer:    directory_namer.richiesta_documento
             inject_on_load:     true
             delete_on_update:   true
             delete_on_remove:   true
+
+
+be_simple_soap:
+    cache:
+        type:     disk
+        lifetime: 86400
+        limit:    5
+    services:
+            ServerESTAR:
+                namespace:     http://localhost/RDA/web/app_dev.php/ws/ServerESTAR/1.0/
+                binding:       rpc-literal
+                resource:      "@estarRdaBundle/Controller/ServerESTARController.php"
+                resource_type: annotation
+    clients:
+            ServerESTAR:
+                wsdl:           http://localhost/RDA/web/app_dev.php/ws/ServerESTAR?wsdl
+            Tempo:
+                wsdl: http://www.webservicex.com/globalweather.asmx?wsdl
+            Sistematica:
+                wsdl: https://democorepaumbria.grupposistematica.it/isharedoc/webservices/webserviceInstance.wsdl
+
+
+#oneup_uploader:
+#    mappings:
+#        gallery:
+#            frontend: dropzone # or any uploader you use in the frontend
+#            root_folder: true
+##            storage:
+##                directory: "%kernel.root_dir%/../web/uploads/"

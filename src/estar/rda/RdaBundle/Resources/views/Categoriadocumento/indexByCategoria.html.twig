@@ -1,0 +1,33 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+<div class="panel panel-default">
+    <div class="panel-heading"><h4>Elenco documenti associati alla Categoria</h4></div>
+
+       <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Descrizione</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('documento_edit', { 'id': entity.iddocumento.id }) }}">{{ entity.iddocumento.nome }}</a></td>
+                <td>{{ entity.iddocumento.descrizione }}</td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    <div class="panel-heading"><h4>Collega nuovo Documento alla Categoria</h4>
+        {{ form(create_form) }}
+    </div>
+    {% endblock %}
+    
+

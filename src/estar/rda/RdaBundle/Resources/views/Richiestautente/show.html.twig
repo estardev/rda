@@ -18,7 +18,7 @@
                 <td>{{ entity.validatoreamministrativo }}</td>
             </tr>
             <tr>
-                <th>Referenteabs</th>
+                <th>ReferenteESTAR</th>
                 <td>{{ entity.referenteabs }}</td>
             </tr>
             <tr>
@@ -28,17 +28,14 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('richiestautente') }}">
-            Back to the list
+<div class="bottoniera">
+        <a class="btn btn-default" href="{{ path('richiestautente') }}">
+            Torna indietro
         </a>
-    </li>
-    <li>
-        <a href="{{ path('richiestautente_edit', { 'id': entity.id }) }}">
+
+        <a class="btn btn-default" href="{{ path('richiestautente_edit', { 'id': entity.id }) }}">
             Edit
         </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <!-- <li>{{ form(delete_form) }}</li> -->
+</div>
 {% endblock %}

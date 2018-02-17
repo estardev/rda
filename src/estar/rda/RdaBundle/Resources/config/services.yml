@@ -14,9 +14,47 @@ services:
            user: "@security.context"
            session: "@session"
 
+    model.richiesta:
+        class: estar\rda\RdaBundle\Model\RichiestaModel
+        arguments:
+          em: "@doctrine.orm.entity_manager"
+          user: "@security.context"
+          service_container: "@service_container"
+
+    model.campo:
+        class: estar\rda\RdaBundle\Model\CampoModel
+        arguments:
+          em: "@doctrine.orm.entity_manager"
+          user: "@security.context"
+
 #services:
 #    estar_rda.example:
 #        class: estar\rda\RdaBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
 
-    
+
+    namer.richiesta_documento:
+        class: estar\rda\RdaBundle\Namer\Namer
+        tags:
+            - { name: filePath }
+
+    directory_namer.richiesta_documento:
+            class: estar\rda\RdaBundle\Namer\DirectoryNamer
+            tags:
+                - { name: filePath }
+
+    namer.richiesta_documentolibero:
+        class: estar\rda\RdaBundle\Namer\NamerLibero
+        tags:
+            - { name: filePath }
+
+    directory_namer.richiesta_documentolibero:
+            class: estar\rda\RdaBundle\Namer\DirectoryNamerLibero
+            tags:
+                - { name: filePath }
+
+    model.client:
+            class: estar\rda\RdaBundle\Model\ClientSistematica
+            arguments:
+              em: "@doctrine.orm.entity_manager"
+              user: "@security.context"

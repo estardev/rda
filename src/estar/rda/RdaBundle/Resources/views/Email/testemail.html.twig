@@ -1,0 +1,13 @@
+<h3>Funziona tutto!</h3>
+<img src="{{ asset('images/logoestar.png', absolute=true) }}">
+<p>
+    Ciao {{ nomecognome }}! Se leggi questa email, vuol dire che tutto funziona.
+
+    Evvai!
+
+    Il team di RDA
+
+</p>
+{% if (test is defined) %}
+Risultato: {{ risultato }}
+{% endif %}

@@ -15,7 +15,7 @@ class Azienda
     /**
      * @var string
      *
-     * @ORM\Column(name="nome", type="string", length=45, nullable=false)
+     * @ORM\Column(name="nome", type="string", length=255, nullable=false)
      */
     private $nome;
 
@@ -29,7 +29,7 @@ class Azienda
     private $id;
 
 
-    public function __toString(){return strval($this->getId());}
+
     /**
      * Set nome
      *
@@ -63,4 +63,6 @@ class Azienda
     {
         return $this->id;
     }
+
+    public function __toString(){return strval($this->getId());}
 }

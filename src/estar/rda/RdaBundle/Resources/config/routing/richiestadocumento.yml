@@ -32,7 +32,7 @@ richiestadocumento_delete:
 richiestadocumento_upload:
     path:     /upload/{idRichiesta}/{idDocumento}
     defaults: { _controller: "estarRdaBundle:Richiestadocumento:upload" }
-    methods:  POST
+    methods:  [POST, GET]
 
 richiestadocumento_print:
     path:     /print/{idCategoria}/{idRichiesta}/{idDocumento}

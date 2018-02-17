@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+
 class CategoriadocumentoType extends AbstractType
 {
     /**
@@ -15,7 +16,11 @@ class CategoriadocumentoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('necessarioperabs',null, array('label' => 'Necessario per ABS'))
+            ->add('necessarioperabs', 'choice',
+                array('label' => 'Necessario per ESTAR',
+                    'choices' => array('Si'=>true, 'No'=>false),
+                    'choices_as_values' => true,
+                ))
             ->add('iddocumento', 'entity', array(
                 'class' => 'estar\rda\RdaBundle\Entity\Documento',
                 'choice_label' => 'nomedescrizione',

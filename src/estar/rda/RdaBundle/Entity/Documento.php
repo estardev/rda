@@ -15,7 +15,7 @@ class Documento
     /**
      * @var string
      *
-     * @ORM\Column(name="nome", type="string", length=45, nullable=true)
+     * @ORM\Column(name="nome", type="string", length=255, nullable=true)
      */
     private $nome;
 
@@ -27,6 +27,13 @@ class Documento
     private $descrizione;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="path", type="string", length=255, nullable=true)
+     */
+    private $path;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
@@ -35,10 +42,8 @@ class Documento
      */
     private $id;
 
-    private $nomedescrizione;
 
 
-    public function __toString(){return strval($this->getId());}
     /**
      * Set nome
      *
@@ -87,11 +92,6 @@ class Documento
         return $this->descrizione;
     }
 
-    public function getNomedescrizione()
-    {
-        return $this->nome . ", " . $this->descrizione;
-    }
-
     /**
      * Get id
      *
@@ -101,4 +101,32 @@ class Documento
     {
         return $this->id;
     }
+
+    public function __toString(){return strval($this->getId());}
+
+    /**
+     * @return string una descrizione decente
+     */
+    public function getNomeDescrizione()
+    {
+        return $this->getNome().' - '.$this->getDescrizione();
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+
+
 }

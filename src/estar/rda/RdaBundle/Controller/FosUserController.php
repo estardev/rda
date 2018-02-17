@@ -4,7 +4,6 @@ namespace estar\rda\RdaBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use estar\rda\RdaBundle\Entity\FosUser;
 use estar\rda\RdaBundle\Form\FosUserType;
 

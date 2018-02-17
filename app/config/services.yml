@@ -11,7 +11,13 @@ services:
         class: estar\rda\RdaBundle\Form\RegistrationType
         tags:
             - { name: form.type, alias: app_user_registration }
-  app.twig_extension:
+
+  app.form.profile:
+        class: estar\rda\RdaBundle\Form\ProfileType
+        tags:
+             - { name: form.type, alias: app_user_profile }
+
+  navbar.twig_extension:
           class: estar\rda\RdaBundle\Twig\NavbarExtension
           public: false
           tags:
@@ -20,3 +26,21 @@ services:
                       em: "@doctrine.orm.entity_manager"
                       user: "@security.context"
                       session: "@session"
+
+  sidebar.twig_extension:
+            class: estar\rda\RdaBundle\Twig\SidebarExtension
+            public: false
+            tags:
+                - { name: twig.extension }
+            arguments:
+                        user: "@security.context"
+  fos_user.doctrine_registry:
+            alias: doctrine
+
+  form_template_factory:
+        class: estar\rda\RdaBundle\Form\FormTemplateService
+        arguments:
+            user:   "@usercheck.notify"
+            router: "@router"
+            em:     "@doctrine.orm.entity_manager"
+            session: "@session"

@@ -3,6 +3,7 @@
 namespace estar\rda\RdaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use FOS\UserBundle\Model\Group as BaseGroup;
 
 /**
  * Gruppoutente
@@ -15,14 +16,14 @@ class Gruppoutente
     /**
      * @var string
      *
-     * @ORM\Column(name="nome", type="string", length=45, nullable=false)
+     * @ORM\Column(name="nome", type="string", length=255, nullable=false)
      */
     private $nome;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="descrizione", type="string", length=100, nullable=true)
+     * @ORM\Column(name="descrizione", type="string", length=255, nullable=true)
      */
     private $descrizione;
 
@@ -36,7 +37,7 @@ class Gruppoutente
     private $id;
 
 
-    public function __toString(){return strval($this->getId());}
+
     /**
      * Set nome
      *
@@ -94,4 +95,6 @@ class Gruppoutente
     {
         return $this->id;
     }
+
+    public function __toString(){return strval($this->getId());}
 }

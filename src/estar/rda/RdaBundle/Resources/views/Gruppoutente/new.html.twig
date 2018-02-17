@@ -1,15 +1,29 @@
 {% extends '::base.html.twig' %}
 
-{% block body -%}
-    <h1>Gruppoutente creation</h1>
+    {% block javascripts %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#homepageSelectBtnCategoria').prop('disabled',true);
+        $('#homepageMostraTutte').prop('disabled',true);
+        $('#homepageSelectCategoria').val('defaultDisabledNavbarOption');
+    });
+</script>
+{{parent()}}
+{% endblock %}
 
+{% block body -%}
+    <h1>Creazione di un nuovo Gruppo Utente</h1>
+
+    <div class="bottoniera">
+            <a class="btn btn-default" href="{{ path('gruppoutente') }}">
+                Indietro alla Lista
+            </a>
+    </div>
+    &nbsp;
     {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
         <ul class="record_actions">
-    <li>
-        <a href="{{ path('gruppoutente') }}">
-            Back to the list
-        </a>
-    </li>
+
+
 </ul>
 {% endblock %}

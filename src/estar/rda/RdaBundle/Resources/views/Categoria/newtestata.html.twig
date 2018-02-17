@@ -1,0 +1,13 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Nuova Categoria</h1>
+
+    {{ form(form) }}
+
+<div class="bottoniera">
+        <a class="btn btn-default" href="{{ path('area') }}">
+            Indietro alla Lista
+        </a>
+</div>
+{% endblock %}

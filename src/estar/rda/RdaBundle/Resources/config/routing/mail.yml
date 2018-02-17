@@ -1,0 +1,9 @@
+mail_test:
+    path: /mail/test
+    defaults: { _controller: estarRdaBundle:Email:testEmail}
+    #methods:  [POST, PUT]
+
+mail_notify:
+    path: /mail/notify/{idrichiesta}
+    defaults: { _controller: estarRdaBundle:Email:notifyEmail}
+    #methods:  [POST, PUT]

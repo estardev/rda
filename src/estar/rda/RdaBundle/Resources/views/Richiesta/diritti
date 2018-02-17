@@ -1,0 +1,62 @@
+ {% if diritti is defined %}
+                <tr>
+                    <td colspan="4">PIPPO</td>
+                </tr>
+            <tbody>
+            {% endif %}
+            {% if diritti is defined %}
+            <tr>
+                <td>VA= {{ diritti.isva }}</td>
+                <td>VT= {{ diritti.isvt }}</td>
+                <td>AI= {{ diritti.isai }}</td>
+
+            </tr>
+            <tbody>
+            {% endif %}
+            {% if diritti.isva %}
+            <tr>
+                <td> altro pippo</td>
+            </tr>
+            <tbody>
+            {% else %}
+            <tr>
+                <td> un pluto</td>
+            </tr>
+            {% endif %}
+
+
+            ----------------------
+
+
+
+            <!-- David_20151029: test per dirottare su rotte e parametri direttamente dal twig -->
+                    <!-- <button class="btn btn-default"><a href="{{  absolute_url(path('richiesta_bycategoria', {'idCategoria': app.session.get('homepageSelectCategoria')})) }}">indietro</a></button>-->
+                    <!-- fine:20151029 -->
+
+
+----------------------------------
+
+switch($transizione)
+{
+            case 'presentata': $pre=1; break;
+            case 'rifiutata_tec': $pre=2; break;
+            case 'validazione_tec': $pre=3; break;
+            case 'rifiutata_amm': $pre=4; break;
+            case 'validazione_amm': $pre=5; break;
+            case 'inviato_ESTAR': $pre=6; break;
+            case 'cancellazione': $pre=7; break;
+            case 'annullamento': $pre=8; break;
+            case 'rifiutata_amm_ESTAR': $pre=9; break;
+            case 'rifiutata_tec_ESTAR': $pre=10; break;
+            case 'rigettata_ESTAR': $pre=11; break;
+            case 'chiusura_ESTAR': $pre=12; break;
+            case 'attesa_doc_aggiuntiva': $pre=14; break;
+            case 'attesa_doc_aggiuntiva_RUP': $pre=15; break;
+            case 'assegnata_programmazione': $pre=16; break;
+            case 'istruttoria': $pre=17; break;
+            case 'indizione': $pre=18; break;
+            case 'valutazione': $pre=19; break;
+            case 'aggiudicazione': $pre=20; break;
+            case 'annullamento_ESTAR': $pre=21; break;
+}
+

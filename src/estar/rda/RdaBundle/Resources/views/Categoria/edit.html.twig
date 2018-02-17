@@ -1,16 +1,293 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <h1>Categoria edit</h1>
 
-    {{ form(edit_form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('categoria') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <script>
+
+
+        function addTagFormDeleteLink($tagFormLi) {
+            var $removeFormA = $('<a href="#">delete this tag</a>');
+            $tagFormLi.append($removeFormA);
+
+            $removeFormA.on('click', function (e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the tag edit_form
+                $tagFormLi.remove();
+            });
+        }
+
+        function addTagForm($collectionHolder, $newLinkLi) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype');
+
+            // get the new index
+            var index = $collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the edit_form in the page in an li, before the "Add a tag" link li
+            var $newFormLi = $('<li></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+
+            // add a delete link to the new edit_form
+            addTagFormDeleteLink($newFormLi);
+        }
+        var $collectionHolder;
+
+        // setup an "add a tag" link
+        var $addTagLink = $('<a href="#" class="add_tag_link">Add a tag</a>');
+        var $newLinkLi = $('<li></li>').append($addTagLink);
+
+        jQuery(document).ready(function () {
+
+
+            // Get the ul that holds the collection of tags
+            $collectionHolder = $('ul.tags');
+
+            // add the "add a tag" anchor and li to the tags ul
+            $collectionHolder.append($newLinkLi);
+
+            // add a delete link to all of the existing tag edit_form li elements
+            $collectionHolder.find('li:not(:has(.add_tag_link))').each(function () {
+                addTagFormDeleteLink($(this));
+            });
+
+            // count the current edit_form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            $addTagLink.on('click', function (e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new tag edit_form (see next code block)
+                addTagForm($collectionHolder, $newLinkLi);
+            });
+        });
+    </script>
+    <div id="myProgress" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    {#<button type="button" class="close" data-dismiss="modal">&times;</button>#}
+                    {#<h4 class="modal-title">Modifica Campo</h4>#}
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#{{ dump(form.children)}}#}
+    {% if form.children|length<2 %}
+        <button id="campoNew" type="button" class="btn btn-info btn-lg" data-toggle="modal"
+                data-target="#myModal">Aggiungi Campo
+        </button>
+    {% endif %}
+    {{ form(form) }}
+
+    {#<h1>Categoria editing</h1>#}
+    {#{{ form_start(edit_form) }}#}
+    {#{{ form_row(edit_form.nome) }}#}
+    {#{{ form_row(edit_form.descrizione) }}#}
+    {#{{ edit_form(edit_form, {'attr': {'novalidate': 'novalidate'}}) }}#}
+    {#<ul class="tags" >#}
+    {#<ul class="tags" data-prototype="{{ form_widget(edit_form.campi.vars.prototype)|e }}">#}
+    {#{{ dump(edit_form.campo }}#}
+    {#{% for campo in edit_form.campi %}#}
+    {#{{ dump(campo.vars.value.descrizione) }}#}
+    {#<li>#}
+
+    {#{{ campo.vars.value.descrizione }}#}
+
+
+
+    <!-- Modal -->
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modifica Campo</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.close').on('click', function () {
+                $('.dropdown-toggle').dropdown();
+            });
+            var $campiEditabili = $('.form-group').has('input:not(.secondLevel)').find('label.control-label');
+            $.each($campiEditabili, function (index) {
+
+                var disableFirst = (index == 0) ? 'disabled' : '';
+                var disableLast = (index == $campiEditabili.length - 1) ? 'disabled' : '';
+                var patt = new RegExp(/form_(.*)+-([0-9]+)/);
+                var id = patt.exec($(this).parent().find('input').attr('id'))[2];
+                var patt2 = new RegExp(/(\d)-(.*)+/);
+                var ordinamento = parseInt(patt2.exec($(this).text())[1]);
+                var route = "{{ path('campo_create', { 'idCategoria':idCategoria,'ordinamento': 'PLACEHOLDER' }) }}";
+                var urlCreateUp = route.replace('PLACEHOLDER', ordinamento - 1);
+                var urlCreateDown = route.replace('PLACEHOLDER', ordinamento + 1);
+                $(this).replaceWith(
+                        '<div class="dropdown">' +
+                        '<button class="btn btn-default" type="button">' + $(this).text() + '</button>' +
+                        '<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><span class="caret"></span></button>' +
+                        '<span class="sr-only">Toggle Dropdown</span>' +
+                        '<ul class="dropdown-menu">' +
+                        '<li><a class="edit" id="' + id + '">Modifica</a></li>' +
+                        '<li class="' + disableFirst + '"><a >Sposta su</a></li>' +
+                        '<li class="' + disableLast + '"><a >Sposta giù</a></li>' +
+                        '<li class="divider"></li>' +
+                        '<li><a class="createUp">Aggiungi sopra</a></li>' +
+                        '<li><a class="createDown">Aggiungi sotto</a></li>' +
+                        '</ul>' +
+                        '</div>');
+            });
+
+//            $('.form-group').has('input:not(.secondLevel)').find('label.control-label')
+            $('.edit').on('click', function () {
+
+//                var patt = new RegExp(/form_(.*)+-([0-9]+)/);
+//                var id = patt.exec($(this).parent().find('input').attr('id'))[2];
+                id = $(this).attr('id');
+                var route = "{{ path('campo_edit', { 'id': 'PLACEHOLDER' }) }}";
+                var url = route.replace('PLACEHOLDER', id);
+                var $myModal = $('#myModal');
+                console.log(url);
+                var $myProgress = $('#myProgress');
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    async: true,
+                    beforeSend: function () {
+
+                        $myProgress.find('.modal-body').html("<h4><p>Attendere prego...</p></h4>");
+                        $myProgress.modal('show');
+
+                    },
+                    success: function (data) {
+                        $('#myProgress').modal('hide');
+                        $myModal.find('.modal-body').html(data);
+                        $myModal.modal('show');
+                        $('.dropdown-toggle').dropdown()
+
+                    }
+                })
+            });
+            $('#campoNew').on('click', function () {
+
+
+                id = $(this).attr('id');
+                var url = "{{ path('campo_new',{'idCategoria':idCategoria,'ordinamento':'1'}) }}";
+                var $myModal = $('#myModal');
+                console.log(url);
+                var $myProgress = $('#myProgress');
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    async: true,
+                    beforeSend: function () {
+
+                        $myProgress.find('.modal-body').html("<h4><p>Attendere prego...</p></h4>");
+                        $myProgress.modal('show');
+
+                    },
+                    success: function (data) {
+                        $('#myProgress').modal('hide');
+                        $myModal.find('.modal-body').html(data);
+                        $myModal.modal('show');
+                        $('.dropdown-toggle').dropdown()
+
+                    }
+                })
+            });
+            $('.createUp').on('click', function () {
+
+                var patt2 = new RegExp(/(\d*)-(.*)+/);
+                var ordinamento = parseInt(patt2.exec($(this).parents('.dropdown.open').find('.btn:not(.dropdown-toggle)').text())[1]);
+//                var isFirstLevel = $(this).parents('.form-group').has('.firstLevel').length > 0;
+//                var offset = (isFirstLevel) ? 2 : 1;
+                var offset = 1;
+                var route = "{{ path('campo_new', { 'idCategoria':idCategoria,'ordinamento': 'PLACEHOLDER' }) }}";
+                var urlCreateUp = route.replace('PLACEHOLDER', ordinamento - offset);
+                var $myModal = $('#myModal');
+                var $myProgress = $('#myProgress');
+                $.ajax({
+                    type: 'GET',
+                    url: urlCreateUp,
+                    async: true,
+                    beforeSend: function () {
+
+                        $myProgress.find('.modal-body').html("<h4><p>Attendere prego...</p></h4>");
+                        $myProgress.modal('show');
+
+                    },
+                    success: function (data) {
+                        $('#myProgress').modal('hide');
+                        $myModal.find('.modal-body').html(data);
+                        $myModal.modal('show');
+                        $('.dropdown-toggle').dropdown()
+
+                    }
+                })
+            });
+            $('.createDown').on('click', function () {
+
+
+                var patt2 = new RegExp(/(\d*)-(.*)+/);
+                var ordinamento = parseInt(patt2.exec($(this).parents('.dropdown.open').find('.btn:not(.dropdown-toggle)').text())[1]);
+                var isFirstLevel = $(this).parents('.form-group').has('.firstLevel').length > 0;
+                var offset = (isFirstLevel) ? 2 : 1;
+                var route = "{{ path('campo_new', { 'idCategoria':idCategoria,'ordinamento': 'PLACEHOLDER' }) }}";
+                var urlCreateDown = route.replace('PLACEHOLDER', ordinamento + offset);
+                var $myModal = $('#myModal');
+                var $myProgress = $('#myProgress');
+                $.ajax({
+                    type: 'GET',
+                    url: urlCreateDown,
+                    async: true,
+                    beforeSend: function () {
+
+                        $myProgress.find('.modal-body').html("<h4><p>Attendere prego...</p></h4>");
+                        $myProgress.modal('show');
+
+                    },
+                    success: function (data) {
+                        $('#myProgress').modal('hide');
+                        $myModal.find('.modal-body').html(data);
+                        $myModal.modal('show');
+                        $('.dropdown-toggle').dropdown()
+
+                    }
+                })
+            })
+        });
+
+    </script>
+
 {% endblock %}

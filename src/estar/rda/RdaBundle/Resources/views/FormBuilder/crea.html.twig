@@ -1,0 +1,14 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Crea Nuovo Campo</h1>
+    {% if form is defined %}
+        {{ form(form) }}
+    {% endif %}
+
+        <ul class="record_actions">
+    <li>
+        {{ form(backForm) }}
+    </li>
+</ul>
+{% endblock %}

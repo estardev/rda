@@ -1,0 +1,68 @@
+{% if (is_granted("IS_AUTHENTICATED_REMEMBERED")) %}
+
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapse" aria-expanded="false" data-toggle="collapse" data-target="#navbar-collapse-2">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        &nbsp;
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="navbar-collapse-2">
+    <ul class="nav navbar-nav navbar-left">
+
+        {#<li>
+            <a href="#" data-toggle="collapse" class="mydropdown" data-target="#subRichieste"><b>RICHIESTE</b></a>
+            <ul class="nav collapse in" id="subRichieste">
+                <li class="active scelteSidebar scelteSidebarLavorazione" id="lavorate_0"><a><span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;In Lavorazione</a></li>
+                <li class="scelteSidebar scelteSidebarLavorazione" id="lavorate_1"><a><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;Lavorate</a></li>
+            </ul>
+
+        </li>#}
+
+    {% if (is_granted("ROLE_MANAGER_USER"))%}
+        <li>
+        <a href="#" data-toggle="collapse" aria-expanded="false" class="mydropdown" data-target="#subUtenti"><b>UTENTI</b></a>
+        <ul class="nav collapse" id="subUtenti">
+            <li class="scelteSidebar"><a href="{{ path('utente') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Gestione Utenti</a></li>
+            <li class="scelteSidebar"><a href="{{ path('fos_user_registration_register') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Nuovo Utente</a></li>
+            <li class="scelteSidebar"><a href="{{ path('gruppoutente') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Gestione Gruppi</a></li>
+            <li class="scelteSidebar"><a href="{{ path('gruppoutente_new') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Nuovo Gruppo</a></li>
+            <li class="scelteSidebar"><a href="{{ path('categoriagruppo') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Gestione Permessi</a></li>
+            <li class="scelteSidebar"><a href="{{ path('categoriagruppo_new') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Nuovo Permesso</a></li>
+
+        </ul>
+        </li>
+    {% elseif (is_granted("ROLE_ADMIN") or is_granted("ROLE_SUPER_ADMIN"))%}
+            <li>
+                <a href="#" data-toggle="collapse" aria-expanded="false" class="mydropdown" data-target="#subUtenti"><b>UTENTI</b></a>
+                <ul class="nav collapse" id="subUtenti">
+                    <li class="scelteSidebar"><a href="{{ path('utente') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Gestione Utenti</a></li>
+                    <li class="scelteSidebar"><a href="{{ path('fos_user_registration_register') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Nuovo Utente</a></li>
+                    <li class="scelteSidebar"><a href="{{ path('gruppoutente') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Gestione Gruppi</a></li>
+                    <li class="scelteSidebar"><a href="{{ path('gruppoutente_new') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Nuovo Gruppo</a></li>
+                    <li class="scelteSidebar"><a href="{{ path('categoriagruppo') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Gestione Permessi</a></li>
+                    <li class="scelteSidebar"><a href="{{ path('categoriagruppo_new') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Nuovo Permesso</a></li>
+
+                </ul>
+
+            </li>
+
+            <li>
+                <a href="#" data-toggle="collapse" aria-expanded="false" class="mydropdown" data-target="#subConf"><b>CONFIGURAZIONE</b></a>
+                <ul class="nav collapse" id="subConf">
+                    <li class="scelteSidebar"><a href="{{ path('categoria') }}"><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;Gestione Categorie</a></li>
+                    <li class="scelteSidebar"><a href="{{ path('categoria_newtestata') }}"><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;Nuova Categoria</a></li>
+                    <li class="scelteSidebar"><a href="{{ path('documento') }}"><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Gestione Documenti</a></li>
+                    <li class="scelteSidebar"><a href="{{ path('documento_new') }}"><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Nuovo Documento</a></li>
+                    <!--<li class="scelteSidebar"><a href="{{ path('area') }}"><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Aree</a></li>-->
+                </ul>
+            </li>
+        {% endif %}
+
+    </ul>
+    </div><!-- /.navbar-collapse -->
+
+{% endif %}

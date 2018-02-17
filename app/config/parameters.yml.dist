@@ -2,18 +2,37 @@
 # Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
 # http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
 parameters:
-    database_host:     127.0.0.1
-    database_port:     ~
-    database_name:     symfony
-    database_user:     root
-    database_password: ~
-    # You should uncomment this if you want use pdo_sqlite
-    # database_path: "%kernel.root_dir%/data.db3"
-
-    mailer_transport:  smtp
-    mailer_host:       127.0.0.1
-    mailer_user:       ~
-    mailer_password:   ~
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: rda
+    database_user: root
+    database_password: null
+    mailer_transport: smtp
+    mailer_host: smtps.sanita.toscana.it
+    mailer_user: assistenza.rda@estar.toscana.it
+    mailer_password: '0717482560'
+    mailer_port: 465
+    invioprotocollo: true #true se abilitata la funzione di invio manuale protocollo
+    endpoint: indirizzo_endpoint
+    tipoinstallazione: test
+    #    applicativo: RDA Online
+    applicativo: RDA Test
+    #    applicativo: RDA Concorsi
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+#connessione per software programmazione
+    # AMBIENTE SVILUPPO
+    #auth-dev.estav-centro.toscana.it
+    database_host2: 159.213.95.8
+    # AMBIENTE TEST
+    #database_host2: 159.213.95.8
+    # AMBIENTE PRODUZIONE
+    # mysql01.estav-centro.toscana.it
+    #database_host2: 159.213.95.6
+    #FG20170212 si raggiunge solo con l'ip di dmz: 10.180.1.18
+    #database_host2: 10.180.1.18
+    database_port2: 3306
+    database_name2: abs
+    database_user2: rda
+    database_password2: 3star2018!

@@ -8,11 +8,16 @@
             async: false,
             url: Routing.generate('navbarSelectedSessionClear'),
             /*success: function(data)
-            {
-                var myjson = $.parseJSON(data);
-                alert(" ecco: "+myjson.homepageSelectCategoria);
-            }*/
+             {
+             var myjson = $.parseJSON(data);
+             alert(" ecco: "+myjson.homepageSelectCategoria);
+             }*/
         });
+
+        function ChangeSelect(idSelect){
+          $('#homepageSelectCategoria').val(idSelect).trigger('change');
+
+        }
     </script>
 
     {{parent()}}
@@ -21,14 +26,68 @@
 
 {% endblock %}
 
-{% block sidebar -%}
-    {#<ul class="nav nav-pills nav-stacked">
-        <li role="presentation" class="active"><a href="#">In Lavorazione</a></li>
-        <li role="presentation"><a href="#">Lavorate</a></li>
-    </ul>#}
-{% endblock %}
-
 {% block body -%}
-    <p>Benvenuto sul portale delle Richieste d'Acquisto.</p>
+
+    <h3>Benvenuto sul portale delle Richieste d'Acquisto.</h3>
+    <h4>Richiesta da lavorare</h4>
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <th>#</th>
+                <th>Descrizione</th>
+                <th>Categorie</th>
+            </tr>
+
+            {% for bozza1 in nbozza %}
+            {% for bozza in bozza1 %}
+                {% if (bozza['numero']) %}
+                <tr>
+                    <td><strong>{{ bozza['numero'] }}</strong></td>
+                    <td> Richieste in <strong>Stato Bozza</strong> da inviare per la validazione Tecninca</td>
+                    <td><a href="#"  onclick="ChangeSelect({{ bozza['idcat'] }})" ><strong>{{bozza['descrizionecategoria'] }}</strong></a> </td>
+                </tr>
+                    {% endif %}
+            {% endfor %}
+            {% endfor %}
+
+            {% for valtec1 in nvaltec %}
+            {% for veltec in valtec1 %}
+                {% if (veltec['numero']) %}
+                    <tr>
+                    <td><strong>{{ veltec['numero'] }}</strong></td>
+                    <td> Richieste in <strong>Attesa di Validazione Tecnica</strong> da inviare per la validazione Amministrativa</td>
+                    <td><a href="#"  onclick="ChangeSelect({{ veltec['idcat'] }})" ><strong>{{veltec['descrizionecategoria'] }}</strong></a> </td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            {% endfor %}
+
+            {% for valamm1 in nvalamm %}
+            {% for valamm in valamm1 %}
+                {% if (valamm['numero']) %}
+                    <tr>
+                    <td><strong>{{ valamm['numero'] }}</strong></td>
+                    <td> Richieste in <strong>Attesa di Valutazione Amministrativa</strong></td>
+                    <td><a href="#"  onclick="ChangeSelect({{ valamm['idcat'] }})" ><strong>{{valamm['descrizionecategoria'] }}</strong></a> </td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            {% endfor %}
+
+            {% for dainv1 in ndainvABS %}
+            {% for dainv in dainv1 %}
+                {% if (dainv['numero']) %}
+                    <tr>
+                    <td><strong>{{ dainv['numero'] }}</strong></td>
+                    <td> Richieste in <strong>Attesa di essere inoltrate in ESTAR</strong></td>
+                    <td><a href="#"  onclick="ChangeSelect({{ dainv['idcat'] }})" ><strong>{{dainv['descrizionecategoria'] }}</strong></a> </td>
+
+                </tr>
+                {% endif %}
+            {% endfor %}
+            {% endfor %}
+
+        </table>
+    </div>
     <p>Seleziona una Categoria per cominciare.</p>
 {% endblock %}

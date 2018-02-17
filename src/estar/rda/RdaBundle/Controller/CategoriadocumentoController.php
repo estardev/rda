@@ -5,7 +5,9 @@ namespace estar\rda\RdaBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+
 use estar\rda\RdaBundle\Entity\Categoriadocumento;
+use estar\rda\RdaBundle\Entity\Categoria;
 use estar\rda\RdaBundle\Form\CategoriadocumentoType;
 
 /**
@@ -54,6 +56,29 @@ class CategoriadocumentoController extends Controller
     }
 
     /**
+     * @param string $idCategoria la categoria
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function createByCategoriaAction($idCategoria, Request $request)
+    {
+        //TODO da finire
+        $em = $this->getDoctrine()->getManager();
+        $entity = new Categoriadocumento();
+
+        $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
+        $campi = $request->request->all();
+        $documento = $em->getRepository('estarRdaBundle:Documento')->find($campi['form']['iddocumento']);
+        $necessarioperabs = $campi['form']['necessarioperabs'];
+        $entity->setIdcategoria($categoria);
+        $entity->setIddocumento($documento);
+        $entity->setNecessarioperabs($necessarioperabs);
+        $em->persist($entity);
+        $em->flush();
+        return $this->redirect($this->generateUrl('categoriadocumento_byCategoria', array('idCategoria' => $idCategoria)));
+    }
+
+    /**
      * Creates a form to create a Categoriadocumento entity.
      *
      * @param Categoriadocumento $entity The entity
@@ -68,6 +93,34 @@ class CategoriadocumentoController extends Controller
         ));
 
         $form->add('submit', 'submit', array('label' => 'Create'));
+
+        return $form;
+    }
+
+    /**
+     * Creates a form to create a Categoriadocumento entity.
+     *
+     * @param Categoria $categoria la categoria per cui vogliamo collegare un documento
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createCreateFormByCategoria(Categoria $categoria)
+    {
+        $form = $this->createFormBuilder()
+            ->add('necessarioperabs','choice', array(
+                'label' => 'Necessario per ESTAR',
+                'choices_as_values' => true,
+                'choices'  => array(
+                    'No' => false,
+                    'Si' => true,)))
+            ->add('iddocumento', 'entity', array(
+                'class' => 'estar\rda\RdaBundle\Entity\Documento',
+                'choice_label' => 'nomedescrizione',
+                'label' => 'Documento',
+            ))
+            -> setAction($this->generateUrl('categoriadocumento_createByCategoria', array('idCategoria' => $categoria->getId())))
+            ->add('submit', 'submit', array('label' => 'Aggiungi'))
+            ->getForm();
 
         return $form;
     }
@@ -106,6 +159,27 @@ class CategoriadocumentoController extends Controller
         return $this->render('estarRdaBundle:Categoriadocumento:show.html.twig', array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * @param String $idCategoria
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function byCategoriaAction($idCategoria)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
+
+        $entities = $em->getRepository('estarRdaBundle:Categoriadocumento')->findBy(array('idcategoria' => $idCategoria));
+
+
+        $createForm   = $this->createCreateFormByCategoria($categoria);
+
+        return $this->render('estarRdaBundle:Categoriadocumento:indexByCategoria.html.twig', array(
+            'entities' => $entities,
+            'create_form' => $createForm->createView(),
         ));
     }
 

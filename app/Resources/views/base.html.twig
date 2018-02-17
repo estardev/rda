@@ -1,47 +1,122 @@
 <!DOCTYPE html>
 <html>
-    <head>
+<head>
 
-		<title>RDA</title>
-		<meta charset="UTF-8"  name="viewport" content="width=device-width, initial-scale=1.0">
-		<!-- Bootstrap -->
-		<link href="{{ asset('css/bootstrap.css', absolute=true) }}" rel="stylesheet" media="screen">
-		{#<link href="http://symfony/rda/web/css/bootstrap.css" rel="stylesheet" media="screen">#}
-		<link href="{{ asset('css/style.css', absolute=true) }}" rel="stylesheet" media="screen">
-		<!-- HTML5 Shim and Respond.js add IE8 support of HTML5 elements and media queries -->
-		{% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
-        <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
-        <script src="{{ asset('js/jquery.js', absolute=true) }}"></script>
-        <!-- Include all JavaScripts, compiled by Assetic -->
-        <script src="{{ asset('js/bootstrap.js', absolute=true) }}"></script>
-        <!-- Include FOSJsRoutingBundle, compiled by Assetic -->
-        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-        {#<script src="{{ asset('js/router.js', absolute=true) }}"></script>#}
-        <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    <title>RDA</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="{{ asset('css/bootstrap.css', absolute=true) }}" rel="stylesheet" media="screen">
+    {#<link href="http://symfony/rda/web/css/bootstrap.css" rel="stylesheet" media="screen">#}
+    <link href="{{ asset('css/style.css', absolute=true) }}" rel="stylesheet" media="screen">
+    <link href="{{ asset('css/sidebar.css', absolute=true) }}" rel="stylesheet" media="screen">
+    <link href="{{ asset('css/jquery.dataTables.min.css', absolute=true) }}" rel="stylesheet" media="screen">
+    <!-- HTML5 Shim and Respond.js add IE8 support of HTML5 elements and media queries -->
+    {% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
+    <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
+    <script src="{{ asset('js/jquery.js', absolute=true) }}"></script>
+    <script src="{{ asset('js/jquery-ui.min.js', absolute=true) }}"></script>
+    <script src="{{ asset('js/jackmoore-autosize/jquery.autosize.min.js', absolute=true) }}"></script>
 
-        {% block header %}
+    <!-- Include all JavaScripts, compiled by Assetic -->
+    <script src="{{ asset('js/bootstrap.js', absolute=true) }}"></script>
+    <!-- Include FOSJsRoutingBundle, compiled by Assetic -->
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    {#<script src="{{ asset('js/router.js', absolute=true) }}"></script>#}
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 
+    {% block header %}
+    {% endblock %}
+
+
+
+    {% block javascripts %}
+        <script type="text/javascript" src="{{ asset('js/navbar.js', absolute=true) }}"></script>
+        <script type="text/javascript" src="{{ asset('js/sidebar.js', absolute=true) }}"></script>
+        <script type="text/javascript" src="{{ asset('js/levelsFieldFunctions.js', absolute=true) }}"></script>
+        <script type="text/javascript" src="{{ asset('js/jquery.dataTables.min.js', absolute=true) }}"></script>
+
+        <script type="text/javascript" src="{{ asset('js/dataTables.buttons.min.js', absolute=true) }}"></script>
+        <script type="text/javascript" src="{{ asset('js/buttons.flash.min.js', absolute=true) }}"></script>
+        <script type="text/javascript" src="{{ asset('js/jszip.min.js', absolute=true) }}"></script>
+        <script type="text/javascript" src="{{ asset('js/pdfmake.min.js', absolute=true) }}"></script>
+        <script type="text/javascript" src="{{ asset('js/vfs_fonts.js', absolute=true) }}"></script>
+        <script type="text/javascript" src="{{ asset('js/buttons.html5.min.js', absolute=true) }}"></script>
+        <script type="text/javascript" src="{{ asset('js/buttons.print.min.js', absolute=true) }}"></script>
+        {% if firstLevels is defined %}
+        <script>
+
+            var decodeHtmlEntity = function (str) {
+                return str.replace(/&#(\d+);/g, function (match, dec) {
+                    return String.fromCharCode(dec);
+                });
+            };
+
+            var encodeHtmlEntity = function (str) {
+                var buf = [];
+                for (var i = str.length - 1; i >= 0; i--) {
+                    buf.unshift(['&#', str[i].charCodeAt(), ';'].join(''));
+                }
+                return buf.join('');
+            };
+            $(document).ready(function () {
+
+                        var options = {{ firstLevels| json_encode |raw }};
+                        firstLevelNew(options);
+
+                        secondLevel();
+                        $("textarea").autosize();
+
+
+                        /* DEM 20160923 Funzione per far deselezionare i radio senza dover apportare nessuna modifica!!!!
+                        $('input[type="radio"]').mousedown(function() {
+                            if (this.checked) {
+                                $(this).mouseup(function(e) {
+                                    var radio = this;
+                                    setTimeout(function() {	radio.checked = false;	}, 5);
+                                    $(this).unbind('mouseup');
+                                });
+                            }
+                        });
+                           IN QUESTA MERDA DI FRAMEWORK QUANDO VIENE DESELEZIONATO NON LO SCRIVE SUL DB...BELLO!!!*/
+
+                    }
+            )
+        </script>
+        {% endif %}
+    {% endblock %}
+
+</head>
+
+
+{% block navbar %}
+    {{ navbar() }}
+{% endblock %}
+<body>
+
+
+<div class="row">
+    <!-- sidebar -->
+    <div class="col-sm-12 col-md-2" id="sidebar" role="navigation">
+        {% block sidebar %}
+            {{ sidebar() }}
         {% endblock %}
+    </div>
 
+    <!-- main area -->
+    <div class="container col-sm-12 col-md-10" style="display: none">
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="alert alert-{{ flashMessage.alert }} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <strong>{{ flashMessage.title }}</strong> {{ flashMessage.message|raw }}
+            </div>
+        {% endfor %}
+        {% block body %}{% endblock %}
+    </div>
 
-		{% block javascripts %}
-            <script type="text/javascript" src="{{ asset('js/navbar.js', absolute=true) }}"></script>
-        {% endblock %}
+</div>
 
-	</head>
-	
-    <body>
-        {% block navbar %}
-            {{ navbar() }}
-        {% endblock %}
-        <div class="left_block block_1">
-            {% block sidebar %}{% endblock %}
-		</div>
-		<div class="container" style="display: none">
-
-	        {% block body %}{% endblock %}
-	    </div>
-
-    </body>
+</body>
 
 </html>

@@ -1,0 +1,385 @@
+{% extends '::base.html.twig' %}
+
+
+{% block javascripts %}
+
+    <script type="text/javascript">
+        $.ajax({
+            type: "GET",
+            async: false,
+            url: Routing.generate('navbarSelectedSessionClear'),
+            /*success: function(data)
+             {
+             var myjson = $.parseJSON(data);
+             alert(" ecco: "+myjson.homepageSelectCategoria);
+             }*/
+        });
+
+        function ChangeSelect(idSelect){
+          $('#homepageSelectCategoria').val(idSelect).trigger('change');
+
+        }
+    </script>
+
+    {{parent()}}
+
+    <script type="text/javascript" src="{{ asset('js/homepage.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+//            $(document).on("keyup", "#searchRichiesta", function () {
+//                var filter = $(this).val();
+//                var regExPattern = "gi";
+//                var regEx = new RegExp(filter, regExPattern);
+//                $("#tableListaRichiesteHome tr").each(function () {
+//                    if ($(this).data('state'))
+//                        if (
+//                            $(this).text().search(new RegExp(filter, "i")) < 0
+//                            && $(this).data('state').search(regEx) < 0
+//                        ) {
+//                            $(this).hide();
+//                        } else {
+//                            $(this).show();
+//                        }
+//                });
+//            });
+            var table = $('#tableListaRichiesteHome').DataTable({bFilter: true, paging: true, bInfo: false, order:[ 0, 'desc' ], dom: 'Bfrtip',
+                buttons: [
+                    {extend:                   'excel',
+                        className: 'bottoniera bottonieratop btn btn-primary',
+                        exportOptions: {
+                            columns: [3,1,9,10,2,4,5,7,0,6]
+                        }
+                    },
+                    {extend:                   'csv',
+                        className: 'bottoniera bottonieratop btn btn-primary',
+                        exportOptions: {
+                            columns: [3,1,9,10,2,4,5,7,0,6]
+                        }
+                    },
+                    {extend:                   'print',
+                        orientation: 'landscape',
+                        className: 'bottoniera bottonieratop btn btn-primary',
+                        exportOptions: {
+                            columns: [3,1,9,10,2,4,5,7,0,6]
+                        }
+                    },
+                    {extend:                   'pdf',
+                        orientation: 'landscape',
+                        className: 'bottoniera bottonieratop btn btn-primary',
+
+                        pageSize: 'LEGAL',
+                        exportOptions: {
+                            columns: [3,1,9,10,2,4,5,7,0,6]
+                        }
+                    }
+                ]
+            });
+
+            $('#searchRichiesta').on('keyup', function() {
+                table.search( this.value ).draw();
+            });
+
+
+            $(document).on('click', '#statoiter', function () {
+                var idrichiesta = $(this).attr('data-id');
+                $('#iterModal').modal('show');
+                $('#numeropratica').html('<h4 id="numeropratica" class="modal-title">Iter Pratica ' + idrichiesta + '</h4>');
+                $('#tableiter').html('<tbody><td class="warning"><td>In Caricamento...</td></tr></tbody>');
+                //alert('s1');
+                $.ajax({
+                    type: "POST",
+                    url: Routing.generate('iter_byrichiesta'),
+                    data: {idrichiesta: idrichiesta},
+                    success: function (data) {
+                        $('#tableiter').html(data);
+                        //alert('s2');
+                    }
+                });
+                //alert(id);
+
+            });
+
+            $('#homepageSelectBtnCategoria').prop('disabled',true);
+            $('#homepageMostraTutte').prop('disabled',true);
+            $('#homepageSelectCategoria').val('defaultDisabledNavbarOption');
+        });
+    </script>
+
+
+{% endblock %}
+{% block body -%}
+    <h3>Benvenuto sul portale delle Richieste d'Acquisto.</h3>
+    <div class="row">
+    <div class="panel panel-default ">
+        <div class="panel-heading">
+            <h4 class="panel-title pull-left">
+                Lista Richieste
+            </h4>
+
+            <div class="form-group pull-right">
+                <input id="searchRichiesta" class="form-control" placeholder="Cerca..."/>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        {#<div class="panel-body">Table qua</div>#}
+        <table class="table table-responsive table-hover" id="tableListaRichiesteHome">
+            <thead>
+            <tr>
+                <th>Id Pratica</th>
+                <th>Titolo</th>
+                <th>Status</th>
+                <th>Azienda</th>
+                <th>Data Modifica</th>
+                <th>Numero protocollo</th>
+                <th hidden>Codice Gara</th>
+                <th hidden>Data protocollo</th>
+                <th>Azioni</th>
+                <th hidden>Descrizione</th>
+                <th hidden>Categoria</th>
+            </tr>
+            </thead>
+{#{{ dump(diritti) }}#}
+            {% for entity0 in entities %}
+
+                {% set entity = entity0[0] %}
+                {% set diritto = entity0[1] %}
+
+                <tr data-state="richiesta">
+
+                    {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ESTAR' or entity.status == 'chiusa_ESTAR' or entity.status == 'annullata_ESTAR' or diritto=='READ') %}
+                        <td>
+                            <a href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}" onclick="ChangeSelect({{ entity.idcategoria }})">{{ entity.id }}
+                            </a></td>
+                        <td>
+                            <a href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}" onclick="ChangeSelect({{ entity.idcategoria }})">{{ entity.titolo }}
+                            </a></td>
+                    {% else %}
+                        <td>{{ entity.id }}</td>
+                        <td>{{ entity.titolo }}</td>
+                    {% endif %}
+                    <td>
+
+                        {% if entity.status=='bozza' %}
+                            <button style="background-color:#d7dcdc" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                        class="glyphicon glyphicon-list"
+                                        aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                            </button>
+                        {% elseif entity.status=='attesa_val_tec'  %}
+                            <button style="background-color:#6f8edf" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %}id="statoiter" data-id="{{ entity.id }}"><span
+                                        class="glyphicon glyphicon-list"
+                                        aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                            </button>
+                        {% elseif entity.status=='attesa_val_amm'  %}
+                            <button style="background-color:#4dbf49" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                        class="glyphicon glyphicon-list"
+                                        aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                            </button>
+                        {% elseif entity.status=='da_inviare_ESTAR'  %}
+                            <button style="background-color:#e0d713" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                        class="glyphicon glyphicon-list"
+                                        aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                            </button>
+                        {% elseif entity.status=='inviata_ESTAR'  %}
+                            <button {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                        class="glyphicon glyphicon-list"
+                                        aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                            </button>
+                        {% elseif entity.status=='eliminata'  %}
+                            <button style="background-color:red" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                        class="glyphicon glyphicon-list"
+                                        aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                            </button>
+                        {% elseif entity.status=='annullata'  %}
+                            <button style="background-color:#FF9C1D" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                        class="glyphicon glyphicon-list"
+                                        aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                            </button>
+                        {% elseif entity.status=='evasa_ESTAR'  %}
+                            <button style="background-color:#B761FF" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                        class="glyphicon glyphicon-list"
+                                        aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                            </button>
+                        {% elseif entity.status=='rigetto_ESTAR'  %}
+                            <button style="background-color:darkred" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                        class="glyphicon glyphicon-list"
+                                        aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                            </button>
+                        {% elseif entity.status=='chiusa_ESTAR'  %}
+                            <button style="background-color:indianred" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                        class="glyphicon glyphicon-list"
+                                        aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                            </button>
+                        {% elseif entity.status=='annullata_ESTAR'  %}
+                            <button style="background-color:red" {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                        class="glyphicon glyphicon-list"
+                                        aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                            </button>
+                        {% else %}
+                            <button {% if entity.presentato==14 or entity.presentato==15 %} class="btn btn-danger" {% else %} class="btn btn-primary" {% endif %} id="statoiter" data-id="{{ entity.id }}"><span
+                                        class="glyphicon glyphicon-list"
+                                        aria-hidden="true"></span> {{ entity.status }} {% if(entity.statusgestav!="") %}  -  {{ entity.statusgestav }} {% endif %}
+                            </button>
+                        {% endif %}
+
+
+                    </td>
+                    <td>{{ entity.idAzienda.nome }}</td>
+                    {% if entity.dataultimamodifica is not null %}
+                        <td>{{ entity.dataultimamodifica|date('d-m-Y H:i:s') }}</td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                    <td>{{ entity.numeroprotocollo }}</td>
+                    <td hidden>{{ entity.codicegara }}</td>
+                    <td hidden>{{ entity.dataprotocollo }}</td>
+                    <td>
+
+                        {#
+                        <div class="btn-group">
+                            <a class="btn btn-default"  target="_blank"
+                                    href="{{ path('formtemplate_print', { 'idRichiesta': entity.id, 'idCategoria': entity.idcategoria }) }}">
+                                       <span class="glyphicon glyphicon-file"
+                                             aria-hidden="true"></span> Genera PDF</a>
+                {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ESTAR' or entity.status == 'chiusa_ESTAR' or entity.status == 'annullata_ESTAR') %}
+                    <a class="btn btn-default"
+                            href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
+                            <span class="glyphicon glyphicon-pencil"
+                                  aria-hidden="true"></span> Modifica</a>
+                {% endif %}
+                {% if diritti is defined %}
+                    {% if (diritti.isai and entity.status=='bozza') or (diritti.isvt and entity.status=='attesa_val_tec') or (diritti.isva and entity.status=='attesa_val_amm') or (diritti.isva and entity.status=='da_inviare_ESTAR') %}
+                        <a class="btn btn-default"
+                                    href="{{ path('documento_byCategoria', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
+                                <span class="glyphicon glyphicon-book"
+                                      aria-hidden="true"></span> Documenti</a>
+                        <a class="btn btn-default"
+                                    href="{{ path('documento_liberoByRichiesta', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
+                               <span class="glyphicon glyphicon-book"
+                                     aria-hidden="true"></span> Allegati</a>
+                    {% endif %}
+                {% endif %}
+                       </div>
+#}
+
+
+                        <div class="btn-group">
+                            <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Seleziona Azione <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a
+                                            target="_blank"
+                                            href="{{ path('formtemplate_print', { 'idRichiesta': entity.id, 'idCategoria': entity.idcategoria }) }}">
+                                       <span class="glyphicon glyphicon-file"
+                                             aria-hidden="true"></span> Genera PDF</a></li>
+                                {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ESTAR' or entity.status == 'chiusa_ESTAR' or entity.status == 'annullata_ESTAR' or diritto=='READ') %}
+                                    <li><a
+                                                href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}" onclick="ChangeSelect({{ entity.idcategoria }})">
+                            <span class="glyphicon glyphicon-pencil"
+                                  aria-hidden="true"></span> Modifica</a></li>
+                                    <li><a
+                                                href="{{ path('documento_byCategoria', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}" onclick="ChangeSelect({{ entity.idcategoria }})">
+                                <span class="glyphicon glyphicon-book"
+                                      aria-hidden="true"></span> Documenti</a></li>
+                                    <li><a
+                                                href="{{ path('documento_liberoByRichiesta', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}" onclick="ChangeSelect({{ entity.idcategoria }})">
+                               <span class="glyphicon glyphicon-book"
+                                     aria-hidden="true"></span> Allegati</a></li>
+                                {% else %}
+                                    <li class="disabled"><a onclick="return false;" disabled="true"
+                                                            href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}" onclick="ChangeSelect({{ entity.idcategoria }})">
+                            <span class="glyphicon glyphicon-pencil"
+                                  aria-hidden="true"></span> Modifica</a></li>
+                                {% endif %}
+                                {#                  {% if diritti is defined %}
+                                                    {% if (diritti.isai and entity.status=='bozza') or (diritti.isvt and entity.status=='attesa_val_tec') or (diritti.isva and entity.status=='attesa_val_amm') or (diritti.isva and entity.status=='da_inviare_ESTAR') %}
+                                #}
+
+                                {#
+                                                        {% else %}
+                                                            <li class="disabled"><a onclick="return false;" disabled="true"
+                                                                        href="{{ path('documento_byCategoria', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
+                                                                <span class="glyphicon glyphicon-book"
+                                                                      aria-hidden="true"></span> Documenti</a></li>
+                                                            <li class="disabled"><a onclick="return false;" disabled="true"
+                                                                        href="{{ path('documento_liberoByRichiesta', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
+                                                               <span class="glyphicon glyphicon-book"
+                                                                     aria-hidden="true"></span> Allegati</a></li>
+                                                    {% endif %}
+                                                {% endif %}
+
+                                                            </ul>
+                                                        </div>
+
+
+
+                                                        {#
+                                                        <div class="btn-group" role="group">
+                                                            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-file"
+                                                                                                                aria-hidden="true"></span><a
+                                                                        target="_blank"
+                                                                        href="{{ path('formtemplate_print', { 'idRichiesta': entity.id, 'idCategoria': entity.idcategoria }) }}">
+                                                                    Genera PDF</a></button>
+                                                            {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ESTAR' or entity.status == 'chiusa_ESTAR' or entity.status == 'annullata_ESTAR') %}
+                                                                <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-pencil"
+                                                                                                                    aria-hidden="true"></span><a
+                                                                            href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
+                                                                        Modifica</a></button>
+                                                            {% endif %}
+                                                            {% if diritti is defined %}
+                                                            {% if (diritti.isai and entity.status=='bozza') or (diritti.isvt and entity.status=='attesa_val_tec') or (diritti.isva and entity.status=='attesa_val_amm') or (diritti.isva and entity.status=='da_inviare_ESTAR') %}
+
+                                                            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-book"
+                                                                                                                aria-hidden="true"></span><a
+                                                                        href="{{ path('documento_byCategoria', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
+                                                                    Documenti</a></button>
+
+                                                            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-book"
+                                                                                                                aria-hidden="true"></span><a
+                                                                        href="{{ path('documento_liberoByRichiesta', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">
+                                                                    Allegati</a></button>
+                                                            {% endif %}
+                                                            {% endif %}
+                                                        </div>
+                                #}
+                            </ul>
+                        </div>
+                    </td>
+                    <td hidden>{{ entity.descrizione }}</td>
+                    <td hidden>{{ entity.idCategoria.descrizione }}</td>
+
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    </div>
+
+
+    <div class="modal fade" id="iterModal" tabindex="-1" aria-hidden="true" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span class="sr-only">Chiudi</span>
+                    </button>
+
+                    <h4 id="numeropratica" class="modal-title"></h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div id="tableiter"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

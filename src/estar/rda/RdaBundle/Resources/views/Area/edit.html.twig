@@ -1,0 +1,16 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Modifica di una Area</h1>
+
+    {{ form(edit_form) }}
+
+        <ul class="record_actions">
+            <div class="bottoniera">
+        <a class="btn btn-default" href="{{ path('area') }}">
+            Indietro alla lista
+        </a>
+                </div>
+    <!-- <li>{{ form(delete_form) }}</li> -->
+</ul>
+{% endblock %}

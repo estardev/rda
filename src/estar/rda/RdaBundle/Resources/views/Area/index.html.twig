@@ -1,0 +1,45 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+<div class="panel panel-default">
+    <div class="panel-heading"><h4>Elenco delle Aree</h4></div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nome</th>
+                <th>Descrizione</th>
+                <th>Gruppogestav</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td>{{ entity.id }}</td>
+                <td><a href="{{ path('area_show', { 'id': entity.id }) }}">{{ entity.nome }}</a></td>
+                <td>{{ entity.descrizione }}</td>
+                <td>{{ entity.gruppogestav }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('area_show', { 'id': entity.id }) }}">Mostra</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('area_edit', { 'id': entity.id }) }}">Modifica</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+     <div class="bottoniera">
+            <a class="btn btn-default" href="{{ path('area_new') }}">
+                Create a new entry
+            </a>
+     </div>
+</div>
+    {% endblock %}

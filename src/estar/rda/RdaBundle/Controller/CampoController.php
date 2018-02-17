@@ -4,7 +4,6 @@ namespace estar\rda\RdaBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use estar\rda\RdaBundle\Entity\Campo;
 use estar\rda\RdaBundle\Form\CampoType;
 
@@ -29,27 +28,36 @@ class CampoController extends Controller
             'entities' => $entities,
         ));
     }
+
     /**
      * Creates a new Campo entity.
      *
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request, $idCategoria,$ordinamento)
     {
         $entity = new Campo();
-        $form = $this->createCreateForm($entity);
+        $form = $this->createCreateForm($entity,$idCategoria,$ordinamento);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $entity->setIdcategoria($em->getRepository('estarRdaBundle:Categoria')->find($idCategoria));
+            $entity->setOrdinamento($ordinamento);
+            if($entity->getFiglio()!=null){
+                $entity->setFiglio();
+            }
+            //20160119 modifica per campi "orfani" generati in caso di figlio non presente
+            if ($entity->nonHaFiglio()) $entity->setFiglio(null);
             $em->persist($entity);
+
             $em->flush();
 
-            return $this->redirect($this->generateUrl('campo_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('categoria_edit', array('id' => $idCategoria)));
         }
 
         return $this->render('estarRdaBundle:Campo:new.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         ));
     }
 
@@ -60,10 +68,10 @@ class CampoController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(Campo $entity)
+    private function createCreateForm(Campo $entity, $idCategoria,$ordinamento)
     {
         $form = $this->createForm(new CampoType(), $entity, array(
-            'action' => $this->generateUrl('campo_create'),
+            'action' => $this->generateUrl('campo_create',array('idCategoria'=>$idCategoria,'ordinamento'=>$ordinamento)),
             'method' => 'POST',
         ));
 
@@ -76,14 +84,14 @@ class CampoController extends Controller
      * Displays a form to create a new Campo entity.
      *
      */
-    public function newAction()
+    public function newAction($idCategoria,$ordinamento)
     {
         $entity = new Campo();
-        $form   = $this->createCreateForm($entity);
+        $form = $this->createCreateForm($entity, $idCategoria,$ordinamento);
 
         return $this->render('estarRdaBundle:Campo:new.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         ));
     }
 
@@ -104,7 +112,7 @@ class CampoController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('estarRdaBundle:Campo:show.html.twig', array(
-            'entity'      => $entity,
+            'entity' => $entity,
             'delete_form' => $deleteForm->createView(),
         ));
     }
@@ -127,19 +135,19 @@ class CampoController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('estarRdaBundle:Campo:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
 
     /**
-    * Creates a form to edit a Campo entity.
-    *
-    * @param Campo $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
+     * Creates a form to edit a Campo entity.
+     *
+     * @param Campo $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
     private function createEditForm(Campo $entity)
     {
         $form = $this->createForm(new CampoType(), $entity, array(
@@ -151,6 +159,7 @@ class CampoController extends Controller
 
         return $form;
     }
+
     /**
      * Edits an existing Campo entity.
      *
@@ -170,17 +179,16 @@ class CampoController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            //20160117 controllo se non ha figli
+            if ($entity->nonHaFiglio()) $entity->setFiglio(null);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('campo_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('categoria_edit', array('id' => $entity->getIdcategoria()->getId())));
         }
 
-        return $this->render('estarRdaBundle:Campo:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return $this->redirect($this->generateUrl('categoria_edit', array('id' => $entity->getIdcategoria()->getId())));
     }
+
     /**
      * Deletes a Campo entity.
      *
@@ -218,7 +226,6 @@ class CampoController extends Controller
             ->setAction($this->generateUrl('campo_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+            ->getForm();
     }
 }

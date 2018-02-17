@@ -27,6 +27,12 @@ security:
                 #failure_path: login_failure
             logout:       true
             anonymous:    true
+            remember_me:
+                key:      "%secret%"
+                lifetime: 28800 # 8 ore in secondi
+                path:     /
+                domain:   ~
+                user_provider: fos_userbundle
         #default:
         #    anonymous: ~
         #    http_basic: ~
@@ -35,4 +41,6 @@ security:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/prog, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/ws/ServerESTAR, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, role: ROLE_USER }

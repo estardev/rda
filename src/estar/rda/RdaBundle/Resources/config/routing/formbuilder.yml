@@ -1,0 +1,55 @@
+formbuilder_showByCategoria:
+    path:     /showByCategoria/{idCategoria}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:show" }
+
+formbuilder_setPadre:
+    path:     /setPadre/{idCategoria}/{idCampo}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:setPadre" }
+
+formbuilder_setPadreDB:
+    path:     /setPadreDB/{idCategoria}/{idCampo}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:setPadreDB" }
+
+formbuilder_setCondizioni:
+    path:     /setCondizioni/{idCategoria}/{idCampo}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:setCondizioni" }
+
+formbuilder_setCondizioniDB:
+    path:     /setCondizioniDB/{idCategoria}/{idCampo}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:setCondizioniDB" }
+
+formbuilder_setValori:
+    path:     /setValori/{idCategoria}/{idCampo}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:setValori" }
+
+formbuilder_setValoriDB:
+    path:     /setValoriDB/{idCategoria}/{idCampo}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:setValoriDB" }
+
+formbuilder_spostaSu:
+    path:     /spostaSu/{idCategoria}/{idCampo}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:spostaSu" }
+
+formbuilder_spostaGiu:
+    path:     /spostaGiu/{idCategoria}/{idCampo}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:spostaGiu" }
+
+formbuilder_elimina:
+    path:     /elimina/{idCategoria}/{idCampo}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:elimina" }
+
+formbuilder_edit:
+    path:     /edit/{idCategoria}/{idCampo}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:edit" }
+
+formbuilder_editDB:
+    path:     /editDB/{idCategoria}/{idCampo}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:editDB" }
+
+formbuilder_nuovo:
+    path:     /nuovo/{idCategoria}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:crea" }
+
+formbuilder_nuovoDB:
+    path:     /nuovoDB/{idCategoria}
+    defaults: { _controller: "estarRdaBundle:FormBuilder:creaDB" }

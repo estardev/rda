@@ -3,20 +3,31 @@
 <head>
 
     <title>RDA</title>
-    <meta charset="UTF-8"  name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
-    <link href="{{ asset('css/bootstrap.css', absolute=true) }}" rel="stylesheet" media="screen">
+    {#<link href="{{ asset('css/bootstrap.css', absolute=true) }}" rel="stylesheet" media="screen">#}
+    <link href="{{ pathToWeb}}/css/bootstrap.css" rel="stylesheet" media="screen">
     {#<link href="http://symfony/rda/web/css/bootstrap.css" rel="stylesheet" media="screen">#}
-    <link href="{{ asset('css/style.css', absolute=true) }}" rel="stylesheet" media="screen">
+    <link href="{{ pathToWeb}}/css/style.css" rel="stylesheet" media="screen">
+    {#<link href="{{ asset('css/style.css', absolute=true) }}" rel="stylesheet" media="screen">#}
     <!-- HTML5 Shim and Respond.js add IE8 support of HTML5 elements and media queries -->
-    {% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
+    {#FG commentato, dubito serva nel print...#}
+    {#{% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}#}
     <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
-    <script src="{{ asset('js/jquery.js', absolute=true) }}"></script>
+    {#<script src="{{ asset('js/jquery.js', absolute=true) }}"></script>#}
+    <script src="{{ pathToWeb}}/js/jquery.js"></script>
+    {#<script src="{{ asset('js/jquery.js', absolute=true) }}"></script>#}
+    <script src="{{ pathToWeb}}/js/jquery-ui.min.js"></script>
+    {#<script src="{{ asset('js/jquery-ui.min.js', absolute=true) }}"></script>#}
+    <script src="{{ pathToWeb}}/js/jackmoore-autosize/jquery.autosize.min.js"></script>
+    {#<script src="{{ asset('js/jackmoore-autosize/jquery.autosize.min.js', absolute=true) }}"></script>#}
     <!-- Include all JavaScripts, compiled by Assetic -->
-    <script src="{{ asset('js/bootstrap.js', absolute=true) }}"></script>
+    {#<script src="{{ asset('js/bootstrap.js', absolute=true) }}"></script>#}
+    <script src="{{ pathToWeb}}/js/bootstrap.js"></script>
     <!-- Include FOSJsRoutingBundle, compiled by Assetic -->
     {#<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>#}
-    <script src="{{ asset('js/router.js', absolute=true) }}"></script>
+    {#<script src="{{ asset('js/router.js', absolute=true) }}"></script>#}
+    <script src="{{ pathToWeb}}/js/router.js"></script>
     {#<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>#}
 
     {% block header %}
@@ -25,22 +36,122 @@
 
 
     {% block javascripts %}
-        <script type="text/javascript" src="{{ asset('js/navbar.js', absolute=true) }}"></script>
+        <script type="text/javascript" src="{{ pathToWeb}}/js/navbar.js"></script>
+        {#<script type="text/javascript" src="{{ asset('js/navbar.js', absolute=true) }}"></script>#}
+        <script>
+
+
+            var decodeHtmlEntity = function (str) {
+                return str.replace(/&#(\d+);/g, function (match, dec) {
+                    return String.fromCharCode(dec);
+                });
+            };
+
+            var encodeHtmlEntity = function (str) {
+                var buf = [];
+                for (var i = str.length - 1; i >= 0; i--) {
+                    buf.unshift(['&#', str[i].charCodeAt(), ';'].join(''));
+                }
+                return buf.join('');
+            };
+
+
+            $(document).ready(function () {
+
+
+                var $textarea = $('textarea');
+                $textarea.each(function () {
+
+                            var fontSize = $(this).css('font-size').replace('px', '');
+                            var lineHeight = Math.floor(parseInt(fontSize) * 1.5);
+
+                            var lines = encodeHtmlEntity($(this).val()).split('&#10;');
+                            var lineCount = 0;
+                    /**
+                     ATTENZIONE!!! il valore della variabile "numcols" rappresenta il numero di caratteri contenuti in una riga
+                     di una textarea così come viene renderizzata allo stato attuale all'interno delle stampe.
+                     Qualsiasi cambiamento alla grandezza di queste componenti comporterà un adeguamento di questa misura
+                     per mantenere il corretto funzionamento del meccanismo di "autosizing" delle textarea all'interno dei file Pdf.
+                     */
+                    var numcols = 71;
+
+                            for (var i = 0; i < lines.length; i++) {
+
+                                if (decodeHtmlEntity(lines[i]).length > numcols) {
+
+                                    lineCount +=Math.floor(decodeHtmlEntity(lines[i]).length/numcols)+1;
+                                } else {
+                                    lineCount++;
+                                }
+                            }
+
+                            $(this).height(lineCount * lineHeight);
+//                            $(this).val();
+
+
+                        }
+                );
+            });
+        </script>
     {% endblock %}
 
 </head>
 
 <body>
 {#{% block navbar %}#}
-    {#{{ navbar() }}#}
+{#{{ navbar() }}#}
 {#{% endblock %}#}
 <div class="left_block block_1">
     {% block sidebar %}{% endblock %}
 </div>
-<div class="container" >
+{#<div class="header-logo"><img src="{{ asset('images/logoestar.png', absolute=true) }}"></div>#}
+<div class="content_logo"><div class="header-logo"><img src="{{ pathToWeb}}/images/logoestar.png"></div><div class="header-azienda"><h2>Azienda: {{ azienda.nome }}</h2></div></div>
+<div class="container">
 
     {% block body %}
+        <hr>
+        <h1>Dati Richiesta</h1>
+        <h1>Richiesta: {{ categoria.nome }}</h1>
+        <h3>Titolo: {{ titolo }}</h3>
+        <h3>Descrizione: {{ descrizione }}</h3>
+        <h3>Priorit&agrave;: {{ priorita }}</h3>
+        <hr>
+        {% if documento is defined %}
+            <hr>
+            <h1>Dati Documento</h1>
+            <h3>Titolo: {{ documento.nome }}</h3>
+            <h3>Descrizione: {{ documento.descrizione }}</h3>
+            <hr>
+        {% endif %}
+        <hr>
         {{ form(form) }}
+        <hr>
+        <h3>Iter</h3>
+        <table style="font-size: x-small" class ="table table-responsive">
+            <thead>
+            <tr>
+                <th>Utente</th>
+                <th>Da</th>
+                <th>A</th>
+                <th>Stato GESTAV</th>
+                <th>Data e Ora</th>
+                <th>Motivazione</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for entity in iter %}
+                <tr>
+                    <td>{{ entity.idutente.nomecognome }}</td>
+                    <td>{{ entity.dastato }} </td>
+                    <td>{{ entity.astato }}</td>
+                    <td>{{ entity.dastatogestav }} -> {{ entity.astatogestav }}</td>
+                    <td>{{ entity.dataora|date('d-m-y')  }}</td>
+                    <td>{{ entity.motivazione }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
     {% endblock %}
 </div>
 

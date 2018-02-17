@@ -1,0 +1,5 @@
+sistematicaclient_index:
+    path: /index/{idCategoria}/{idRichiesta}/{tipologia}
+    defaults: { _controller: estarRdaBundle:SistematicaClient:index}
+    #methods:  [POST, PUT]
+

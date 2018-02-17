@@ -5,6 +5,7 @@ namespace estar\rda\RdaBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class UtentegruppoutenteType extends AbstractType
 {
@@ -15,7 +16,7 @@ class UtentegruppoutenteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('amministratore',null, array('label' => 'Amministratore'))
+            ->add('amministratore', CheckboxType::class, array('label' => 'Amministratore'))
             ->add('idutente', 'entity', array(
                 'class' => 'estar\rda\RdaBundle\Entity\Utente',
                 'choice_label' => 'utenteldap',

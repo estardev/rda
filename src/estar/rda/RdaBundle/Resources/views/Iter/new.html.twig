@@ -1,0 +1,13 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Iter creation</h1>
+
+    {{ form(form) }}
+
+<div class="bottoniera">
+        <a  class="btn btn-default" href="{{ path('iter') }}">
+            Torna indietro
+        </a>
+</div>
+{% endblock %}
