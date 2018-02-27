@@ -31,8 +31,8 @@
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td>{{ entity.idcategoria.nome }}</td>
-                <td>{{ entity.idgruppoutente.nome }}</td>
+                <td><b>{{ entity.idcategoria.nome }}</b><br><i>{{ entity.idcategoria.descrizione }}</i></td>
+                <td><b>{{ entity.idgruppoutente.nome }}</b><br><i>{{ entity.idgruppoutente.descrizione }}</i></td>
                 <td>{% if entity.abilitatoinserimentorichieste %} Si {% else %} No {% endif %}</td>
                 <td>{% if entity.validatoretecnico %} Si {% else %} No {% endif %}</td>
                 <td>{% if entity.validatoreamministrativo %} Si {% else %} No {% endif %}</td>
