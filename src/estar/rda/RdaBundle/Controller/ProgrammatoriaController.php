@@ -46,6 +46,8 @@ class ProgrammatoriaController extends Controller
      */
     public function getMapCampoByCategoria($categoria)
     {
+        //FG20180302: Demetrio, se non definisci le variabili poi ha poco senso dichiararle fuori scope...
+        $campo = 0;
         switch ($categoria) {
             case 1:
                 $campo = 25;
