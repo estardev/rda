@@ -290,3 +290,21 @@ be_simple_soap:
 #            root_folder: true
 ##            storage:
 ##                directory: "%kernel.root_dir%/../web/uploads/"
+
+monolog:
+    handlers:
+        programmatoria:
+            type:   stream
+            path:   "%kernel.logs_dir%/programmatoria.log"
+            level:  debug
+            channels: [programmatoria]
+        sistematicaclient:
+            type:   stream
+            path:   "%kernel.logs_dir%/sistematicaclient.log"
+            level:  debug
+            channels: [sistematicaclient]
+        sistematicaserver:
+            type:   stream
+            path:   "%kernel.logs_dir%/sistematicaserver.log"
+            level:  debug
+            channels: [sistematicaserver]

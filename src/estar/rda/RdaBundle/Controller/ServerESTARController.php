@@ -37,10 +37,14 @@ class ServerESTARController extends Controller
      * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\String[]")
      */
     public function notifyAction($username, $password, $note=null, $idpratica, $dataRequest=null, $codicestato, $codicegara=null, $rup=null,$numeroAttoAggiudicazione=null,$numeroProtocolloLettera=null, $prioritaGestav=null)
-    {   $username1=strtolower($username);
+    {
+        $logger = $this->get('sistematicaserver_logger');
+        $logger->log('Invocato: note '.$note.', idpratica '.$idpratica.', codicestato '.$codicestato);
+        $username1=strtolower($username);
         $em = $this->getDoctrine()->getManager();
         $postdata = file_get_contents("php://input");
         file_put_contents("REQUESTclient/".rand().time()."_request.xml",$postdata);
+        $logger->log('XML puro: '.$postdata);
 
         //file_put_contents(time()."_user.xml",$username);
         //file_put_contents(time()."_psw.xml",$password);
@@ -66,6 +70,7 @@ class ServerESTARController extends Controller
             $messaggioErrore = "KO";
             $codice = "040";  //KO
             $descrizioneErrore = "Credenziali non corrette";
+            $logger->log('Autenticazione fallita');
             return array(
                 'CodiceRisposta' => $messaggioErrore,
                 'codiceErrore' => $codice,
@@ -74,11 +79,27 @@ class ServerESTARController extends Controller
             );
 
              } else {
+                $logger->log('Avvio processing richiesta');
                 $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $idpratica, $codicestato, $codicegara,$rup,$numeroAttoAggiudicazione,$numeroProtocolloLettera,$prioritaGestav);
-                if ($risposta->getCodiceRisposta()!= 'KO' and ($codicestato=='090' or $codicestato=='030' or $codicestato=='031' or $codicestato=='130' or $codicestato=='091' or $codicestato=='040' or $codicestato=='041')){
-                    $mail= new EmailController($this->getDoctrine()->getManager(), $this->get('service_container'));
-                    $mail->notifyEmailAction($idpratica);
+                $logger->log('Termine processing richiesta');
+                if (is_null($risposta)) {
+                    $logger->log('RichiestaModel ha dato risposta null');
+                } else {
+                    $logger->log('Ricevuta risposta da richiesta model: '.$risposta->getCodiceRisposta());
                 }
+                if ($risposta->getCodiceRisposta()!= 'KO' and ($codicestato=='090' or $codicestato=='030' or $codicestato=='031' or $codicestato=='130' or $codicestato=='091' or $codicestato=='040' or $codicestato=='041')){
+                    $logger->log('Avvio invio mail');
+                    //FG20180313 invio della mail in try-catch perchè ho il sentore che fallisca.
+                    try {
+                        $mail = new EmailController($this->getDoctrine()->getManager(), $this->get('service_container'));
+                        $mail->notifyEmailAction($idpratica);
+                        $logger->log('Termine invio mail');
+                    } catch (\Exception $e) {
+                        $logger->log('Errore invio mail: '.$e->getMessage());
+                    }
+
+                }
+                $logger->log('Fine');
                 return array(
                     'CodiceRisposta' => $risposta->getCodiceRisposta(),
                     'codiceErrore' => $risposta->getCodiceErrore(),

@@ -44,3 +44,24 @@ services:
             router: "@router"
             em:     "@doctrine.orm.entity_manager"
             session: "@session"
+
+  programmatoria_logger:
+        class: estar\rda\RdaBundle\Services\RdaLogger
+        arguments:
+            logger: "@logger"
+        tags:
+            - { name: monolog.logger, channel: programmatoria }
+
+  sistematicaclient_logger:
+        class: estar\rda\RdaBundle\Services\RdaLogger
+        arguments:
+            logger: "@logger"
+        tags:
+            - { name: monolog.logger, channel: sistematicaclient }
+
+  sistematicaserver_logger:
+        class: estar\rda\RdaBundle\Services\RdaLogger
+        arguments:
+            logger: "@logger"
+        tags:
+            - { name: monolog.logger, channel: sistematicaserver }

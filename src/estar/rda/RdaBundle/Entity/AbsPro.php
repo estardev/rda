@@ -77,6 +77,14 @@ class AbsPro
      */
     private $pro_protocollo_rda;
 
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pro_errore_rda", type="string", length=255, nullable=true)
+     */
+    private $pro_errore_rda;
+
     /**
      * @var \DateTime
      *
@@ -335,6 +343,22 @@ class AbsPro
     public function setProDatatrasfRda($pro_datatrasf_rda)
     {
         $this->pro_datatrasf_rda = $pro_datatrasf_rda;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProErroreRda()
+    {
+        return $this->pro_errore_rda;
+    }
+
+    /**
+     * @param string $pro_errore_rda
+     */
+    public function setProErroreRda($pro_errore_rda)
+    {
+        $this->pro_errore_rda = $pro_errore_rda;
     }
 
 

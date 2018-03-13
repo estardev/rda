@@ -442,6 +442,7 @@ class RichiestaModel
         } else {
             //TODO convertire la $data in oggetto!!!!!
             $dateTime = new \DateTime($data, new \DateTimeZone('Europe/Rome'));
+            //FG 20180312: perchè? PERCHE'?
             $dateTime->modify('+ 2 hours');
             $dataFornita = true;
             // file_put_contents("dataok","ciao");
