@@ -466,11 +466,13 @@ class SistematicaClientController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
+        $logger = $this->get('sistematicaclient_logger');
         $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
         $gruppogestav = $categoria->getGruppogestav();
         $categoriamerciologica = $categoria->getNomegestav();
 
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
+        $logger->log('SistematicaClientController.index: inizio invio  richiesta '.$idRichiesta.' per categoria '.$idCategoria.' con tipologia '.$tipologia);
         $azienda = $richiesta->getIdazienda()->getNome();
         $priorita=$richiesta->getPriorita();
         switch ($priorita){
@@ -558,7 +560,7 @@ class SistematicaClientController extends Controller
 //            $pippo = "pluto";
 //        else
 //            $pippo = "paperino";
-
+        $logger->log('SistematicaClientController.indexAction: chiamata webservice');
         $esito = $risposta->RequestWebServer();
 
         if ($esito['esito'] == true and ($tipologia == "Nuova" or $tipologia == "Documentazione aggiuntiva" or $tipologia == "Documentazione richiesta da RUP" ))
@@ -596,7 +598,8 @@ class SistematicaClientController extends Controller
                 $iter->setIdrichiesta($richiesta);
                 if($tipologia=="Nuova"){
                     $iter->setMotivazione("Nuova richiesta inviata e protocollata");
-                    if ($categoria->getId()==15 or $categoria->getId()==16 or $categoria->getId()==8 or $categoria->getId()==19){
+                    //FG20180319 questa cosa è ORRIBILE, gli id delle categorie cablati nel codice, porco cazzo!
+                    if ($categoria->getId()==15 or $categoria->getId()==16 or $categoria->getId()==8 or $categoria->getId()==19 or $categoria->getId() == 40 or $categoria->getId() == 41){
                         $iter->setAstatogestav('Validazione Amministrativa in ESTAR');
                         $richiesta->setStatusgestav('Validazione Amministrativa in ESTAR');
                     }
@@ -772,6 +775,7 @@ class SistematicaClientController extends Controller
                 'message' => 'C\'è stato un errore nell\'invio della domanda verso iShareDoc, Riprovare o contattare i sistemisti'
             )
         );
+        $logger->log('SistematicaClientController.indexAction: se sono arrivato fin qui, ho un errore');
 
         return $this->redirect($this->generateUrl("richiesta_bycategoria", array('idCategoria' => $idCategoria)));
 

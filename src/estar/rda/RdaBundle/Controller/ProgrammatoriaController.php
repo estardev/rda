@@ -337,7 +337,7 @@ class ProgrammatoriaController extends Controller
             if ($esito != "" and $esito->getStatusCode() == '200') {
                 $numprotocollo = $esito->getContent();
                 $programmazione = $programmazioneDoctrine->getRepository('estarRdaBundle:AbsPro')->find($idProgrammata);
-                $programmazione->setProProtocolloRda($numprotocollo);
+                $programmazione->setProProtocolloRda($numprotocollo.'-'.$richiesta_programmazione->getProanno());
                 $messaggio = $programmazione->getProErroreRda();
                 $messaggio = $messaggio.'; Trasmessa correttamente ';
                 $programmazione->setProErroreRda($messaggio);
