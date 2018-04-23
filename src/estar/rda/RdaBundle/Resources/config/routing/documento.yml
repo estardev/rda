@@ -47,3 +47,7 @@ documento_liberoByRichiesta:
     path:     /liberoByRichiesta/{idRichiesta}/{idCategoria}
     defaults: { _controller: "estarRdaBundle:Documento:liberoByRichiesta" }
 
+
+documento_download:
+    path:     /download/{id}/{nomeClasse}
+    defaults: { _controller: "estarRdaBundle:Documento:download" }
