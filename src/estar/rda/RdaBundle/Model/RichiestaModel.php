@@ -420,8 +420,8 @@ class RichiestaModel
     public function getPratica($utente, $data, $note, $idpratica, $codicestato, $codicegara, $rup, $numeroAttoAggiudicazione, $numeroProtocolloLettera,$prioritaGestav)
     {
         // Ci costruiamo l'oggetto risposta
-        $logger = $this->get('richiestamodel_logger');
-        $logger->log('RichiestaModel.getPratica: invocato per richiesta '.$idpratica);
+//        $logger = $this->get('richiestamodel_logger');
+//        //$logger->log('RichiestaModel.getPratica: invocato per richiesta '.$idpratica);
         $dateRisposta = new \DateTime();
         $dateRisposta->setTimeZone(new \DateTimeZone('Europe/Rome'));
         $dataRisposta = $dateRisposta->format(\DateTime::ATOM);
@@ -456,13 +456,13 @@ class RichiestaModel
 
         //Se la richiesta non è trovata, ritorniamo un messaggio di errore
         if (is_null($richiesta)) {
-            $logger->log('RichiestaModel.getPratica: richiesta non trovata ');
+//            //$logger->log('RichiestaModel.getPratica: richiesta non trovata ');
             $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
             $risposta->setCodiceErrore(RispostaPerSistematica::codiceErrorePraticaNonTrovata);
             $risposta->setDescrizioneErrore("Non è stata trovata alcuna pratica con id " . $idpratica);
             return $risposta;
         } else {
-            $logger->log('RichiestaModel.getPratica: richiesta trovata. Stato '.$richiesta->getStatus().' stato richiesto '.$codicestato);
+            //$logger->log('RichiestaModel.getPratica: richiesta trovata. Stato '.$richiesta->getStatus().' stato richiesto '.$codicestato);
         }
 
         //Passiamo a gestire i vari caso
@@ -476,7 +476,7 @@ class RichiestaModel
             case '010':
                 //valutazione tecnica
                 //La richiesta passa in stato di valutazione tecnica
-                $logger->log('RichiestaModel.getPratica: gestione passaggio 010 (valutazione tecnica)');
+                //$logger->log('RichiestaModel.getPratica: gestione passaggio 010 (valutazione tecnica)');
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
@@ -502,19 +502,19 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente ');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente ');
                     }
 
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $logger->log('RichiestaModel.getPratica: la pratica '.$idpratica.' non può transire nello stato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: la pratica '.$idpratica.' non può transire nello stato richiesto');
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto"); //.$articleSM->can('rifiutata_tec_ESTAR')." - ".$articleSM->getState());
                 }
                 $risposta->setDataRisposta($dataRisposta);
@@ -522,7 +522,7 @@ class RichiestaModel
             case '020':
                 //valutazione amministrativa
                 //La richiesta passa in stato di valutazione amministrativa
-                $logger->log('RichiestaModel.getPratica: valutazione amministrativa');
+                //$logger->log('RichiestaModel.getPratica: valutazione amministrativa');
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
@@ -548,19 +548,19 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente ');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente ');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestita correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestita correttamente');
                     }
 
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $logger->log('RichiestaModel.getPratica: la pratica non può transire nello stato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: la pratica non può transire nello stato richiesto');
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
                 }
                 $risposta->setDataRisposta($dataRisposta);
@@ -569,7 +569,7 @@ class RichiestaModel
             case '030':
                 //attesa documentazione aggiuntiva tecnica
                 //La richiesta passa in stato di valutazione tecnica
-                $logger->log('RichiestaModel.getPratica: attesa documentazione aggiuntiva tecnica');
+                //$logger->log('RichiestaModel.getPratica: attesa documentazione aggiuntiva tecnica');
                 if ($articleSM->can('rifiutata_tec_ESTAR')) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
                         $iter = new Iter();
@@ -596,19 +596,19 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestita correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestita correttamente');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestita correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestita correttamente');
                     }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: la pratica non può transire nello stato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: la pratica non può transire nello stato richiesto');
                 }
                 //TODO: ricordiamoci di mettere un avviso via mail
                 $risposta->setDataRisposta($dataRisposta);
@@ -616,7 +616,7 @@ class RichiestaModel
             case '031':
                 //attesa documentazione aggiuntiva amministrativa
                 //La richiesta passa in stato di valutazione amministrativa
-                $logger->log('RichiestaModel.getPratica: attesa documentazione amministrativa aggiuntiva');
+                //$logger->log('RichiestaModel.getPratica: attesa documentazione amministrativa aggiuntiva');
                 if ($articleSM->can('rifiutata_amm_ESTAR')) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
@@ -644,12 +644,12 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestita correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestita correttamente');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestita correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestita correttamente');
                     }
 
                 } else {
@@ -657,7 +657,7 @@ class RichiestaModel
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto "); //.$articleSM->can('rifiutata_tec_ESTAR')." - ".$articleSM->getState());
-                    $logger->log('RichiestaModel.getPratica: non può transire nello stato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: non può transire nello stato richiesto');
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
@@ -665,7 +665,7 @@ class RichiestaModel
             case '040':
                 //rigetto pratica controllo tecnico
                 //La richiesta passa in stato di rifiutata ESTAR
-                $logger->log('RichiestaModel.getPratica: rigetto pratica controllo tecnico');
+                //$logger->log('RichiestaModel.getPratica: rigetto pratica controllo tecnico');
                 if ($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus() == 'rigetto_ESTAR') {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
@@ -692,19 +692,19 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto');
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
@@ -712,7 +712,7 @@ class RichiestaModel
             case '041':
                 //rigetto pratica controllo amministrativo
                 //La richiesta passa in stato di rifiutata ESTAR
-                $logger->log('RichiestaModel.getPratica: rigetto controllo amministrativo');
+                //$logger->log('RichiestaModel.getPratica: rigetto controllo amministrativo');
                 if ($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus() == 'rigetto_ESTAR') {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
@@ -739,26 +739,26 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto');
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '050':
                 //Assegnata programmazione
-                $logger->log('RichiestaModel.getPratica: assegnata alla programmazione');
+                //$logger->log('RichiestaModel.getPratica: assegnata alla programmazione');
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ASSEGNATAPROGRAMMAZIONE) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
@@ -785,26 +785,26 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente ');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente ');
                     }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto');
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '060':
                 //Istruttoria tecnica
-                $logger->log('RichiestaModel.getPratica: istruttoria tecnica');
+                //$logger->log('RichiestaModel.getPratica: istruttoria tecnica');
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ISTRUTTORIA) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
@@ -830,26 +830,26 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente ');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente ');
                     }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto');
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '061':
                 //Istruttoria amministrativa
-                $logger->log('RichiestaModel.getPratica: istruttoria amministrativa');
+                //$logger->log('RichiestaModel.getPratica: istruttoria amministrativa');
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ISTRUTTORIA_AMM) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
@@ -875,26 +875,26 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: non può transire allo stato richeisto');
+                    //$logger->log('RichiestaModel.getPratica: non può transire allo stato richeisto');
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '070':
                 //Indizione
-                $logger->log('RichiestaModel.getPratica: indizione');
+                //$logger->log('RichiestaModel.getPratica: indizione');
                 if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR AND !empty($codicegara)) or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_INDIZIONE) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
@@ -920,12 +920,12 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     }
                 } else {
                     //Non posso transire in quello stato
@@ -933,11 +933,11 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR and empty($codicegara)) {
                         $risposta->setDescrizioneErrore("Non è stato indicato il codice Gara");
-                        $logger->log('RichiestaModel.getPratica: codice gara mancatne');
+                        //$logger->log('RichiestaModel.getPratica: codice gara mancatne');
                     }
                     else {
                         $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                        $logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto ');
+                        //$logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto ');
                     }
                 }
                 $risposta->setDataRisposta($dataRisposta);
@@ -945,7 +945,7 @@ class RichiestaModel
 
             case '080':
                 //Valutazione
-                $logger->log('RichiestaModel.getPratica: valutazione');
+                //$logger->log('RichiestaModel.getPratica: valutazione');
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_VALUTAZIONE) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
@@ -970,26 +970,26 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto');
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '090':
                 //Aggiudicazione
-                $logger->log('RichiestaModel.getPratica: aggiudicazione');
+                //$logger->log('RichiestaModel.getPratica: aggiudicazione');
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_AGGIUDICAZIONE) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
@@ -1021,25 +1021,25 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto');
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
             case '091':
                 //aggiudicazione parziale
-                $logger->log('RichiestaModel.getPratica: aggiudicazione parziale');
+                //$logger->log('RichiestaModel.getPratica: aggiudicazione parziale');
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
@@ -1071,26 +1071,26 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente ');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente ');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: non può transire allo stato richiesto');
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '100':
                 //Chiusura (iter terminato)
-                $logger->log('RichiestaModel.getPratica: chiusura per iter terminato');
+                //$logger->log('RichiestaModel.getPratica: chiusura per iter terminato');
                 if ($articleSM->can('chiusura_ESTAR') or $richiesta->getStatus() == RichiestaModel::STATUS_CHIUSA_ESTAR) {
 
                     if ($richiesta->getStatus() != RichiestaModel::STATUS_CHIUSA_ESTAR AND $richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE) {
@@ -1124,13 +1124,13 @@ class RichiestaModel
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $this->em->flush();
-                    $logger->log('RichiestaModel.getPratica: pratica gestita correttamente');
+                    //$logger->log('RichiestaModel.getPratica: pratica gestita correttamente');
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: non può transire nello stato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: non può transire nello stato richiesto');
 
                 }
                 $risposta->setDataRisposta($dataRisposta);
@@ -1138,12 +1138,12 @@ class RichiestaModel
 
             case '101':
                 //stato in cui verrà comunicata la chiusura per errore e la riapertura della pratica
-                $logger->log('RichiestaModel.getPratica: chiusura per errore e riapertura');
+                //$logger->log('RichiestaModel.getPratica: chiusura per errore e riapertura');
                 if($richiesta->getStatusgestav() == RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE){
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                    //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                 }
                 elseif ($articleSM->can('apertura_ESTAR')) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
@@ -1171,19 +1171,19 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: mnon può transire nello stato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: mnon può transire nello stato richiesto');
                 }
 
                 //TODO: ricordiamoci di mettere un avviso via mail
@@ -1192,7 +1192,7 @@ class RichiestaModel
 
             case '110':
                 //Annullato ESTAR
-                $logger->log('RichiestaModel.getPratica: annullato estar');
+                //$logger->log('RichiestaModel.getPratica: annullato estar');
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_ANNULLATA) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
@@ -1219,32 +1219,32 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: non può transire nello stato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: non può transire nello stato richiesto');
 
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '111':
-                $logger->log('RichiestaModel.getPratica: 111');
+                //$logger->log('RichiestaModel.getPratica: 111');
                 if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR AND
                     $richiesta->getStatusgestav() == RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                    //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                 } elseif (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR AND
                     $richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
                     $iter = new Iter();
@@ -1270,13 +1270,13 @@ class RichiestaModel
                     $this->em->persist($richiesta);
                     $this->em->persist($iter);
                     $this->em->flush();
-                    $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                    //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: non può transire nello stato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: non può transire nello stato richiesto');
 
                 }
                 $risposta->setDataRisposta($dataRisposta);
@@ -1323,7 +1323,7 @@ class RichiestaModel
 
                 //attesa documentazione aggiuntiva RUP
                 //La richiesta passa in stato di valutazione amministrativa
-                $logger->log('RichiestaModel.getPratica: documentazione aggiuntiva RUP');
+                //$logger->log('RichiestaModel.getPratica: documentazione aggiuntiva RUP');
                 if ((($articleSM->can('rifiutata_amm_ESTAR')) AND !empty($codicegara)) or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
@@ -1351,19 +1351,19 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     } else {
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                        //$logger->log('RichiestaModel.getPratica: gestito correttamente');
                     }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: non può transire nellos tato richiesto');
+                    //$logger->log('RichiestaModel.getPratica: non può transire nellos tato richiesto');
                 }
                 //TODO: ricordiamoci di mettere un avviso via mail
                 $risposta->setDataRisposta($dataRisposta);
@@ -1376,7 +1376,7 @@ class RichiestaModel
                 $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                 $risposta->setDescrizioneErrore("Il codice immesso non è gestito.");
                 $risposta->setDataRisposta($dataRisposta);
-                $logger->log('RichiestaModel.getPratica: codice non gestito');
+                //$logger->log('RichiestaModel.getPratica: codice non gestito');
                 return $risposta;
         }
     }
