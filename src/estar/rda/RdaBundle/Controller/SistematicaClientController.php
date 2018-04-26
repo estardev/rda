@@ -563,6 +563,7 @@ class SistematicaClientController extends Controller
         $logger->log('SistematicaClientController.indexAction: chiamata webservice');
         $esito = $risposta->RequestWebServer();
         $logger->log('SistematicaClientController.indexAction: fine  chiamata webservice');
+        $logger->log('SistematicaClientController: risposta '.var_dump($esito));
         if ($esito['esito'] == true and ($tipologia == "Nuova" or $tipologia == "Documentazione aggiuntiva" or $tipologia == "Documentazione richiesta da RUP" ))
         {
             $numprotocollo = $esito['protocollo'];
@@ -787,7 +788,7 @@ class SistematicaClientController extends Controller
                 'message' => 'C\'è stato un errore nell\'invio della domanda verso iShareDoc, Riprovare o contattare i sistemisti'
             )
         );
-        $logger->log('SistematicaClientController.indexAction: se sono arrivato fin qui, ho un errore');
+        $logger->log('SistematicaClientController.indexAction: se sono arrivato fin qui, ho un errore. ');
 
         return $this->redirect($this->generateUrl("richiesta_bycategoria", array('idCategoria' => $idCategoria)));
 
