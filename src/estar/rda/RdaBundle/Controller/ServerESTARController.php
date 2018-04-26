@@ -39,7 +39,7 @@ class ServerESTARController extends Controller
      */
     public function notifyAction($username, $password, $note = null, $idpratica, $dataRequest = null, $codicestato, $codicegara = null, $rup = null, $numeroAttoAggiudicazione = null, $numeroProtocolloLettera = null, $prioritaGestav = null)
     {
-        $logger = $this->get('sistematicaclient_logger');
+        $logger = $this->get('sistematicaserver_logger');
         $logger->log('ServerEstarController: Invocato: note ' . $note . ', idpratica ' . $idpratica . ', codicestato ' . $codicestato);
         $username1 = strtolower($username);
         $em = $this->getDoctrine()->getManager();

@@ -36,3 +36,7 @@ parameters:
     database_name2: abs
     database_user2: rda
     database_password2: 3star2018!
+    #eseguibile wkhtmltopdf
+   #pdfwriter:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" #locale in ambiente windows
+   #pdfwriter:     /usr/local/bin/wkhtmltopdf #produzione
+    pdfwriter:     /usr/local/bin/wkhtmltopdf.sh #test
