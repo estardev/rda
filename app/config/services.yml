@@ -72,3 +72,10 @@ services:
             logger: "@logger"
         tags:
             - { name: monolog.logger, channel: richiestamodel }
+
+  accessi_logger:
+        class: estar\rda\RdaBundle\Services\RdaLogger
+        arguments:
+            logger: "@logger"
+        tags:
+            - { name: monolog.logger, channel: accessi }

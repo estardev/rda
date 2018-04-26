@@ -250,7 +250,8 @@ class RichiestaController extends Controller
     public function indexByCategoriaAction($idCategoria)
     {
         $em = $this->getDoctrine()->getManager();
-
+        $logger = $this->get('accessi_logger');
+        $logger->log('Utente '.$this->getUser()->getId().' richiede le richieste per la categoria '.$idCategoria);
         $usercheck = $this->get("usercheck.notify");
         $diritti = $usercheck->allRole($idCategoria);
 
@@ -425,6 +426,7 @@ class RichiestaController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
+
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 

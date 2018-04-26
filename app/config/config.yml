@@ -313,3 +313,8 @@ monolog:
             path:   "%kernel.logs_dir%/richiestamodel.log"
             level:  debug
             channels: [richiestamodel]
+        accesso:
+            type:   stream
+            path:   "%kernel.logs_dir%/accessi.log"
+            level:  debug
+            channels: [accessi]
