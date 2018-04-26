@@ -161,6 +161,7 @@ class ProgrammatoriaController extends Controller
         /* @var $programmazione AbsPro */
         $em = $this->getDoctrine()->getManager();
         foreach ($programs as $programmazione) {
+            $logger->log('Inizio lavorazione '.$programmazione->getProId());
             if ($programmazione->getProAnno() < $anno) {
                 //FG20180312: se è dell'anno precedente viene skippata. Lo salviamo comunque sulla procedura.
                 $programmazione->setProErroreRda('Saltata in quanto programmata in anno diverso da '.$anno);
@@ -343,6 +344,7 @@ class ProgrammatoriaController extends Controller
                 $programmazione->setProErroreRda($messaggio);
                 $programmazioneDoctrine->flush();
             } else {
+                $programmazione = $programmazioneDoctrine->getRepository('estarRdaBundle:AbsPro')->find($idProgrammata);
                 $messaggio = $programmazione->getProErroreRda();
                 $messaggio = $messaggio.'; problema di trasmissione '.$esito;
                 $programmazione->setProErroreRda($messaggio);
