@@ -562,7 +562,7 @@ class SistematicaClientController extends Controller
 //            $pippo = "paperino";
         $logger->log('SistematicaClientController.indexAction: chiamata webservice');
         $esito = $risposta->RequestWebServer();
-
+        $logger->log('SistematicaClientController.indexAction: fine  chiamata webservice');
         if ($esito['esito'] == true and ($tipologia == "Nuova" or $tipologia == "Documentazione aggiuntiva" or $tipologia == "Documentazione richiesta da RUP" ))
         {
             $numprotocollo = $esito['protocollo'];
@@ -589,6 +589,7 @@ class SistematicaClientController extends Controller
 
             $factory = $this->container->get('sm.factory');
             $articleSM = $factory->get($richiesta, 'rda');
+            $logger->log('SistematicaClientController.indexAction: costruita macchina a stati');
             if ($articleSM->can('inviato_ESTAR')) {
                 $iter = new Iter();
                 $iter->setDastato($articleSM->getState());
@@ -626,7 +627,9 @@ class SistematicaClientController extends Controller
                 $iter->setDataprotocollo($dataprotocollo);
                 $iter->setDatafornita(false);
                 $em->persist($iter);
+                $logger->log('SistematicaClientController.indexAction: Aggiunto iter');
                 $em->persist($richiesta);
+                $logger->log('SistematicaClientController.indexAction: Aggiornata richiesta');
 
                 // scrivo il numero di protocollo sulla richiesta se è nuova
                 if ($tipologia == "Nuova") {
@@ -637,17 +640,20 @@ class SistematicaClientController extends Controller
                     $richiesta->setIdgestav($idGestav);
                     $richiesta->setPresentato(0);
                     $em->persist($richiesta);
+                    $logger->log('SistematicaClientController.indexAction: aggiornato numero di protocollo su richiesta');
                 }
                 elseif ($tipologia == "Documentazione aggiuntiva"){
 
                     $richiesta->setPresentato(0);
                     $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ATTESA_INV);
                     $em->persist($richiesta);
+                    $logger->log('SistematicaClientController.indexAction: aggiornato stato gestar come '.RichiestaModel::STATUSESTAR_ATTESA_INV);
                 }
                 elseif ($tipologia == "Documentazione richiesta da RUP"){
                     $richiesta->setPresentato(0);
                     $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ATTESA_INV);
                     $em->persist($richiesta);
+                    $logger->log('SistematicaClientController.indexAction: aggiornato stato gestar come '.RichiestaModel::STATUSESTAR_ATTESA_INV);
                 }
 
 
@@ -663,6 +669,7 @@ class SistematicaClientController extends Controller
                         $documentiliberiscrittura->setDataprotocollo($dataprotocollo);
                         $documentiliberiscrittura->setUrlprotocollo($urlGestav);
                         $em->persist($documentiliberiscrittura);
+                        $logger->log('SistematicaClientController.indexAction: Aggiunto numero protocollo '.$numprotocollo.'-'.$anno.' su documento libero'.$documentiliberiscrittura->getId());
                     }
                 }
                 $documentiscr = $em->getRepository('estarRdaBundle:Richiestadocumento')->findBy(array('idrichiesta' => $idRichiesta));
@@ -675,6 +682,7 @@ class SistematicaClientController extends Controller
                         $documentiscrittura->setDataprotocollo($dataprotocollo);
                         $documentiscrittura->setUrlprotocollo($urlGestav);
                         $em->persist($documentiscrittura);
+                        $logger->log('SistematicaClientController.indexAction: Aggiunto numero protocollo '.$numprotocollo.'-'.$anno.' su documento '.$documentiscrittura->getId());
                     }
                 }
 
@@ -689,6 +697,7 @@ class SistematicaClientController extends Controller
 
                 $em->flush();
                 if ($programmatoria == 1 ) {
+                   $logger->log('SistematicaClientController.indexAction: richiesta da programmatoria, torno status http200 e numero di protocollo');
                    return new Response($numprotocollo,200);
                    }
                 //return $this->redirect($this->generateUrl("richiesta"));
@@ -715,9 +724,11 @@ class SistematicaClientController extends Controller
                     )
                 );
             }
+            $logger->log('SistematicaClientController.indexAction: fine ');
             return $this->redirect($this->generateUrl("richiesta_bycategoria", array('idCategoria' => $idCategoria)));
 
         } else if ($esito['esito'] == true and $tipologia == "Annullamento") {
+            $logger->log('SistematicaClientController.indexAction: annullamento');
             $numprotocollo = $esito['protocollo'];
             $idGestav=$esito['chiavesistematica'];
             $urlGestav=$esito['urlprotocollo'];
@@ -752,6 +763,7 @@ class SistematicaClientController extends Controller
                         'message' => 'Pratica annullata correttamente!'
                     )
                 );
+
             } else {
 
                 $this->get('session')->getFlashBag()->add(
@@ -763,7 +775,7 @@ class SistematicaClientController extends Controller
                     )
                 );
             }
-
+            $logger->log('SistematicaClientController.indexAction: fine ');
             return $this->redirect($this->generateUrl("richiesta_bycategoria", array('idCategoria' => $idCategoria)));
         }
 

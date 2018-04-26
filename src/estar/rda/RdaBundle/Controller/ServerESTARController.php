@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 //use Symfony\Component\Security\Core\Security;
 //use Symfony\Component\Security\Core\SecurityContextInterface;
 //use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use BeSimple\SoapClient;
 use BeSimple\SoapServer;
@@ -36,15 +37,15 @@ class ServerESTARController extends Controller
      * @Soap\Param("numeroProtocolloLettera", phpType = "string")
      * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\String[]")
      */
-    public function notifyAction($username, $password, $note=null, $idpratica, $dataRequest=null, $codicestato, $codicegara=null, $rup=null,$numeroAttoAggiudicazione=null,$numeroProtocolloLettera=null, $prioritaGestav=null)
+    public function notifyAction($username, $password, $note = null, $idpratica, $dataRequest = null, $codicestato, $codicegara = null, $rup = null, $numeroAttoAggiudicazione = null, $numeroProtocolloLettera = null, $prioritaGestav = null)
     {
         $logger = $this->get('sistematicaserver_logger');
-        $logger->log('ServerEstarController: Invocato: note '.$note.', idpratica '.$idpratica.', codicestato '.$codicestato);
-        $username1=strtolower($username);
+        $logger->log('ServerEstarController: Invocato: note ' . $note . ', idpratica ' . $idpratica . ', codicestato ' . $codicestato);
+        $username1 = strtolower($username);
         $em = $this->getDoctrine()->getManager();
         $postdata = file_get_contents("php://input");
-        file_put_contents("REQUESTclient/".rand().time()."_request.xml",$postdata);
-        $logger->log('ServerEstarController:  XML puro: '.$postdata);
+        file_put_contents("REQUESTclient/" . rand() . time() . "_request.xml", $postdata);
+        $logger->log('ServerEstarController:  XML puro: ' . $postdata);
 
         //file_put_contents(time()."_user.xml",$username);
         //file_put_contents(time()."_psw.xml",$password);
@@ -59,35 +60,35 @@ class ServerESTARController extends Controller
 
         try {
             $utente = $em->getRepository('estarRdaBundle:Utente')->findOneBy(
-            array('username' => "$username1", 'utentecartaoperatore' => $password));
+                array('username' => "$username1", 'utentecartaoperatore' => $password));
 
             if (!$utente) {
-                    //SE C'è BISOGNO DI ABILITARE IL LOGIN TRAMITE WS ABILITARE QUESTE RIGHE
+                //SE C'è BISOGNO DI ABILITARE IL LOGIN TRAMITE WS ABILITARE QUESTE RIGHE
                 //$user_manager = $this->get('fos_user.user_manager');
                 //$user = $user_manager->findUserByUsername($username);
                 //$token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
                 //$this->get('security.token_storage')->setToken($token);
-            $messaggioErrore = "KO";
-            $codice = "040";  //KO
-            $descrizioneErrore = "Credenziali non corrette";
-            $logger->log('Autenticazione fallita');
-            return array(
-                'CodiceRisposta' => $messaggioErrore,
-                'codiceErrore' => $codice,
-                'DescrizioneErrore' => $descrizioneErrore,
-                'data' => $dataRispostaServer
-            );
+                $messaggioErrore = "KO";
+                $codice = "040";  //KO
+                $descrizioneErrore = "Credenziali non corrette";
+                $logger->log('Autenticazione fallita');
+                return array(
+                    'CodiceRisposta' => $messaggioErrore,
+                    'codiceErrore' => $codice,
+                    'DescrizioneErrore' => $descrizioneErrore,
+                    'data' => $dataRispostaServer
+                );
 
-             } else {
+            } else {
                 $logger->log('ServerEstarController: Avvio processing richiesta');
-                $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $idpratica, $codicestato, $codicegara,$rup,$numeroAttoAggiudicazione,$numeroProtocolloLettera,$prioritaGestav);
+                $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $idpratica, $codicestato, $codicegara, $rup, $numeroAttoAggiudicazione, $numeroProtocolloLettera, $prioritaGestav);
                 $logger->log('ServerEstarController: Termine processing richiesta');
                 if (is_null($risposta)) {
                     $logger->log('ServerEstarController:  RichiestaModel ha dato risposta null');
                 } else {
-                    $logger->log('ServerEstarController: Ricevuta risposta da richiesta model: '.$risposta->getCodiceRisposta());
+                    $logger->log('ServerEstarController: Ricevuta risposta da richiesta model: ' . $risposta->getCodiceRisposta());
                 }
-                if ($risposta->getCodiceRisposta()!= 'KO' and ($codicestato=='090' or $codicestato=='030' or $codicestato=='031' or $codicestato=='130' or $codicestato=='091' or $codicestato=='040' or $codicestato=='041')){
+                if ($risposta->getCodiceRisposta() != 'KO' and ($codicestato == '090' or $codicestato == '030' or $codicestato == '031' or $codicestato == '130' or $codicestato == '091' or $codicestato == '040' or $codicestato == '041')) {
                     $logger->log('ServerEstarController: Avvio invio mail');
                     //FG20180313 invio della mail in try-catch perchè ho il sentore che fallisca.
                     try {
@@ -95,7 +96,7 @@ class ServerESTARController extends Controller
                         $mail->notifyEmailAction($idpratica);
                         $logger->log('ServerEstarController: Termine invio mail');
                     } catch (\Exception $e) {
-                        $logger->log('ServerEstarController: Errore invio mail: '.$e->getMessage());
+                        $logger->log('ServerEstarController: Errore invio mail: ' . $e->getMessage());
                     }
 
                 }
@@ -107,10 +108,21 @@ class ServerESTARController extends Controller
                     'data' => $risposta->getDataRisposta()
                 );
 
+            }
+        } catch (\Exception $e) {
+            $logger->log('Eccezione non trappata: ' . $e->getMessage());
+            throw new \SoapFault('Errore', 'Contattare i sistemisti ' . $e->getMessage());
         }
-        } catch(\Exception $e) {
-            $logger->log('Eccezione non trappata: '.$e->getMessage());
-            throw new \SoapFault('Errore', 'Contattare i sistemisti '.$e->getMessage());
-        }
+    }
+
+
+    /** test
+     * */
+    public function indexAction()
+    {
+        $logger = $this->get('sistematicaserver_logger');
+        $logger->log('ServerEstarController: Index: invocato');
+        return new Response("ok");
+
     }
 }
