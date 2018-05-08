@@ -550,6 +550,7 @@ class RichiestaModel
                         try {
                             $this->em->flush();
                         } catch (\Exception $e) {
+                            $logger->log('RichiestaModel.getPratica: eccezione applicativa '.$e->getMessage());
                             $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreAltro);
                             $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                             $risposta->setDescrizioneErrore('Eccezione applicativa: '.$e->getMessage());
