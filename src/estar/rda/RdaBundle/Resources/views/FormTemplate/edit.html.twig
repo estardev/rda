@@ -36,6 +36,14 @@
                 </button>
             </div>
         {% endif %}
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="bottoni">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#confirmModal"><span
+                            class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Cambio Stato Admin
+                </button>
+            </div>
+
+        {% endif %}
 
     </div>
 
