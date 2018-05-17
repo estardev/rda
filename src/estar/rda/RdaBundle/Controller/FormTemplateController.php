@@ -679,6 +679,11 @@ class FormTemplateController extends Controller
         $usercheckControl = $this->get('usercheck.notify');
         $dirittiucc = $usercheckControl->allRole($idCategoria);
 
+        //FG20180508 form per la clonazione
+        $formbuilder->setAction($this->generateUrl('richiesta_clona', array('id' => $idRichiesta)));
+        $clonaForm = $this->createFormBuilder();
+        $clonaForm->add('submit', 'submit', array('label' => 'Conferma clonazione'));
+
         return $this->render('estarRdaBundle:FormTemplate:edit.html.twig', array(
             'entity' => $entity,
             'edit_form' => $editForm->createView(),

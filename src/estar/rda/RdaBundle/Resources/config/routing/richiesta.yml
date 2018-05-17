@@ -45,6 +45,11 @@ richiesta_valida:
     defaults: { _controller: "estarRdaBundle:Richiesta:valida" }
     methods:  POST
 
+richiesta_clona:
+    path:     /{id}/clona}
+    defaults: { _controller: "estarRdaBundle:Richiesta:clona" }
+    methods:  POST
+
 richiesta_viewall:
     path:     /view/{all}
     defaults: { _controller: "estarRdaBundle:Richiesta:viewAll" }

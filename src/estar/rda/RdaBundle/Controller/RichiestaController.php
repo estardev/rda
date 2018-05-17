@@ -9,6 +9,7 @@ use estar\rda\RdaBundle\Form\RichiestaType;
 use estar\rda\RdaBundle\Model\DirittiRichiesta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use estar\rda\RdaBundle\Model\RichiestaModel;
 
 /**
  * Richiesta controller.
@@ -117,7 +118,7 @@ class RichiestaController extends Controller
                                     AND r.proid is null
                                     "); //Un utente ESTAR vede tutte le richieste, sue e non sue
 
-                } else{
+                } else {
                     $query = $em->createQuery("SELECT r
                                     FROM estarRdaBundle:Richiesta r
                                     WHERE  r.idutente=$utenteSessione 
@@ -129,7 +130,7 @@ class RichiestaController extends Controller
                 }
 
                 foreach ($query->getResult() as $richiesta) {
-                    $richieste->add(array($richiesta,'AI'));
+                    $richieste->add(array($richiesta, 'AI'));
                 }
 
             }
@@ -151,7 +152,7 @@ class RichiestaController extends Controller
                                      AND r.proid is null
                                      ");
                 foreach ($query1->getResult() as $richiesta1) {
-                    $richieste->add(array($richiesta1,'VT'));
+                    $richieste->add(array($richiesta1, 'VT'));
                 }
 
             }
@@ -177,7 +178,7 @@ class RichiestaController extends Controller
                                     AND r.proid is null
                                     ");
                 foreach ($query2->getResult() as $richiesta2) {
-                    $richieste->add(array($richiesta2,'VA'));
+                    $richieste->add(array($richiesta2, 'VA'));
                 }
 
             }
@@ -201,12 +202,12 @@ class RichiestaController extends Controller
                 }
 
                 foreach ($query->getResult() as $richiesta3) {
-                    $richieste->add(array($richiesta3,'READ'));
+                    $richieste->add(array($richiesta3, 'READ'));
                 }
 
             }
 
-            if ($aziendaUtente == 'ESTAR'){
+            if ($aziendaUtente == 'ESTAR') {
                 //prendo anche quelle chiuse per categoria che posso vedere
                 $query3 = $em->createQuery("SELECT r
                                     FROM estarRdaBundle:Richiesta r
@@ -214,8 +215,7 @@ class RichiestaController extends Controller
                                     OR r.status = 'annullata')
                                     AND r.proid is null
                                     AND r.idcategoria=$idCategoria");
-            }
-            else{
+            } else {
                 //prendo anche quelle chiuse per categoria che posso vedere
                 $query3 = $em->createQuery("SELECT r
                                     FROM estarRdaBundle:Richiesta r
@@ -226,7 +226,7 @@ class RichiestaController extends Controller
                                     AND r.idazienda=$idAziendaUtente");
             }
             foreach ($query3->getResult() as $richiesta4) {
-                $richieste->add(array($richiesta4,''));
+                $richieste->add(array($richiesta4, ''));
             }
 
         }
@@ -251,7 +251,7 @@ class RichiestaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $logger = $this->get('accessi_logger');
-        $logger->log('Utente '.$this->getUser()->getId().' richiede le richieste per la categoria '.$idCategoria);
+        $logger->log('Utente ' . $this->getUser()->getId() . ' richiede le richieste per la categoria ' . $idCategoria);
         $usercheck = $this->get("usercheck.notify");
         $diritti = $usercheck->allRole($idCategoria);
 
@@ -612,4 +612,40 @@ class RichiestaController extends Controller
     }
 
 
+    /**
+     * Clona una richiesta a partire da una esistente.
+     * Copia tutti i campi valorizzati, non copia i documenti, e la piazza in status di bozza.
+     * @param $id
+     * @param Request $request
+     */
+    public function clonaAction($id, Request $request)
+    {
+        $campi = $request->request->all();
+        $em = $this->getDoctrine()->getManager();
+
+        /* @var \estar\rda\RdaBundle\Entity\Richiesta */
+        $richiestaOld = $em->getRepository('estarRdaBundle:Richiesta')->find($id);
+        $idcategoria = $richiestaOld->getIdcategoria();
+
+        $richiestaNew = new Richiesta();
+        $richiestaNew->setDataora(new \DateTime('now'));
+        $richiestaNew->setDescrizione($richiestaOld->getDescrizione());
+        $richiestaNew->setTitolo($richiestaOld->getTitolo());
+        $richiestaNew->setIdazienda($richiestaOld->getIdazienda());
+        $richiestaNew->setIdcategoria($richiestaOld->getIdcategoria());
+        $richiestaNew->setIdutente($richiestaOld->getIdutente());
+        $richiestaNew->setPriorita($richiestaOld->getPriorita());
+        $richiestaNew->setStatus(RichiestaModel::STATUS_BOZZA);
+
+        $em->persist($richiestaNew);
+
+        //dopodichè creiamo i campi
+        $vcr = $em->getRepository('estarRdaBundle:Valorizzazionecamporichiesta')->findBy(
+            array('idrichiesta' => $id)
+        );
+        //per ogni campo richiesta, ne creiamo un altro sulla richiesta nuova
+
+
+
+    }
 }
