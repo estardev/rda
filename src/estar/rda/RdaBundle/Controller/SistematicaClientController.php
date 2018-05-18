@@ -563,7 +563,7 @@ class SistematicaClientController extends Controller
         $logger->log('SistematicaClientController.indexAction: chiamata webservice');
         $esito = $risposta->RequestWebServer();
         $logger->log('SistematicaClientController.indexAction: fine  chiamata webservice');
-        $logger->log('SistematicaClientController: risposta '.var_dump($esito));
+        $logger->log('SistematicaClientController: risposta '.json_encode($esito));
         if ($esito['esito'] == true and ($tipologia == "Nuova" or $tipologia == "Documentazione aggiuntiva" or $tipologia == "Documentazione richiesta da RUP" ))
         {
             $numprotocollo = $esito['protocollo'];
