@@ -493,6 +493,12 @@ class FormTemplateController extends Controller
         $usercheckControl = $this->get('usercheck.notify');
         $dirittiucc = $usercheckControl->allRole($idCategoria);
 
+        //FG20180508 form per la clonazione
+        $formbuilder = $this->createFormBuilder();
+        $formbuilder->setAction($this->generateUrl('richiesta_clona', array('id' => $idRichiesta)));
+        $clonaForm = $formbuilder->getForm();
+        $clonaForm->add('submit', 'submit', array('label' => 'Conferma clonazione'));
+
         return $this->render('estarRdaBundle:FormTemplate:edit.html.twig', array(
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
@@ -502,6 +508,7 @@ class FormTemplateController extends Controller
             'valida_forms' => $validaForms,
             'soap_form' => $ClientSoapForm->createView(),
             'back_form' => $backForm->createView(),
+            'clona_form' => $clonaForm->createView(),
             'diritti' => $dirittiucc,
             'stato' => $stato,
             'firstLevels' => $res[1]
@@ -680,8 +687,9 @@ class FormTemplateController extends Controller
         $dirittiucc = $usercheckControl->allRole($idCategoria);
 
         //FG20180508 form per la clonazione
+        $formbuilder = $this->createFormBuilder();
         $formbuilder->setAction($this->generateUrl('richiesta_clona', array('id' => $idRichiesta)));
-        $clonaForm = $this->createFormBuilder();
+        $clonaForm = $formbuilder->getForm();
         $clonaForm->add('submit', 'submit', array('label' => 'Conferma clonazione'));
 
         return $this->render('estarRdaBundle:FormTemplate:edit.html.twig', array(
@@ -693,6 +701,7 @@ class FormTemplateController extends Controller
             'valida_forms' => $validaForms,
             'soap_form' => $ClientSoapForm->createView(),
             'back_form' => $backForm->createView(),
+            'clona_form' => $clonaForm->createView(),
             'diritti' => $dirittiucc,
             'stato' => $stato,
             'firstLevels' => $res[1]
