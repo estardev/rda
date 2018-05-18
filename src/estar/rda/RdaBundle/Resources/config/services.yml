@@ -58,3 +58,4 @@ services:
             arguments:
               em: "@doctrine.orm.entity_manager"
               user: "@security.context"
+              service_container: "@service_container"
