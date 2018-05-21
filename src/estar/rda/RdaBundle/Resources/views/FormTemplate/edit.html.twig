@@ -25,7 +25,7 @@
                 </button></div>
         {% endif %}
 
-        {% if (diritti.isVA) and (stato=='da_inviare_ESTAR') %}
+        {% if ((diritti.isVA) and (stato=='da_inviare_ESTAR')) or (is_granted('ROLE_ADMIN') and (stato=='da_inviare_ESTAR')) %}
             <div class="bottoni"> {{ form(soap_form, {'attr': {'novalidate': 'novalidate'}}) }}</div>
         {% endif %}
 
