@@ -533,9 +533,10 @@ class SistematicaClientController extends Controller
         $risposta->setNomefile($nomefile);
         $risposta->setPath($pathfile);
         $titolo = $richiesta->getTitolo();
-        str_replace('<','&lt;',$titolo);
-        str_replace('>','&gt;',$titolo);
-        str_replace('&','&amp;',$titolo);
+//        str_replace('<','&lt;',$titolo);
+//        str_replace('>','&gt;',$titolo);
+//        str_replace('&','&amp;',$titolo);
+        $titolo = htmlentities($titolo, ENT_XML1);
         $risposta->setOggettomessaggio($azienda.": ".$categoriamerciologica.", ".$titolo);
         $risposta->setTipologia($tipologia);
         $risposta->setPriorita($prioritastringa);
