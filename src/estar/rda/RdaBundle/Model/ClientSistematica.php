@@ -666,7 +666,7 @@ class ClientSistematica
    </soapenv:Body>
 </soapenv:Envelope>'; //appIdentifier '.$this->getNumeroProtocollo().'
 
-        $logger->log('ClientSistematica.RequestWebServer: id pratica '.$idPratica.' invio '.$request_xml);
+        $logger->log('ClientSistematica.RequestWebServer: id pratica '.$idPratica.' invio ');
         $response = $client->send($request_xml, $soapaction, 0,300);
         $res=$client->responseData;
         $logger->log('ClientSistematica.RequestWebServer: id pratica '.$idPratica.' ricevo '.$res);
