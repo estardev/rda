@@ -1,0 +1,5 @@
+sistematicaserver_index:
+    path: /index
+    defaults: { _controller: estarRdaBundle:ServerESTAR:index}
+    #methods:  [POST, PUT]
+

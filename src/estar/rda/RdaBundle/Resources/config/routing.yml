@@ -143,3 +143,7 @@ iter_byrichiestagestav:
 programmatoria:
     path:     /prog
     defaults: { _controller: estarRdaBundle:Programmatoria:index }
+
+sistematicaserver:
+        resource: "@estarRdaBundle/Resources/config/routing/sistematicaserver.yml"
+        prefix:   /sistematicaserver

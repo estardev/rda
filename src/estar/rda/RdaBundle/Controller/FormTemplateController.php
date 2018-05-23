@@ -125,6 +125,8 @@ class FormTemplateController extends Controller
 
     public function createAction(Request $request, $idCategoria)
     {
+        $logger = $this->get('accessi_logger');
+
         $dateTime = new \DateTime();
         $dateTime->setTimeZone(new \DateTimeZone('Europe/Rome'));
         $dataFornita = false;
@@ -162,6 +164,7 @@ class FormTemplateController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            $logger->log('Utente '.$this->getUser()->getId().' crea una richiesta per la categoria '.$idCategoria);
             $categoria = $em->getRepository('estarRdaBundle:Categoria')->find($idCategoria);
             $richiesta = new Richiesta();
             $richiesta->setIdutente($utente);
@@ -214,10 +217,10 @@ class FormTemplateController extends Controller
             $iter->setMotivazione('inserita nuova richiesta');
             $em->persist($iter);
             $em->flush();
-
+            $logger->log('Utente '.$this->getUser()->getId().' ha inserito per la categoria '.$idCategoria.' la richiesta '.$richiesta->getId());
             return $this->redirect($this->generateUrl("richiesta_bycategoria", array("idCategoria" => $idCategoria)));
         }
-
+        $logger->log('Utente '.$this->getUser()->getId().' richiede la form di creazione di una richiesta di categoria '.$idCategoria);
         $formbuilder = $this->createFormBuilder();
         $formbuilder->setAction($this->generateUrl('formtemplate_back', array('idCategoria' => $idCategoria)));
         $backForm = $formbuilder->getForm();
@@ -241,7 +244,8 @@ class FormTemplateController extends Controller
      */
     public function showAction($idCategoria, $idRichiesta)
     {
-
+        $logger = $this->get('accessi_logger');
+        $logger->log('Utente '.$this->getUser()->getId().' visualizza la richiesta '.$idRichiesta.' della categoria '.$idCategoria);
         //TODO: vanno aggiunti anche i documenti (generati o creati, della stessa sostanza del Padre)
         $em = $this->getDoctrine()->getManager();
 
@@ -351,6 +355,8 @@ class FormTemplateController extends Controller
     public function editAction($idCategoria, $idRichiesta)
     {
         $em = $this->getDoctrine()->getManager();
+        $logger = $this->get('accessi_logger');
+        $logger->log('Utente '.$this->getUser()->getId().' entra in modifica della richiesta'.$idRichiesta.' della categoria '.$idCategoria);
 
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         $stato = $richiesta->getStatus();
@@ -487,6 +493,12 @@ class FormTemplateController extends Controller
         $usercheckControl = $this->get('usercheck.notify');
         $dirittiucc = $usercheckControl->allRole($idCategoria);
 
+        //FG20180508 form per la clonazione
+        $formbuilder = $this->createFormBuilder();
+        $formbuilder->setAction($this->generateUrl('richiesta_clona', array('id' => $idRichiesta)));
+        $clonaForm = $formbuilder->getForm();
+        $clonaForm->add('submit', 'submit', array('label' => 'Conferma clonazione'));
+
         return $this->render('estarRdaBundle:FormTemplate:edit.html.twig', array(
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
@@ -496,6 +508,7 @@ class FormTemplateController extends Controller
             'valida_forms' => $validaForms,
             'soap_form' => $ClientSoapForm->createView(),
             'back_form' => $backForm->createView(),
+            'clona_form' => $clonaForm->createView(),
             'diritti' => $dirittiucc,
             'stato' => $stato,
             'firstLevels' => $res[1]
@@ -673,6 +686,12 @@ class FormTemplateController extends Controller
         $usercheckControl = $this->get('usercheck.notify');
         $dirittiucc = $usercheckControl->allRole($idCategoria);
 
+        //FG20180508 form per la clonazione
+        $formbuilder = $this->createFormBuilder();
+        $formbuilder->setAction($this->generateUrl('richiesta_clona', array('id' => $idRichiesta)));
+        $clonaForm = $formbuilder->getForm();
+        $clonaForm->add('submit', 'submit', array('label' => 'Conferma clonazione'));
+
         return $this->render('estarRdaBundle:FormTemplate:edit.html.twig', array(
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
@@ -682,6 +701,7 @@ class FormTemplateController extends Controller
             'valida_forms' => $validaForms,
             'soap_form' => $ClientSoapForm->createView(),
             'back_form' => $backForm->createView(),
+            'clona_form' => $clonaForm->createView(),
             'diritti' => $dirittiucc,
             'stato' => $stato,
             'firstLevels' => $res[1]

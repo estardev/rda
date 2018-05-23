@@ -54,13 +54,26 @@
                         </div>
                     </td>
                     <td class="col-lg-6">
-                        <form class="bottoni" method="get">
+                        {#<form class="bottoni" method="get">#}
+                            {#<a class="btn btn-default"#}
+                                        {#href="{{ (vich_uploader_asset(entity, 'docFile')) }}"#}
+                                        {#download#}
+                                {#><span#}
+                                        {#class="glyphicon glyphicon-download"#}
+                                        {#aria-hidden="true"></span> Scarica</a>#}
+                        {#</form>#}
+                        {#Gianluca Licari: attenzione i documenti potevano essere scaricati direttamente dall'apache senza controllo alcuno#}
+                        <form method="get">
                             <a class="btn btn-default"
-                                        href="{{ (vich_uploader_asset(entity, 'docFile')) }}"
-                                        download
-                                ><span
+                                    {#questa istruzione in produzione va commentata e va usata la successiva "questione di path"#}
+                                    {#href="{{ app.request.basePath }}/{{ (vich_uploader_asset(documento.rd, 'docFile')) }}"#}
+                               href="{{ path('documento_download',{'id':entity.id, 'nomeClasse':'Richiestadocumentolibero'}) }}"
+
+                            > <span
                                         class="glyphicon glyphicon-download"
                                         aria-hidden="true"></span> Scarica</a>
+
+
                         </form>
                         <form class="bottoni" style="padding-left: 5px;" method="post" action="{{ path('documento_deletelibero') }}">
                             <input name="idDocumento" type="hidden" value="{{ entity }}" />

@@ -29,6 +29,9 @@ class RegistrationType extends AbstractType
             ))
             ->add('gruppiutente', 'entity', array(
                 'class' => 'estar\rda\RdaBundle\Entity\Gruppoutente',
+                'choice_label' => function ($gruppoutente) {
+                    return $gruppoutente->getNome().' ('.$gruppoutente->getDescrizione().')';
+                },
                 'property' => 'nome',
                 'multiple' => true,
                 'expanded' => true,

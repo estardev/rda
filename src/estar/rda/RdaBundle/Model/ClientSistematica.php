@@ -8,6 +8,7 @@
 
 namespace estar\rda\RdaBundle\Model;
 use nusoap_client;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
 class ClientSistematica
@@ -372,10 +373,11 @@ class ClientSistematica
 
 
     /** costruttore di default. Mi serve un entity manager e l'utente corrente */
-    public function __construct($em, $user)
+    public function __construct($em, $user, ContainerInterface $containerInterface)
     {
         $this->em = $em;
         $this->user = $user;
+        $this->container = $containerInterface;
     }
 
     public function RequestWebServer()
@@ -387,6 +389,8 @@ class ClientSistematica
         //$searchmode1="NOTFOUNDDEF";
         // $searchtype2="CODE";
 
+        $logger = $this->container->get('sistematicaclient_logger');
+        $logger->log('ClientSistematica.RequestWebServer: inizio');
         $searchvalue1="vuoto";
 
 
@@ -662,9 +666,10 @@ class ClientSistematica
    </soapenv:Body>
 </soapenv:Envelope>'; //appIdentifier '.$this->getNumeroProtocollo().'
 
-
+        $logger->log('ClientSistematica.RequestWebServer: id pratica '.$idPratica.' invio ');
         $response = $client->send($request_xml, $soapaction, 0,300);
         $res=$client->responseData;
+        $logger->log('ClientSistematica.RequestWebServer: id pratica '.$idPratica.' ricevo '.$res);
         file_put_contents("REQUESTserver/".$number."_richiestaclient.xml",$client->request );
         file_put_contents("REQUESTserver/".$number."_rispostastaclient.xml",$client->response );
         if($rispostaSistematica= file_get_contents("REQUESTserver/".$number."_rispostastaclient.xml")){

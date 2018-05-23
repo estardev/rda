@@ -108,7 +108,13 @@
                 <tr data-state="richiesta">
 
                         <td>{{ entity.id }}</td>
-                        <td>{{ entity.titolo }}</td>
+                        <td>
+                            {% if (is_granted('ROLE_ADMIN') and entity.status=='da_inviare_ESTAR') %}
+                                <a href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}" onclick="ChangeSelect({{ entity.idcategoria }})">{{ entity.titolo }}
+                                    {% else %}
+                            {{ entity.titolo }}
+                                        {% endif %}
+                        </td>
                 <td>
 
                 {% if entity.status=='bozza' %}

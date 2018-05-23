@@ -6,9 +6,12 @@ use estar\rda\RdaBundle\Entity\Richiestadocumento;
 use estar\rda\RdaBundle\Entity\Richiestadocumentolibero;
 use estar\rda\RdaBundle\Form\DocumentoliberoType;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Validator\Constraints\NotNull;
 use estar\rda\RdaBundle\Entity\Documento;
 use estar\rda\RdaBundle\Form\DocumentoType;
@@ -528,6 +531,34 @@ class DocumentoController extends Controller
             'valida' => $valida,
             'rdl' => $rdl
         ));
+    }
+
+
+
+
+    public function downloadAction($id,$nomeClasse){
+
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('estarRdaBundle:'.$nomeClasse);
+
+        $richiestaDocumento = $repository->find($id);
+
+
+
+        $publicResourcesFolderPath = $this->get('kernel')->getRootDir() . '/../web/documenti/';
+        $filename = "Richiesta_".$richiestaDocumento->getIdrichiesta()->getId()."/".$richiestaDocumento->getFilepath();
+
+        $file = new File($publicResourcesFolderPath.$filename) ;
+
+        $response = new BinaryFileResponse($file);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+        return $response;
+
+
+
+
     }
 
 }

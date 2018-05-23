@@ -156,8 +156,9 @@ knp_snappy:
     pdf:
         enabled:    true
   #      binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" #locale
-        binary:     /usr/local/bin/wkhtmltopdf #produzione
+#        binary:     /usr/local/bin/wkhtmltopdf #produzione
 #        binary:     /usr/local/bin/wkhtmltopdf.sh #test
+        binary: "%pdfwriter%"
         options:
             no-outline: true
             page-size: LETTER
@@ -290,3 +291,31 @@ be_simple_soap:
 #            root_folder: true
 ##            storage:
 ##                directory: "%kernel.root_dir%/../web/uploads/"
+
+monolog:
+    handlers:
+        programmatoria:
+            type:   stream
+            path:   "%kernel.logs_dir%/programmatoria.log"
+            level:  debug
+            channels: [programmatoria]
+        sistematicaclient:
+            type:   stream
+            path:   "%kernel.logs_dir%/sistematicaclient.log"
+            level:  debug
+            channels: [sistematicaclient]
+        sistematicaserver:
+            type:   stream
+            path:   "%kernel.logs_dir%/sistematicaserver.log"
+            level:  debug
+            channels: [sistematicaserver]
+        richiestamodel:
+            type:   stream
+            path:   "%kernel.logs_dir%/richiestamodel.log"
+            level:  debug
+            channels: [richiestamodel]
+        accesso:
+            type:   stream
+            path:   "%kernel.logs_dir%/accessi.log"
+            level:  debug
+            channels: [accessi]
