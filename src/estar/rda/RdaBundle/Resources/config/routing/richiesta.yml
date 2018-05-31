@@ -50,6 +50,11 @@ richiesta_clona:
     defaults: { _controller: "estarRdaBundle:Richiesta:clona" }
     methods:  POST
 
+richiesta_imponi_stato:
+    path:     /imponistato/{id}
+    defaults: { _controller: "estarRdaBundle:Richiesta:imponiStato" }
+    methods:  [POST]
+
 richiesta_viewall:
     path:     /view/{all}
     defaults: { _controller: "estarRdaBundle:Richiesta:viewAll" }

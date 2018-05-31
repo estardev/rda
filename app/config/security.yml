@@ -43,4 +43,5 @@ security:
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/prog, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/ws/ServerESTAR, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/richiesta/imponistato, role: ROLE_ADMIN }
         - { path: ^/, role: ROLE_USER }

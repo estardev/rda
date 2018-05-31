@@ -137,7 +137,7 @@
 
                     <tr data-state="richiesta">
 
-                        {% if not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ESTAR' or entity.status == 'chiusa_ESTAR' or entity.status == 'annullata_ESTAR' or diritti.read ) %}
+                        {% if is_granted('ROLE_ADMIN') or not (entity.status=='eliminata' or entity.status=='annullata' or entity.status == 'evasa_ESTAR' or entity.status == 'chiusa_ESTAR' or entity.status == 'annullata_ESTAR' or diritti.read ) %}
                             <td>
                                 <a href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}">{{ entity.id }}
                                 </a></td>

@@ -649,7 +649,8 @@ class RichiestaController extends Controller
         $richiestaNew->setAssenzaconflitto($richiestaOld->isAssenzaconflitto());
         $richiestaNew->setCp(false);
         $richiestaNew->setIdcategoria($richiestaOld->getIdcategoria());
-        $richiestaNew->setIdutente($richiestaOld->getIdutente());
+        //$richiestaNew->setIdutente($richiestaOld->getIdutente());
+        $richiestaNew->setIdutente($this->getUser());
         $richiestaNew->setPriorita($richiestaOld->getPriorita());
         $richiestaNew->setStatus(RichiestaModel::STATUS_BOZZA);
 
@@ -693,5 +694,60 @@ class RichiestaController extends Controller
 
         return $this->redirect($this->generateUrl("richiesta_bycategoria", array('idCategoria' => $idcategoria)));
 
+    }
+
+
+    /**
+     * Controller di RigFi 20180529
+     * GaFra: controller per il "cambio stato admin", ossia una cosa che bypassi completamente la macchina a stati sia dello stato estar che dello stato gestav.
+     * Serve per snellire la gestione di una parte delle chiamate di assistenza, dove può capitare che per qualche motivo una richiesta non è
+     * transitata dove doveva transitare e quindi va rimessa a mano nello stato giusto per poter riprovare. Questo ci permette di farci aiutare
+     * anche da persone non skillate sul db (ad esempio Francesco) per snellire il carico di assistenza ed essere più rapidi ad evadere questo
+     * tipo di chiamate
+     * @param $id
+     * @param Request $request
+     */
+    public function imponiStatoAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($id);
+        $utente=$this->getUser();
+        $campi = $request->request->all();
+        //$newMessaggio = $campi['form']['messaggio'];
+        $newStatoEstar = $campi['form']['Stato_Estar'];
+        $newStatusGestav = $campi['form']['Stato_Gestav'];
+        if(empty($newStatusGestav)){$newStatusGestav=null;};
+        $iter = new Iter();
+        $iter->setDastato($richiesta->getStatus());   //richiesta->getStatusgestav    iter->getDastatogestav iter->getDastato richiesta->getStatus
+        $iter->setDastatogestav($richiesta->getStatusgestav());
+        $iter->setAstato($newStatoEstar);
+        $iter->setAstatogestav($newStatusGestav);
+        $iter->setIdrichiesta($richiesta);
+        $iter->setIdutente($utente);
+        $iter->setMotivazione("Cambio manuale (forzato) di stato da parte dell'utente ".$utente->getUsername()." #".$utente->getId());
+        $iter->setDataora(new \DateTime('now'));
+        $iter->setDatafornita(true);
+        $em->persist($iter);
+
+        $richiesta->setStatus($newStatoEstar);   //richiesta->getStatusgestav
+        $richiesta->setStatusgestav($newStatusGestav);
+        $em->persist($richiesta);
+
+        $em->flush();
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            array(
+            'alert' => 'info',
+            'title' => 'Informazione!',
+            'message' => 'Stato ESTAR della RDA #'.$richiesta->getId().' forzato a [' . $richiesta->getStatus() . '] e stato GESTAV forzato a ['.(is_null($richiesta->getStatusgestav()) ? "Nessuno" : $richiesta->getStatusgestav()).']'
+//                if(is_null($richiesta->getStatusgestav())){'Nessuno'}
+//                is_null($richiesta->getStatusgestav() ? 'Nessuno' : $richiesta->getStatusgestav();
+            )
+        );
+
+
+        $idcategoria = $richiesta->getIdcategoria();
+        return $this-> redirect($this->generateUrl("richiesta_bycategoria", array('idCategoria' => $idcategoria)));
     }
 }

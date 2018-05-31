@@ -26,6 +26,48 @@ class FormTemplateController extends Controller
     /** FG messa costante per poterla più facilmente editare in futuro */
     const SEPARATORE_CAMPI = '||';
 
+    //da .\src\estar\rda\RdaBundle\Model\RichiestaModel.php
+
+    private $arrayStatoEstar = [
+        'bozza' => 'bozza',
+        'eliminata' => 'eliminata',
+        'annullata' => 'annullata',
+        'attesa_val_tec' => 'attesa_val_tec',
+        'attesa_val_amm' => 'attesa_val_amm',
+        'da_inviare_ESTAR' => 'da_inviare_ESTAR',
+        'inviata_ESTAR' => 'inviata_ESTAR',
+        "chiusa_ESTAR" => "chiusa_ESTAR",
+        "annullata_ESTAR" => "annullata_ESTAR",
+        "evasa_ESTAR" => "evasa_ESTAR",
+        "rigetto_ESTAR" => "rigetto_ESTAR"
+    ];
+
+
+
+    private $arrayStatoGestav = [
+        null=>"Nessuno",
+        "Rigettata dal controllo Tecnico ESTAR" => "Rigettata dal controllo Tecnico ESTAR",
+        "Rigettata dal controllo Amministrativo ESTAR" => "Rigettata dal controllo Amministrativo ESTAR",
+        "In Programmazione ESTAR" => "In Programmazione ESTAR",
+        "In valutazione ESTAR" => "In valutazione ESTAR",
+        "In valutazione amministrativa ESTAR" => "In valutazione amministrativa ESTAR",
+        "In valutazione tecnica ESTAR" => "In valutazione tecnica ESTAR",
+        "Aggiudicazione ESTAR" => "Aggiudicazione ESTAR",
+        "Attesa documentazione aggiuntiva Tecnica" => "Attesa documentazione aggiuntiva Tecnica",
+        "Attesa documentazione aggiuntiva Amministrativa" => "Attesa documentazione aggiuntiva Amministrativa",
+        "Inviata documentazione aggiuntiva" => "Inviata documentazione aggiuntiva",
+        "In Istruttoria ESTAR" => "In Istruttoria ESTAR",
+        "In Istruttoria ESTAR Amministrativa" => "In Istruttoria ESTAR Amministrativa",
+        "Indizione" => "Indizione",
+        "Conferma pratica annullata ESTAR" => "Conferma pratica annullata ESTAR",
+         "Archiviata da ESTAR" => "Archiviata da ESTAR",
+        "Chiusa da ESTAR per termine Iter" => "Chiusa da ESTAR per termine Iter",
+        "Riapertura pratica ESTAR" => "Riapertura pratica ESTAR",
+        "Richiesta documentazione (RUP)" => "Richiesta documentazione (RUP)",
+        "Richiesta con più gare" => "Richiesta con più gare",
+        "Aggiudicazione Parziale" => "Aggiudicazione Parziale",
+    ];
+
     public function getChoicesOptions($string)
     {
         $options = explode(FormTemplateController::SEPARATORE_CAMPI, $string);
@@ -499,6 +541,32 @@ class FormTemplateController extends Controller
         $clonaForm = $formbuilder->getForm();
         $clonaForm->add('submit', 'submit', array('label' => 'Conferma clonazione'));
 
+        // *** - RigFi-2018.05.29 form per forzatura passaggio di stato (saltando macchina a stati)  - *** //
+        // todo: mettere controllo su utente con ruolo admin
+        $formbuilder = $this->createFormBuilder();
+        $formbuilder->setAction($this->generateUrl('richiesta_imponi_stato', array('id' => $idRichiesta)));
+        $imponiStatoForm = $formbuilder->getForm();
+//        $imponiStatoForm->add("messaggio", "textarea", array(
+//            'label' => "Messaggio",
+//            'attr' => array('placeholder'=> "indicare motivazione di forzatura dello stato"),
+//            'constraints' => new NotNull()
+//        ));
+        $imponiStatoForm->add('Stato_Estar', 'choice', array(
+        'choices'  => $this->arrayStatoEstar,
+        'data' => $richiesta->getStatus(),
+        ));
+        $imponiStatoForm->add('Stato_Gestav', 'choice', [
+            'choices' => $this->arrayStatoGestav,
+            //'choices_as_values' => true,
+            'required' => false,
+            'data' => $richiesta->getStatusgestav(),
+        ]);
+        $imponiStatoForm->add('submit', 'submit', array('label' => 'Conferma Cambio Stati'));
+        // vedere se le seguenti due  righe possono essere utilizzate come sicurezza/controllo user admin
+        //$usercheckControl = $this->get('usercheck.notify');
+        //$dirittiucc = $usercheckControl->allRole($idCategoria);
+        // *** - fine RigFi20180531 - *** //
+
         return $this->render('estarRdaBundle:FormTemplate:edit.html.twig', array(
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
@@ -509,11 +577,12 @@ class FormTemplateController extends Controller
             'soap_form' => $ClientSoapForm->createView(),
             'back_form' => $backForm->createView(),
             'clona_form' => $clonaForm->createView(),
+            'imponiStato_form' => $imponiStatoForm->createView(),
             'diritti' => $dirittiucc,
             'stato' => $stato,
+            'gestav' => $richiesta->getStatusgestav(),
             'firstLevels' => $res[1]
         ));
-
     }
 
     public
