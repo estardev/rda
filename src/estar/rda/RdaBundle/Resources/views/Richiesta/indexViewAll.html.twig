@@ -119,7 +119,7 @@
                     {% elseif (is_granted('ROLE_ADMIN')) %}
                         <td>
                             <a href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}"
-                               onclick="ChangeSelect({{ entity.idcategoria }})">{{ entity.id }}
+                               onclick="ChangeSelect({{ entity.idcategoria }})">{{ entity.id }} (Admin)
                             </a></td>
                         <td>
                             <a href="{{ path('formtemplate_edit', { 'idRichiesta': entity.id ,'idCategoria': entity.idcategoria}) }}"
