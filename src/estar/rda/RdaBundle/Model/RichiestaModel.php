@@ -52,6 +52,7 @@ class RichiestaModel
     const STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP = "Richiesta documentazione (RUP)";
     const STATUSESTAR_RICHIESTA_CON_PIU_GARE = "Richiesta con più gare";
     const STATUSESTAR_AGGIUDICAZIONE_PARZIALE = "Aggiudicazione Parziale";
+    const STATUSESTAR_CHIUSURA_SENZA_ESITO = "Chiusa da ESTAR senza esito";
 
     protected $em;
 
@@ -1372,6 +1373,65 @@ class RichiestaModel
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
                     $logger->log('RichiestaModel.getPratica: non può transire nellos tato richiesto');
+                }
+                //TODO: ricordiamoci di mettere un avviso via mail
+                $risposta->setDataRisposta($dataRisposta);
+                return $risposta;
+
+
+            case '140':
+
+                //Chiusura richiesta senza esito
+                //Mail di Scanzani 20180614:
+                //stiamo facendo le modifiche per la chiusura delle richieste "Senza
+                //esito", mi servirebbe sapere quale è il codice che dobbiamo passare.
+                //
+                //Questo nuovo stato deve essere accettato da qualsiasi stato si trova la
+                //richiesta.
+
+                $logger->log('RichiestaModel.getPratica: chiusura senza esito');
+                //Sicuramente non ci sono vincoli, la richiesta può sempre transire
+                //...a meno che non sia mai stata protocollata!
+                if (!is_null($richiesta->getNumeroProtocollo())) {
+                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
+
+                        $iter = new Iter();
+                        $iter->setDastato($articleSM->getState());
+                        $articleSM->apply('chiusura_ESTAR');
+                        $iter->setAstato($articleSM->getState());
+                        $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO);
+                        $iter->setIdrichiesta($richiesta);
+                        $iter->setMotivazione($note);
+                        $iter->setDataora($dateTime);
+                        $iter->setIdutente($utente);
+                        $iter->setDatafornita($dataFornita);
+                        $iter->setRup($rup);
+                        $iter->setPrioritaGestav($prioritaGestav);
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $richiesta->setCodicegara($codicegara);
+                        $richiesta->setDataultimamodifica($dateTime);
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO);
+                        $richiesta->setPresentato(15);
+                        $richiesta->setPrioritaGestav($prioritaGestav);
+                        $this->em->persist($richiesta);
+                        $this->em->persist($iter);
+                        $this->em->flush();
+                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                    } else {
+                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaErrore);
+                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                        $risposta->setDescrizioneErrore("Una richiesta con più gare non può essere chiusa senza esito");
+                        $logger->log('RichiestaModel.getPratica: una richiesta con più gare non può transire nello stato richiesto');
+                    }
+                } else {
+                    //Non posso transire in quello stato
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
+                    $logger->log('RichiestaModel.getPratica: non può transire nello stato richiesto');
                 }
                 //TODO: ricordiamoci di mettere un avviso via mail
                 $risposta->setDataRisposta($dataRisposta);

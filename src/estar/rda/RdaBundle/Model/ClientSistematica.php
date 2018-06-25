@@ -572,11 +572,13 @@ class ClientSistematica
 
         if ($_SERVER['SERVER_NAME'] != "rda.estar.toscana.it" and $_SERVER['SERVER_NAME'] != "159.213.95.80") {
             //todo in https test
+            $logger->log('Endpoint di test');
             $client->endpoint = 'https://democorepa3.grupposistematica.it/isharedoc/webservices/webserviceInstance3';
             $soapaction = 'https://democorepa3.grupposistematica.it/isharedoc/webservices/webserviceInstance3';
         }
         else{
             //todo produzione
+            $logger->log('Endpoint di produzione');
             $client->endpoint = 'https://protocollo.estar.toscana.it/isharedoc/webservices/instanceService3';
             $soapaction = 'https://protocollo.estar.toscana.it/isharedoc/webservices/instanceService3/';
         }
