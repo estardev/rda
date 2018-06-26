@@ -1324,18 +1324,15 @@ class RichiestaModel
             //          return $risposta;
 
             case '130':
-
                 //if($richiesta->getCodicegara()==$codicegara)
                 //    $idgara=true;
                 //else
                 //    $idgara=false;
-
                 //attesa documentazione aggiuntiva RUP
                 //La richiesta passa in stato di valutazione amministrativa
                 $logger->log('RichiestaModel.getPratica: documentazione aggiuntiva RUP');
                 if ((($articleSM->can('rifiutata_amm_ESTAR')) AND !empty($codicegara)) or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
-
                         $iter = new Iter();
                         $iter->setDastato($articleSM->getState());
                         $articleSM->apply('rifiutata_amm_ESTAR');
@@ -1380,21 +1377,19 @@ class RichiestaModel
 
 
             case '140':
-
                 //Chiusura richiesta senza esito
-                //Mail di Scanzani 20180614:
-                //stiamo facendo le modifiche per la chiusura delle richieste "Senza
-                //esito", mi servirebbe sapere quale è il codice che dobbiamo passare.
-                //
-                //Questo nuovo stato deve essere accettato da qualsiasi stato si trova la
-                //richiesta.
-
-                $logger->log('RichiestaModel.getPratica: chiusura senza esito');
-                //Sicuramente non ci sono vincoli, la richiesta può sempre transire
-                //...a meno che non sia mai stata protocollata!
+                // Mail di Scanzani 20180614:
+                // stiamo facendo le modifiche per la chiusura delle richieste "Senzaesito", mi servirebbe sapere quale è il codice che dobbiamo passare.
+                // Questo nuovo stato deve essere accettato da qualsiasi stato si trova la richiesta.
+                // Mail di Santucci di Giovedì, 21 giugno 2018 10:55:15
+                // 1) richiesta con una sola gara. L'utente lato ISD chiude senza esito, lo stato arriva al portale, il portale traccia il nuovo ed ultimo stato.
+                // 2) richiesta con 2(o N) gare. L'utente lato ISD chiude senza esito le due gare. Lo stato del portale sara' gia' in "richiesta con piu gare". Per ogni gara chiusa arriva al portale la chiusura senza esito. Il portale li accetta entrambi ma ovviamente in cronologia traccia due volte lo stesso passaggio.
+                // 3) caso rarissimo, direi impossibile nella pratica. richiesta con 2(o N) gare. L'utente lato ISD chiude senza esito una sola gara e lavora l'altra... Lo stato del portale sara' gia' in "richiesta con piu gare". Al portale arriva la chiusura senza esito, la traccia... Ma se dall'altra gara arrivano avanzamenti il sistema li continua a tracciare in cronologia. E' il caso piu "sporco"...
+                //Lato portale quindi la chiusura senza esito deve poter essere ricevuta sempre (anche piu volte in sequenza) e non deve necessariamente essere uno stato bloccante per eventuali ulteriori passaggi. L unica risposta di errore e' nel caso in cui idpraticaportale non sia stato protocollato o non esista.
+                $logger->log('RichiestaModel.getPratica ['.$idpratica.']: chiusura senza esito');
+                //Sicuramente non ci sono vincoli, la richiesta può sempre transire ... a meno che non sia mai stata protocollata!
                 if (!is_null($richiesta->getNumeroProtocollo())) {
-                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
-
+//                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
                         $iter = new Iter();
                         $iter->setDastato($articleSM->getState());
                         $articleSM->apply('chiusura_ESTAR');
@@ -1419,19 +1414,19 @@ class RichiestaModel
                         $this->em->persist($richiesta);
                         $this->em->persist($iter);
                         $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
-                    } else {
-                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaErrore);
-                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
-                        $risposta->setDescrizioneErrore("Una richiesta con più gare non può essere chiusa senza esito");
-                        $logger->log('RichiestaModel.getPratica: una richiesta con più gare non può transire nello stato richiesto');
-                    }
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: gestito correttamente');
+//                    } else {
+//                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaErrore);
+//                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+//                        $risposta->setDescrizioneErrore("Una richiesta con più gare non può essere chiusa senza esito");
+//                        $logger->log('RichiestaModel.getPratica: una richiesta con più gare non può transire nello stato richiesto');
+//                    }
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: non può transire nello stato richiesto');
+                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: non può transire nello stato richiesto');
                 }
                 //TODO: ricordiamoci di mettere un avviso via mail
                 $risposta->setDataRisposta($dataRisposta);
