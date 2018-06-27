@@ -1391,54 +1391,58 @@ class RichiestaModel
                 if (!is_null($richiesta->getNumeroProtocollo())) {
 //                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
                         $iter = new Iter();
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: new iter');
                         $iter->setDastato($articleSM->getState());
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDastato');
-                        $articleSM->apply('chiusura_ESTAR');
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: apply');
-                        $iter->setAstato($articleSM->getState());
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setAstato');
-                        $iter->setDastatogestav($richiesta->getStatusgestav());
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDastatogestav');
-                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setAstatogestav');
-                        $iter->setIdrichiesta($richiesta);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setIdrichiesta');
-                        $iter->setMotivazione($note);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setMotivazione');
-                        $iter->setDataora($dateTime);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDataora');
-                        $iter->setIdutente($utente);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setIdutente');
-                        $iter->setDatafornita($dataFornita);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDatafornita');
-                        $iter->setRup($rup);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setRup');
-                        $iter->setPrioritaGestav($prioritaGestav);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setPrioritaGestav');
-                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setCodiceErrore');
-                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setCodiceRisposta');
-                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDescrizioneErrore');
-                        $richiesta->setCodicegara($codicegara);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setCodicegara');
-                        $richiesta->setDataultimamodifica($dateTime);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDataultimamodifica');
-                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setStatusgestav');
-                        $richiesta->setPresentato(15);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setPresentato');
-                        $richiesta->setPrioritaGestav($prioritaGestav);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setPrioritaGestav');
-                        $this->em->persist($richiesta);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: persist richiesta');
-                        $this->em->persist($iter);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: persist iter');
-                        $this->em->flush();
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: flush');
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: gestito correttamente');
+                        if($richiesta->getStatusgestav()==RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE && !$articleSM->getState()=="chiusura_ESTAR") {
+                            $articleSM->apply('chiusura_ESTAR');
+                            $logger->log('RichiestaModel.getPratica ['.$idpratica.']: apply');
+                        }elseif($richiesta->getStatusgestav()!=RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE){
+                            $articleSM->apply('chiusura_ESTAR');
+                            $logger->log('RichiestaModel.getPratica ['.$idpratica.']: apply');
+                        }
+                            $iter->setAstato($articleSM->getState());
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setAstato');
+                            $iter->setDastatogestav($richiesta->getStatusgestav());
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDastatogestav');
+                            $iter->setAstatogestav(RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setAstatogestav');
+                            $iter->setIdrichiesta($richiesta);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setIdrichiesta');
+                            $iter->setMotivazione($note);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setMotivazione');
+                            $iter->setDataora($dateTime);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDataora');
+                            $iter->setIdutente($utente);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setIdutente');
+                            $iter->setDatafornita($dataFornita);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDatafornita');
+                            $iter->setRup($rup);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setRup');
+                            $iter->setPrioritaGestav($prioritaGestav);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setPrioritaGestav');
+                            $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setCodiceErrore');
+                            $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setCodiceRisposta');
+                            $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDescrizioneErrore');
+                            $richiesta->setCodicegara($codicegara);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setCodicegara');
+                            $richiesta->setDataultimamodifica($dateTime);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDataultimamodifica');
+                            $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setStatusgestav');
+                            $richiesta->setPresentato(15);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setPresentato');
+                            $richiesta->setPrioritaGestav($prioritaGestav);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setPrioritaGestav');
+                            $this->em->persist($richiesta);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: persist richiesta');
+                            $this->em->persist($iter);
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: persist iter');
+                            $this->em->flush();
+                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: flush');
+                            $logger->log('RichiestaModel.getPratica ['.$idpratica.']: gestito correttamente');
+//                        }
 //                    } else {
 //                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaErrore);
 //                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
@@ -1449,8 +1453,8 @@ class RichiestaModel
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: non può transire nello stato richiesto');
+                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non esiste o ha num prot vuoto");
+                    $logger->log("La pratica " . $idpratica . " non esiste o ha num prot vuoto");
                 }
                 //TODO: ricordiamoci di mettere un avviso via mail
                 $risposta->setDataRisposta($dataRisposta);
