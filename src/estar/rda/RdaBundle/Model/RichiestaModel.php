@@ -1392,55 +1392,38 @@ class RichiestaModel
 //                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
                         $iter = new Iter();
                         $iter->setDastato($articleSM->getState());
-                        if($richiesta->getStatusgestav()==RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE && !$articleSM->getState()=="chiusura_ESTAR") {
+                        //badilografata di rigfi per non perdere troppo tempo su un codice fatto male ma risolvere il problema
+                        if($richiesta->getStatusgestav()==RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE && !$articleSM->getState()==RichiestaModel::STATUS_CHIUSA_ESTAR) {
+                        //if($richiesta->getStatusgestav()==RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO && !$articleSM->getState()==RichiestaModel::STATUS_CHIUSA_ESTAR) {
                             $articleSM->apply('chiusura_ESTAR');
-                            $logger->log('RichiestaModel.getPratica ['.$idpratica.']: apply');
+                            $logger->log('RichiestaModel.getPratica ['.$idpratica.']: assegnato stato [chiusa senza esito] perché è una RDA con più gare ma ancora aperta');
+                        //}elseif($richiesta->getStatusgestav()!=RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO){
                         }elseif($richiesta->getStatusgestav()!=RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE){
                             $articleSM->apply('chiusura_ESTAR');
-                            $logger->log('RichiestaModel.getPratica ['.$idpratica.']: apply');
+                            $logger->log('RichiestaModel.getPratica ['.$idpratica.']: assegnato stato [chiusa senza esito] perché è una RDA che non ha più gare');
                         }
                             $iter->setAstato($articleSM->getState());
                         $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setAstato');
                             $iter->setDastatogestav($richiesta->getStatusgestav());
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDastatogestav');
                             $iter->setAstatogestav(RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setAstatogestav');
                             $iter->setIdrichiesta($richiesta);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setIdrichiesta');
                             $iter->setMotivazione($note);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setMotivazione');
                             $iter->setDataora($dateTime);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDataora');
                             $iter->setIdutente($utente);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setIdutente');
                             $iter->setDatafornita($dataFornita);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDatafornita');
                             $iter->setRup($rup);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setRup');
                             $iter->setPrioritaGestav($prioritaGestav);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setPrioritaGestav');
                             $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setCodiceErrore');
                             $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setCodiceRisposta');
                             $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDescrizioneErrore');
                             $richiesta->setCodicegara($codicegara);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setCodicegara');
                             $richiesta->setDataultimamodifica($dateTime);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setDataultimamodifica');
                             $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setStatusgestav');
                             $richiesta->setPresentato(15);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setPresentato');
                             $richiesta->setPrioritaGestav($prioritaGestav);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setPrioritaGestav');
                             $this->em->persist($richiesta);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: persist richiesta');
                             $this->em->persist($iter);
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: persist iter');
                             $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: flush');
                             $logger->log('RichiestaModel.getPratica ['.$idpratica.']: gestito correttamente');
 //                        }
 //                    } else {
