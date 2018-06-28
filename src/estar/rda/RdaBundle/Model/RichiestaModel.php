@@ -1397,7 +1397,8 @@ class RichiestaModel
                     //badile di rigfi: provando stato 'annullata' (oppure chiusa_da_estar per la seconda volta in caso di rda con + gare) si ha errore a causa della macchina a stati
                     // -> si forza lo stato della richiesta senza appoggiarsi alla macchina a stati
                     $richiesta->setStatus(RichiestaModel::STATUS_ANNULLATA);
-                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: assegnato di forza stato [annullata] bypassando la macchina a stati');
+                    //$articleSM->apply(RichiestaModel::STATUS_ANNULLATA);
+                    //$logger->log('RichiestaModel.getPratica ['.$idpratica.']: assegnato di forza stato [annullata] bypassando la macchina a stati');
                     $iter->setAstato($articleSM->getState());
                     $iter->setDastatogestav($richiesta->getStatusgestav());
                     $iter->setAstatogestav(RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO);
