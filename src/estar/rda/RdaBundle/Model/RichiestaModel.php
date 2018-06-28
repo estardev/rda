@@ -1385,53 +1385,41 @@ class RichiestaModel
                 // 1) richiesta con una sola gara. L'utente lato ISD chiude senza esito, lo stato arriva al portale, il portale traccia il nuovo ed ultimo stato.
                 // 2) richiesta con 2(o N) gare. L'utente lato ISD chiude senza esito le due gare. Lo stato del portale sara' gia' in "richiesta con piu gare". Per ogni gara chiusa arriva al portale la chiusura senza esito. Il portale li accetta entrambi ma ovviamente in cronologia traccia due volte lo stesso passaggio.
                 // 3) caso rarissimo, direi impossibile nella pratica. richiesta con 2(o N) gare. L'utente lato ISD chiude senza esito una sola gara e lavora l'altra... Lo stato del portale sara' gia' in "richiesta con piu gare". Al portale arriva la chiusura senza esito, la traccia... Ma se dall'altra gara arrivano avanzamenti il sistema li continua a tracciare in cronologia. E' il caso piu "sporco"...
-                //Lato portale quindi la chiusura senza esito deve poter essere ricevuta sempre (anche piu volte in sequenza) e non deve necessariamente essere uno stato bloccante per eventuali ulteriori passaggi. L unica risposta di errore e' nel caso in cui idpraticaportale non sia stato protocollato o non esista.
+                // Lato portale quindi la chiusura senza esito deve poter essere ricevuta sempre (anche piu volte in sequenza) e non deve necessariamente essere uno stato bloccante per eventuali ulteriori passaggi. L unica risposta di errore e' nel caso in cui idpraticaportale non sia stato protocollato o non esista.
+                // Mail di Santucci di Giovedì, 26 giugno 2018 17:15
+                // lo status di destinazione RdA quando si riceve il nuovo codice 140 dovrebbe essere:
+                // Annullata - Chiusura da ESTAR senza esito (che viene visualizzato in arancione).
                 $logger->log('RichiestaModel.getPratica ['.$idpratica.']: chiusura senza esito');
-                //Sicuramente non ci sono vincoli, la richiesta può sempre transire ... a meno che non sia mai stata protocollata!
+                //Sicuramente non ci sono vincoli, la richiesta deve sempre transire ... a meno che non sia mai stata protocollata!
                 if (!is_null($richiesta->getNumeroProtocollo())) {
-//                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
-                        $iter = new Iter();
-                        $iter->setDastato($articleSM->getState());
-                        //badilografata di rigfi per non perdere troppo tempo su un codice fatto male ma risolvere il problema
-                        if($richiesta->getStatusgestav()==RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE && !$articleSM->getState()==RichiestaModel::STATUS_CHIUSA_ESTAR) {
-                        //if($richiesta->getStatusgestav()==RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO && !$articleSM->getState()==RichiestaModel::STATUS_CHIUSA_ESTAR) {
-                            $articleSM->apply('chiusura_ESTAR');
-                            $logger->log('RichiestaModel.getPratica ['.$idpratica.']: assegnato stato [chiusa senza esito] perché è una RDA con più gare ma ancora aperta');
-                        //}elseif($richiesta->getStatusgestav()!=RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO){
-                        }elseif($richiesta->getStatusgestav()!=RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE){
-                            $articleSM->apply('chiusura_ESTAR');
-                            $logger->log('RichiestaModel.getPratica ['.$idpratica.']: assegnato stato [chiusa senza esito] perché è una RDA che non ha più gare');
-                        }
-                            $iter->setAstato($articleSM->getState());
-                        $logger->log('RichiestaModel.getPratica ['.$idpratica.']: setAstato');
-                            $iter->setDastatogestav($richiesta->getStatusgestav());
-                            $iter->setAstatogestav(RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO);
-                            $iter->setIdrichiesta($richiesta);
-                            $iter->setMotivazione($note);
-                            $iter->setDataora($dateTime);
-                            $iter->setIdutente($utente);
-                            $iter->setDatafornita($dataFornita);
-                            $iter->setRup($rup);
-                            $iter->setPrioritaGestav($prioritaGestav);
-                            $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                            $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                            $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                            $richiesta->setCodicegara($codicegara);
-                            $richiesta->setDataultimamodifica($dateTime);
-                            $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO);
-                            $richiesta->setPresentato(15);
-                            $richiesta->setPrioritaGestav($prioritaGestav);
-                            $this->em->persist($richiesta);
-                            $this->em->persist($iter);
-                            $this->em->flush();
-                            $logger->log('RichiestaModel.getPratica ['.$idpratica.']: gestito correttamente');
-//                        }
-//                    } else {
-//                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceRispostaErrore);
-//                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
-//                        $risposta->setDescrizioneErrore("Una richiesta con più gare non può essere chiusa senza esito");
-//                        $logger->log('RichiestaModel.getPratica: una richiesta con più gare non può transire nello stato richiesto');
-//                    }
+                    $iter = new Iter();
+                    $iter->setDastato($articleSM->getState());
+                    //badile di rigfi: provando stato 'annullata' (oppure chiusa_da_estar per la seconda volta in caso di rda con + gare) si ha errore a causa della macchina a stati
+                    // -> si forza lo stato della richiesta senza appoggiarsi alla macchina a stati
+                    $richiesta->setStatus(RichiestaModel::STATUS_ANNULLATA);
+                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: assegnato di forza stato [annullata] bypassando la macchina a stati');
+                    $iter->setAstato($articleSM->getState());
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dateTime);
+                    $iter->setIdutente($utente);
+                    $iter->setDatafornita($dataFornita);
+                    $iter->setRup($rup);
+                    $iter->setPrioritaGestav($prioritaGestav);
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+                    $richiesta->setCodicegara($codicegara);
+                    $richiesta->setDataultimamodifica($dateTime);
+                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_CHIUSURA_SENZA_ESITO);
+                    $richiesta->setPresentato(15);
+                    $richiesta->setPrioritaGestav($prioritaGestav);
+                    $this->em->persist($richiesta);
+                    $this->em->persist($iter);
+                    $this->em->flush();
+                    $logger->log('RichiestaModel.getPratica ['.$idpratica.']: gestito correttamente');
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
