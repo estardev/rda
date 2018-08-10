@@ -68,6 +68,12 @@ class FormTemplateController extends Controller
         "Aggiudicazione Parziale" => "Aggiudicazione Parziale",
     ];
 
+    private $arrayPresentato = [
+        0=>"Nessuno",
+        14=>"Documentazione aggiuntiva",
+        15=>"Documentazione richiesta da RUP"
+    ];
+
     public function getChoicesOptions($string)
     {
         $options = explode(FormTemplateController::SEPARATORE_CAMPI, $string);
@@ -561,6 +567,14 @@ class FormTemplateController extends Controller
             'required' => false,
             'data' => $richiesta->getStatusgestav(),
         ]);
+
+        $imponiStatoForm->add('presentato', 'choice', [
+            'choices' => $this->arrayPresentato,
+            //'choices_as_values' => true,
+            'required' => false,
+            'data' => $richiesta->getPresentato(),
+        ]);
+
         $imponiStatoForm->add('submit', 'submit', array('label' => 'Conferma Cambio Stati'));
         // vedere se le seguenti due  righe possono essere utilizzate come sicurezza/controllo user admin
         //$usercheckControl = $this->get('usercheck.notify');

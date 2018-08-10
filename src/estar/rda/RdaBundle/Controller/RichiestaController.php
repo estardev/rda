@@ -716,6 +716,7 @@ class RichiestaController extends Controller
         //$newMessaggio = $campi['form']['messaggio'];
         $newStatoEstar = $campi['form']['Stato_Estar'];
         $newStatusGestav = $campi['form']['Stato_Gestav'];
+        $newPresentato = $campi['form']['presentato'];
         if(empty($newStatusGestav)){$newStatusGestav=null;};
         $iter = new Iter();
         $iter->setDastato($richiesta->getStatus());   //richiesta->getStatusgestav    iter->getDastatogestav iter->getDastato richiesta->getStatus
@@ -724,13 +725,14 @@ class RichiestaController extends Controller
         $iter->setAstatogestav($newStatusGestav);
         $iter->setIdrichiesta($richiesta);
         $iter->setIdutente($utente);
-        $iter->setMotivazione("Cambio manuale (forzato) di stato da parte dell'utente ".$utente->getUsername()." #".$utente->getId());
+        $iter->setMotivazione("Cambio manuale (forzato anche 'presentato'=".$newPresentato.") di stato da parte dell'utente ".$utente->getUsername()." #".$utente->getId());
         $iter->setDataora(new \DateTime('now'));
         $iter->setDatafornita(true);
         $em->persist($iter);
 
         $richiesta->setStatus($newStatoEstar);   //richiesta->getStatusgestav
         $richiesta->setStatusgestav($newStatusGestav);
+        $richiesta->setPresentato($newPresentato);
         $em->persist($richiesta);
 
         $em->flush();

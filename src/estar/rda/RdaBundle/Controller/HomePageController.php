@@ -190,6 +190,7 @@ class HomePageController extends Controller
                                     AND c.id=$idCategoria AND r.idazienda=$idAziendaUtente AND r.proid is null
                                     ");
                 $nValAmm->add($query2->getResult());
+                
                 if ($aziendaUtente == 'ESTAR')
                     $query3 = $em->createQuery("SELECT COUNT(r) as numero, c.id as idcat, c.descrizione as descrizionecategoria
                                     FROM estarRdaBundle:Richiesta r, estarRdaBundle:Categoria c
