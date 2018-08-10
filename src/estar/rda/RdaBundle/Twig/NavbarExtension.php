@@ -26,13 +26,12 @@ class NavbarExtension extends \Twig_Extension
         $this->session = $session;
     }
 
-           public function getFunctions()
+    public function getFunctions()
     {
         return array(
             'navbar' => new \Twig_Function_Method($this, 'renderNavbar', array('is_safe' => array('html'),
                 'needs_environment' => true))
         );
-
     }
 
     public function renderNavbar(\Twig_Environment $twig)

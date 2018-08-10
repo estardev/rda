@@ -50,7 +50,7 @@ class FormTemplateController extends Controller
         "Rigettata dal controllo Amministrativo ESTAR" => "Rigettata dal controllo Amministrativo ESTAR",
         "In Programmazione ESTAR" => "In Programmazione ESTAR",
         "In valutazione ESTAR" => "In valutazione ESTAR",
-        "In valutazione amministrativa ESTAR" => "In valutazione amministrativa ESTAR",
+        "Valutazione Amministrativa in ESTAR" => "Valutazione Amministrativa in ESTAR",
         "In valutazione tecnica ESTAR" => "In valutazione tecnica ESTAR",
         "Aggiudicazione ESTAR" => "Aggiudicazione ESTAR",
         "Attesa documentazione aggiuntiva Tecnica" => "Attesa documentazione aggiuntiva Tecnica",
