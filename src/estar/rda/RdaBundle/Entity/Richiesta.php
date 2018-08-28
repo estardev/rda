@@ -114,6 +114,13 @@ class Richiesta
     private $titolo;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="documentazione", type="string", length=512, nullable=true)
+     */
+    private $documentazione;
+
+    /**
      * @return boolean
      */
     public function isCp()
@@ -769,6 +776,23 @@ class Richiesta
             '3' => 'Standard');
         return $choices;
     }
+
+    /**
+     * @return string
+     */
+    public function getDocumentazione()
+    {
+        return $this->documentazione;
+    }
+
+    /**
+     * @param string $documentazione
+     */
+    public function setDocumentazione($documentazione)
+    {
+        $this->documentazione = $documentazione;
+    }
+
 
 
     public function __toString(){return strval($this->getId());}

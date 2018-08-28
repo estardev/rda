@@ -147,7 +147,7 @@ class Iter
 
     /**
      * @param string $urlprotocollo
-     * @return Richiesta
+     * @return Iter
      */
     public function setUrlprotocollo($urlprotocollo)
     {

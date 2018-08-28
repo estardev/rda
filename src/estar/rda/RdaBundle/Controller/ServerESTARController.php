@@ -27,6 +27,7 @@ class ServerESTARController extends Controller
      * @Soap\Param("username", phpType = "string")
      * @Soap\Param("password", phpType = "string")
      * @Soap\Param("note", phpType = "string")
+     * @Soap\Param("documentazione", phpType = "string")
      * @Soap\Param("idpratica", phpType = "int")
      * @Soap\Param("dataRequest", phpType = "string")
      * @Soap\Param("codicestato", phpType = "string")
@@ -37,7 +38,7 @@ class ServerESTARController extends Controller
      * @Soap\Param("numeroProtocolloLettera", phpType = "string")
      * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\String[]")
      */
-    public function notifyAction($username, $password, $note = null, $idpratica, $dataRequest = null, $codicestato, $codicegara = null, $rup = null, $numeroAttoAggiudicazione = null, $numeroProtocolloLettera = null, $prioritaGestav = null)
+    public function notifyAction($username, $password, $note = null, $documentazione, $idpratica, $dataRequest = null, $codicestato, $codicegara = null, $rup = null, $numeroAttoAggiudicazione = null, $numeroProtocolloLettera = null, $prioritaGestav = null)
     {
         $logger = $this->get('sistematicaserver_logger');
         $logger->log('ServerEstarController: Invocato: note ' . $note . ', idpratica ' . $idpratica . ', codicestato ' . $codicestato);
@@ -81,7 +82,7 @@ class ServerESTARController extends Controller
 
             } else {
                 $logger->log('ServerEstarController: Avvio processing richiesta');
-                $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $idpratica, $codicestato, $codicegara, $rup, $numeroAttoAggiudicazione, $numeroProtocolloLettera, $prioritaGestav);
+                $risposta = $this->get('model.richiesta')->getPratica($utente, $dataRequest, $note, $documentazione, $idpratica, $codicestato, $codicegara, $rup, $numeroAttoAggiudicazione, $numeroProtocolloLettera, $prioritaGestav);
                 $logger->log('ServerEstarController: Termine processing richiesta');
                 if (is_null($risposta)) {
                     $logger->log('ServerEstarController:  RichiestaModel ha dato risposta null');

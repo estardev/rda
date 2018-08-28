@@ -418,7 +418,7 @@ class RichiestaModel
      * @param string $prioritaGestav
      * @return RispostaPerSistematica
      */
-    public function getPratica($utente, $data, $note, $idpratica, $codicestato, $codicegara, $rup, $numeroAttoAggiudicazione, $numeroProtocolloLettera,$prioritaGestav)
+    public function getPratica($utente, $data, $note, $documentazione, $idpratica, $codicestato, $codicegara, $rup, $numeroAttoAggiudicazione, $numeroProtocolloLettera,$prioritaGestav)
     {
         // Ci costruiamo l'oggetto risposta
         $logger = $this->container->get('richiestamodel_logger');
@@ -452,7 +452,7 @@ class RichiestaModel
 
 
         //Prendiamo la richiesta
-
+        /* @var \estar\rda\RdaBundle\Entity\Richiesta $richiesta */
         $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')->findOneBy(array('id' => $idpratica));
 
         //Se la richiesta non è trovata, ritorniamo un messaggio di errore
@@ -472,6 +472,9 @@ class RichiestaModel
         $articleSM = $factory->get($richiesta, 'rda');
 
         $iter = new Iter();
+        //FG20180828: se viene specificata la documentazione, la setto
+        if (!is_null($documentazione))
+            $richiesta->setDocumentazione($documentazione);
 
         switch ($codicestato) {
             case '010':
