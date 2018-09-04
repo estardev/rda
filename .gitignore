@@ -6,9 +6,17 @@
 /app/logs/*
 !app/logs/.gitkeep
 /app/phpunit.xml
+/app/check.php
+/app/SymfonyRequirements.php
 /bin/
 /composer.phar
 /vendor/
 /web/bundles/
+/web/REQUESTclient/
+/web/REQUESTserver/
+/web/sender/
+/web/documenti/
 /.idea/*
 /chiave ultima commit
+debugRouterShowControllers.txt
+/nbproject/private/

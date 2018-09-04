@@ -296,6 +296,21 @@
                                   aria-hidden="true"></span> Modifica</a></li>
                                     {% endif %}
 
+
+                                    {# rigfi 2018-09-03 - prima parte - modifica richiesta di Santucci (non è possibile clonare rda chiuse perché il tasto clona è dentro pagina di edit rda) #}
+                                        {# inserito quindi tasto clona anche nell'indice rda per categoria #}
+                                        {# vedere modale con form "taroccato" (inserita alla fione di questa cella <td> e taggata con rigfi 2018-09-03 - seconda parte #}
+                                    <li>
+                                        <a  data-toggle="modal" data-target="#confirmModalClonazione_{{ entity.id }}">
+                                            <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Clona
+                                        </a>
+                                    </li>
+                                    {#rigfi 2018-09-03 - prima parte - modifica richiesta di Santucci (non è possibile clonare rda chiuse perché il tasto clona è dentro pagina di edit rda)#}
+
+
+
+
+
                                     {#                  {% if diritti is defined %}
                                                         {% if (diritti.isai and entity.status=='bozza') or (diritti.isvt and entity.status=='attesa_val_tec') or (diritti.isva and entity.status=='attesa_val_amm') or (diritti.isva and entity.status=='da_inviare_ESTAR') %}
                                     #}
@@ -349,12 +364,42 @@
                                     #}
                                 </ul>
                             </div>
+
+                            {#rigfi 2018-09-03 - seconda parte - form taroccato #}
+                            <div class="modal fade" id="confirmModalClonazione_{{ entity.id }}" role="dialog">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                <span class="sr-only">Chiudi</span>
+                                            </button>
+                                            <h4 class="modal-title">Clonazione richiesta</h4>
+                                            La richiesta verrà clonata con tutti i campi, senza i documenti, senza alcuno stato in ABS e in stato di bozza su RDA.
+                                        </div>
+                                        <div class="modal-body">
+                                            <form name="form" method="post" action="{{ path('richiesta_clona', { 'id': entity.id }) }}" role="form">
+                                                <div id="form">
+                                                    <div class="form-group">
+                                                        <button type="submit" id="form_submit" name="form[submit]" class="btn btn-primary">Conferma clonazione</button>
+                                                    </div>
+                                                    <input type="hidden" id="form__token" name="form[_token]" class="form-control" value="I0gG0uUnnwu-DVrTzCn-3ui-4254GohJVa2kg3m3C3g">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {#rigfi 2018-09-03 - seconda parte - form taroccato#}
+
                         </td>
                     </tr>
                 {% endfor %}
             </table>
         </div>
     </div>
+
+
 
     <div class="modal fade" id="iterModal" tabindex="-1" aria-hidden="true" role="dialog"
          aria-labelledby="myLargeModalLabel">
