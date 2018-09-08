@@ -589,7 +589,8 @@ class RichiestaModel
                         $articleSM->apply('rifiutata_tec_ESTAR');
                         $iter->setAstato($articleSM->getState());
                         $iter->setDastatogestav($richiesta->getStatusgestav());
-                        $iter->setAstatogestav($richiesta->getStatusgestav());
+        //                $iter->setAstatogestav($richiesta->getStatusgestav());
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ATTESA_TEC);     // zanna20180713
                         $iter->setIdrichiesta($richiesta);
                         $iter->setMotivazione($note);
                         $iter->setDataora($dateTime);
@@ -637,7 +638,9 @@ class RichiestaModel
                         $articleSM->apply('rifiutata_amm_ESTAR');
                         $iter->setAstato($articleSM->getState());
                         $iter->setDastatogestav($richiesta->getStatusgestav());
-                        $iter->setAstatogestav($richiesta->getStatusgestav());
+                    //    $iter->setAstatogestav($richiesta->getStatusgestav());          // zanna: Dastatogestav = DastatoGestav ??? prima assegna nell'iter quello della richiesta ??
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ATTESA_AMM);   // zanna: 20180713
+                        $richiesta->setPresentato(14);
                         $iter->setIdrichiesta($richiesta);
                         $iter->setMotivazione($note);
                         $iter->setDataora($dateTime);
@@ -648,7 +651,7 @@ class RichiestaModel
                         $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                         $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                         $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ATTESA_AMM);
+                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_ATTESA_AMM);  // zanna: poi lo setta giusto nella richiesta??
                         $richiesta->setPresentato(14);
                         $richiesta->setDataultimamodifica($dateTime);
                         $richiesta->setCodicegara(null);

@@ -72,19 +72,18 @@ class EmailController extends Controller
     public function notifyEmailAction($idRichiesta)
     {
 
-        $em = $this->em;
+        $em   = $this->em;
         /* @var $richiesta Richiesta */
         $richiesta = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
-        $protocollo = $richiesta->getNumeroprotocollo();
-        $categoria= $richiesta->getIdcategoria()->getDescrizione();
-        $utente= $richiesta->getIdutente()->getNomecognome();
-        $mail = $richiesta->getIdutente()->getEmail();
+        $protocollo  = $richiesta->getNumeroprotocollo();
+        $categoria   = $richiesta->getIdcategoria()->getDescrizione();
+        $utente      = $richiesta->getIdutente()->getNomecognome();
+        $mail        = $richiesta->getIdutente()->getEmail();
         $descrizione = $richiesta->getDescrizione();
-        $azienda = $richiesta->getIdazienda()->getNome();
-        $titolo = $richiesta->getTitolo();
+        $azienda     = $richiesta->getIdazienda()->getNome();
+        $titolo      = $richiesta->getTitolo();
 
         /* @var $richiestaaggregate Richiestaaggregazione */
-
         $richiestaaggregate = $this->em->getRepository('estarRdaBundle:Richiestaaggregazione')->findBy( array('idrichiesta' => $idRichiesta));
         $aziendaRichesta = new ArrayCollection();
         foreach ($richiestaaggregate as $aziendaR){
@@ -93,14 +92,21 @@ class EmailController extends Controller
 
         /* @var $iter Iter*/
         $iter = $em->getRepository('estarRdaBundle:Iter')->findBy(array('idrichiesta' => $idRichiesta),array('id' => 'DESC'));
+        // todo: zanna20180713 controllare lo stato che viene catturato
+        // review: zanna20180713 trovato errore in RichiesteModel da correggere perché nei due casi :
+        //   030 STATUSESTAR_ATTESA_TEC = "Attesa documentazione aggiuntiva Tecnica"
+        //   031 STATUSESTAR_ATTESA_AMM = "Attesa documentazione aggiuntiva Amministrativa"
+        // non aggiornava lo stato corretto nell'iter
+
         $stato = $iter[0]->getAstatogestav();
+        $stato = $richiesta->getStatusgestav();
 
         $message = \Swift_Message::newInstance();
-            $message->setSubject('RDA AVVISO: Cambio di Stato richiesta n: '.$idRichiesta.' (protocollo '.$protocollo.')');
-//            ->setFrom('cinghialemannaro@gmail.com')
+        $message->setSubject('RDA AVVISO: Cambio di Stato richiesta n: '.$idRichiesta.' (protocollo '.$protocollo.')');
         $message->setFrom('assistenza.rda@estar.toscana.it');
-            $message->setTo("$mail");
-            $message->setBody(
+        $message->setTo("$mail");
+    //    $message->setTo('nadia.zanieri@estar.toscana.it');
+        $message->setBody(
                 $this->renderView(
                 // app/Resources/views/Emails/registration.html.twig
                     'estarRdaBundle:Email:notifyemail.html.twig',
@@ -117,7 +123,7 @@ class EmailController extends Controller
                         )
                 ),
                 'text/html'
-            )
+        )
             /*
              * If you also want to include a plaintext version of the message
             ->addPart(
