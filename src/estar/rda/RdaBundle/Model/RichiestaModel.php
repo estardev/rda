@@ -589,8 +589,8 @@ class RichiestaModel
                         $articleSM->apply('rifiutata_tec_ESTAR');
                         $iter->setAstato($articleSM->getState());
                         $iter->setDastatogestav($richiesta->getStatusgestav());
-        //                $iter->setAstatogestav($richiesta->getStatusgestav());
-                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ATTESA_TEC);     // zanna20180713
+        //                $iter->setAstatogestav($richiesta->getStatusgestav());            // zanna20180713 commento
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ATTESA_TEC);     // zanna20180713 aggiungo
                         $iter->setIdrichiesta($richiesta);
                         $iter->setMotivazione($note);
                         $iter->setDataora($dateTime);
@@ -639,7 +639,7 @@ class RichiestaModel
                         $iter->setAstato($articleSM->getState());
                         $iter->setDastatogestav($richiesta->getStatusgestav());
                     //    $iter->setAstatogestav($richiesta->getStatusgestav());          // zanna: Dastatogestav = DastatoGestav ??? prima assegna nell'iter quello della richiesta ??
-                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ATTESA_AMM);   // zanna: 20180713
+                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_ATTESA_AMM);   // zanna: 20180713 aggiungo
                         $richiesta->setPresentato(14);
                         $iter->setIdrichiesta($richiesta);
                         $iter->setMotivazione($note);

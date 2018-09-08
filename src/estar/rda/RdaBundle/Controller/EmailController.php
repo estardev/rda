@@ -92,7 +92,7 @@ class EmailController extends Controller
 
         /* @var $iter Iter*/
         $iter = $em->getRepository('estarRdaBundle:Iter')->findBy(array('idrichiesta' => $idRichiesta),array('id' => 'DESC'));
-        // todo: zanna20180713 controllare lo stato che viene catturato
+
         // review: zanna20180713 trovato errore in RichiesteModel da correggere perché nei due casi :
         //   030 STATUSESTAR_ATTESA_TEC = "Attesa documentazione aggiuntiva Tecnica"
         //   031 STATUSESTAR_ATTESA_AMM = "Attesa documentazione aggiuntiva Amministrativa"
