@@ -38,7 +38,7 @@ class ServerESTARController extends Controller
      * @Soap\Param("numeroProtocolloLettera", phpType = "string")
      * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\String[]")
      */
-    public function notifyAction($username, $password, $note = null, $documentazione, $idpratica, $dataRequest = null, $codicestato, $codicegara = null, $rup = null, $numeroAttoAggiudicazione = null, $numeroProtocolloLettera = null, $prioritaGestav = null)
+    public function notifyAction($username, $password, $note = null, $documentazione=null, $idpratica, $dataRequest = null, $codicestato, $codicegara = null, $rup = null, $numeroAttoAggiudicazione = null, $numeroProtocolloLettera = null, $prioritaGestav = null)
     {
         $logger = $this->get('sistematicaserver_logger');
         $logger->log('ServerEstarController: Invocato: note ' . $note . ', idpratica ' . $idpratica . ', codicestato ' . $codicestato);
