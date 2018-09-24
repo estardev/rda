@@ -216,6 +216,29 @@ class Iter
      */
     private $numeroProtocolloLettera;
 
+    // by trigfi per soluzione malfunzione segnalata da Santucci il 24/09/2018: il link del doc va inn iter e non deve sovrascrivere il precedente
+    /**
+     * @var string
+     * @ORM\Column(name="documentazione", type="string", length=512, nullable=true)
+     */
+    private $documentazione;
+
+    /**
+     * @return string
+     */
+    public function getDocumentazione()
+    {
+        return $this->documentazione;
+    }
+
+    /**
+     * @param string $documentazione
+     */
+    public function setDocumentazione($documentazione)
+    {
+        $this->documentazione = $documentazione;
+    }
+
     /**
      * @return string
      */

@@ -472,9 +472,13 @@ class RichiestaModel
         $articleSM = $factory->get($richiesta, 'rda');
 
         $iter = new Iter();
+
         //FG20180828: se viene specificata la documentazione, la setto
-        if (!is_null($documentazione))
+        if (!is_null($documentazione)) {
+            //rigfi 2018/09/24: se viene specificata la documentazione, la setto nell'iter (e non tocco codice di FG)
+            $iter->setDocumentazione($documentazione);
             $richiesta->setDocumentazione($documentazione);
+        }
 
         switch ($codicestato) {
             case '010':
@@ -484,7 +488,7 @@ class RichiestaModel
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($richiesta->getStatus());
                         $iter->setAstato($richiesta->getStatus());
                         $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -530,7 +534,7 @@ class RichiestaModel
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($richiesta->getStatus());
                         $iter->setAstato($richiesta->getStatus());
                         $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -584,7 +588,7 @@ class RichiestaModel
                 $logger->log('RichiestaModel.getPratica: attesa documentazione aggiuntiva tecnica');
                 if ($articleSM->can('rifiutata_tec_ESTAR')) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($articleSM->getState());
                         $articleSM->apply('rifiutata_tec_ESTAR');
                         $iter->setAstato($articleSM->getState());
@@ -633,7 +637,7 @@ class RichiestaModel
                 if ($articleSM->can('rifiutata_amm_ESTAR')) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($articleSM->getState());
                         $articleSM->apply('rifiutata_amm_ESTAR');
                         $iter->setAstato($articleSM->getState());
@@ -684,7 +688,7 @@ class RichiestaModel
                 if ($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus() == 'rigetto_ESTAR') {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($articleSM->getState());
                         $articleSM->apply('rigettata_ESTAR');
                         $iter->setAstato($articleSM->getState());
@@ -731,7 +735,7 @@ class RichiestaModel
                 if ($articleSM->can('rigettata_ESTAR') or $richiesta->getStatus() == 'rigetto_ESTAR') {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($articleSM->getState());
                         $articleSM->apply('rigettata_ESTAR');
                         $iter->setAstato($articleSM->getState());
@@ -777,7 +781,7 @@ class RichiestaModel
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ASSEGNATAPROGRAMMAZIONE) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($richiesta->getStatus());
                         $iter->setAstato($richiesta->getStatus());
                         $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -823,7 +827,7 @@ class RichiestaModel
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ISTRUTTORIA) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($richiesta->getStatus());
                         $iter->setAstato($richiesta->getStatus());
                         $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -868,7 +872,7 @@ class RichiestaModel
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_ISTRUTTORIA_AMM) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($richiesta->getStatus());
                         $iter->setAstato($richiesta->getStatus());
                         $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -913,7 +917,7 @@ class RichiestaModel
                 if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR AND !empty($codicegara)) or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_INDIZIONE) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($richiesta->getStatus());
                         $iter->setAstato($richiesta->getStatus());
                         $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -964,7 +968,7 @@ class RichiestaModel
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_VALUTAZIONE) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($richiesta->getStatus());
                         $iter->setAstato($richiesta->getStatus());
                         $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -1008,7 +1012,7 @@ class RichiestaModel
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_AGGIUDICAZIONE) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($richiesta->getStatus());
                         $iter->setAstato($richiesta->getStatus());
                         $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -1058,7 +1062,7 @@ class RichiestaModel
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($richiesta->getStatus());
                         $iter->setAstato($richiesta->getStatus());
                         $iter->setDastatogestav($richiesta->getStatusgestav());
@@ -1109,7 +1113,7 @@ class RichiestaModel
                 if ($articleSM->can('chiusura_ESTAR') or $richiesta->getStatus() == RichiestaModel::STATUS_CHIUSA_ESTAR) {
 
                     if ($richiesta->getStatus() != RichiestaModel::STATUS_CHIUSA_ESTAR AND $richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE) {
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($articleSM->getState());
                         $articleSM->apply('chiusura_ESTAR');
                         $iter->setAstato($articleSM->getState());
@@ -1163,7 +1167,7 @@ class RichiestaModel
                 elseif ($articleSM->can('apertura_ESTAR')) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($articleSM->getState());
                         $articleSM->apply('apertura_ESTAR');
                         $iter->setAstato($articleSM->getState());
@@ -1211,7 +1215,7 @@ class RichiestaModel
                 if ($richiesta->getStatus() == RichiestaModel::STATUS_ANNULLATA) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
 
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($articleSM->getState());
                         //$articleSM->apply('annullamento_ESTAR');
                         $iter->setAstato($articleSM->getState());
@@ -1262,7 +1266,7 @@ class RichiestaModel
                     $logger->log('RichiestaModel.getPratica: gestito correttamente');
                 } elseif (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR AND
                     $richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
-                    $iter = new Iter();
+//                    $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                     $iter->setDastato($articleSM->getState());
                     //$articleSM->apply('annullamento_ESTAR');
                     $iter->setAstato($articleSM->getState());
@@ -1339,7 +1343,7 @@ class RichiestaModel
                 $logger->log('RichiestaModel.getPratica: documentazione aggiuntiva RUP');
                 if ((($articleSM->can('rifiutata_amm_ESTAR')) AND !empty($codicegara)) or $iter->getAstatogestav() == RichiestaModel::STATUSESTAR_RICHIESTADOCUMENTAZIONE_RUP or $richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR) {
                     if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
-                        $iter = new Iter();
+//                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                         $iter->setDastato($articleSM->getState());
                         $articleSM->apply('rifiutata_amm_ESTAR');
                         $iter->setAstato($articleSM->getState());
@@ -1398,7 +1402,7 @@ class RichiestaModel
                 $logger->log('RichiestaModel.getPratica ['.$idpratica.']: chiusura senza esito');
                 //Sicuramente non ci sono vincoli, la richiesta deve sempre transire ... a meno che non sia mai stata protocollata!
                 if (!is_null($richiesta->getNumeroProtocollo())) {
-                    $iter = new Iter();
+//                    $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
                     $iter->setDastato($articleSM->getState());
                     //badile di rigfi: provando stato 'annullata' (oppure chiusa_da_estar per la seconda volta in caso di rda con + gare) si ha errore a causa della macchina a stati
                     // -> si forza lo stato della richiesta senza appoggiarsi alla macchina a stati
