@@ -51,7 +51,7 @@
             <td>{{ entity.motivazione }}</td>
             <td>{{ entity.numeroAttoAggiudicazione }}</td>
             <td>{{ entity.numeroProtocolloLettera }}</td>
-            <td>{% if(entity.idrichiesta.documentazione != '') %}
+            <td>{% if(entity.documentazione != null) %}
 
                 <a href="{{ entity.documentazione }}" target="_blank">download</a>
                 {% else %}
