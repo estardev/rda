@@ -36,7 +36,7 @@ class ServerESTARController extends Controller
      * @Soap\Param("rup", phpType = "string")
      * @Soap\Param("numeroAttoAggiudicazione", phpType = "string")
      * @Soap\Param("numeroProtocolloLettera", phpType = "string")
-     * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\String[]")
+     * @Soap\Result(phpType = "BeSimple\SoapCommon\Type\KeyValue\Stringa[]")
      */
     public function notifyAction($username, $password, $note = null, $documentazione=null, $idpratica, $dataRequest = null, $codicestato, $codicegara = null, $rup = null, $numeroAttoAggiudicazione = null, $numeroProtocolloLettera = null, $prioritaGestav = null)
     {
@@ -89,7 +89,21 @@ class ServerESTARController extends Controller
                 } else {
                     $logger->log('ServerEstarController: Ricevuta risposta da richiesta model: ' . $risposta->getCodiceRisposta());
                 }
-                if ($risposta->getCodiceRisposta() != 'KO' and ($codicestato == '090' or $codicestato == '030' or $codicestato == '031' or $codicestato == '130' or $codicestato == '091' or $codicestato == '040' or $codicestato == '041')) {
+//              Invio mail in caso di esito positivo nei sequenti casi:
+//                $codicestato == '090'  In aggiudicazione
+//                $codicestato == '030'  attesa documentazione aggiuntiva tecnica
+//                $codicestato == '031'  attesa documentazione aggiuntiva amministrativa
+//                $codicestato == '130'  attesa documentazione aggiuntiva tecnica rup
+//                $codicestato == '091'  In aggiudicazione parziale
+//                $codicestato == '040'  Rigetto pratica controllo tecnico
+//                $codicestato == '041'  Rigetto pratica controllo amministrativo
+//                $codicestato == '100' Chiusa da ESTAR per termine iter (da aggiungere)
+//                $codicestato == '140' Chiusura senza esito ESTAR (da aggiungere)
+//                20181016 zanna rimosso codice '090', aggiunti codici '100 e '140'
+                if ($risposta->getCodiceRisposta() != 'KO'  and  ($codicestato == '030' or $codicestato == '031' or $codicestato == '130' or
+                                                                  $codicestato == '091' or $codicestato == '040' or $codicestato == '041' or
+                                                                  $codicestato == '100' or $codicestato == '140')
+                    ) {
                     $logger->log('ServerEstarController: Avvio invio mail');
                     //FG20180313 invio della mail in try-catch perchè ho il sentore che fallisca.
                     try {

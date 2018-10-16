@@ -565,6 +565,9 @@ class SistematicaClientController extends Controller
         $esito = $risposta->RequestWebServer();
         $logger->log('SistematicaClientController.indexAction: fine  chiamata webservice');
         $logger->log('SistematicaClientController: risposta '.json_encode($esito));
+
+
+
         if ($esito['esito'] == true and ($tipologia == "Nuova" or $tipologia == "Documentazione aggiuntiva" or $tipologia == "Documentazione richiesta da RUP" ))
         {
             $numprotocollo = $esito['protocollo'];
@@ -731,10 +734,12 @@ class SistematicaClientController extends Controller
 
         } else if ($esito['esito'] == true and $tipologia == "Annullamento") {
             $logger->log('SistematicaClientController.indexAction: annullamento');
+
             $numprotocollo = $esito['protocollo'];
             $idGestav=$esito['chiavesistematica'];
             $urlGestav=$esito['urlprotocollo'];
             $dataprotocollo=$esito['dataprotocollo'];
+
             $entity = $em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
 
             $factory = $this->container->get('sm.factory');

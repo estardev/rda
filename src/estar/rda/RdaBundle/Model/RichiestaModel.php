@@ -1257,6 +1257,7 @@ class RichiestaModel
                 return $risposta;
 
             case '111':
+                //comunicazione di gare multiple
                 $logger->log('RichiestaModel.getPratica: 111');
                 if (($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR AND
                     $richiesta->getStatusgestav() == RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
