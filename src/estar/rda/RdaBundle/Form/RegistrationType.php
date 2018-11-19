@@ -2,6 +2,7 @@
 
 namespace estar\rda\RdaBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -29,6 +30,10 @@ class RegistrationType extends AbstractType
             ))
             ->add('gruppiutente', 'entity', array(
                 'class' => 'estar\rda\RdaBundle\Entity\Gruppoutente',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('gu')
+                        ->orderBy('gu.nome', 'ASC');
+                },
                 'choice_label' => function ($gruppoutente) {
                     return $gruppoutente->getNome().' ('.$gruppoutente->getDescrizione().')';
                 },

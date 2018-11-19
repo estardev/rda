@@ -99,7 +99,7 @@ class ServerESTARController extends Controller
 //                $codicestato == '041'  Rigetto pratica controllo amministrativo
 //                $codicestato == '100' Chiusa da ESTAR per termine iter (da aggiungere)
 //                $codicestato == '140' Chiusura senza esito ESTAR (da aggiungere)
-//                20181016 zanna rimosso codice '090', aggiunti codici '100 e '140'
+//                20181016 zanna rimosso codice '090', aggiunti codici '100' e '140'
                 if ($risposta->getCodiceRisposta() != 'KO'  and  ($codicestato == '030' or $codicestato == '031' or $codicestato == '130' or
                                                                   $codicestato == '091' or $codicestato == '040' or $codicestato == '041' or
                                                                   $codicestato == '100' or $codicestato == '140')
