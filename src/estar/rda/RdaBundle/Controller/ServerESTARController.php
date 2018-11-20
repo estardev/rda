@@ -113,6 +113,15 @@ class ServerESTARController extends Controller
                     } catch (\Exception $e) {
                         $logger->log('ServerEstarController: Errore invio mail: ' . $e->getMessage());
                     }
+                    //FG20181120 mail di Santucci 20181112: se il codice stato è 100, avvisare anche il VA
+                    try {
+                        $logger->log('ServerEstarController: invio mail a VA');
+                        $mail = new EmailController($this->getDoctrine()->getManager(), $this->get('service_container'));
+                        $mail->notifyEmailVAAction($idpratica);
+                        $logger->log('ServerEstarController: Termine invio mail a VA');
+                    } catch (\Exception $e) {
+                        $logger->log('ServerEstarController: Errore invio mail a VA: ' . $e->getMessage());
+                    }
 
                 }
                 $logger->log('ServerEstarController: Fine');
