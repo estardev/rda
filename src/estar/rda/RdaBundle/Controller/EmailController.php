@@ -135,7 +135,8 @@ class EmailController extends Controller
             )
             */
         ;
-        return $this->get('mailer')->send($message);
+        $result = $this->get('mailer')->send($message);
+        return $result;
 
         //return $this->render('estarRdaBundle:Email:notifyemail.html.twig',
         //    array('nomecognome' => $utente->getNomecognome(),
@@ -193,7 +194,7 @@ class EmailController extends Controller
         $message->setBody(
             $this->renderView(
             // app/Resources/views/Emails/registration.html.twig
-                'estarRdaBundle:Email:notifyemail.html.twig',
+                'estarRdaBundle:Email:notifyemailVA.html.twig',
                 array(
                     'nomecognome' => $utente,
                     'protocollo' => $protocollo,
@@ -219,7 +220,8 @@ class EmailController extends Controller
             )
             */
         ;
-        return $this->get('mailer')->send($message);
+        $result = $this->get('mailer')->send($message);
+        return $result;
 
         //return $this->render('estarRdaBundle:Email:notifyemail.html.twig',
         //    array('nomecognome' => $utente->getNomecognome(),
