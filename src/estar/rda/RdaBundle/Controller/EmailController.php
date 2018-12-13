@@ -182,36 +182,38 @@ class EmailController extends Controller
         //   030 STATUSESTAR_ATTESA_TEC = "Attesa documentazione aggiuntiva Tecnica"
         //   031 STATUSESTAR_ATTESA_AMM = "Attesa documentazione aggiuntiva Amministrativa"
         // non aggiornava lo stato corretto nell'iter
-        //FG20181212 potrebbe non esserci ul'utente
-        $utenteVA = $iter->getIdutente();
-        if ($utenteVA != null) {
-            $mail = $iter->getIdutente()->getEmail();
-            $stato = $iter->getAstatogestav();
-            $stato = $richiesta->getStatusgestav();
+        //FG potrebbe non esserci l'iter!
+        if ($iter != null  ) {
+            //FG20181212 potrebbe non esserci ul'utente
+            $utenteVA = $iter->getIdutente();
+            if ($utenteVA != null) {
+                $mail = $iter->getIdutente()->getEmail();
+                $stato = $iter->getAstatogestav();
+                $stato = $richiesta->getStatusgestav();
 
-            $message = \Swift_Message::newInstance();
-            $message->setSubject('RDA AVVISO per Validatore Amministrativo: Cambio di Stato richiesta n: ' . $idRichiesta . ' (protocollo ' . $protocollo . ')');
-            $message->setFrom('assistenza.rda@estar.toscana.it');
-            $message->setTo("$mail");
-            //    $message->setTo('nadia.zanieri@estar.toscana.it');
-            $message->setBody(
-                $this->renderView(
-                // app/Resources/views/Emails/registration.html.twig
-                    'estarRdaBundle:Email:notifyemailVA.html.twig',
-                    array(
-                        'nomecognome' => $utente,
-                        'protocollo' => $protocollo,
-                        'idrichiesta' => $idRichiesta,
-                        'categoria' => $categoria,
-                        'stato' => $stato,
-                        'titolo' => $titolo,
-                        'descrizione' => $descrizione,
-                        'azienda' => $azienda,
-                        'aziendaRichiesta' => $aziendaRichesta
-                    )
-                ),
-                'text/html'
-            )/*
+                $message = \Swift_Message::newInstance();
+                $message->setSubject('RDA AVVISO per Validatore Amministrativo: Cambio di Stato richiesta n: ' . $idRichiesta . ' (protocollo ' . $protocollo . ')');
+                $message->setFrom('assistenza.rda@estar.toscana.it');
+                $message->setTo("$mail");
+                //    $message->setTo('nadia.zanieri@estar.toscana.it');
+                $message->setBody(
+                    $this->renderView(
+                    // app/Resources/views/Emails/registration.html.twig
+                        'estarRdaBundle:Email:notifyemailVA.html.twig',
+                        array(
+                            'nomecognome' => $utente,
+                            'protocollo' => $protocollo,
+                            'idrichiesta' => $idRichiesta,
+                            'categoria' => $categoria,
+                            'stato' => $stato,
+                            'titolo' => $titolo,
+                            'descrizione' => $descrizione,
+                            'azienda' => $azienda,
+                            'aziendaRichiesta' => $aziendaRichesta
+                        )
+                    ),
+                    'text/html'
+                )/*
              * If you also want to include a plaintext version of the message
             ->addPart(
                 $this->renderView(
@@ -221,9 +223,10 @@ class EmailController extends Controller
                 'text/plain'
             )
             */
-            ;
-            $result = $this->get('mailer')->send($message);
-            return $result;
+                ;
+                $result = $this->get('mailer')->send($message);
+                return $result;
+            }
         }
         return 0;
 
