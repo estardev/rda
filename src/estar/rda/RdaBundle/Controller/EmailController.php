@@ -226,9 +226,10 @@ class EmailController extends Controller
                 ;
                 $result = $this->get('mailer')->send($message);
                 return $result;
-            }
-        }
-        return 0;
+            } else
+                return 0;
+        } else
+            return 0;
 
         //return $this->render('estarRdaBundle:Email:notifyemail.html.twig',
         //    array('nomecognome' => $utente->getNomecognome(),
