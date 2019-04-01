@@ -40,3 +40,4 @@ parameters:
    #pdfwriter:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" #locale in ambiente windows
    #pdfwriter:     /usr/local/bin/wkhtmltopdf #produzione
     pdfwriter:     /usr/local/bin/wkhtmltopdf.sh #test
+    urlRDAv2: 'https://rda2-srv-symfony.estar.toscana.it/login'
