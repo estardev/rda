@@ -24,8 +24,11 @@ security:
                 always_use_default_target_path: true
                 default_target_path: /homepage
                 #use_referer: true
-                #failure_path: login_failure
-            logout:       true
+                failure_path: /nuovo/login
+#            logout:       true
+            logout:
+                path: fos_user_security_logout
+                target: /login
             anonymous:    true
             remember_me:
                 key:      "%secret%"
@@ -39,6 +42,7 @@ security:
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/nuovo/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/prog, role: IS_AUTHENTICATED_ANONYMOUSLY }

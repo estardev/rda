@@ -94,6 +94,10 @@ HomePage:
     path:     /homepage
     defaults: { _controller: estarRdaBundle:HomePage:index }
 
+Portale:
+    path:     /login
+    defaults: { _controller: estarRdaBundle:Default:index }
+
 underCostruction:
     path:     /underCostruction
     defaults: { _controller: estarRdaBundle:UnderCostruction:index}

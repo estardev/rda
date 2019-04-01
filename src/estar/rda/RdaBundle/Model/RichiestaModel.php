@@ -473,10 +473,12 @@ class RichiestaModel
 
         $iter = new Iter();
 
-        //FG20180828: se viene specificata la documentazione, la setto
+        //FG20180828: se viene specificata la documentazione, la setto a quello che mi pare
         if (!is_null($documentazione)) {
             //rigfi 2018/09/24: se viene specificata la documentazione, la setto nell'iter (e non tocco codice di FG)
             $iter->setDocumentazione($documentazione);
+            $this->em->persist($iter);
+            $this->em->flush();
             $richiesta->setDocumentazione($documentazione);
         }
 

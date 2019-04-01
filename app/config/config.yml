@@ -41,7 +41,7 @@ twig:
         pathToWeb: "%kernel.root_dir%/../web"
         applicativo: "%applicativo%"
         invioprotocollo: "%invioprotocollo%"
-
+        urlRDAv2: "%urlRDAv2%"
 
 # Assetic Configuration
 assetic:
