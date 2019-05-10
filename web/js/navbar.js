@@ -23,7 +23,7 @@ $(document).ready(function()
 
     $(document).on("change", "#homepageSelectCategoria", function () {
         var homepageSelectCategoria = $('#homepageSelectCategoria').val();
-        $('#homepageSelectBtnCategoria').attr('disabled',false);
+        // $('#homepageSelectBtnCategoria').attr('disabled',false);
         //alert("selezionato: " + homepageSelectCategoria);
         if (  homepageSelectCategoria==22
             || homepageSelectCategoria==23
