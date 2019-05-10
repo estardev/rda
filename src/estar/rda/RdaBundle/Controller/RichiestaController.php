@@ -633,67 +633,66 @@ class RichiestaController extends Controller
     {
         $logger = $this->get('accessi_logger');
         $logger->log('Utente ' . $this->getUser()->getId() . ' richiede la clonazione per la richiesta ' . $id);
-
-        $campi = $request->request->all();
+//
+//        $campi = $request->request->all();
         $em = $this->getDoctrine()->getManager();
-
-        /* @var \estar\rda\RdaBundle\Entity\Richiesta */
+//
+//        /* @var \estar\rda\RdaBundle\Entity\Richiesta */
         $richiestaOld = $em->getRepository('estarRdaBundle:Richiesta')->find($id);
         $idcategoria = $richiestaOld->getIdcategoria();
+//
+//        $richiestaNew = new Richiesta();
+//        $richiestaNew->setDataora(new \DateTime('now'));
+//        $richiestaNew->setDescrizione($richiestaOld->getDescrizione());
+//        $richiestaNew->setTitolo($richiestaOld->getTitolo());
+//        $richiestaNew->setIdazienda($richiestaOld->getIdazienda());
+//        $richiestaNew->setAssenzaconflitto($richiestaOld->isAssenzaconflitto());
+//        $richiestaNew->setCp(false);
+//        $richiestaNew->setIdcategoria($richiestaOld->getIdcategoria());
+//        $richiestaNew->setIdutente($this->getUser());
+//        $richiestaNew->setPriorita($richiestaOld->getPriorita());
+//        $richiestaNew->setStatus(RichiestaModel::STATUS_BOZZA);
+//
+//        $em->persist($richiestaNew);
+//        $logger->log('Creata richiesta da clonazione con id '.$richiestaNew->getId());
+//
+//
+//        //dopodichè creiamo i campi
+//        $vcr = $em->getRepository('estarRdaBundle:Valorizzazionecamporichiesta')->findBy(
+//            array('idrichiesta' => $id)
+//        );
+//        //per ogni campo richiesta, ne creiamo un altro sulla richiesta nuova
+//        foreach ($vcr as $campoValorizzatoOld) {
+//            $campoValorizzatoNew = new Valorizzazionecamporichiesta();
+//            $campoValorizzatoNew->setIdcategoria($campoValorizzatoOld->getIdcategoria());
+//            $campoValorizzatoNew->setIdcampo($campoValorizzatoOld->getIdcampo());
+//            $campoValorizzatoNew->setIdrichiesta($richiestaNew);
+//            $campoValorizzatoNew->setValore($campoValorizzatoOld->getValore());
+//            $em->persist($campoValorizzatoNew);
+//
+//        }
+//        $logger->log('Valorizzati i campi della nuova richiesta');
+//        $iter = new Iter();
+//        $iter->setIdrichiesta($richiestaNew);
+//        $iter->setIdutente($this->getUser());
+//        $iter->setDataora(new \Datetime('now'));
+//        $iter->setAstato(RichiestaModel::STATUS_BOZZA);
+//        $iter->setMotivazione('Clonazione da richiesta '.$richiestaOld->getId());
+//        $em->persist($iter);
+//
+//        $em->flush();
+//        $this->get('session')->getFlashBag()->add(
+//            'notice',
+//            array(
+//                'alert' => 'info',
+//                'title' => 'Informazione!',
+//                'message' => 'Creata la nuova richiesta con id' . $richiestaNew->getId() . ' con successo'
+//            )
+//        );
 
-        $richiestaNew = new Richiesta();
-        $richiestaNew->setDataora(new \DateTime('now'));
-        $richiestaNew->setDescrizione($richiestaOld->getDescrizione());
-        $richiestaNew->setTitolo($richiestaOld->getTitolo());
-        $richiestaNew->setIdazienda($richiestaOld->getIdazienda());
-        $richiestaNew->setAssenzaconflitto($richiestaOld->isAssenzaconflitto());
-        $richiestaNew->setCp(false);
-        $richiestaNew->setIdcategoria($richiestaOld->getIdcategoria());
-        //$richiestaNew->setIdutente($richiestaOld->getIdutente());
-        $richiestaNew->setIdutente($this->getUser());
-        $richiestaNew->setPriorita($richiestaOld->getPriorita());
-        $richiestaNew->setStatus(RichiestaModel::STATUS_BOZZA);
-
-        $em->persist($richiestaNew);
-        $logger->log('Creata richiesta da clonazione con id '.$richiestaNew->getId());
-
-
-        //dopodichè creiamo i campi
-        $vcr = $em->getRepository('estarRdaBundle:Valorizzazionecamporichiesta')->findBy(
-            array('idrichiesta' => $id)
-        );
-        //per ogni campo richiesta, ne creiamo un altro sulla richiesta nuova
-        foreach ($vcr as $campoValorizzatoOld) {
-            $campoValorizzatoNew = new Valorizzazionecamporichiesta();
-            $campoValorizzatoNew->setIdcategoria($campoValorizzatoOld->getIdcategoria());
-            $campoValorizzatoNew->setIdcampo($campoValorizzatoOld->getIdcampo());
-            $campoValorizzatoNew->setIdrichiesta($richiestaNew);
-            $campoValorizzatoNew->setValore($campoValorizzatoOld->getValore());
-            $em->persist($campoValorizzatoNew);
-
-        }
-        $logger->log('Valorizzati i campi della nuova richiesta');
-        $iter = new Iter();
-        $iter->setIdrichiesta($richiestaNew);
-        $iter->setIdutente($this->getUser());
-        $iter->setDataora(new \Datetime('now'));
-        $iter->setAstato(RichiestaModel::STATUS_BOZZA);
-        $iter->setMotivazione('Clonazione da richiesta '.$richiestaOld->getId());
-        $em->persist($iter);
-
-        $em->flush();
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            array(
-                'alert' => 'info',
-                'title' => 'Informazione!',
-                'message' => 'Creata la nuova richiesta con id' . $richiestaNew->getId() . ' con successo'
-            )
-        );
-
-
+        $logger->log('Invocata clonazione che però dal 10/05/2018 è disabilitata, rilasciato avviso e rediretto su rotta richiesta_bycategoria');
+        $request->getSession()->getFlashBag()->add('danger', 'Clonazione disabilitata! Per le nuove RDA usare la nuova app RDA v.2');
         return $this->redirect($this->generateUrl("richiesta_bycategoria", array('idCategoria' => $idcategoria)));
-
     }
 
 
