@@ -1159,52 +1159,53 @@ class RichiestaModel
 
             case '101':
                 //stato in cui verrà comunicata la chiusura per errore e la riapertura della pratica
+                //   se $articleSM->can('apertura_ESTAR') :  from: [chiusa_ESTAR]  to: inviata_ESTAR
                 $logger->log('RichiestaModel.getPratica: chiusura per errore e riapertura');
                 if($richiesta->getStatusgestav() == RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE){
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente (gare multiple)");
+                    $logger->log('RichiestaModel.getPratica: gestito correttamente (gare multiple)');
                 }
-                elseif ($articleSM->can('apertura_ESTAR')) {
-                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
-
+                else {
 //                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
-                        $iter->setDastato($articleSM->getState());
+
+// or ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR)
+                    $iter->setDastato($articleSM->getState());
+                    if ( $articleSM->can('apertura_ESTAR') ) {
                         $articleSM->apply('apertura_ESTAR');
-                        $iter->setAstato($articleSM->getState());
-                        $iter->setDastatogestav($richiesta->getStatusgestav());
-                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_APERTURA);
-                        $iter->setIdrichiesta($richiesta);
-                        $iter->setMotivazione($note);
-                        $iter->setDataora($dateTime);
-                        $iter->setIdutente($utente);
-                        $iter->setDatafornita($dataFornita);
-                        $iter->setRup($rup);
-                        $iter->setPrioritaGestav($prioritaGestav);
-                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $richiesta->setCodicegara($codicegara);
-                        $richiesta->setDataultimamodifica($dateTime);
-                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_APERTURA);
-                        $richiesta->setPrioritaGestav($prioritaGestav);
-                        $this->em->persist($richiesta);
-                        $this->em->persist($iter);
-                        $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
-                    } else {
-                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
                     }
-                } else {
-                    //Non posso transire in quello stato
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: mnon può transire nello stato richiesto');
+                    $iter->setAstato($articleSM->getState());
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_APERTURA);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dateTime);
+                    $iter->setIdutente($utente);
+                    $iter->setDatafornita($dataFornita);
+                    $iter->setRup($rup);
+                    $iter->setPrioritaGestav($prioritaGestav);
+
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+
+                    $richiesta->setCodicegara($codicegara);
+                    $richiesta->setDataultimamodifica($dateTime);
+                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_APERTURA);
+                    $richiesta->setPrioritaGestav($prioritaGestav);
+
+                    $this->em->persist($richiesta);
+                    $this->em->persist($iter);
+                    $this->em->flush();
+                    $logger->log('RichiestaModel.getPratica: cod.101 gestito correttamente');
+
+//                } else {
+//                    //Non posso transire in quello stato
+//                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+//                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+//                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto (cod.101) ");
+//                    $logger->log('RichiestaModel.getPratica: mnon può transire nello stato richiesto');
                 }
 
                 //TODO: ricordiamoci di mettere un avviso via mail
