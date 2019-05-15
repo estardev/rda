@@ -55,11 +55,8 @@ class RichiestaModel
     const STATUSESTAR_CHIUSURA_SENZA_ESITO = "Chiusa da ESTAR senza esito";
 
     protected $em;
-
     protected $user;
-
     protected $container;
-
 
     /** costruttore di default. Mi serve un entity manager e l'utente corrente
      * 20160223: aggiunti anche il service container e la session
@@ -131,8 +128,7 @@ class RichiestaModel
     function campiNecessariProssimoPasso($idRichiesta)
     {
         //primo step mi tiro su la richiesta
-        $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')
-            ->find($idRichiesta);
+        $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         //prendo lo status della richiesta
         $status = $richiesta->getStatus();
         //mi preparo a ciclare sui campi
@@ -156,21 +152,20 @@ class RichiestaModel
      */
 
 
-    /** metodo che restituisce gli stati a cui la richiesta pu� transire
+    /** metodo che restituisce gli stati a cui la richiesta può transire
      *
-     * @return un array con il nome dei campi cos� come definiti nella macchina a stati
+     * @return un array con il nome dei campi cosò come definiti nella macchina a stati
      */
 
 
-    /** METODONE che ci dice se una richiesta pu� o non pu� avanzare allo stato indicato
+    /** METODONE che ci dice se una richiesta può o non può avanzare allo stato indicato
      *
      * @return true or false
      */
     public function puoAvanzare($idRichiesta, $nuovostatus)
     {
         //tiro su la richiesta
-        $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')
-            ->find($idRichiesta);
+        $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         //prendo lo status della richiesta
         $vecchiostatus = $richiesta->getStatus();
 
@@ -217,7 +212,6 @@ class RichiestaModel
                     'stato8' => RichiestaModel::STATUS_ANNULLATA_ESTAR,
                     'stato9' => RichiestaModel::STATUS_RIGETTO_ESTAR,
 
-
                 ));
 
             }
@@ -236,7 +230,6 @@ class RichiestaModel
                     'stato7' => RichiestaModel::STATUS_CHIUSA_ESTAR,
                     'stato8' => RichiestaModel::STATUS_ANNULLATA_ESTAR,
                     'stato9' => RichiestaModel::STATUS_RIGETTO_ESTAR,
-
 
                 ));
 
@@ -371,11 +364,11 @@ class RichiestaModel
         $utente = $usercheck->getUtente();
         $toReturn = array();
 
-        //Se l'utente non � loggato (caso che non dovrebbe mai succedere) ritorno l'array vuoto
+        //Se l'utente non è loggato (caso che non dovrebbe mai succedere) ritorno l'array vuoto
         //metto la return qui per evitare successive bizze di NPE.
         if ($utente == null) return $toReturn;
 
-        // check: se l'utente � amministratore di sistema, vede tutto.
+        // check: se l'utente è amministratore di sistema, vede tutto.
         $utenteFos = $utente->getIdFosUser();
 
         if ($utenteFos->is_granted('ROLE_ADMIN') || $utenteFos->is_granted('ROLE_SUPERADMIN')) {
