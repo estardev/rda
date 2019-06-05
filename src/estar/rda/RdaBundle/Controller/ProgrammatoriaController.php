@@ -354,6 +354,6 @@ class ProgrammatoriaController extends Controller
 //        }
 
 //        $logger->log('Fine lavori');
-        return new Response('ok', 200);
+        return new Response('funzionalità disattivata!', 200);
     }
 }
