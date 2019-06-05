@@ -55,11 +55,8 @@ class RichiestaModel
     const STATUSESTAR_CHIUSURA_SENZA_ESITO = "Chiusa da ESTAR senza esito";
 
     protected $em;
-
     protected $user;
-
     protected $container;
-
 
     /** costruttore di default. Mi serve un entity manager e l'utente corrente
      * 20160223: aggiunti anche il service container e la session
@@ -131,8 +128,7 @@ class RichiestaModel
     function campiNecessariProssimoPasso($idRichiesta)
     {
         //primo step mi tiro su la richiesta
-        $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')
-            ->find($idRichiesta);
+        $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         //prendo lo status della richiesta
         $status = $richiesta->getStatus();
         //mi preparo a ciclare sui campi
@@ -156,21 +152,20 @@ class RichiestaModel
      */
 
 
-    /** metodo che restituisce gli stati a cui la richiesta pu� transire
+    /** metodo che restituisce gli stati a cui la richiesta può transire
      *
-     * @return un array con il nome dei campi cos� come definiti nella macchina a stati
+     * @return un array con il nome dei campi cosò come definiti nella macchina a stati
      */
 
 
-    /** METODONE che ci dice se una richiesta pu� o non pu� avanzare allo stato indicato
+    /** METODONE che ci dice se una richiesta può o non può avanzare allo stato indicato
      *
      * @return true or false
      */
     public function puoAvanzare($idRichiesta, $nuovostatus)
     {
         //tiro su la richiesta
-        $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')
-            ->find($idRichiesta);
+        $richiesta = $this->em->getRepository('estarRdaBundle:Richiesta')->find($idRichiesta);
         //prendo lo status della richiesta
         $vecchiostatus = $richiesta->getStatus();
 
@@ -217,7 +212,6 @@ class RichiestaModel
                     'stato8' => RichiestaModel::STATUS_ANNULLATA_ESTAR,
                     'stato9' => RichiestaModel::STATUS_RIGETTO_ESTAR,
 
-
                 ));
 
             }
@@ -236,7 +230,6 @@ class RichiestaModel
                     'stato7' => RichiestaModel::STATUS_CHIUSA_ESTAR,
                     'stato8' => RichiestaModel::STATUS_ANNULLATA_ESTAR,
                     'stato9' => RichiestaModel::STATUS_RIGETTO_ESTAR,
-
 
                 ));
 
@@ -371,11 +364,11 @@ class RichiestaModel
         $utente = $usercheck->getUtente();
         $toReturn = array();
 
-        //Se l'utente non � loggato (caso che non dovrebbe mai succedere) ritorno l'array vuoto
+        //Se l'utente non è loggato (caso che non dovrebbe mai succedere) ritorno l'array vuoto
         //metto la return qui per evitare successive bizze di NPE.
         if ($utente == null) return $toReturn;
 
-        // check: se l'utente � amministratore di sistema, vede tutto.
+        // check: se l'utente è amministratore di sistema, vede tutto.
         $utenteFos = $utente->getIdFosUser();
 
         if ($utenteFos->is_granted('ROLE_ADMIN') || $utenteFos->is_granted('ROLE_SUPERADMIN')) {
@@ -1109,9 +1102,10 @@ class RichiestaModel
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
+
             case '100':
                 //Chiusura (iter terminato)
-                $logger->log('RichiestaModel.getPratica: chiusura per iter terminato');
+                $logger->log('RichiestaModel.getPratica: Codice [100] chiusura per iter terminato');
                 if ($articleSM->can('chiusura_ESTAR') or $richiesta->getStatus() == RichiestaModel::STATUS_CHIUSA_ESTAR) {
 
                     if ($richiesta->getStatus() != RichiestaModel::STATUS_CHIUSA_ESTAR AND $richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE) {
@@ -1145,69 +1139,68 @@ class RichiestaModel
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
                     $risposta->setDescrizioneErrore("Pratica gestita correttamente");
                     $this->em->flush();
-                    $logger->log('RichiestaModel.getPratica: pratica gestita correttamente');
+                    $logger->log('RichiestaModel.getPratica:  Codice [100] pratica gestita correttamente');
                 } else {
                     //Non posso transire in quello stato
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
                     $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: non può transire nello stato richiesto');
-
+                    $logger->log('RichiestaModel.getPratica:  Codice [100] non può transire nello stato richiesto');
                 }
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
             case '101':
                 //stato in cui verrà comunicata la chiusura per errore e la riapertura della pratica
+                //   se $articleSM->can('apertura_ESTAR') :  from: [chiusa_ESTAR]  to: inviata_ESTAR
                 $logger->log('RichiestaModel.getPratica: chiusura per errore e riapertura');
                 if($richiesta->getStatusgestav() == RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE){
                     $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
                     $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                    $logger->log('RichiestaModel.getPratica: gestito correttamente');
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente (gare multiple) Codice [101] ");
+                    $logger->log('RichiestaModel.getPratica: Codice [101] gestito correttamente (gare multiple)');
                 }
-                elseif ($articleSM->can('apertura_ESTAR')) {
-                    if (($richiesta->getStatusgestav() != RichiestaModel::STATUSESTAR_RICHIESTA_CON_PIU_GARE)) {
-
+                else {
 //                        $iter = new Iter();       //rigfi: un nuovo oggetto iter è già stato instanziato prima di entrare in questo costrutto SWITCH
-                        $iter->setDastato($articleSM->getState());
+
+// or ($richiesta->getStatus() == RichiestaModel::STATUS_INVIATA_ESTAR)
+                    $iter->setDastato($articleSM->getState());
+                    if ( $articleSM->can('apertura_ESTAR') ) {
                         $articleSM->apply('apertura_ESTAR');
-                        $iter->setAstato($articleSM->getState());
-                        $iter->setDastatogestav($richiesta->getStatusgestav());
-                        $iter->setAstatogestav(RichiestaModel::STATUSESTAR_APERTURA);
-                        $iter->setIdrichiesta($richiesta);
-                        $iter->setMotivazione($note);
-                        $iter->setDataora($dateTime);
-                        $iter->setIdutente($utente);
-                        $iter->setDatafornita($dataFornita);
-                        $iter->setRup($rup);
-                        $iter->setPrioritaGestav($prioritaGestav);
-                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $richiesta->setCodicegara($codicegara);
-                        $richiesta->setDataultimamodifica($dateTime);
-                        $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_APERTURA);
-                        $richiesta->setPrioritaGestav($prioritaGestav);
-                        $this->em->persist($richiesta);
-                        $this->em->persist($iter);
-                        $this->em->flush();
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
-                    } else {
-                        $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
-                        $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
-                        $risposta->setDescrizioneErrore("Pratica gestita correttamente");
-                        $logger->log('RichiestaModel.getPratica: gestito correttamente');
                     }
-                } else {
-                    //Non posso transire in quello stato
-                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
-                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
-                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto ");
-                    $logger->log('RichiestaModel.getPratica: mnon può transire nello stato richiesto');
+                    $iter->setAstato($articleSM->getState());
+                    $iter->setDastatogestav($richiesta->getStatusgestav());
+                    $iter->setAstatogestav(RichiestaModel::STATUSESTAR_APERTURA);
+                    $iter->setIdrichiesta($richiesta);
+                    $iter->setMotivazione($note);
+                    $iter->setDataora($dateTime);
+                    $iter->setIdutente($utente);
+                    $iter->setDatafornita($dataFornita);
+                    $iter->setRup($rup);
+                    $iter->setPrioritaGestav($prioritaGestav);
+
+                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreOK);
+                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaOk);
+                    $risposta->setDescrizioneErrore("Pratica gestita correttamente");
+
+                    $richiesta->setCodicegara($codicegara);
+                    $richiesta->setDataultimamodifica($dateTime);
+                    $richiesta->setStatusgestav(RichiestaModel::STATUSESTAR_APERTURA);
+                    $richiesta->setPrioritaGestav($prioritaGestav);
+
+                    $this->em->persist($richiesta);
+                    $this->em->persist($iter);
+                    $this->em->flush();
+                    $logger->log('RichiestaModel.getPratica: Codice [101] gestito correttamente');
+
+//                } else {
+//                    //Non posso transire in quello stato
+//                    $risposta->setCodiceRisposta(RispostaPerSistematica::codiceRispostaErrore);
+//                    $risposta->setCodiceErrore(RispostaPerSistematica::codiceErroreStatoNonGestito);
+//                    $risposta->setDescrizioneErrore("La pratica " . $idpratica . " non può transire nello stato richiesto (cod.101) ");
+//                    $logger->log('RichiestaModel.getPratica: mnon può transire nello stato richiesto');
                 }
 
-                //TODO: ricordiamoci di mettere un avviso via mail
                 $risposta->setDataRisposta($dataRisposta);
                 return $risposta;
 
